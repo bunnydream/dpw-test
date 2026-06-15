@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Public Works — Option 2: Dark Cinematic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --forge:#1E272E;
+  --copper:#C77234;
+  --deep-copper:#9F5528;
+  --steel:#3A4E5C;
+  --verdigris:#56A374;
+  --white-gold:#D4CAA8;
+  --molten:#E9A030;
+  --rose-gold:#DEB0A0;
+  --aluminum:#A9B0B6;
+  --light-al:#D0D5D8;
+  --white:#FFFFFF;
+  --void:#0D1318;
+  --surface:#111920;
+  --surface2:#172029;
+  --glass:rgba(255,255,255,0.04);
+  --glass-border:rgba(255,255,255,0.07);
+  --copper-glow:rgba(199,114,52,0.15);
+  --verdigris-glow:rgba(86,163,116,0.12);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Atkinson Hyperlegible',sans-serif;
+  font-size:18px;line-height:1.7;
+  color:rgba(255,255,255,0.85);
+  background:var(--void);
+  overflow-x:hidden;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(13,19,24,0.85);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--glass-border);
+  height:68px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(24px,5vw,72px);
+}
+.nav-logo img{height:20px;display:block}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+  color:rgba(255,255,255,0.4);text-decoration:none;
+  padding:8px 16px;border-radius:4px;
+  transition:color .18s,background .18s;
+}
+.nav-links a:hover{color:rgba(255,255,255,0.9);background:var(--glass)}
+.nav-cta{
+  background:var(--copper)!important;
+  color:#fff!important;border-radius:4px!important;
+  padding:9px 24px!important;
+  box-shadow:0 0 32px rgba(199,114,52,0.25);
+  transition:box-shadow .2s!important;
+}
+.nav-cta:hover{box-shadow:0 0 48px rgba(199,114,52,0.4)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.4);border-radius:2px}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(80px,12vw,140px) clamp(24px,5vw,72px) clamp(60px,8vw,100px);
+  overflow:hidden;
+}
+/* animated gradient orbs */
+.hero-orb{
+  position:absolute;border-radius:50%;pointer-events:none;
+  filter:blur(120px);animation:drift 12s ease-in-out infinite alternate;
+}
+.orb-copper{
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(199,114,52,0.18) 0%,transparent 70%);
+  top:-100px;right:-100px;
+  animation-duration:14s;
+}
+.orb-verdigris{
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(86,163,116,0.12) 0%,transparent 70%);
+  bottom:-80px;left:-60px;
+  animation-duration:18s;animation-delay:-5s;
+}
+.orb-copper2{
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(199,114,52,0.08) 0%,transparent 70%);
+  top:40%;left:30%;
+  animation-duration:22s;animation-delay:-9s;
+}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(40px,30px) scale(1.08)}
+}
+/* grid overlay */
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;mask-image:radial-gradient(ellipse at center,black 30%,transparent 75%);
+}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(86,163,116,0.1);
+  border:1px solid rgba(86,163,116,0.25);
+  border-radius:100px;padding:8px 18px 8px 12px;
+  margin-bottom:48px;
+}
+.live-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--verdigris);flex-shrink:0;
+  animation:pulse 2s infinite;box-shadow:0 0 8px rgba(86,163,116,0.6);
+}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(86,163,116,0.4)}50%{box-shadow:0 0 0 6px rgba(86,163,116,0)}}
+.live-text{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--verdigris);
+}
+.hero-eyeline{
+  display:grid;grid-template-columns:1fr auto;gap:48px;align-items:end;
+}
+h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(38px,5.5vw,76px);
+  font-weight:700;line-height:1.04;letter-spacing:-0.025em;
+  color:#fff;max-width:820px;
+}
+h1 .accent{color:var(--copper)}
+.hero-kpi{
+  display:flex;flex-direction:column;gap:2px;min-width:220px;
+}
+.kpi-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  padding:16px 22px;border-radius:6px;
+  backdrop-filter:blur(8px);
+}
+.kpi-num{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:22px;font-weight:700;color:var(--copper);
+  line-height:1;margin-bottom:4px;
+}
+.kpi-label{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.4}
+.hero-sub-row{
+  margin-top:48px;
+  display:grid;grid-template-columns:2fr 1fr;gap:48px;align-items:end;
+}
+.hero-sub{
+  font-size:clamp(16px,2vw,19px);line-height:1.82;
+  color:rgba(255,255,255,0.55);max-width:560px;
+}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+.btn-glow{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+  padding:16px 36px;border-radius:6px;background:var(--copper);color:#fff;
+  text-decoration:none;display:inline-block;
+  box-shadow:0 0 40px rgba(199,114,52,0.3);
+  transition:all .2s;border:1px solid var(--copper);
+}
+.btn-glow:hover{box-shadow:0 0 60px rgba(199,114,52,0.5);transform:translateY(-1px)}
+.btn-ghost{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:12px;letter-spacing:0.08em;text-transform:uppercase;
+  padding:15px 36px;border-radius:6px;
+  background:transparent;color:rgba(255,255,255,0.7);
+  text-decoration:none;display:inline-block;
+  border:1px solid var(--glass-border);
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.25);color:#fff;background:var(--glass)}
+.hero-note{
+  font-size:13px;color:rgba(255,255,255,0.3);
+  font-family:'Space Grotesk',sans-serif;letter-spacing:0.03em;
+  margin-top:20px;
+}
+/* scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:rgba(255,255,255,0.2);
+  font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+}
+.scroll-arrow{
+  width:1px;height:40px;background:linear-gradient(to bottom,rgba(199,114,52,0.4),transparent);
+  animation:scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse{0%,100%{opacity:0.3}50%{opacity:1}}
+
+/* ─── SECTION SYSTEM ─── */
+.inner{max-width:1200px;margin:0 auto;padding:0 clamp(24px,5vw,72px)}
+.chip{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--copper);margin-bottom:20px;
+}
+.chip::before{content:'';width:20px;height:1px;background:var(--copper)}
+.section-h{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(28px,4vw,52px);font-weight:700;
+  line-height:1.07;letter-spacing:-0.018em;color:#fff;
+}
+.body-dim{font-size:17px;line-height:1.82;color:rgba(255,255,255,0.5)}
+.body-dim p{margin-bottom:1.2em}
+.body-dim p:last-child{margin-bottom:0}
+.section-divider{
+  height:1px;
+  background:linear-gradient(to right,transparent,var(--glass-border) 20%,var(--glass-border) 80%,transparent);
+}
+
+/* ─── PRESSURE ─── */
+.pressure{
+  background:var(--surface);
+  padding:clamp(80px,10vw,120px) 0;
+  position:relative;overflow:hidden;
+}
+.pressure::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(199,114,52,0.4),transparent);
+}
+.pressure::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--glass-border),transparent);
+}
+.pressure-grid{
+  display:grid;grid-template-columns:280px 1fr;gap:80px;align-items:start;
+}
+.pressure-left h2{margin:16px 0 32px}
+.pressure-big-text{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(60px,8vw,110px);font-weight:700;
+  letter-spacing:-0.04em;line-height:0.9;
+  color:rgba(255,255,255,0.04);
+  position:absolute;top:-16px;left:-20px;
+  pointer-events:none;user-select:none;
+}
+.pressure-left{position:relative;padding-top:72px}
+
+/* ─── HOW IT WORKS ─── */
+.how{
+  background:var(--void);
+  padding:clamp(80px,10vw,120px) 0;
+  position:relative;overflow:hidden;
+}
+.how::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(199,114,52,0.3),transparent);
+}
+.how-top{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;
+  margin-bottom:80px;align-items:end;
+}
+.steps-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;
+}
+.step-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:12px;
+  padding:40px 32px;
+  position:relative;overflow:hidden;
+  transition:background .2s,border-color .2s,transform .2s,box-shadow .2s;
+}
+.step-card:hover{
+  background:rgba(199,114,52,0.06);
+  border-color:rgba(199,114,52,0.2);
+  transform:translateY(-4px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+.step-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,var(--copper),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.step-card:hover::before{opacity:1}
+.step-num-badge{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--copper);
+  background:rgba(199,114,52,0.1);
+  border:1px solid rgba(199,114,52,0.2);
+  display:inline-flex;padding:5px 12px;border-radius:100px;
+  margin-bottom:24px;
+}
+.step-h{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:17px;font-weight:700;color:#fff;
+  margin-bottom:14px;line-height:1.3;
+}
+.step-p{font-size:15px;color:rgba(255,255,255,0.5);line-height:1.7}
+
+/* ─── STORIES ─── */
+.stories{
+  background:var(--surface);
+  padding:clamp(80px,10vw,120px) 0;
+  position:relative;
+}
+.stories::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(86,163,116,0.3),transparent);
+}
+.stories-head{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;
+  margin-bottom:64px;align-items:end;
+}
+.story-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:48px}
+.story-card{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:10px;
+  padding:clamp(28px,3vw,44px);
+  display:grid;grid-template-columns:56px 1fr;gap:32px;align-items:start;
+  position:relative;overflow:hidden;
+  transition:background .2s,border-color .2s;
+}
+.story-card:hover{background:rgba(199,114,52,0.05);border-color:rgba(199,114,52,0.15)}
+.story-card::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,var(--copper),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.story-card:hover::after{opacity:1}
+.story-idx{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(32px,4vw,48px);font-weight:700;
+  color:rgba(255,255,255,0.08);line-height:1;
+  transition:color .2s;
+}
+.story-card:hover .story-idx{color:rgba(199,114,52,0.3)}
+.story-chip{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--copper);margin-bottom:10px;
+}
+.story-h{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:16px;font-weight:700;color:#fff;
+  margin-bottom:12px;line-height:1.3;
+}
+.story-p{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.7}
+.stories-outro{
+  font-size:17px;color:rgba(255,255,255,0.5);line-height:1.82;
+  max-width:760px;
+}
+
+/* ─── PROVEN ─── */
+.proven{
+  background:var(--void);
+  padding:clamp(80px,10vw,120px) 0;
+  position:relative;overflow:hidden;
+}
+.proven::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(199,114,52,0.3),transparent);
+}
+/* giant background number */
+.proven-bg-num{
+  position:absolute;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(300px,35vw,520px);font-weight:700;
+  color:rgba(255,255,255,0.015);
+  line-height:1;right:-40px;top:50%;transform:translateY(-50%);
+  pointer-events:none;user-select:none;letter-spacing:-0.05em;
+}
+.proven-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;
+  position:relative;z-index:1;
+}
+.proven-body{margin-top:24px;font-size:17px;color:rgba(255,255,255,0.5);line-height:1.82}
+.proof-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.proof-stat{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:10px;padding:32px 28px;
+  position:relative;overflow:hidden;
+  transition:background .2s,transform .2s;
+}
+.proof-stat:hover{background:rgba(199,114,52,0.06);transform:translateY(-2px)}
+.proof-stat::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,var(--copper),transparent);
+}
+.proof-num{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(36px,5vw,60px);font-weight:700;
+  color:var(--copper);line-height:1;
+  margin-bottom:12px;display:block;
+  text-shadow:0 0 40px rgba(199,114,52,0.3);
+}
+.proof-label{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6}
+
+/* ─── MODEL ─── */
+.model{
+  background:var(--surface);
+  padding:clamp(80px,10vw,120px) 0;
+  position:relative;
+}
+.model::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(86,163,116,0.25),transparent);
+}
+.model-grid{display:grid;grid-template-columns:3fr 2fr;gap:80px;align-items:start}
+.model-callout{
+  background:rgba(199,114,52,0.05);
+  border:1px solid rgba(199,114,52,0.15);
+  border-radius:10px;padding:36px;
+  box-shadow:inset 0 0 60px rgba(199,114,52,0.04);
+}
+.model-callout-label{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--copper);margin-bottom:24px;
+  padding-bottom:16px;border-bottom:1px solid rgba(199,114,52,0.15);
+  display:block;
+}
+.model-list{list-style:none}
+.model-list li{
+  font-size:15px;color:rgba(255,255,255,0.7);line-height:1.6;
+  padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;gap:12px;align-items:flex-start;
+  font-family:'Atkinson Hyperlegible',sans-serif;
+}
+.model-list li:last-child{border-bottom:none}
+.model-list li::before{content:'—';color:var(--copper);flex-shrink:0;font-family:'Space Grotesk',sans-serif;font-weight:700}
+
+/* ─── COMPARE ─── */
+.compare{
+  background:var(--void);
+  padding:clamp(80px,10vw,120px) 0;
+  position:relative;
+}
+.compare::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--glass-border),transparent);
+}
+.table-scroll{overflow-x:auto;margin-top:48px;border-radius:10px;overflow:hidden;border:1px solid var(--glass-border)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead{background:rgba(255,255,255,0.03)}
+th{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;
+  padding:22px 24px;text-align:left;color:rgba(255,255,255,0.3);
+  border-right:1px solid var(--glass-border);
+}
+th.th-vmi{color:var(--white-gold)}
+td{
+  padding:20px 24px;border-bottom:1px solid var(--glass-border);
+  border-right:1px solid var(--glass-border);
+  vertical-align:top;line-height:1.65;
+}
+td:last-child{border-right:none}
+td:first-child{
+  font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.25);
+}
+.td-them{color:rgba(255,255,255,0.4)}
+.td-vmi{color:rgba(255,255,255,0.85);font-weight:700}
+tr:hover td{background:rgba(199,114,52,0.03)}
+tr:last-child td{border-bottom:none}
+
+/* ─── QUOTES ─── */
+.quotes{
+  background:var(--surface);
+  padding:clamp(80px,10vw,120px) 0;
+  position:relative;overflow:hidden;
+}
+.quotes::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(199,114,52,0.3),transparent);
+}
+.quote-featured{
+  background:rgba(255,255,255,0.025);
+  border:1px solid var(--glass-border);
+  border-radius:12px;padding:clamp(40px,5vw,72px);
+  margin-bottom:16px;position:relative;overflow:hidden;
+}
+.quote-featured::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,var(--copper),var(--verdigris),transparent);
+}
+.giant-q{
+  position:absolute;top:20px;left:32px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:160px;font-weight:700;line-height:0.7;
+  color:rgba(199,114,52,0.08);pointer-events:none;user-select:none;
+}
+.quote-text{
+  font-size:clamp(18px,2.5vw,26px);
+  color:rgba(255,255,255,0.88);font-style:italic;
+  line-height:1.62;max-width:820px;position:relative;margin-bottom:28px;
+}
+.quote-attr{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;color:rgba(255,255,255,0.3);position:relative;
+}
+.quotes-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.quote-sm{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:10px;padding:36px;position:relative;overflow:hidden;
+  transition:background .2s,border-color .2s;
+}
+.quote-sm:hover{background:rgba(199,114,52,0.05);border-color:rgba(199,114,52,0.15)}
+.quote-text-sm{
+  font-size:15px;color:rgba(255,255,255,0.65);font-style:italic;
+  line-height:1.7;margin-bottom:18px;
+}
+.quote-attr-sm{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;color:rgba(255,255,255,0.25);
+}
+
+/* ─── TRUSTED / BACKED ─── */
+.trust-section{
+  background:var(--void);
+  padding:clamp(64px,8vw,96px) 0;
+  position:relative;
+}
+.trust-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--glass-border),transparent);
+}
+.trust-header{margin-bottom:40px}
+.trust-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(22px,3vw,34px);font-weight:700;
+  color:#fff;letter-spacing:-0.01em;
+}
+.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.trust-tile{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:10px;
+  padding:32px 36px;
+  display:flex;align-items:center;gap:24px;
+  transition:background .2s,border-color .2s;
+}
+.trust-tile:hover{background:rgba(199,114,52,0.05);border-color:rgba(199,114,52,0.15)}
+.trust-seal{
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(255,255,255,0.06);border:1px solid var(--glass-border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,0.4);letter-spacing:0.05em;
+}
+.trust-abbr{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;
+}
+.trust-name{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.4}
+.trust-status{
+  margin-top:8px;
+  font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--verdigris);display:flex;align-items:center;gap:6px;
+}
+.trust-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--verdigris);box-shadow:0 0 8px var(--verdigris)}
+
+.funders-section{
+  background:var(--surface);
+  padding:clamp(64px,8vw,96px) 0;
+  position:relative;
+}
+.funders-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(199,114,52,0.3),transparent);
+}
+.funders-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(22px,3vw,34px);font-weight:700;
+  color:#fff;letter-spacing:-0.01em;margin-bottom:40px;
+}
+.funders-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.funder-tile{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  border-radius:10px;padding:28px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:20px;
+  min-height:140px;text-decoration:none;
+  position:relative;overflow:hidden;
+  transition:background .2s,border-color .2s,transform .2s,box-shadow .2s;
+}
+.funder-tile:hover{
+  background:rgba(199,114,52,0.07);
+  border-color:rgba(199,114,52,0.2);
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.3);
+}
+.funder-tile::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,var(--copper),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.funder-tile:hover::before{opacity:1}
+.funder-logo-wrap img{
+  max-height:40px;max-width:120px;object-fit:contain;object-position:left;
+  filter:brightness(0) invert(1);opacity:0.6;transition:opacity .2s;
+}
+.funder-tile:hover .funder-logo-wrap img{opacity:0.9}
+.funder-name-fb{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:15px;font-weight:700;color:rgba(255,255,255,0.7);
+}
+.funder-type{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--copper);
+}
+
+/* ─── FOOTER CTA ─── */
+.footer-cta{
+  background:var(--void);
+  padding:clamp(80px,12vw,140px) 0;
+  position:relative;overflow:hidden;text-align:center;
+}
+.footer-cta::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 100%,rgba(199,114,52,0.12),transparent 70%);
+  pointer-events:none;
+}
+.footer-cta-inner{max-width:640px;margin:0 auto;position:relative;z-index:1}
+.footer-cta h2{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(28px,4vw,50px);font-weight:700;
+  color:#fff;line-height:1.1;letter-spacing:-0.015em;margin-bottom:16px;
+}
+.footer-cta p{font-size:17px;color:rgba(255,255,255,0.4);margin-bottom:44px;line-height:1.65}
+.footer-cta-note{
+  margin-top:20px;font-size:13px;
+  color:rgba(255,255,255,0.2);font-family:'Space Grotesk',sans-serif;
+}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--void);
+  border-top:1px solid var(--glass-border);
+  padding:clamp(32px,4vw,48px) 0;
+}
+.footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-contact{font-size:12px;color:rgba(255,255,255,0.25);line-height:1.9;margin-bottom:16px}
+.footer-contact a{color:rgba(255,255,255,0.25);text-decoration:none}
+.footer-contact a:hover{color:rgba(255,255,255,0.6)}
+.footer-tagline{font-size:11px;color:rgba(255,255,255,0.18);font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacing:0.04em}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:11px;color:rgba(255,255,255,0.18);text-decoration:none}
+.footer-links a:hover{color:rgba(255,255,255,0.5)}
+
+/* ─── MOBILE ─── */
+.mobile-menu{display:none;position:fixed;inset:0;background:var(--void);z-index:199;flex-direction:column;align-items:center;justify-content:center;gap:28px;backdrop-filter:blur(20px)}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:rgba(255,255,255,0.8);text-decoration:none}
+.mobile-close{position:absolute;top:20px;right:20px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:22px;cursor:pointer}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .hero-eyeline{grid-template-columns:1fr}
+  .hero-kpi{display:none}
+  .hero-sub-row{grid-template-columns:1fr}
+  .pressure-grid{grid-template-columns:1fr}
+  .how-top{grid-template-columns:1fr}
+  .steps-row{grid-template-columns:1fr}
+  .stories-head{grid-template-columns:1fr}
+  .proven-grid{grid-template-columns:1fr}
+  .model-grid{grid-template-columns:1fr}
+  .trust-grid{grid-template-columns:1fr}
+  .funders-grid{grid-template-columns:1fr 1fr}
+  .quotes-pair{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}.hamburger{display:flex}
+  .proof-stats{grid-template-columns:1fr 1fr}
+  .funders-grid{grid-template-columns:1fr}
+}
+
+/* ─── ANIMATION ─── */
+.fade-up{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.22,1,.36,1);
+}
+.fade-up.vis{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose">✕</button>
+  <a href="/">Home</a><a href="/product">Product</a><a href="/impact">Impact</a>
+  <a href="/about">About</a><a href="/careers">Careers</a><a href="/contact">Contact</a>
+  <a href="/contact" style="color:var(--copper)">Request a Demo</a>
+</div>
+
+<nav>
+  <a href="/"><img src="./Logo/Stacked%20Logo/SVG/Dark/Duo-copper.svg" alt="Digital Public Works" style="height:36px;display:block"></a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/product">Product</a>
+    <a href="/impact">Impact</a>
+    <a href="/about">About</a>
+    <a href="/careers">Careers</a>
+    <a href="/contact">Contact</a>
+    <a href="/contact" class="nav-cta">Request a Demo</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb orb-copper" aria-hidden="true"></div>
+  <div class="hero-orb orb-verdigris" aria-hidden="true"></div>
+  <div class="hero-orb orb-copper2" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span class="live-text">Live in PA &amp; AZ</span>
+    </div>
+    <div class="hero-eyeline">
+      <h1>What if income verification worked for families and states instead of vendors?</h1>
+      <div class="hero-kpi" aria-label="Key statistics">
+        <div class="kpi-card">
+          <div class="kpi-num">Under 5 min</div>
+          <div class="kpi-label">Median verification time</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">85%</div>
+          <div class="kpi-label">Applicants: no difficulty</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">93%</div>
+          <div class="kpi-label">Caseworkers prefer VMI</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">7.5×</div>
+          <div class="kpi-label">Faster than manual</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-sub-row">
+      <div>
+        <p class="hero-sub">Digital Public Works is the nonprofit alternative. We built Verify My Income (VMI) because families deserve better. It handles the entire process, from applicant consent to caseworker-ready income report. Open source. At cost. No vendor lock-in.</p>
+        <div class="hero-actions">
+          <a href="/contact" class="btn-glow">Request a Demo</a>
+          <a href="#how" class="btn-ghost">See How It Works</a>
+        </div>
+        <p class="hero-note">No procurement required to begin the conversation. We start with a free, philanthropically funded pilot.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <div class="scroll-arrow"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- PRESSURE -->
+<section class="pressure">
+  <div class="inner">
+    <div class="pressure-grid">
+      <div class="pressure-left">
+        <div class="pressure-big-text" aria-hidden="true">01</div>
+        <p class="chip">The moment we are in</p>
+        <h2 class="section-h" style="margin-bottom:32px">The pressure<br>is real</h2>
+        <a href="/contact" class="btn-glow" style="font-size:11px;padding:14px 28px">Request a Demo</a>
+      </div>
+      <div class="body-dim fade-up">
+        <p>H.R. 1 expands work requirements for SNAP and Medicaid. The Workforce for the Community Act introduces new community engagement verification requirements. States face financial penalties for SNAP payment error rates above 6%.</p>
+        <p>The tools states have today were not built for this moment. Quarterly wage databases are months behind. Commercial verification services charge per query with prices that go up every year. And when the data is wrong or incomplete, caseworkers absorb the cost in follow-up calls, manual processing, and the ever increasing backlog. Meanwhile, applicants face longer waits and higher burdens.</p>
+        <p>Real-time payroll data is part of the answer, but raw data is not verification. A payroll connection can pull income records from an employer's system. It cannot tell you whether those records contain what a caseworker needs to make an eligibility determination. Without a layer that validates, contextualizes, and delivers that data in a usable format, states trade one set of problems for another.</p>
+        <p>VMI addresses all of these pressures: real-time income data that reduces payment errors, a validation layer that ensures caseworkers receive only eligibility-grade reports, support for work and community engagement requirements, and a streamlined process that removes the verification bottleneck for caseworkers and applicants.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="inner">
+    <div class="how-top">
+      <div>
+        <p class="chip">The process</p>
+        <h2 class="section-h">How VMI works</h2>
+      </div>
+      <p class="body-dim">VMI handles the entire data journey from the applicant's payroll provider, through a consent-driven workflow, to a caseworker-ready report. States get a complete service, not just a data feed.</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-card fade-up">
+        <span class="step-num-badge">Step 01</span>
+        <h3 class="step-h">Applicant receives a secure link</h3>
+        <p class="step-p">During or after applying for benefits, the applicant is told they need to verify earned income and is shown a link to verify their income.</p>
+      </div>
+      <div class="step-card fade-up">
+        <span class="step-num-badge">Step 02</span>
+        <h3 class="step-h">Applicant consents and connects their payroll</h3>
+        <p class="step-p">The applicant reviews a plain-language consent screen, then connects to their payroll provider. No pay stubs to find. No documents to upload.</p>
+      </div>
+      <div class="step-card fade-up">
+        <span class="step-num-badge">Step 03</span>
+        <h3 class="step-h">Verified income data is delivered to the caseworker</h3>
+        <p class="step-p">A standardized income report, verified directly from the payroll source, is delivered to the state benefit system. The report passes through validation before delivery so the caseworker only receives eligibility-grade data and can act immediately.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORIES -->
+<section class="stories">
+  <div class="inner">
+    <div class="stories-head">
+      <div>
+        <p class="chip">Service design</p>
+        <h2 class="section-h">We do not just deliver data. We fix the process.</h2>
+      </div>
+      <p class="body-dim">Most verification vendors hand off data and walk away. DPW embeds with your team to find and fix the problems that no data feed can solve.</p>
+    </div>
+    <div class="story-cards">
+      <div class="story-card fade-up">
+        <div class="story-idx" aria-hidden="true">01</div>
+        <div>
+          <p class="story-chip">Finding</p>
+          <h3 class="story-h">A form question that created unnecessary work</h3>
+          <p class="story-p">In one state, the application asked for a specific number of hours worked rather than a range. When paystubs showed normal week-to-week variation (39, 37, 42, 40 hours), caseworkers were forced to issue Requests for Information to verify the client's expected working hours even though the paystubs were valid proof of income. DPW identified the problem through service design analysis and recommended changing the question to ask for a range, eliminating unnecessary RFIs caused by a form-wording problem that had nothing to do with data access.</p>
+        </div>
+      </div>
+      <div class="story-card fade-up">
+        <div class="story-idx" aria-hidden="true">02</div>
+        <div>
+          <p class="story-chip">Finding</p>
+          <h3 class="story-h">40% of applicants did not know they had a next step</h3>
+          <p class="story-p">In another state, approximately 40% of people completing SNAP renewals were not submitting required income documents because they did not realize they needed to. The required actions were buried deep in a generic PDF. DPW worked with the state to add a clear alert on the post-submission landing page, making the required next steps visible for the first time. This workflow improvement led to a 35% increase in income document submissions and saw an increase across all verification methods, not just VMI.</p>
+        </div>
+      </div>
+      <div class="story-card fade-up">
+        <div class="story-idx" aria-hidden="true">03</div>
+        <div>
+          <p class="story-chip">Finding</p>
+          <h3 class="story-h">Caseworkers were over-verifying without realizing it</h3>
+          <p class="story-p">DPW's case review analysis found that caseworkers were frequently requesting household composition verification at unnecessary steps in the benefit lifecycle. After DPW flagged this pattern to agency leadership, a policy bulletin was published clarifying when such requests were appropriate. This reduced unnecessary burden on both applicants and caseworkers.</p>
+        </div>
+      </div>
+    </div>
+    <p class="stories-outro fade-up">Every state engagement includes a discovery sprint with interviews of policy experts, caseworkers, quality control workers, community-based organizations, and applicants. These are not one-time exercises. DPW conducts ongoing case reviews, feedback analysis, and service design improvements throughout the partnership.</p>
+  </div>
+</section>
+
+<!-- PROVEN -->
+<section class="proven">
+  <div class="proven-bg-num" aria-hidden="true">VMI</div>
+  <div class="inner">
+    <div class="proven-grid">
+      <div>
+        <p class="chip">Results</p>
+        <h2 class="section-h">Proven in the field</h2>
+        <p class="proven-body">VMI is in production with state agencies in Pennsylvania and Arizona, with additional states and multiple commercial partners in active discussion. The underlying technology was first piloted at the United States Digital Service, where our founding team ran pilots in Massachusetts, New York City, and Louisiana before leaving federal service to build DPW.</p>
+      </div>
+      <div class="proof-stats">
+        <div class="proof-stat fade-up">
+          <span class="proof-num">5 min</span>
+          <p class="proof-label">Median time for an applicant to verify income</p>
+        </div>
+        <div class="proof-stat fade-up">
+          <span class="proof-num">85%</span>
+          <p class="proof-label">Of applicants report no difficulty completing the process</p>
+        </div>
+        <div class="proof-stat fade-up">
+          <span class="proof-num">93%</span>
+          <p class="proof-label">Of caseworkers find VMI reports just as easy or easier to use than existing methods</p>
+        </div>
+        <div class="proof-stat fade-up">
+          <span class="proof-num">7.5×</span>
+          <p class="proof-label">Faster than manual income verification processes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODEL -->
+<section class="model">
+  <div class="inner">
+    <div class="model-grid">
+      <div>
+        <p class="chip">Our model</p>
+        <h2 class="section-h" style="margin-bottom:32px">A better model for income verification</h2>
+        <div class="body-dim">
+          <p>Traditional verification vendors lock you into rising costs and proprietary systems. When you need to switch, you start from scratch.</p>
+          <p>DPW is different. We are a registered 501(c)(3) nonprofit. We are legally prohibited from profiting on this work. Your price reflects our operating costs and nothing more. As more states join the platform, the per-state cost decreases. States share infrastructure instead of building alone.</p>
+          <p>Our code is open source under the AGPL-3.0 license, published on GitHub. If you adopt VMI, you have full access to the source code, the integration architecture, and all documentation. No vendor lock-in. No black boxes. No surprise overages.</p>
+        </div>
+      </div>
+      <div class="model-callout fade-up">
+        <span class="model-callout-label">What this means for you</span>
+        <ul class="model-list">
+          <li>501(c)(3) nonprofit — legally at-cost pricing</li>
+          <li>Per-state cost decreases as more states join</li>
+          <li>Full codebase published under AGPL-3.0 on GitHub</li>
+          <li>WCAG 2.1 AA with independent third-party auditing</li>
+          <li>No vendor lock-in — full code and architecture access</li>
+          <li>Discovery sprints, case reviews, service design included</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section class="compare">
+  <div class="inner">
+    <p class="chip">Transparency</p>
+    <h2 class="section-h">Traditional Approaches vs. VMI</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:16%"></th>
+            <th>Traditional Approaches</th>
+            <th class="th-vmi">VMI (Digital Public Works)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>What you get</td><td class="td-them">A data connection, a bundled add-on to a larger contract, or a commercial product. The state fills the gaps.</td><td class="td-vmi">A complete verification service. Consent, benefits specific data validation, and caseworker-ready reports included.</td></tr>
+          <tr><td>Pricing</td><td class="td-them">Commercial pricing that rises over time. Some vendors bundle verification into larger contracts, hiding the true cost.</td><td class="td-vmi">Nonprofit, at cost. Price decreases as more states join the platform.</td></tr>
+          <tr><td>Data quality</td><td class="td-them">Raw data delivered as-is. No validation against program requirements. Incomplete or unusable records reach caseworkers.</td><td class="td-vmi">Every report passes through programmatic validation. Reports that do not meet eligibility-grade standards are rejected and applicants are redirected to existing options.</td></tr>
+          <tr><td>Open source</td><td class="td-them">Proprietary. No visibility into how the system works.</td><td class="td-vmi">Full codebase published under AGPL-3.0 on GitHub.</td></tr>
+          <tr><td>Vendor lock-in</td><td class="td-them">High. Switching vendors means rebuilding. Some states are locked into multi-year contracts with no exit path.</td><td class="td-vmi">None. If DPW ceased to exist, states retain full access to the code, architecture, and documentation.</td></tr>
+          <tr><td>Accessibility</td><td class="td-them">State inherits responsibility for all embedded components, including third-party interfaces it does not control.</td><td class="td-vmi">WCAG 2.1 AA commitment with independent third-party auditing funded by AARP Foundation.</td></tr>
+          <tr><td>Service model</td><td class="td-them">Per-verification billing regardless of eligibility value.</td><td class="td-vmi">Embedded partnership: discovery sprints, case reviews, ongoing service design, and workflow improvement.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTES -->
+<section class="quotes">
+  <div class="inner">
+    <p class="chip">In their own words</p>
+    <h2 class="section-h" style="margin-bottom:48px">What people are saying</h2>
+    <div class="quote-featured fade-up">
+      <span class="giant-q" aria-hidden="true">"</span>
+      <p class="quote-text">This is a good product. It will make case reviews easier. This makes it almost fool-proof and it's low cost time-wise for the client.</p>
+      <p class="quote-attr">Pilot Agency Leadership</p>
+    </div>
+    <div class="quotes-pair">
+      <div class="quote-sm fade-up">
+        <p class="quote-text-sm">Being able to update and report my income online is far more efficient than doing so by other means (in person, mail, etc.) and I am grateful for this option.</p>
+        <p class="quote-attr-sm">Pennsylvania VMI User</p>
+      </div>
+      <div class="quote-sm fade-up">
+        <p class="quote-text-sm">It was quick and simple and best of all didn't require me to jump through hoops.</p>
+        <p class="quote-attr-sm">VMI User</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<div class="trust-section">
+  <div class="inner">
+    <div class="trust-header">
+      <h2 class="trust-title">Trusted by</h2>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-tile fade-up">
+        <div class="trust-seal">PA</div>
+        <div>
+          <div class="trust-abbr">PA DHS</div>
+          <div class="trust-name">Pennsylvania Department of Human Services</div>
+          <div class="trust-status">Live — Statewide</div>
+        </div>
+      </div>
+      <div class="trust-tile fade-up">
+        <div class="trust-seal">AZ</div>
+        <div>
+          <div class="trust-abbr">AZ DES</div>
+          <div class="trust-name">Arizona Department of Economic Security</div>
+          <div class="trust-status">Live — Statewide</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BACKED BY -->
+<div class="funders-section">
+  <div class="inner">
+    <h2 class="funders-title">Backed by</h2>
+    <div class="funders-grid">
+      <a href="https://www.drkfoundation.org" class="funder-tile fade-up" target="_blank" rel="noopener">
+        <div class="funder-logo-wrap">
+          <img src="https://www.drkfoundation.org/wp-content/themes/drk/public/images/drk-logo.svg" alt="DRK Foundation" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div class="funder-name-fb" style="display:none">DRK Foundation</div>
+        </div>
+        <div class="funder-type">Philanthropic Funder</div>
+      </a>
+      <a href="https://www.aarp.org/aarp-foundation/" class="funder-tile fade-up" target="_blank" rel="noopener">
+        <div class="funder-logo-wrap">
+          <img src="https://cdn.aarp.net/content/dam/aarp/aarp_foundation/2024/AARPF-Logo-1140x101.png" alt="AARP Foundation" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div class="funder-name-fb" style="display:none">AARP Foundation</div>
+        </div>
+        <div class="funder-type">Philanthropic Funder · Accessibility Research Partner</div>
+      </a>
+      <a href="https://familiesandworkers.org" class="funder-tile fade-up" target="_blank" rel="noopener">
+        <div class="funder-logo-wrap">
+          <img src="https://familiesandworkers.org/wp-content/uploads/2021/07/FWF-Logo.svg" alt="Families and Workers Fund" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div class="funder-name-fb" style="display:none">Families and Workers Fund</div>
+        </div>
+        <div class="funder-type">Philanthropic Funder</div>
+      </a>
+      <a href="https://www.pritzkerchildrensinitiative.org" class="funder-tile fade-up" target="_blank" rel="noopener">
+        <div class="funder-logo-wrap">
+          <img src="https://cdn.prod.website-files.com/645949fd33dfec58ad176f97/64596d56ea5b2ad4dddf9c86_PritzkerChildrensInitiative-logo-color-RGB-03.png" alt="Pritzker Children's Initiative" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div class="funder-name-fb" style="display:none">Pritzker Children's Initiative</div>
+        </div>
+        <div class="funder-type">Philanthropic Funder</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER CTA -->
+<div class="footer-cta">
+  <div class="footer-cta-inner">
+    <h2>Ready to pilot Verify My Income in your jurisdiction? Let's talk.</h2>
+    <p>No procurement required to begin the conversation.</p>
+    <a href="/contact" class="btn-glow">Request a Demo</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="inner">
+    <p class="footer-contact">
+      <a href="mailto:info@digitalpublicworks.org">info@digitalpublicworks.org</a><br>
+      2261 Market Street, Suite 32572, San Francisco, CA 94114
+    </p>
+    <div class="footer-row">
+      <p class="footer-tagline">Digital Public Works is an independent 501(c)(3) nonprofit.</p>
+      <div class="footer-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/accessibility">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('mobileClose').addEventListener('click',()=>document.getElementById('mobileMenu').classList.remove('open'));
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}});
+},{threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// Stat counters
+function counter(el,target,prefix,suffix){
+  const dur=1400,t0=performance.now();
+  const isFloat=target%1!==0;
+  (function frame(now){
+    const p=Math.min((now-t0)/dur,1);
+    const v=target*(1-Math.pow(1-p,3));
+    el.textContent=(prefix||'')+(isFloat?v.toFixed(1):Math.round(v))+(suffix||'');
+    if(p<1)requestAnimationFrame(frame);
+  })(performance.now());
+}
+const cObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const el=e.target;
+      counter(el,parseFloat(el.dataset.count),el.dataset.prefix||'',el.dataset.suffix||'');
+      cObs.unobserve(el);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('[data-count]').forEach(el=>cObs.observe(el));
+</script>
+</body>
+</html>
