@@ -20,17 +20,65 @@
       padding: 0
     }
 
+    /* ═══════════════════════════════════════════════════════════════════
+       DESIGN TOKENS
+       ═══════════════════════════════════════════════════════════════════ */
     :root {
+
+      /* ── COLOR ──────────────────────────────────────────────────────── */
       --forge: #1E272E;
+      /* primary dark — white on forge ≈ 18:1 ✅ */
       --copper: #C77234;
+      /* brand copper — large text on white only (3.01:1) */
       --deep-copper: #9F5528;
+      /* white on deep-copper = 4.8:1 ✅ */
       --steel: #3A4E5C;
+      /* mid-dark blue-grey */
+      --park-green: #316844;
+      /* accent green — never use as text on copper */
       --verdigris: #56A374;
+      /* accent green — never use as text on copper */
       --aluminum: #A9B0B6;
+      /* muted grey */
       --light-al: #D0D5D8;
+      /* light grey for borders */
       --white: #FFFFFF;
       --cool-white: #F6F7F8;
       --white-gold: #D4CAA8;
+      --molten-gold: #E9A030;
+      --rose-gold: #DEB0A0;
+      /* warm accent */
+
+      /* ── TYPE SCALE ─────────────────────────────────────────────────
+         Five tiers. Every font-size in this file uses one of these
+         variables — no raw px values for font sizes anywhere else.
+
+         TIER       VARIABLE       VALUE                    FONT                    WT   USE
+         ─────────────────────────────────────────────────────────────────────────────────
+         Display    --t-display    clamp(44px,5.5vw,68px)   Space Grotesk           700  Hero h1 only
+         Headline   --t-headline   clamp(28px,3.5vw,44px)   Space Grotesk           700  Section h2s, stat numbers
+         Subhead    --t-subhead    clamp(18px,2.2vw,24px)   Space Grotesk           700  h3, h4, pull quotes, featured quote, step numbers, mobile nav
+         Body       --t-body       17px                     Atkinson Hyperlegible   400  All paragraphs, card text, quote text, callout items
+         Label      --t-label      12px                     Space Grotesk           700  Nav links, badges, table headers, captions, footer
+         Button     --t-button     14px                     Space Grotesk           700  Buttons
+
+         Exception:
+         Data       --t-data       14px                     Atkinson Hyperlegible   400  Table cells ONLY — needed for dense tabular layout
+
+         Not a type tier:
+         --t-decorative-mark is the large ornamental quotation mark (clamp 64–120px).
+         It is a display glyph, not readable text, and is exempt from the scale.
+         ─────────────────────────────────────────────────────────────────────────── */
+      --t-display: clamp(44px, 5.5vw, 68px);
+      --t-headline: clamp(28px, 3.5vw, 44px);
+      --t-subhead: clamp(18px, 2.2vw, 24px);
+      --t-body: 17px;
+      --t-label: 12px;
+      --t-data: 14px;
+      /* exception — table cells only */
+      --t-decorative-mark: clamp(64px, 9vw, 120px);
+      /* ornamental, not a tier */
+      --t-button: 14px;
     }
 
     html {
@@ -39,20 +87,12 @@
 
     body {
       font-family: 'Atkinson Hyperlegible', sans-serif;
-      font-size: 17px;
+      font-size: var(--t-body);
       line-height: 1.75;
       color: var(--forge);
       background: var(--white);
       overflow-x: hidden;
     }
-
-    /*
-  TYPE SCALE — four sizes only
-  Hero:    clamp(44px, 5.5vw, 68px)  Space Grotesk 700
-  Section: clamp(28px, 3.5vw, 44px)  Space Grotesk 700
-  Body:    17px                       Atkinson Hyperlegible
-  Utility: 12px                       Space Grotesk 700
-*/
 
     /* ─── MOTION ──────────────────────────────────── */
     .reveal {
@@ -87,48 +127,62 @@
       position: sticky;
       top: 0;
       z-index: 200;
-      background: rgba(255, 255, 255, 0.93);
+      background: var(--forge);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border-top: 3px solid var(--copper);
-      border-bottom: 1px solid var(--light-al);
-      height: 66px;
+      /* border-top: 3px solid var(--copper); */
+      /* border-bottom: 1px solid rgba(255, 255, 255, 0.12); */
+      height: 74px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 clamp(20px, 5vw, 64px);
     }
 
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+    }
+
     .nav-logo img {
-      height: 36px;
-      display: block
+      height: 42px;
+      display: block;
+      width: auto;
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 28px
+      gap: 30px;
     }
 
+    /* Label tier: nav links */
     .nav-links a {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      color: var(--steel);
+      letter-spacing: 0.06em;
+      color: var(--light-al);
       text-decoration: none;
       transition: color .15s;
     }
 
-    .nav-links a:hover {
-      color: var(--forge)
+    .nav-links a.current-page {
+      color: var(--rose-gold);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.current-page:hover {
+      color: var(--verdigris)
     }
 
     .nav-cta {
       background: var(--copper) !important;
-      color: #fff !important;
-      padding: 9px 22px;
+      color: #000 !important;
+      padding: 10px 24px;
       border-radius: 2px;
+      font-size: var(--t-button);
+      text-transform: none;
       transition: background .15s !important;
     }
 
@@ -150,7 +204,7 @@
       display: block;
       width: 22px;
       height: 2px;
-      background: var(--steel)
+      background: rgba(255, 255, 255, 0.9)
     }
 
     /* ─── MOBILE MENU ─────────────────────────────── */
@@ -170,9 +224,10 @@
       display: flex
     }
 
+    /* Subhead tier: mobile nav links (large, readable on dark overlay) */
     .mobile-menu a {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 20px;
+      font-size: var(--t-subhead);
       font-weight: 700;
       color: #fff;
       text-decoration: none;
@@ -183,24 +238,26 @@
       color: var(--copper)
     }
 
+    /* Subhead tier: close button (icon character, same visual weight) */
     .mobile-close {
       position: absolute;
       top: 20px;
       right: 24px;
       background: none;
       border: none;
-      color: rgba(255, 255, 255, 0.45);
-      font-size: 24px;
+      color: var(--light-al);
+      font-size: var(--t-subhead);
       cursor: pointer;
     }
 
     /* ─── BUTTONS ─────────────────────────────────── */
+    /* Label tier: all buttons */
     .btn {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 12px;
+      font-size: var(--t-button);
       letter-spacing: 0.06em;
-      text-transform: uppercase;
+      text-transform: none;
       padding: 13px 28px;
       text-decoration: none;
       display: inline-block;
@@ -231,7 +288,7 @@
     .btn-outline {
       background: transparent;
       color: var(--forge);
-      border: 1.5px solid var(--light-al)
+      border: 1.5px solid var(--light-al);
     }
 
     .btn-outline:hover {
@@ -250,13 +307,21 @@
     /* ─── HERO ────────────────────────────────────── */
     .hero {
       background: var(--white);
-      padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 64px) 0;
+      min-height: calc(100dvh - 66px);
+      padding: clamp(24px, 4vw, 40px) clamp(20px, 5vw, 64px) clamp(24px, 4vw, 40px);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .hero-inner {
       max-width: 1200px;
-      margin: 0 auto
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .hero-grid {
@@ -264,24 +329,14 @@
       grid-template-columns: 1fr min(460px, 38vw);
       gap: clamp(32px, 5vw, 72px);
       align-items: center;
-      padding-bottom: clamp(56px, 7vw, 80px);
+      padding-bottom: clamp(24px, 3vw, 36px);
+      flex: 1;
     }
 
-    @keyframes pulse {
-
-      0%,
-      100% {
-        box-shadow: 0 0 0 0 rgba(86, 163, 116, 0.5)
-      }
-
-      50% {
-        box-shadow: 0 0 0 6px rgba(86, 163, 116, 0)
-      }
-    }
-
+    /* Display tier: hero headline */
     h1 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(44px, 5.5vw, 68px);
+      font-size: var(--t-display);
       font-weight: 700;
       line-height: 1.04;
       letter-spacing: -0.022em;
@@ -289,8 +344,9 @@
       margin-bottom: 24px;
     }
 
+    /* Body tier: hero sub-copy */
     .hero-sub {
-      font-size: 17px;
+      font-size: var(--t-body);
       line-height: 1.82;
       color: var(--steel);
       max-width: 56ch;
@@ -299,14 +355,15 @@
 
     .hero-actions {
       display: flex;
-      gap: 12px;
+      gap: 20px;
       flex-wrap: wrap;
       margin-bottom: 20px
     }
 
+    /* Label tier: hero footnote */
     .hero-note {
-      font-size: 12px;
-      color: var(--aluminum);
+      font-size: var(--t-label);
+      color: var(--steel);
       line-height: 1.65;
       padding-left: 12px;
       border-left: 2px solid var(--copper);
@@ -318,7 +375,7 @@
       border-radius: 2px;
       overflow: hidden;
       aspect-ratio: 4/5;
-      position: relative;
+      position: relative
     }
 
     .hero-img img {
@@ -329,56 +386,60 @@
       display: block;
     }
 
-    .hero-img-credit {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      color: rgba(255, 255, 255, 0.45);
-    }
 
     /* ─── STAT ROW ────────────────────────────────── */
     .stat-row {
-      border-top: 1px solid var(--light-al);
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      max-width: 1200px;
-      margin: 0 auto;
+      width: 100%;
+      margin: 0;
+      padding: 0 clamp(20px, 5vw, 64px) clamp(32px, 4vw, 48px);
+      gap: 0;
+      position: relative;
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+      border-bottom: 1px solid var(--light-al);
     }
 
     .stat-cell {
-      padding: clamp(24px, 3.5vw, 40px) clamp(16px, 2.5vw, 28px);
-      border-right: 1px solid var(--light-al);
+      padding: clamp(24px, 3.5vw, 40px) clamp(16px, 2.5vw, 28px) 0;
+      position: relative;
     }
 
-    .stat-cell:last-child {
-      border-right: none
+    .stat-cell::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 4px;
+      background: var(--copper);
+      margin-bottom: 18px;
     }
 
+    /* Headline tier: stat numbers (same scale as section headings — they carry equal visual weight) */
     .stat-num {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-size: clamp(36px, 4.2vw, 56px);
       font-weight: 700;
       color: var(--forge);
-      line-height: 1;
-      letter-spacing: -0.02em;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
+    /* Label tier: stat descriptor */
     .stat-label {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--steel);
-      line-height: 1.5
+      line-height: 1.45;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
     }
 
     /* ─── COMPARE TEASER ──────────────────────────── */
     .compare-teaser {
-      background: var(--cool-white);
-      border-top: 1px solid var(--light-al);
+      background: var(--white);
+      border-top: 0;
       padding: clamp(56px, 7vw, 80px) clamp(20px, 5vw, 64px);
     }
 
@@ -396,15 +457,16 @@
       flex-wrap: wrap;
     }
 
+    /* Headline tier: compare section heading */
     .ct-h {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(22px, 2.8vw, 34px);
+      font-size: var(--t-headline);
       font-weight: 700;
       letter-spacing: -0.015em;
       color: var(--forge);
     }
 
-    /* glanceable table */
+    /* Comparison table */
     .ct-wrap {
       overflow-x: auto
     }
@@ -413,7 +475,6 @@
       width: 100%;
       border-collapse: collapse;
       background: var(--white);
-      font-size: 14px;
       border: 1px solid var(--light-al);
       border-radius: 2px;
       overflow: hidden;
@@ -423,27 +484,30 @@
       background: var(--forge)
     }
 
+    /* Label tier: table column headers */
     table.ct th {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
+      font-size: var(--t-label);
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       padding: 16px 20px;
       text-align: left;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--rose-gold);
     }
 
     table.ct th.vmi-head {
-      color: var(--white-gold)
+      color: var(--verdigris);
     }
 
     table.ct th:first-child {
       width: 20%;
-      color: rgba(255, 255, 255, 0.25)
+      color: var(--light-al)
     }
 
+    /* Data tier (exception): table body cells — dense tabular layout requires tighter size */
     table.ct td {
+      font-size: var(--t-data);
       padding: 13px 20px;
       border-bottom: 1px solid var(--cool-white);
       vertical-align: middle;
@@ -454,13 +518,14 @@
       border-bottom: none
     }
 
+    /* Label tier: row dimension labels in leftmost column */
     table.ct .ct-dim {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
+      font-size: var(--t-label);
       font-weight: 700;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: var(--aluminum);
+      color: var(--steel);
     }
 
     table.ct .ct-them {
@@ -482,7 +547,7 @@
 
     /* ─── PRESSURE ────────────────────────────────── */
     .pressure {
-      background: var(--white);
+      background: var(--cool-white);
       border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
@@ -499,20 +564,26 @@
       align-items: start;
     }
 
+    .pressure-right {
+      margin-top: 84px;
+      align-self: start;
+    }
+
+    /* Headline tier: section heading */
     .pressure-h {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-size: var(--t-headline);
       font-weight: 700;
-      line-height: 1.1;
+      line-height: 1.2;
       letter-spacing: -0.018em;
       color: var(--forge);
-      margin-bottom: 28px;
+      margin-bottom: 36px;
     }
 
     .pressure-img {
       margin-bottom: 28px;
       border-radius: 2px;
-      overflow: hidden;
+      overflow: hidden
     }
 
     .pressure-img img {
@@ -523,16 +594,17 @@
       object-position: center;
     }
 
-    /* 2-column body text from editorial */
+    /* Single-column body text */
     .body-cols {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: clamp(20px, 3vw, 40px);
       margin-bottom: 36px;
     }
 
+    /* Body tier: pressure body copy */
     .body-col p {
-      font-size: 17px;
+      font-size: var(--t-body);
       line-height: 1.82;
       color: var(--steel);
       margin-bottom: 18px;
@@ -542,20 +614,35 @@
       margin-bottom: 0
     }
 
-    /* pull quote — "Raw data is not verification" */
+    /* pull quote */
     .pull-quote {
       border-top: 2px solid var(--forge);
-      border-bottom: 1px solid var(--light-al);
       padding: 24px 0;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
     }
 
+    .pq-mark {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(72px, 10vw, 120px);
+      font-weight: 700;
+      line-height: 0.75;
+      color: var(--copper);
+      margin-top: -6px;
+      flex-shrink: 0;
+    }
+
+    /* Subhead tier: pull quote text */
     .pq-text {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(17px, 2vw, 24px);
+      font-size: var(--t-subhead);
       font-weight: 700;
       line-height: 1.35;
       letter-spacing: -0.01em;
       color: var(--forge);
+      margin: 0;
     }
 
     .pq-text em {
@@ -563,9 +650,9 @@
       font-style: normal
     }
 
-    /* ─── HOW IT WORKS ───────────────────────────── */
+    /* ─── HOW IT WORKS ────────────────────────────── */
     .how {
-      background: var(--cool-white);
+      background: var(--white);
       border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
@@ -576,29 +663,33 @@
     }
 
     .how-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(32px, 5vw, 72px);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
       margin-bottom: 52px;
-      align-items: end;
+      max-width: 760px;
     }
 
+    /* Headline tier: section heading */
     .how-h {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-size: var(--t-headline);
       font-weight: 700;
-      line-height: 1.1;
+      line-height: 1.2;
       letter-spacing: -0.018em;
       color: var(--forge);
     }
 
+    /* Body tier: section sub-copy */
     .how-sub {
-      font-size: 17px;
+      font-size: var(--t-body);
       line-height: 1.8;
-      color: var(--steel)
+      color: var(--steel);
+      max-width: 64ch;
+      margin: 0;
     }
 
-    /* flow diagram placeholder */
     .flow-placeholder {
       background: var(--white);
       border: 2px dashed var(--light-al);
@@ -608,19 +699,21 @@
       margin-bottom: 48px;
     }
 
+    /* Label tier: placeholder notice */
     .flow-note {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
+      font-size: var(--t-label);
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--aluminum);
     }
 
-    /* steps — organic connected timeline */
+    /* steps — connected timeline */
     .steps {
       position: relative;
-      max-width: 820px
+      max-width: 820px;
+      margin: 0 auto;
     }
 
     .steps-line {
@@ -663,17 +756,19 @@
       border-color: var(--copper)
     }
 
+    /* Subhead tier: step number in badge */
     .step-n {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 20px;
+      font-size: var(--t-subhead);
       font-weight: 700;
       color: var(--copper);
       line-height: 1;
     }
 
+    /* Label tier: "Step" label below the number */
     .step-lbl {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 9px;
+      font-size: var(--t-label);
       font-weight: 700;
       color: var(--aluminum);
       letter-spacing: 0.07em;
@@ -685,31 +780,35 @@
       border: 1px solid var(--light-al);
       border-radius: 2px;
       padding: clamp(18px, 2.5vw, 28px);
-      transition: border-color .2s;
+      transition: border-color .2s, transform .2s ease, box-shadow .2s ease;
     }
 
     .step:hover .step-content {
-      border-color: rgba(199, 114, 52, 0.3)
+      border-color: rgba(199, 114, 52, 0.3);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 24px rgba(30, 39, 46, 0.08);
     }
 
+    /* Subhead tier: step titles */
     .step-content h3 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(16px, 1.9vw, 20px);
+      font-size: var(--t-subhead);
       font-weight: 700;
       color: var(--forge);
       margin-bottom: 10px;
       letter-spacing: -0.01em;
     }
 
+    /* Body tier: step descriptions */
     .step-content p {
-      font-size: 17px;
+      font-size: var(--t-body);
       line-height: 1.8;
       color: var(--steel)
     }
 
-    /* ─── STORIES ────────────────────────────────── */
+    /* ─── STORIES ─────────────────────────────────── */
     .stories {
-      background: var(--white);
+      background: var(--cool-white);
       border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
@@ -724,29 +823,33 @@
       max-width: 700px
     }
 
+    /* Headline tier: section heading */
     .stories-h {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-size: var(--t-headline);
       font-weight: 700;
-      line-height: 1.1;
+      line-height: 1.2;
       letter-spacing: -0.018em;
       color: var(--forge);
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
 
+    /* Body tier: section sub-copy */
     .stories-sub {
-      font-size: 17px;
+      font-size: var(--t-body);
       line-height: 1.8;
       color: var(--steel);
-      max-width: 56ch
+      max-width: 56ch;
+      margin-bottom: 36px;
+
     }
 
-    /* card grid — from organic */
+    /* story card grid */
     .story-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 36px;
     }
 
     .story-card {
@@ -759,7 +862,7 @@
 
     .story-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(30, 39, 46, 0.1)
+      box-shadow: 0 8px 32px rgba(30, 39, 46, 0.1);
     }
 
     .card-accent {
@@ -771,9 +874,10 @@
       padding: clamp(18px, 2.5vw, 28px)
     }
 
+    /* Label tier: card number tag */
     .card-n {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
+      font-size: var(--t-label);
       font-weight: 700;
       letter-spacing: 0.08em;
       color: var(--copper);
@@ -781,33 +885,36 @@
       display: block;
     }
 
+    /* Subhead tier: card headline */
     .story-card h4 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(15px, 1.7vw, 18px);
+      font-size: var(--t-subhead);
       font-weight: 700;
       color: var(--forge);
       margin-bottom: 12px;
       line-height: 1.3;
     }
 
+    /* Body tier: card body copy */
     .story-card p {
-      font-size: 15px;
+      font-size: var(--t-body);
       line-height: 1.82;
       color: var(--steel)
     }
 
+    /* Body tier: outro paragraph */
     .stories-outro {
-      border-left: 3px solid var(--light-al);
+      border-left: 3px solid var(--rose-gold);
       padding: 18px 24px;
-      font-size: 16px;
+      font-size: var(--t-body);
       line-height: 1.85;
       color: var(--steel);
       background: var(--cool-white);
     }
 
-    /* ─── MODEL ──────────────────────────────────── */
+    /* ─── MODEL ───────────────────────────────────── */
     .model {
-      background: var(--cool-white);
+      background: var(--white);
       border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
@@ -824,18 +931,20 @@
       align-items: start;
     }
 
+    /* Headline tier: section heading */
     .model-h {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 3.5vw, 44px);
+      font-size: var(--t-headline);
       font-weight: 700;
-      line-height: 1.1;
+      line-height: 1.2;
       letter-spacing: -0.018em;
       color: var(--forge);
       margin-bottom: 28px;
     }
 
+    /* Body tier: model body copy */
     .model-body p {
-      font-size: 17px;
+      font-size: var(--t-body);
       line-height: 1.82;
       color: var(--steel);
       margin-bottom: 18px;
@@ -846,33 +955,37 @@
       margin-bottom: 0
     }
 
-    /* callout — forge, not copper */
+    /* callout box */
     .model-callout {
-      background: var(--forge);
+      background: var(--white);
+      border: 1px solid var(--light-al);
       border-radius: 2px;
       overflow: hidden
     }
 
+    /* Label tier: callout header */
     .mc-head {
       padding: 16px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(30, 39, 46, 0.08);
+      background: var(--deep-copper);
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--white);
     }
 
+    /* Body tier: callout list items */
     .mc-item {
       display: flex;
       align-items: flex-start;
       gap: 12px;
       padding: 13px 24px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      font-size: 15px;
+      border-bottom: 1px solid rgba(30, 39, 46, 0.08);
+      font-size: var(--t-body);
       line-height: 1.55;
-      color: #fff;
+      color: var(--forge);
       font-family: 'Atkinson Hyperlegible', sans-serif;
     }
 
@@ -880,6 +993,7 @@
       border-bottom: none
     }
 
+    /* Label tier: check icon in callout (small icon glyph, not readable text) */
     .mc-check {
       width: 20px;
       height: 20px;
@@ -889,16 +1003,16 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      font-size: 11px;
+      font-size: var(--t-label);
       font-weight: 700;
       color: var(--verdigris);
       margin-top: 2px;
     }
 
-    /* ─── QUOTES ─────────────────────────────────── */
+    /* ─── QUOTES ──────────────────────────────────── */
     .quotes {
-      background: var(--forge);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--cool-white);
+      border-top: 1px solid rgba(30, 39, 46, 0.08);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
 
@@ -908,72 +1022,78 @@
     }
 
     .quote-featured {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
       padding: clamp(36px, 5vw, 56px) 0;
       display: flex;
       gap: clamp(20px, 3vw, 40px);
       align-items: flex-start;
+      width: 100%;
     }
 
+    /* Decorative (not a type tier): large opening quotation mark glyph */
     .q-mark {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(64px, 9vw, 120px);
+      font-size: var(--t-decorative-mark);
       font-weight: 700;
-      color: rgba(199, 114, 52, 0.22);
+      color: var(--copper);
       line-height: 0.75;
       flex-shrink: 0;
       margin-top: -8px;
     }
 
+    /* Subhead tier: featured quote text */
     .q-text-lg {
-      font-size: clamp(18px, 2.3vw, 26px);
+      font-size: var(--t-subhead);
       line-height: 1.6;
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--forge);
       font-style: italic;
       margin-bottom: 20px;
-      max-width: 680px;
+      width: 100%;
+      max-width: none;
     }
 
+    /* Label tier: quote attribution */
     .q-attr {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
+      font-size: var(--t-label);
       font-weight: 700;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: var(--aluminum);
+      color: var(--steel);
     }
 
     .quote-pair {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2px;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      border-top: 1px solid rgba(30, 39, 46, 0.08);
     }
 
     .q-sm {
-      background: rgba(255, 255, 255, 0.03);
-      padding: clamp(24px, 3.5vw, 40px);
+      background: var(--white);
+      padding: clamp(24px, 3.5vw, 40px)
     }
 
+    /* Body tier: secondary quote text */
     .q-text-sm {
-      font-size: 16px;
+      font-size: var(--t-body);
       line-height: 1.8;
-      color: rgba(255, 255, 255, 0.68);
+      color: var(--steel);
       font-style: italic;
       margin-bottom: 14px;
       max-width: 50ch;
     }
 
+    /* Label tier: secondary quote attribution */
     .q-attr-sm {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
+      font-size: var(--t-label);
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--aluminum);
+      color: var(--forge);
     }
 
-    /* ─── FOOTER CTA — copper (one signature moment) */
+    /* ─── FOOTER CTA — copper ─────────────────────── */
     .footer-cta {
       background: var(--copper);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
@@ -1000,82 +1120,166 @@
       position: relative
     }
 
+    /* Headline tier: footer CTA heading */
     .fca-h {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(26px, 4vw, 48px);
+      font-size: var(--t-headline);
       font-weight: 700;
-      color: #fff;
+      color: #000;
       line-height: 1.1;
       letter-spacing: -0.015em;
       margin-bottom: 12px;
     }
 
+    /* Body tier: footer CTA sub-copy */
     .fca-sub {
-      font-size: 17px;
-      color: rgba(255, 255, 255, 0.72);
+      font-size: var(--t-body);
+      color: #000;
       margin-bottom: 32px;
       line-height: 1.65;
     }
 
     /* ─── FOOTER ──────────────────────────────────── */
     footer {
-      background: #141b21;
-      padding: clamp(32px, 4vw, 48px) clamp(20px, 5vw, 64px) clamp(24px, 3vw, 36px);
+      background: var(--forge);
+      padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 64px) clamp(24px, 3vw, 36px);
     }
 
     .footer-inner {
       max-width: 1200px;
-      margin: 0 auto
+      margin: 0 auto;
+      display: grid;
+      gap: 28px;
     }
 
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding-bottom: 60px;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .footer-logo img {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .footer-cta-block {
+      max-width: 640px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .footer-hero {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .footer-sub {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--light-al);
+      max-width: 54ch;
+    }
+
+    .footer-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin-top: 4px;
+      padding: 0;
+      background: transparent;
+      color: var(--rose-gold);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      text-decoration: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    .footer-demo:hover {
+      color: var(--verdigris);
+      background: transparent;
+    }
+
+    .footer-demo .arrow {
+      font-size: 16px;
+      line-height: 1;
+      transition: transform .18s;
+    }
+
+    .footer-demo:hover .arrow {
+      transform: translateX(3px);
+    }
+
+    /* Label tier: contact block, tagline, links */
     .footer-contact {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.28);
-      line-height: 2;
-      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--light-al);
+      line-height: 1.8;
+      margin-bottom: 0;
+      display: grid;
+      gap: 4px;
     }
 
     .footer-contact a {
-      color: rgba(255, 255, 255, 0.28);
+      color: var(--light-al);
       text-decoration: none
     }
 
     .footer-contact a:hover {
-      color: rgba(255, 255, 255, 0.6)
+      color: #fff
     }
 
     .footer-bottom {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
-      gap: 10px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      gap: 18px;
+      padding-top: 4px;
     }
 
     .footer-tagline {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.22)
+      font-size: 15px;
+      color: var(--light-al);
+      max-width: 34ch;
     }
 
     .footer-links {
       display: flex;
-      gap: 20px
+      gap: 20px;
+      flex-wrap: wrap;
     }
 
     .footer-links a {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.22);
+      font-size: 15px;
+      color: var(--light-al);
       text-decoration: none
     }
 
     .footer-links a:hover {
-      color: rgba(255, 255, 255, 0.55)
+      color: #fff
     }
 
     /* ─── RESPONSIVE ──────────────────────────────── */
-    @media(max-width:1024px) {
+    @media (max-width: 1024px) {
       .hero-grid {
         grid-template-columns: 1fr
       }
@@ -1087,6 +1291,10 @@
 
       .pressure-layout {
         grid-template-columns: 1fr
+      }
+
+      .pressure-right {
+        margin-top: 0;
       }
 
       .how-header {
@@ -1102,7 +1310,7 @@
       }
     }
 
-    @media(max-width:768px) {
+    @media (max-width: 768px) {
       .nav-links {
         display: none
       }
@@ -1140,17 +1348,13 @@
         gap: 12px
       }
 
-      .q-mark {
-        font-size: 56px
-      }
-
       table.ct th:first-child,
       table.ct td:first-child {
         display: none
       }
     }
 
-    @media(max-width:480px) {
+    @media (max-width: 480px) {
       .stat-row {
         grid-template-columns: 1fr
       }
@@ -1179,24 +1383,23 @@
     <a href="/about">About</a>
     <a href="/careers">Careers</a>
     <a href="/contact">Contact</a>
-    <a href="/contact" class="btn btn-copper" style="margin-top:8px">Request a Demo</a>
+    <a href="/contact" class="btn btn-copper" style="margin-top:8px">Request a demo</a>
   </div>
 
   <!-- NAV -->
   <nav>
-    <a href="/">
-      <img src="../Logo/Stacked%20Logo/SVG/Light/Duo-copper.svg" alt="Digital Public Works"
-        style="height:36px;display:block">
+    <a href="/" class="nav-logo">
+      <img src="../Logo/Stacked%20Logo/SVG/Dark/Duo-copper.svg" alt="Digital Public Works">
     </a>
     <div class="nav-links">
-      <a href="/">Home</a>
+      <a href="/" class="current-page">Home</a>
       <a href="/product">Product</a>
       <a href="/impact">Impact</a>
       <a href="/insights">Insights</a>
       <a href="/about">About</a>
       <a href="/careers">Careers</a>
       <a href="/contact">Contact</a>
-      <a href="/contact" class="nav-cta">Request a Demo</a>
+      <a href="/contact" class="nav-cta">Request a demo</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
@@ -1210,16 +1413,16 @@
 
         <!-- Left: headline + CTAs -->
         <div class="reveal">
-
           <h1>What if income verification worked for families and states instead of vendors?</h1>
           <p class="hero-sub">Digital Public Works is the nonprofit alternative. We built Verify My Income because
             families deserve a better experience — and states deserve a partner that isn't charging per query while the
             backlog grows. Open source. At cost. No lock-in.</p>
           <div class="hero-actions">
-            <a href="/contact" class="btn btn-forge">Request a Demo</a>
-            <a href="#how-vmi-works" class="btn btn-outline">See How It Works</a>
+            <a href="/contact" class="btn btn-forge">Request a demo</a>
+            <a href="#how-vmi-works" class="btn btn-outline">See how it works</a>
           </div>
-          <p class="hero-note">No procurement required to begin the conversation. We start with a free,
+          <p class="hero-note" style="font-size: 15px;">No procurement required to begin the conversation. We start with
+            a free,
             philanthropically funded pilot.</p>
         </div>
 
@@ -1227,32 +1430,30 @@
         <div class="hero-img reveal d2">
           <img src="https://images.unsplash.com/photo-1620062158605-be17043056b1?auto=format&fit=crop&w=900&q=80"
             alt="Family reviewing income verification together" loading="eager" width="900" height="1125">
-          <span class="hero-img-credit" aria-hidden="true">Photo: Unsplash / cal gao</span>
         </div>
 
       </div>
     </div>
-
-    <!-- Stats — visible near the headline -->
-    <div class="stat-row" role="list" aria-label="Key statistics">
-      <div class="stat-cell reveal d1" role="listitem">
-        <span class="stat-num" data-count="5" data-prefix="Under " data-suffix=" min">Under 5 min</span>
-        <p class="stat-label">Median time to verify income</p>
-      </div>
-      <div class="stat-cell reveal d2" role="listitem">
-        <span class="stat-num" data-count="85" data-suffix="%">85%</span>
-        <p class="stat-label">Of applicants report no difficulty</p>
-      </div>
-      <div class="stat-cell reveal d3" role="listitem">
-        <span class="stat-num" data-count="93" data-suffix="%">93%</span>
-        <p class="stat-label">Of caseworkers prefer VMI reports</p>
-      </div>
-      <div class="stat-cell reveal d4" role="listitem">
-        <span class="stat-num">7.5×</span>
-        <p class="stat-label">Faster than manual verification</p>
-      </div>
-    </div>
   </section>
+
+  <div class="stat-row" role="list" aria-label="Key statistics">
+    <div class="stat-cell reveal d1" role="listitem">
+      <span class="stat-num" data-count="5" data-prefix="Under " data-suffix=" min">Under 5 min</span>
+      <p class="stat-label">Median time to verify income</p>
+    </div>
+    <div class="stat-cell reveal d2" role="listitem">
+      <span class="stat-num" data-count="85" data-suffix="%">85%</span>
+      <p class="stat-label">Of applicants report no difficulty</p>
+    </div>
+    <div class="stat-cell reveal d3" role="listitem">
+      <span class="stat-num" data-count="93" data-suffix="%">93%</span>
+      <p class="stat-label">Of caseworkers prefer VMI reports</p>
+    </div>
+    <div class="stat-cell reveal d4" role="listitem">
+      <span class="stat-num">7.5×</span>
+      <p class="stat-label">Faster than manual verification</p>
+    </div>
+  </div>
 
   <!-- COMPARISON TEASER -->
   <section class="compare-teaser">
@@ -1274,28 +1475,28 @@
             <tr>
               <td class="ct-dim">Pricing</td>
               <td class="ct-them">Per-query, rising over time</td>
-              <td class="ct-vmi"><span class="ct-check">✓</span> Nonprofit, at-cost. Price falls as more states join.
+              <td class="ct-vmi"><span class="ct-check">✓</span>Nonprofit, at-cost. Price falls as more states join.
               </td>
             </tr>
             <tr>
               <td class="ct-dim">Data quality</td>
               <td class="ct-them">Raw data, no validation</td>
-              <td class="ct-vmi"><span class="ct-check">✓</span> Every report programmatically validated</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>Every report programmatically validated</td>
             </tr>
             <tr>
               <td class="ct-dim">Source code</td>
               <td class="ct-them">Proprietary</td>
-              <td class="ct-vmi"><span class="ct-check">✓</span> Open source under AGPL-3.0</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>Open source under AGPL-3.0</td>
             </tr>
             <tr>
               <td class="ct-dim">Vendor lock-in</td>
               <td class="ct-them">High — no exit path</td>
-              <td class="ct-vmi"><span class="ct-check">✓</span> None. Full code and architecture access.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>None. Full code and architecture access.</td>
             </tr>
             <tr>
               <td class="ct-dim">Service model</td>
               <td class="ct-them">Data hand-off</td>
-              <td class="ct-vmi"><span class="ct-check">✓</span> Embedded partnership and service design</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>Embedded partnership and service design</td>
             </tr>
           </tbody>
         </table>
@@ -1315,22 +1516,24 @@
             <img src="https://images.unsplash.com/photo-1758523418784-efd368723c42?auto=format&fit=crop&w=800&q=80"
               alt="Man reviewing a bill at his kitchen table" loading="lazy" width="800" height="600">
           </div>
-          <a href="/contact" class="btn btn-forge">Request a Demo</a>
         </div>
 
-        <!-- Right: 2-col body text + pull quote -->
-        <div>
+        <!-- Right: single-column body text + pull quote + CTA -->
+        <div class="pressure-right">
           <div class="body-cols reveal d1">
             <div class="body-col">
               <p>H.R. 1 expands work requirements for SNAP and Medicaid. The Workforce for the Community Act introduces
                 new community engagement verification requirements. States face financial penalties for SNAP payment
                 error rates above 6%.</p>
               <p>The tools states have today were not built for this moment. Quarterly wage databases are months behind.
-                Commercial verification services charge per query with prices that go up every year.</p>
-            </div>
-            <div class="body-col">
-              <p>When the data is wrong or incomplete, caseworkers absorb the cost in follow-up calls, manual
+                Commercial verification services charge per query with prices that go up every year. When the data is
+                wrong or incomplete, caseworkers absorb the cost in follow-up calls, manual
                 processing, and an ever-growing backlog. Meanwhile, applicants face longer waits and higher burdens.</p>
+              <p>Real-time payroll data is part of the answer, but raw data is not verification. A payroll connection
+                can pull income records from an employer's system. It cannot tell you whether those records contain what
+                a caseworker needs to make an eligibility determination. Without a layer that validates, contextualizes,
+                and delivers that data in a usable format, states trade one set of problems for another.
+              </p>
               <p>VMI addresses all of these pressures: real-time income data that reduces payment errors, a validation
                 layer that ensures caseworkers receive only eligibility-grade reports, and a streamlined process that
                 removes the verification bottleneck.</p>
@@ -1340,6 +1543,7 @@
             <p class="pq-text">Real-time payroll data is part of the answer, but <em>raw data is not verification.</em>
             </p>
           </div>
+          <a href="/contact" class="btn btn-forge reveal d3">Request a demo</a>
         </div>
 
       </div>
@@ -1351,19 +1555,17 @@
     <div class="how-inner">
       <div class="how-header">
         <div class="reveal">
-          <h2 class="how-h">How VMI Works</h2>
+          <h2 class="how-h">How VMI works</h2>
         </div>
         <p class="how-sub reveal d1">VMI handles the entire data journey from the applicant's payroll provider, through
           a consent-driven workflow, to a caseworker-ready report. States get a complete service, not just a data feed.
         </p>
       </div>
 
-      <!-- Flow diagram placeholder -->
       <div class="flow-placeholder reveal">
         <p class="flow-note">Product flow diagram — DPW asset to be inserted here</p>
       </div>
 
-      <!-- Steps — organic timeline style -->
       <div class="steps">
         <div class="steps-line" aria-hidden="true"></div>
 
@@ -1411,7 +1613,7 @@
   <section class="stories">
     <div class="stories-inner">
       <div class="stories-header reveal">
-        <h2 class="stories-h">We do not just deliver data. We fix the process.</h2>
+        <h2 class="stories-h">We do not just deliver data.<br> We fix the process.</h2>
         <p class="stories-sub">Most verification vendors hand off data and walk away. DPW embeds with your team to find
           and fix the problems no data feed can solve.</p>
       </div>
@@ -1504,36 +1706,46 @@
       </div>
       <div class="quote-pair">
         <div class="q-sm reveal d1">
-          <p class="q-text-sm">Being able to update and report my income online is far more efficient than doing so by
-            other means (in person, mail, etc.) and I am grateful for this option.</p>
+          <p class="q-text-sm">"Being able to update and report my income online is far more efficient than doing so by
+            other means (in person, mail, etc.) and I am grateful for this option."</p>
           <p class="q-attr-sm">Pennsylvania VMI User</p>
         </div>
         <div class="q-sm reveal d2">
-          <p class="q-text-sm">It was quick and simple and best of all didn't require me to jump through hoops.</p>
+          <p class="q-text-sm">"It was quick and simple and best of all didn't require me to jump through hoops."</p>
           <p class="q-attr-sm">VMI User</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER CTA — copper: the one full copper moment -->
+  <!-- FOOTER CTA -->
   <div class="footer-cta">
     <div class="footer-cta-inner">
-      <h2 class="fca-h reveal">Ready to pilot Verify My Income in your state? Let's talk.</h2>
+      <h2 class="fca-h reveal">Ready to pilot <i>Verify My Income</i> in your jurisdiction? <br>Let's talk.</h2>
       <p class="fca-sub reveal d1">No procurement required to begin the conversation.</p>
-      <a href="/contact" class="btn btn-white reveal d2">Request a Demo</a>
+      <a href="/contact" class="btn btn-white reveal d2">Request a demo</a>
     </div>
   </div>
 
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-      <p class="footer-contact">
-        <a href="mailto:info@digitalpublicworks.org">info@digitalpublicworks.org</a><br>
-        2261 Market Street, Suite 32572, San Francisco, CA 94114
-      </p>
+      <div class="footer-top">
+        <div class="footer-cta-block">
+          <h2 class="footer-hero">Ready to pilot <i>Verify My Income</i> in your jurisdiction? Let's talk.</h2>
+          <p class="footer-sub">No procurement required to begin the conversation.</p>
+          <a href="/contact" class="footer-demo">Request a Demo <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <a href="/" class="footer-logo">
+          <img src="../Logo/Extended%20Logo/SVG/Dark/Duo-copper.svg" alt="Digital Public Works">
+        </a>
+      </div>
       <div class="footer-bottom">
         <p class="footer-tagline">Digital Public Works is an independent 501(c)(3) nonprofit.</p>
+        <p class="footer-contact">
+          <a href="mailto:info@digitalpublicworks.org">info@digitalpublicworks.org</a>
+          <span>2261 Market Street, Suite 32572, San Francisco, CA 94114</span>
+        </p>
         <div class="footer-links">
           <a href="/privacy">Privacy Policy</a>
           <a href="/accessibility">Accessibility</a>
