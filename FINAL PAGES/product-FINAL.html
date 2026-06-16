@@ -1158,11 +1158,16 @@
       .hero-tagline { max-width: none; min-width: 0; }
 
       .hero-img {
-        aspect-ratio: 4/3;
-        max-height: 420px;
         order: 2;
-        overflow: hidden;
-        padding-right: 0;
+        overflow: visible;
+        padding: 0 clamp(20px, 5vw, 48px); /* match page content margins */
+        /* no aspect-ratio or max-height — let image size naturally */
+      }
+
+      .hero-img img {
+        height: auto;           /* natural height — full image visible */
+        object-fit: initial;
+        object-position: initial;
       }
 
       .io-grid {
