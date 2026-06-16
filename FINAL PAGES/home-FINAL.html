@@ -1038,33 +1038,33 @@
     }
 
     /* ─── FOOTER CTA — copper ─────────────────────── */
-    .footer-cta {
+    .cta-section {
       background: var(--copper);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
       text-align: center;
     }
 
-    .footer-cta-inner {
+    .cta-inner {
       max-width: 640px;
       margin: 0 auto;
       position: relative
     }
 
-    /* Headline tier: footer CTA heading */
-    .fca-h {
+    /* Headline tier: CTA section heading */
+    .cta-h {
       font-family: 'Space Grotesk', sans-serif;
       font-size: var(--t-headline);
       font-weight: 700;
-      color: #000;
+      color: var(--forge);
       line-height: 1.1;
       letter-spacing: -0.015em;
       margin-bottom: 12px;
     }
 
-    /* Body tier: footer CTA sub-copy */
-    .fca-sub {
+    /* Body tier: CTA section sub-copy */
+    .cta-sub {
       font-size: var(--t-body);
-      color: #000;
+      color: var(--forge);
       margin-bottom: 32px;
       line-height: 1.65;
     }
@@ -1102,7 +1102,7 @@
       display: block;
     }
 
-    .footer-cta-block {
+    .cta-section-block {
       max-width: 640px;
       display: grid;
       gap: 6px;
@@ -1633,12 +1633,13 @@
           <div class="card-accent"></div>
           <div class="card-body">
             <div class="card-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-                <polyline points="10 9 9 9 8 9"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
               </svg>
             </div>
             <span class="card-n">Finding 1</span>
@@ -1653,9 +1654,11 @@
           <div class="card-accent"></div>
           <div class="card-body">
             <div class="card-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                <line x1="1" y1="1" x2="23" y2="23"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                <line x1="1" y1="1" x2="23" y2="23" />
               </svg>
             </div>
             <span class="card-n">Finding 2</span>
@@ -1670,10 +1673,11 @@
           <div class="card-accent"></div>
           <div class="card-body">
             <div class="card-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="1 4 1 10 7 10"/>
-                <polyline points="23 20 23 14 17 14"/>
-                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10" />
+                <polyline points="23 20 23 14 17 14" />
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" />
               </svg>
             </div>
             <span class="card-n">Finding 3</span>
@@ -1742,11 +1746,11 @@
     </div>
   </section>
 
-  <!-- FOOTER CTA -->
-  <div class="footer-cta">
-    <div class="footer-cta-inner">
-      <h2 class="fca-h reveal">Ready to pilot <i>Verify My Income</i> in your jurisdiction? <br>Let's talk.</h2>
-      <p class="fca-sub reveal d1">No procurement required to begin the conversation.</p>
+  <!-- PILOT CTA -->
+  <div class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-h reveal">Ready to pilot <i>Verify My Income</i> in your jurisdiction? <br>Let's talk.</h2>
+      <p class="cta-sub reveal d1">No procurement required to begin the conversation.</p>
       <a href="/contact" class="btn btn-white reveal d2">Request a demo</a>
     </div>
   </div>
@@ -1755,9 +1759,8 @@
   <footer>
     <div class="footer-inner">
       <div class="footer-top">
-        <div class="footer-cta-block">
+        <div class="cta-section-block">
           <h2 class="footer-hero">Ready to pilot <i>Verify My Income</i> in your jurisdiction? Let's talk.</h2>
-          <p class="footer-sub">No procurement required to begin the conversation.</p>
           <a href="/contact" class="footer-demo">Request a Demo <span class="arrow" aria-hidden="true">→</span></a>
         </div>
         <a href="/" class="footer-logo">
