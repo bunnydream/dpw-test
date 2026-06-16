@@ -1,136 +1,216 @@
-# DPW Website Project — Session Summary
+# DPW Website — Project Summary
 
-Use this file to initialize a new Claude chat. Paste it at the start of a new conversation.
+Use this file to initialize a new chat. Paste it at the start of a new conversation.
 
 ---
 
 ## Project Overview
 
 **Client:** Digital Public Works (DPW) — a 501(c)(3) nonprofit
-**Product:** Verify My Income (VMI) — a nonprofit alternative to commercial income verification for state benefit agencies
-**Goal:** Design and build a homepage for DPW's website
-
-All work is standalone HTML prototype files — NOT the Next.js app. Files are saved to `/Users/bellabesuud/Documents/DPW-Project/`.
-
----
-
-## Standing Rules (apply to every session, always)
-
-- **Always edit within the existing file** unless a new version is explicitly requested
-- **New versions → new file** (e.g. `-v2.html`) unless told otherwise
-- **Website copy:** use `DPW Website Copy.docx` EXACTLY — no invented text, no paraphrasing, no changes. Pay attention to tracked-change comments in the doc.
-- **WCAG 2.1 AA compliance** — non-negotiable on every file. See color constraints below.
-- **Logo:** always use the Stacked Logo SVG (not Extended Logo). See logo paths below.
-- **Fonts:** Google Fonts — Space Grotesk (weights 300 + 700 ONLY) + Atkinson Hyperlegible (400 + 700)
-- **Responsive:** mobile-first, hamburger nav at 768px breakpoint
-- **Animations:** IntersectionObserver for scroll reveals, requestAnimationFrame for stat counters, row-by-row table reveals
+**Product:** Verify My Income (VMI) — income verification service for state benefit agencies
+**Work:** Standalone single-file HTML prototypes. **NOT** the Next.js app.
+**Workspace folder:** `/Users/bellabesuud/Desktop/dpw-test/`
 
 ---
 
-## DPW Color Palette
+## File map
 
-| Variable | Hex | Notes |
+```
+dpw-test/
+├── CLAUDE.md                              ← project instructions
+├── summary.md                             ← this file
+├── DPW Website Copy.docx                  ← authoritative copy — use VERBATIM
+├── Brand Guide/                           ← brand guidelines, color palette
+├── Logo/
+│   ├── Extended Logo/SVG/Dark/Duo-copper.svg    ← footer logo
+│   └── Stacked Logo/SVG/Dark/Duo-copper.svg     ← nav logo
+├── Home page/
+│   ├── home-FINAL.html                    ← working file — all fixes applied here
+│   └── home-shareable.html                ← client-ready: logos embedded as inline SVG
+└── Product page/
+    ├── product.html                       ← product page v1 (complete)
+    └── product-v2.html                    ← product page v2 (complete, current)
+```
+
+**home-FINAL.html is the working file for the home page.** All edits go here.
+**home-shareable.html** is generated from home-FINAL.html with logos embedded inline — recreate it when sending to clients (logos use relative paths that break when the file is sent alone).
+**home-v3b.html is the design reference for all pages.** Copy its nav, footer, CSS tokens, and section patterns exactly.
+
+---
+
+## Design system
+
+### Fonts
+- **Space Grotesk 700** — headings, labels, nav, buttons
+- **Atkinson Hyperlegible 400/700** — body text, table cells
+
+Google Fonts import:
+```
+Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400
+```
+
+### Color tokens
+```css
+--forge:       #1E272E;   /* primary dark — nav/footer bg */
+--copper:      #C77234;   /* brand copper — large text only on white (3.57:1, not AA) */
+--deep-copper: #9F5528;   /* small text on white = 5.52:1 ✅ AA */
+--steel:       #3A4E5C;   /* body text secondary — 8.66:1 on white ✅ */
+--park-green:  #316844;   /* checkmarks/positive — 6.57:1 on white ✅ */
+--verdigris:   #56A374;   /* accent green — decorative/large text only (3.05:1) */
+--aluminum:    #A9B0B6;   /* muted grey — decorative only, fails AA on white */
+--light-al:    #D0D5D8;   /* borders, dividers, box-shadows */
+--white:       #FFFFFF;
+--cool-white:  #F6F7F8;   /* section alternating bg */
+--white-gold:  #D4CAA8;
+--molten-gold: #E9A030;
+--rose-gold:   #DEB0A0;   /* nav current-page link, footer demo link */
+```
+
+**Color rules enforced:**
+- Never use raw hex literals or `rgba()` in CSS — always use CSS variables
+- `#000` (black) is the only allowed raw hex (not in token list but explicitly permitted)
+- No alpha/rgba overlays on brand-colored backgrounds (causes color-picker to read off-palette)
+- Box-shadows and divider borders use `var(--light-al)` (solid, no rgba)
+
+### Type scale
+```css
+--t-display:  clamp(44px, 5.5vw, 68px);   /* hero h1 ONLY */
+--t-headline: clamp(28px, 3.5vw, 44px);   /* section h2 */
+--t-subhead:  clamp(18px, 2.2vw, 24px);   /* h3, h4, pull quotes */
+--t-body:     17px;                        /* paragraphs, card text */
+--t-label:    12px;                        /* nav, badges, captions, footer */
+--t-data:     14px;                        /* table cells ONLY */
+--t-button:   14px;
+```
+
+### Key patterns
+- **Nav:** forge bg, 74px height, stacked logo (dark), current-page link in rose-gold, hover in verdigris
+- **Footer:** forge bg, extended logo (dark), demo link in rose-gold
+- **Scroll reveal:** `.reveal` / `.vis` via IntersectionObserver; `.d1`–`.d4` delay classes
+- **Responsive:** hamburger nav at 768px, fluid via CSS Grid + `clamp()`
+- **Images:** Unsplash CDN `https://images.unsplash.com/photo-[id]?auto=format&fit=crop&w=N&q=80`
+  - Skip any URL containing `plus.unsplash.com` (paid, not freely embeddable)
+- **WCAG 2.1 AA** required throughout
+
+---
+
+## Button & interaction system
+
+### Button variants
+```css
+.btn-forge   { background: var(--forge);      color: var(--white) }
+.btn-copper  { background: var(--copper);     color: #000 }
+.btn-white   { background: var(--white);      color: var(--deep-copper) }
+.btn-outline { background: transparent;       color: var(--forge); border: 1.5px solid var(--light-al) }
+```
+
+### Hover states
+```css
+.btn-forge:hover   { background: var(--steel) }
+.btn-copper:hover  { background: var(--deep-copper) }   /* color stays #000 */
+.btn-white:hover   { background: var(--cool-white) }
+.btn-outline:hover { border-color: var(--forge) }
+```
+
+### Nav-specific CTA (.nav-cta)
+```css
+.nav-cta       { background: var(--copper); color: #000 !important; transition: background .15s !important }
+.nav-cta:hover { background: var(--deep-copper) !important }
+```
+
+### Nav page links
+- Default: `var(--light-al)`
+- Current page: `var(--rose-gold)`
+- Hover (all, including current): `var(--verdigris)`
+
+### Mobile menu (.mobile-menu)
+- All links: `color: var(--white)`, hover: `color: var(--verdigris)`
+- `.btn-copper` inside mobile menu overrides: `color: #000; font-size: var(--t-button); transition: all .18s`
+- `.btn-copper:hover` inside mobile menu: `background: var(--deep-copper); color: #000`
+
+---
+
+## WCAG 2.1 AA — fixes applied to home-FINAL.html
+
+All failures resolved. Key changes made:
+
+| Element | Problem | Fix |
 |---|---|---|
-| `--forge` | `#1E272E` | Primary dark — white on forge = ~18:1 ✅ |
-| `--copper` | `#C77234` | Brand copper — **only safe for large text on white** (3.01:1 fails AA for small text) |
-| `--deep-copper` | `#9F5528` | White on deep-copper = 4.8:1 ✅ passes AA all sizes |
-| `--steel` | `#3A4E5C` | Mid-dark blue-grey |
-| `--green` | `#316844` | White on green = ~12:1 ✅ |
-| `--verdigris` | `#56A374` | **NEVER use as text color on copper background** — fails WCAG |
-| `--white-gold` | `#D4CAA8` | Warm accent |
-| `--molten` | `#E9A030` | Warm amber accent |
-| `--rose-gold` | `#DEB0A0` | Soft accent |
-| `--aluminum` | `#A9B0B6` | Muted grey |
-| `--light-al` | `#D0D5D8` | Light grey |
-| `--white` | `#FFFFFF` | |
-| `--cool-white` | `#F6F7F8` | |
-
-**Key WCAG rules:**
-- Copper `#C77234` on white = 3.01:1 — large text only (≥24px regular or ≥18.67px bold)
-- Verdigris `#56A374` on copper `#C77234` — FAILS. Do not use.
-- For "Live — Statewide" pills on copper backgrounds: use `color: white` + `background: rgba(0,0,0,0.28)` → ~5.2:1 ✅
-- Forge on verdigris = ~4.93:1 ✅
-- White on forge `#1E272E` = ~18:1 ✅
+| `.btn-copper` text | `#fff` on copper = 3.57:1 ❌ | `color: #000` → 5.88:1 ✅ |
+| `.card-n` label (12px) | copper on cool-white = 3.33:1 ❌ | `color: var(--deep-copper)` → 5.15:1 ✅ |
+| `.ct-check` ✓ symbol | verdigris on white = 3.05:1 ❌ | `color: var(--park-green)` → 6.57:1 ✅ |
 
 ---
 
-## Logo Paths
+## home-FINAL.html — section inventory
 
-Always use **Stacked Logo** SVG at height `36px` in nav.
-
-```
-Light version (for light/white nav backgrounds):
-./Logo/Stacked Logo/SVG/Light/Duo-copper.svg
-
-Dark version (for dark nav backgrounds):
-./Logo/Stacked Logo/SVG/Dark/Duo-copper.svg
-```
-
-Extended Logo files exist but are NOT used in the nav (they were the broken logos that were fixed).
-
----
-
-## File Map
-
-### `Home page/` subfolder — Active prototypes (currently being designed)
-
-| File | Style | Logo version | Status |
-|---|---|---|---|
-| `Home page/home-copper.html` | Copper — primary design direction | Light stacked | Active, recently edited |
-| `Home page/home-dark-cinematic.html` | Dark/cinematic | Dark stacked | Active |
-| `Home page/home-editorial.html` | Magazine/editorial | Light stacked | Active |
-| `Home page/home-organic.html` | Organic/warm/rounded | Light stacked | Active, WCAG fix applied |
-
-**Recent edits applied to all 4 "Home page/" files:**
-- Fixed broken nav logo (was using Extended Logo path, now uses Stacked Logo at 36px)
-- home-copper.html + home-organic.html: fixed WCAG fail — "Live — Statewide" verdigris text on copper bg → now white text on `rgba(0,0,0,0.28)` pill
-
-### Root-level older iterations (for reference only, not actively being worked on)
-
-- `home-style6-copper.html` — base copper design before "Home page" folder work began
-- `home-style1-civic.html`, `home-style2-bold.html`, `home-style2-bold-v2.html`, `home-style4-opensource.html`, `home-style5-warmth.html`, `home-style5-warmth-v2.html`, `home-option1-brutalism.html` — earlier design explorations
-- `home-v1.html` — original v1
-- `about.html` — about page (separate)
-
-### ⚠️ Files that need to be recreated
-
-The following files were worked on in prior sessions but did not persist to the project folder. They need to be rebuilt:
-
-| File | Description |
+| Section | Notes |
 |---|---|
-| `home-style6-copper-v2.html` | Edited version of home-style6-copper.html with: hero h1 font-size reduced to `clamp(36px,5vw,68px)`, hero overline span deleted, hero h1 made single weight/color (no alternating light/dark words), orange sidebar removed from stories-outro, compare table copy fixed ("benefits specific" not "benefits-specific", "applicants are redirected to existing options.") |
-| `home-style-B-editorial.html` | Option B: Magazine/Editorial aesthetic homepage |
-| `home-style-C-organic.html` | Option C: Organic/Human aesthetic homepage — warm cream bg `#FAF8F4`, rounded cards (20px radius), blob hero, timeline How It Works, speech-bubble quotes, green proven section, copper Trusted By section |
+| Nav | Forge bg, stacked logo, rose-gold current page, verdigris hover, copper CTA button |
+| Hero | Display headline, sub-copy, btn-forge + btn-outline CTAs, Unsplash photo |
+| Compare teaser | VMI vs. traditional table; ✓ marks in `var(--park-green)` |
+| How VMI works | 3-step cards with hover (copper border + light-al shadow) |
+| Stories / Findings | 3 cards with inline SVG icons (copper), `Finding 0X` label in deep-copper |
+| Quotes | Featured quote + 2-up pair on cool-white bg |
+| Footer CTA | Copper bg, `btn-white` (white bg / deep-copper text / cool-white hover) |
+| Footer | Forge bg, extended logo, rose-gold demo link |
+
+**Finding card icons (inline SVG, `fill="currentColor"`, color via `.card-icon { color: var(--copper) }`):**
+- Finding 01 — document (file with lines)
+- Finding 02 — eye-off (eye with diagonal strike)
+- Finding 03 — refresh/loop (circular arrows)
 
 ---
 
-## Source Files
+## product-v2.html — current state
 
-| File | Purpose |
+All sections complete. Key differences from product.html (v1):
+
+| Section | What's in v2 |
 |---|---|
-| `DPW Website Copy.docx` | **THE source of truth for all copy.** Use pandoc to extract: `pandoc --track-changes=all "DPW Website Copy.docx" -o /tmp/webcopy.md` |
-| `DPW Brand Guide 2026.pdf` | Brand guidelines, color palette, visual identity |
-| `Logo/` | All logo assets (see logo paths above) |
-| `Fonts/` | Local font files |
-| `CLAUDE.md` | Short existing project note (does not supersede this file) |
+| Hero | No "Digital Public Works" eyebrow; no CTA buttons |
+| Integration option 3 | "Insert diagram showing integration options" note |
+| Problem/solution | Combined section, h2 "The verification problem", 4 paired rows with → arrow between problem (left) and solution (right); column labels in copper/verdigris |
+| Comparison table | ✗ red in "Traditional Approaches" header, ✓ green in "VMI" header; no green checkmarks in cells |
+| Vendor questions | Accordion (SVG chevron icon flips 180° on open, one-open-at-a-time JS) |
+| Accessibility | "Accessibility research findings — placeholder" |
+| Pilot steps | Duration in parentheses: "Discovery (2–4 weeks)", "Configuration and integration (4–6 weeks)" |
+| Pilot note | PA launch note as plain paragraph below steps (no border, no sidebar) |
+| In the field | 2 dashed placeholder cards: Pennsylvania DHS + Arizona DES |
+
+Photos in product-v2.html:
+- **Hero:** `photo-1583777458845-047acbeb7d21`
+- **Accessibility:** `photo-1675179182019-3c0804f517af`
 
 ---
 
-## Key Copy / Text Notes
+## How to create a shareable (client-ready) file
 
-- Hero headline (exact): **"What if income verification worked for families and states instead of vendors?"**
-- Hero sub (paraphrase check): mentions "Open source. At cost. No vendor lock-in." — this phrase does NOT appear as a standalone line/badge in the copy doc, do not include as a hero overline
-- Compare table cell: "benefits specific" (no hyphen)
-- Compare table cell: "applicants are redirected to existing options." (full sentence — do not truncate)
-- Stat figures: Under 5 min / 85% / 93% / 7.5×
-- Live states: Pennsylvania (PA DHS) + Arizona (AZ DES)
-- Funders: DRK Foundation, AARP Foundation, Families and Workers Fund, Pritzker Children's Initiative
+When sending any HTML file to a client, logos must be embedded inline because relative paths (`../Logo/...`) break outside the folder. Process:
+
+1. Read both SVG files from `Logo/Stacked Logo/SVG/Dark/Duo-copper.svg` and `Logo/Extended Logo/SVG/Dark/Duo-copper.svg`
+2. In the working HTML, change `.nav-logo img` → `.nav-logo svg` and `.footer-logo img` → `.footer-logo svg` in CSS
+3. Replace each `<img src="../Logo/...">` with the full inline `<svg aria-label="Digital Public Works" role="img" ...>` content
+4. Save as a new file (e.g. `home-shareable.html`)
 
 ---
 
-## Tech Stack Notes
+## Pages still to build
 
-- Standalone HTML files — single file, no external CSS/JS dependencies except Google Fonts
-- Google Fonts import: `Space Grotesk:wght@300;700` + `Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400`
-- No framework, no build step — open directly in browser
-- Next.js app also exists in the repo (`app/`, `package.json`) but is separate from the prototype work
+- Impact
+- Insights
+- About
+- Careers
+- Contact
+
+---
+
+## Standing rules
+
+1. Copy from `DPW Website Copy.docx` must be used **verbatim** — no paraphrasing.
+2. All pages are **standalone single-file HTML** — no external CSS/JS, no build step.
+3. Tokens and patterns must match `home-v3b.html` exactly.
+4. Always `Read` a file before `Edit` or `Write`.
+5. Extract copy with: `pandoc "DPW Website Copy.docx" -o /tmp/webcopy.md`
+6. No raw hex values or `rgba()` in CSS — use CSS variables only (`#000` is the sole exception).
+7. The working file for the home page is `home-FINAL.html`. All edits go there. `home-shareable.html` is a derived output for client sharing only.

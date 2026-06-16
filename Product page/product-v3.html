@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify My Income — Digital Public Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ─── RESET ───────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS
+       ═══════════════════════════════════════════════ */
+    :root {
+      --forge:       #1E272E;
+      --copper:      #C77234;
+      --deep-copper: #9F5528;
+      --steel:       #3A4E5C;
+      --park-green:  #316844;
+      --verdigris:   #56A374;
+      --aluminum:    #A9B0B6;
+      --light-al:    #D0D5D8;
+      --white:       #FFFFFF;
+      --cool-white:  #F6F7F8;
+      --white-gold:  #D4CAA8;
+      --molten-gold: #E9A030;
+      --rose-gold:   #DEB0A0;
+
+      --t-display:  clamp(44px, 5.5vw, 68px);
+      --t-headline: clamp(28px, 3.5vw, 44px);
+      --t-subhead:  clamp(18px, 2.2vw, 24px);
+      --t-body:     17px;
+      --t-label:    12px;
+      --t-data:     14px;
+      --t-button:   14px;
+    }
+
+    html { scroll-behavior: smooth }
+
+    body {
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      font-size: var(--t-body);
+      line-height: 1.75;
+      color: var(--forge);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ─── MOTION ─────────────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s cubic-bezier(.22,1,.36,1) }
+    .reveal.vis { opacity: 1; transform: none }
+    .d1 { transition-delay: .1s }
+    .d2 { transition-delay: .2s }
+    .d3 { transition-delay: .3s }
+    .d4 { transition-delay: .4s }
+
+    /* ─── NAV ────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: var(--forge);
+      height: 74px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(20px, 5vw, 64px);
+    }
+    .nav-logo { display: inline-flex; align-items: center }
+    .nav-logo img { height: 42px; display: block; width: auto }
+    .nav-links { display: flex; align-items: center; gap: 30px }
+    .nav-links a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+      color: var(--light-al); text-decoration: none; transition: color .15s;
+    }
+    .nav-links a.current-page { color: var(--rose-gold) }
+    .nav-links a:hover,
+    .nav-links a.current-page:hover { color: var(--verdigris) }
+    .nav-cta {
+      background: var(--copper) !important; color: #000 !important;
+      padding: 10px 24px; border-radius: 2px;
+      font-size: var(--t-button); transition: background .15s !important;
+    }
+    .nav-cta:hover { background: var(--deep-copper) !important }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 8px; background: none; border: none;
+    }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--light-al) }
+
+    /* ─── MOBILE MENU ────────────────────────────── */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0;
+      background: var(--forge); z-index: 300;
+      flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+    }
+    .mobile-menu.open { display: flex }
+    .mobile-menu a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead); font-weight: 700;
+      color: var(--white); text-decoration: none; transition: color .15s;
+    }
+    .mobile-menu a:hover { color: var(--verdigris) }
+    .mobile-menu .btn-copper { color: #000; font-size: var(--t-button); transition: all .18s }
+    .mobile-menu .btn-copper:hover { background: var(--deep-copper); color: #000 }
+    .mobile-close {
+      position: absolute; top: 20px; right: 24px;
+      background: none; border: none; color: var(--light-al);
+      font-size: var(--t-subhead); cursor: pointer;
+    }
+
+    /* ─── BUTTONS ─────────────────────────────────── */
+    .btn {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: var(--t-button); letter-spacing: 0.06em;
+      padding: 13px 28px; text-decoration: none;
+      display: inline-block; border-radius: 2px; border: none;
+      cursor: pointer; transition: all .18s;
+    }
+    .btn-forge   { background: var(--forge); color: var(--white) }
+    .btn-forge:hover { background: var(--steel) }
+    .btn-copper  { background: var(--copper); color: #000 }
+    .btn-copper:hover { background: var(--deep-copper) }
+    .btn-outline { background: transparent; color: var(--forge); border: 1.5px solid var(--light-al) }
+    .btn-outline:hover { border-color: var(--forge) }
+    .btn-white   { background: var(--white); color: var(--deep-copper) }
+    .btn-white:hover { background: var(--cool-white) }
+
+    /* ─── SECTION BASE ────────────────────────────── */
+    .section-pad { padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) }
+    .section-inner { max-width: 1200px; margin: 0 auto }
+    .section-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-headline); font-weight: 700;
+      line-height: 1.2; letter-spacing: -0.018em;
+      color: var(--forge); margin-bottom: 24px;
+    }
+    .section-intro {
+      font-size: var(--t-body); line-height: 1.82;
+      color: var(--steel); max-width: 68ch; margin-bottom: 48px;
+    }
+    .eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--copper); display: block; margin-bottom: 20px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════ */
+    .hero {
+      background: var(--white);
+      min-height: calc(100dvh - 74px);
+      padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) 0;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr min(520px, 42vw);
+      gap: clamp(48px, 6vw, 80px);
+      align-items: center;
+      padding-bottom: clamp(48px, 5vw, 64px);
+      flex: 1;
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-display); font-weight: 700;
+      line-height: 1.04; letter-spacing: -0.022em;
+      color: var(--forge); margin-bottom: 20px;
+    }
+    .hero-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead); font-weight: 700;
+      color: var(--steel); line-height: 1.35;
+      margin-bottom: 24px; max-width: 52ch;
+    }
+    .hero-sub {
+      font-size: var(--t-body); line-height: 1.82;
+      color: var(--steel); max-width: 56ch;
+    }
+    /* Hero right: grey placeholder */
+    .hero-placeholder {
+      border-radius: 2px;
+      background: var(--cool-white);
+      border: 1px solid var(--light-al);
+      aspect-ratio: 4/5;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-placeholder-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--aluminum);
+    }
+
+    /* ═══════════════════════════════════════════════
+       STAT STRIP
+       ═══════════════════════════════════════════════ */
+    .stat-strip {
+      background: var(--forge);
+      padding: clamp(36px, 5vw, 56px) clamp(20px, 5vw, 64px);
+    }
+    .stat-strip-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .stat-item {
+      padding: 20px 32px;
+      border-right: 1px solid var(--steel);
+      text-align: center;
+    }
+    .stat-item:last-child { border-right: none }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 4.5vw, 56px);
+      font-weight: 700; color: var(--copper);
+      line-height: 1; display: block; margin-bottom: 8px;
+    }
+    .stat-desc {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--aluminum); display: block; line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════════
+       INTEGRATION — TALL CARDS WITH PLACEHOLDER TOPS
+       ═══════════════════════════════════════════════ */
+    .integration-v3 {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+    .io-grid-v3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .io-card-v3 {
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: box-shadow .2s, border-color .2s;
+    }
+    .io-card-v3:hover {
+      border-color: var(--copper);
+      box-shadow: 0 8px 24px var(--light-al);
+    }
+    .io-top {
+      background: var(--cool-white);
+      aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      border-bottom: 1px solid var(--light-al);
+      position: relative;
+    }
+    /* Dashed decorative corner lines — CSS only, no rgba */
+    .io-top::before,
+    .io-top::after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      border: 1.5px dashed var(--light-al);
+      border-radius: 2px;
+    }
+    .io-top::before { top: 16px; left: 16px; border-right: none; border-bottom: none }
+    .io-top::after  { bottom: 16px; right: 16px; border-left: none; border-top: none }
+    .io-top-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--white); border: 1.5px solid var(--light-al);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--copper); position: relative; z-index: 1;
+    }
+    .io-body-v3 {
+      padding: clamp(20px, 3vw, 32px);
+      flex: 1; display: flex; flex-direction: column;
+    }
+    .io-pill {
+      display: inline-block;
+      background: var(--cool-white);
+      border: 1px solid var(--light-al);
+      color: var(--steel);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 2px;
+      margin-bottom: 16px;
+    }
+    .io-card-v3 h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead); font-weight: 700;
+      color: var(--forge); margin-bottom: 12px; line-height: 1.3;
+    }
+    .io-desc {
+      font-size: var(--t-body); color: var(--steel);
+      line-height: 1.75; margin-bottom: 24px;
+    }
+    .io-checks { list-style: none; display: grid; gap: 10px; margin-top: auto }
+    .io-check {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: var(--t-body); color: var(--steel); line-height: 1.5;
+    }
+    .io-check-icon { color: var(--park-green); flex-shrink: 0; margin-top: 2px }
+    .integration-note {
+      font-size: var(--t-body); line-height: 1.82; color: var(--steel);
+      border-left: 3px solid var(--light-al);
+      padding: 16px 24px; margin-top: 8px;
+    }
+    .diagram-placeholder {
+      background: var(--white);
+      border: 2px dashed var(--light-al);
+      border-radius: 2px;
+      padding: 56px 24px;
+      text-align: center; margin-top: 32px;
+    }
+    .diagram-placeholder span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--aluminum);
+    }
+
+    /* ═══════════════════════════════════════════════
+       PROBLEM / SOLUTION — TAB PANEL
+       ═══════════════════════════════════════════════ */
+    .ps-v3 {
+      background: var(--white);
+      border-top: 1px solid var(--light-al);
+    }
+    .ps-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: start;
+    }
+    .ps-nav { position: sticky; top: 90px }
+    .ps-nav-eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--aluminum); display: block; margin-bottom: 16px;
+    }
+    .ps-tab-btn {
+      display: block; width: 100%; text-align: left;
+      background: none; border: none;
+      border-left: 2px solid var(--light-al);
+      padding: 14px 20px; cursor: pointer;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-body); font-weight: 700;
+      color: var(--aluminum); line-height: 1.3;
+      transition: all .15s; margin-bottom: 4px;
+    }
+    .ps-tab-btn:hover { border-left-color: var(--light-al); color: var(--steel) }
+    .ps-tab-btn.active { border-left-color: var(--copper); color: var(--forge) }
+    .ps-detail {}
+    .ps-visual-placeholder {
+      background: var(--cool-white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      aspect-ratio: 16/7;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+    .ps-visual-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--aluminum);
+    }
+    .ps-panel { display: none }
+    .ps-panel.active { display: block }
+    .ps-pair-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    /* Cards reused from v2 */
+    .ps-card {
+      border: 1px solid var(--light-al);
+      border-radius: 2px; overflow: hidden;
+      background: var(--white);
+      transition: box-shadow .25s, transform .25s;
+    }
+    .ps-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px var(--light-al);
+    }
+    .ps-accent { height: 3px; background: var(--copper) }
+    .ps-card.is-sol .ps-accent { background: var(--verdigris) }
+    .ps-body { padding: clamp(20px, 3vw, 28px) }
+    .ps-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--copper); display: block; margin-bottom: 10px;
+    }
+    .ps-card.is-sol .ps-num { color: var(--verdigris) }
+    .ps-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead); font-weight: 700;
+      color: var(--forge); margin-bottom: 12px; line-height: 1.3;
+    }
+    .ps-card p { font-size: var(--t-body); line-height: 1.82; color: var(--steel) }
+
+    /* ═══════════════════════════════════════════════
+       COMPARISON TABLE
+       ═══════════════════════════════════════════════ */
+    .compare-section {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+    .ct-wrap { overflow-x: auto }
+    table.ct {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px; overflow: hidden;
+    }
+    table.ct thead { background: var(--forge) }
+    table.ct th {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 18px 24px; text-align: left;
+      color: var(--rose-gold);
+    }
+    table.ct th.vmi-head { color: var(--verdigris) }
+    table.ct th:first-child { width: 16%; color: var(--light-al) }
+    table.ct td {
+      font-size: var(--t-data); padding: 16px 24px;
+      border-bottom: 1px solid var(--cool-white);
+      vertical-align: top; line-height: 1.65;
+    }
+    table.ct tr:last-child td { border-bottom: none }
+    table.ct tbody tr:hover td { background: var(--cool-white) }
+    .ct-dim {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--steel);
+    }
+    .ct-them { color: var(--steel) }
+    .ct-vmi {
+      color: var(--forge); font-weight: 700;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      background: var(--cool-white);
+    }
+
+    /* ═══════════════════════════════════════════════
+       VENDOR QUESTION ACCORDION
+       ═══════════════════════════════════════════════ */
+    .vendor-q {
+      background: var(--white);
+      border-top: 1px solid var(--light-al);
+    }
+    .vq-list { display: grid; gap: 0 }
+    .vq-item { border-bottom: 1px solid var(--light-al) }
+    .vq-item:first-child { border-top: 1px solid var(--light-al) }
+    .vq-trigger {
+      width: 100%; display: flex;
+      align-items: center; justify-content: space-between; gap: 16px;
+      padding: clamp(18px, 2.5vw, 26px) 0;
+      background: none; border: none; cursor: pointer; text-align: left;
+    }
+    .vq-trigger:hover .vq-q { color: var(--copper) }
+    .vq-q {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead); font-weight: 700;
+      color: var(--forge); line-height: 1.3;
+      letter-spacing: -0.01em; transition: color .15s;
+    }
+    .vq-icon {
+      flex-shrink: 0; width: 28px; height: 28px;
+      border-radius: 50%; border: 1.5px solid var(--light-al);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--copper); transition: transform .2s ease, border-color .15s;
+    }
+    .vq-trigger[aria-expanded="true"] .vq-icon {
+      transform: rotate(180deg); border-color: var(--copper);
+    }
+    .vq-panel { padding: 0 0 clamp(18px, 2.5vw, 26px) }
+    .vq-a {
+      font-size: var(--t-body); line-height: 1.82;
+      color: var(--steel); max-width: 80ch;
+    }
+    .vq-a em { color: var(--forge); font-style: italic }
+
+    /* ═══════════════════════════════════════════════
+       ACCESSIBILITY
+       ═══════════════════════════════════════════════ */
+    .access-section {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+    .access-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: clamp(48px, 7vw, 100px);
+      align-items: start;
+    }
+    .access-body p {
+      font-size: var(--t-body); line-height: 1.82;
+      color: var(--steel); margin-bottom: 18px; max-width: 56ch;
+    }
+    .access-body p:last-child { margin-bottom: 0 }
+    .access-stat {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-left: 4px solid var(--copper);
+      border-radius: 2px; padding: 20px 24px; margin: 28px 0;
+    }
+    .access-stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(32px, 4vw, 48px); font-weight: 700;
+      color: var(--copper); line-height: 1; flex-shrink: 0;
+    }
+    .access-stat-text { font-size: var(--t-body); color: var(--steel); line-height: 1.5; padding-top: 4px }
+    .access-photo {
+      border-radius: 2px; overflow: hidden;
+      background: var(--light-al);
+      min-height: 500px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .access-photo-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--aluminum);
+    }
+    .placeholder-notice {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--aluminum);
+      background: var(--white);
+      border: 2px dashed var(--light-al);
+      border-radius: 2px; padding: 24px;
+      text-align: center; margin-top: 28px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       PILOT — HORIZONTAL TIMELINE
+       ═══════════════════════════════════════════════ */
+    .pilot {
+      background: var(--white);
+      border-top: 1px solid var(--light-al);
+    }
+    .pilot-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      position: relative;
+      margin-bottom: 48px;
+    }
+    /* Connecting line across the step numbers */
+    .pilot-timeline::before {
+      content: '';
+      position: absolute;
+      top: 35px;
+      left: calc(12.5% + 0px);
+      right: calc(12.5% + 0px);
+      height: 2px;
+      background: var(--light-al);
+      z-index: 0;
+    }
+    .pt-step {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; position: relative; z-index: 1;
+    }
+    .pt-num {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: var(--white); border: 2px solid var(--light-al);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      margin-bottom: 20px; transition: border-color .25s;
+    }
+    .pt-step:hover .pt-num { border-color: var(--copper) }
+    .pt-n {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead); font-weight: 700;
+      color: var(--copper); line-height: 1;
+    }
+    .pt-lbl {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px; font-weight: 700;
+      color: var(--aluminum); letter-spacing: 0.07em; text-transform: uppercase;
+    }
+    .pt-content h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px; font-weight: 700;
+      color: var(--forge); margin-bottom: 10px; line-height: 1.3;
+    }
+    .pt-content p { font-size: 15px; color: var(--steel); line-height: 1.7 }
+    .pilot-note {
+      font-size: var(--t-body); line-height: 1.82; color: var(--steel);
+      border-left: 3px solid var(--light-al); padding: 16px 24px;
+      max-width: 820px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       IN THE FIELD — CARDS WITH COLORED TOPS
+       ═══════════════════════════════════════════════ */
+    .field {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+    .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px }
+    .case-card-v3 {
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: box-shadow .2s;
+    }
+    .case-card-v3:hover { box-shadow: 0 8px 24px var(--light-al) }
+    .case-top {
+      background: var(--forge);
+      min-height: 220px;
+      display: flex; align-items: flex-end;
+      padding: 24px 28px;
+      position: relative;
+    }
+    /* Subtle concentric circle decoration in case card top */
+    .case-top::before {
+      content: '';
+      position: absolute;
+      width: 240px; height: 240px; border-radius: 50%;
+      border: 1px solid var(--steel);
+      top: -60px; right: -60px;
+    }
+    .case-top::after {
+      content: '';
+      position: absolute;
+      width: 360px; height: 360px; border-radius: 50%;
+      border: 1px solid var(--steel);
+      top: -120px; right: -120px;
+    }
+    .case-top-content { position: relative; z-index: 1 }
+    .case-state {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--copper); display: block; margin-bottom: 6px;
+    }
+    .case-card-v3 h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead); font-weight: 700;
+      color: var(--white); line-height: 1.3;
+    }
+    .case-body-v3 { padding: clamp(20px, 3vw, 32px); flex: 1 }
+    .case-placeholder {
+      font-size: var(--t-body); color: var(--aluminum); line-height: 1.8; margin-bottom: 14px;
+    }
+    .case-structure {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label); font-weight: 700;
+      letter-spacing: 0.03em; color: var(--light-al); line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER CTA
+       ═══════════════════════════════════════════════ */
+    .footer-cta {
+      background: var(--copper);
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .footer-cta-inner { max-width: 640px; margin: 0 auto; position: relative }
+    .fca-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-headline); font-weight: 700;
+      color: #000; line-height: 1.1; letter-spacing: -0.015em; margin-bottom: 12px;
+    }
+    .fca-sub { font-size: var(--t-body); color: #000; margin-bottom: 32px; line-height: 1.65 }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      background: var(--forge);
+      padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 64px) clamp(24px, 3vw, 36px);
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; gap: 28px }
+    .footer-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 32px; flex-wrap: wrap; padding-bottom: 60px;
+    }
+    .footer-logo { display: inline-flex; align-items: center }
+    .footer-logo img { height: 32px; width: auto; display: block }
+    .footer-cta-block { max-width: 640px; display: grid; gap: 6px }
+    .footer-hero {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px; font-weight: 700;
+      line-height: 1.25; letter-spacing: -0.01em; color: var(--white);
+    }
+    .footer-sub { font-size: 15px; line-height: 1.8; color: var(--light-al); max-width: 54ch }
+    .footer-demo {
+      display: inline-flex; align-items: center; gap: 8px;
+      width: fit-content; margin-top: 4px;
+      background: transparent; color: var(--rose-gold);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-decoration: none;
+    }
+    .footer-demo:hover { color: var(--verdigris) }
+    .footer-demo .arrow { font-size: 16px; line-height: 1; transition: transform .18s }
+    .footer-demo:hover .arrow { transform: translateX(3px) }
+    .footer-contact { font-size: 15px; color: var(--light-al); line-height: 1.8; display: grid; gap: 4px }
+    .footer-contact a { color: var(--light-al); text-decoration: none }
+    .footer-contact a:hover { color: var(--white) }
+    .footer-bottom {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; flex-wrap: wrap; gap: 18px; padding-top: 4px;
+    }
+    .footer-tagline { font-size: 15px; color: var(--light-al); max-width: 34ch }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap }
+    .footer-links a { font-size: 15px; color: var(--light-al); text-decoration: none }
+    .footer-links a:hover { color: var(--white) }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr }
+      .hero-placeholder { aspect-ratio: 16/9; max-width: 540px }
+      .io-grid-v3 { grid-template-columns: 1fr }
+      .ps-layout { grid-template-columns: 1fr }
+      .ps-nav { position: static }
+      .ps-tab-btn { border-left: none; border-bottom: 2px solid var(--light-al) }
+      .ps-tab-btn.active { border-left: none; border-bottom-color: var(--copper) }
+      .ps-pair-grid { grid-template-columns: 1fr }
+      .access-grid { grid-template-columns: 1fr }
+      .stat-strip-inner { grid-template-columns: repeat(2, 1fr) }
+      .stat-item:nth-child(2) { border-right: none }
+      .stat-item:nth-child(3) { border-right: 1px solid var(--steel); border-top: 1px solid var(--steel) }
+      .stat-item:nth-child(4) { border-top: 1px solid var(--steel); border-right: none }
+      .pilot-timeline { grid-template-columns: repeat(2, 1fr) }
+      .pilot-timeline::before { display: none }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none }
+      .hamburger { display: flex }
+      table.ct th:first-child,
+      table.ct td:first-child { display: none }
+      .case-grid { grid-template-columns: 1fr }
+      .ps-pair-grid { grid-template-columns: 1fr }
+      .pilot-timeline { grid-template-columns: 1fr }
+      .stat-strip-inner { grid-template-columns: 1fr 1fr }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="/">Home</a>
+    <a href="/product" class="current-page">Product</a>
+    <a href="/impact">Impact</a>
+    <a href="/insights">Insights</a>
+    <a href="/about">About</a>
+    <a href="/careers">Careers</a>
+    <a href="/contact">Contact</a>
+    <a href="/contact" class="btn btn-copper" style="margin-top:8px">Request a demo</a>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="../Logo/Stacked%20Logo/SVG/Dark/Duo-copper.svg" alt="Digital Public Works">
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/product" class="current-page">Product</a>
+      <a href="/impact">Impact</a>
+      <a href="/insights">Insights</a>
+      <a href="/about">About</a>
+      <a href="/careers">Careers</a>
+      <a href="/contact">Contact</a>
+      <a href="/contact" class="nav-cta">Request a demo</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-grid">
+
+        <div class="reveal">
+          <span class="eyebrow">Verify My Income</span>
+          <h1>The income verification service layer</h1>
+          <p class="hero-tagline">Between payroll data and state benefit systems</p>
+          <p class="hero-sub">VMI is an end-to-end verification service that handles the entire journey income data
+            takes, from the applicant's payroll provider, through a consent-driven workflow, to a caseworker-ready
+            report delivered to the state's eligibility system. VMI is designed around enrollment outcomes, not just
+            data retrieval.</p>
+        </div>
+
+        <div class="hero-placeholder reveal d2" role="img" aria-label="Product screenshot placeholder">
+          <span class="hero-placeholder-label">Product screenshot</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       STAT STRIP
+       ═══════════════════════════════════════════════ -->
+  <div class="stat-strip" aria-label="Key metrics">
+    <div class="stat-strip-inner">
+      <div class="stat-item reveal">
+        <span class="stat-num">&lt;5 min</span>
+        <span class="stat-desc">For applicants to verify income</span>
+      </div>
+      <div class="stat-item reveal d1">
+        <span class="stat-num">93%</span>
+        <span class="stat-desc">Caseworkers rate VMI as easy or easier</span>
+      </div>
+      <div class="stat-item reveal d2">
+        <span class="stat-num">85%</span>
+        <span class="stat-desc">Applicants report no difficulty completing</span>
+      </div>
+      <div class="stat-item reveal d3">
+        <span class="stat-num">65%</span>
+        <span class="stat-desc">Users access VMI on a smartphone</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       BUILT TO FIT YOUR SYSTEMS — Integration cards
+       ═══════════════════════════════════════════════ -->
+  <section class="integration-v3 section-pad" id="integration">
+    <div class="section-inner">
+      <h2 class="section-h reveal">Built to fit your systems</h2>
+      <p class="section-intro reveal d1">VMI integrates with existing state benefit systems through multiple deployment
+        options:</p>
+
+      <div class="io-grid-v3">
+
+        <!-- Option 01 -->
+        <div class="io-card-v3 reveal d1">
+          <div class="io-top" aria-hidden="true">
+            <div class="io-top-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 6H16M8 10H16M8 14H12M5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="io-body-v3">
+            <span class="io-pill">Option 01</span>
+            <h3>API integration with state eligibility systems</h3>
+            <p class="io-desc">Connect VMI directly to your existing eligibility infrastructure. Income reports are delivered in real time to your system of record.</p>
+            <ul class="io-checks" aria-label="Features">
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                RESTful API with complete documentation
+              </li>
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Secure server-to-server authentication
+              </li>
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Delivery via SFTP, S3, encrypted email, or webhooks
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Option 02 -->
+        <div class="io-card-v3 reveal d2">
+          <div class="io-top" aria-hidden="true">
+            <div class="io-top-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.5 3H12H8C6.34315 3 5 4.34315 5 6V18C5 19.6569 6.34315 21 8 21H16C17.6569 21 19 19.6569 19 18V8.625M13.5 3L19 8.625M13.5 3V8.625H19M9 13H15M9 17H12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="io-body-v3">
+            <span class="io-pill">Option 02</span>
+            <h3>Standalone portal accessible via unique link per household</h3>
+            <p class="io-desc">Launch fast with zero development resources. Each household receives a unique link to a fully hosted, state-branded VMI portal.</p>
+            <ul class="io-checks" aria-label="Features">
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                No development resources required
+              </li>
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                State-branded portal, fully configured
+              </li>
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Can launch in as little as four weeks
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Option 03 -->
+        <div class="io-card-v3 reveal d3">
+          <div class="io-top" aria-hidden="true">
+            <div class="io-top-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 3H19C20.1 3 21 3.9 21 5V15C21 16.1 20.1 17 19 17H5C3.9 17 3 16.1 3 15V5C3 3.9 3.9 3 5 3ZM3 19H21M8 21H16" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="io-body-v3">
+            <span class="io-pill">Option 03</span>
+            <h3>Embedded widget in state application portals</h3>
+            <p class="io-desc">Incorporate VMI directly into your existing application flow. Applicants never leave your portal during the verification step.</p>
+            <ul class="io-checks" aria-label="Features">
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Simple JavaScript integration
+              </li>
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Configurable to match state branding
+              </li>
+              <li class="io-check">
+                <svg class="io-check-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.25"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Mobile-responsive, WCAG 2.1 AA certified
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- /io-grid-v3 -->
+
+      <p class="integration-note reveal">Each state deployment is white-labeled and configured to match the state's
+        branding, communication preferences, and data requirements. Income reports are delivered via SFTP, S3, encrypted
+        email, or webhooks API to fit existing state infrastructure.</p>
+
+      <div class="diagram-placeholder reveal d1">
+        <span>Integration options diagram — DPW asset to be inserted here</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       THE VERIFICATION PROBLEM — Tab panel
+       ═══════════════════════════════════════════════ -->
+  <section class="ps-v3 section-pad" id="the-problem">
+    <div class="section-inner">
+
+      <h2 class="section-h reveal">The verification problem</h2>
+      <p class="section-intro reveal d1">The issues states face with income verification — and how VMI is built to solve each one.</p>
+
+      <div class="ps-layout reveal d1">
+
+        <!-- Left: tab navigation -->
+        <nav class="ps-nav" aria-label="Problem topics">
+          <span class="ps-nav-eyebrow">Select an issue</span>
+          <button class="ps-tab-btn active" data-ps="1">No verification layer</button>
+          <button class="ps-tab-btn" data-ps="2">Burden on caseworkers</button>
+          <button class="ps-tab-btn" data-ps="3">Time tax on applicants</button>
+          <button class="ps-tab-btn" data-ps="4">Raw data is not verification</button>
+        </nav>
+
+        <!-- Right: detail panels -->
+        <div class="ps-detail">
+
+          <!-- Shared visual placeholder -->
+          <div class="ps-visual-placeholder" aria-hidden="true">
+            <span class="ps-visual-label">Illustration placeholder</span>
+          </div>
+
+          <!-- Panel 1 -->
+          <div class="ps-panel active" id="ps-panel-1" role="tabpanel">
+            <div class="ps-pair-grid">
+              <div class="ps-card">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Problem 01</span>
+                  <h3>No verification layer</h3>
+                  <p>States receive raw data from commercial databases or paper documents, but have no service layer to
+                    validate, contextualize, and deliver that data in a format caseworkers can act on immediately. The result:
+                    follow-up calls, manual processing, and delayed enrollment.</p>
+                </div>
+              </div>
+              <div class="ps-card is-sol">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Solution 01</span>
+                  <h3>A purpose-built verification layer</h3>
+                  <p>VMI handles the entire data journey: consent management, payroll connection, data validation, QA review,
+                    and delivery of a standardized income report to the caseworker. States get a complete service, not just a
+                    data feed.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 2 -->
+          <div class="ps-panel" id="ps-panel-2" role="tabpanel">
+            <div class="ps-pair-grid">
+              <div class="ps-card">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Problem 02</span>
+                  <h3>Burden on caseworkers</h3>
+                  <p>When electronic verification fails, caseworkers must manually process documents, make follow-up calls,
+                    and request additional information from applicants.</p>
+                </div>
+              </div>
+              <div class="ps-card is-sol">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Solution 02</span>
+                  <h3>Easier work for caseworkers</h3>
+                  <p>93% of caseworkers find VMI's income reports just as easy or easier to use than existing methods. Every
+                    report goes through data validation and sufficiency checks (think automated QA) before it reaches a
+                    caseworker. Fewer follow-up calls. Less manual data entry.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 3 -->
+          <div class="ps-panel" id="ps-panel-3" role="tabpanel">
+            <div class="ps-pair-grid">
+              <div class="ps-card">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Problem 03</span>
+                  <h3>Time tax on applicants</h3>
+                  <p>People are required to track down pay stubs, print forms, and submit documents to prove their income.
+                    Access to benefits is delayed by days or weeks.</p>
+                </div>
+              </div>
+              <div class="ps-card is-sol">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Solution 03</span>
+                  <h3>Minutes, not days, for applicants</h3>
+                  <p>Applicants verify income in under 5 minutes. No documents to find or upload. 85% of applicants report no
+                    difficulty completing the process.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 4 -->
+          <div class="ps-panel" id="ps-panel-4" role="tabpanel">
+            <div class="ps-pair-grid">
+              <div class="ps-card">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Problem 04</span>
+                  <h3>Raw data is not verification</h3>
+                  <p>Payroll aggregators can connect to employer systems and pull income records. But raw aggregator data
+                    frequently lacks the information caseworkers need for accurate eligibility determinations, including
+                    missing pay dates, no gross pay amounts, or no hours data. Without a verification layer that validates and
+                    transforms that data, incomplete records reach the caseworker and drive errors.</p>
+                </div>
+              </div>
+              <div class="ps-card is-sol">
+                <div class="ps-accent"></div>
+                <div class="ps-body">
+                  <span class="ps-num">Solution 04</span>
+                  <h3>A programmatic quality gate</h3>
+                  <p>Every aggregator response passes through VMI's validation layer before any data reaches a state agency.
+                    Reports that do not meet eligibility-grade standards are rejected, and the applicant is routed to an
+                    alternative. States receive only verified, caseworker-ready data.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /ps-detail -->
+      </div><!-- /ps-layout -->
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       COMPARISON TABLE
+       ═══════════════════════════════════════════════ -->
+  <section class="compare-section section-pad" id="comparison">
+    <div class="section-inner">
+      <h2 class="section-h reveal">Traditional Approaches vs. VMI</h2>
+      <div class="ct-wrap reveal d1">
+        <table class="ct" aria-label="Traditional approaches vs. VMI comparison">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col"><span style="color:#e05252;margin-right:6px" aria-hidden="true">✗</span>Traditional Approaches</th>
+              <th scope="col" class="vmi-head"><span style="color:var(--verdigris);margin-right:6px" aria-hidden="true">✓</span>VMI — Digital Public Works</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ct-dim">What you get</td>
+              <td class="ct-them">A data connection, a bundled add-on to a larger contract, or a commercial product.
+                The state fills the gaps.</td>
+              <td class="ct-vmi">A complete verification service. Consent, benefits-specific data validation, and
+                caseworker-ready reports included.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Pricing</td>
+              <td class="ct-them">Commercial pricing that rises over time. Some vendors bundle verification into larger
+                contracts, hiding the true cost.</td>
+              <td class="ct-vmi">Nonprofit, at cost. Price decreases as more states join the platform.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Data quality</td>
+              <td class="ct-them">Raw data delivered as-is. No validation against program requirements. Incomplete or
+                unusable records reach caseworkers.</td>
+              <td class="ct-vmi">Every report passes through programmatic validation. Reports that do not meet
+                eligibility-grade standards are rejected and applicants are redirected to existing options.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Open source</td>
+              <td class="ct-them">Proprietary. No visibility into how the system works.</td>
+              <td class="ct-vmi">Full codebase published under AGPL-3.0 on GitHub.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Vendor lock-in</td>
+              <td class="ct-them">High. Switching vendors means rebuilding. Some states are locked into multi-year
+                contracts with no exit path.</td>
+              <td class="ct-vmi">None. If DPW ceased to exist, states retain full access to the code, architecture,
+                and documentation.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Accessibility</td>
+              <td class="ct-them">State inherits responsibility for all embedded components, including third-party
+                interfaces it does not control.</td>
+              <td class="ct-vmi">WCAG 2.1 AA commitment with independent third-party auditing funded by AARP
+                Foundation.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Service model</td>
+              <td class="ct-them">Per-verification billing regardless of eligibility value.</td>
+              <td class="ct-vmi">Embedded partnership: discovery sprints, case reviews, ongoing service design, and
+                workflow improvement.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       QUESTIONS TO ASK ANY INCOME VERIFICATION VENDOR
+       ═══════════════════════════════════════════════ -->
+  <section class="vendor-q section-pad" id="vendor-questions">
+    <div class="section-inner">
+      <h2 class="section-h reveal">Questions to Ask Any Income Verification Vendor</h2>
+
+      <div class="vq-list reveal d1">
+
+        <div class="vq-item">
+          <button class="vq-trigger" aria-expanded="false" aria-controls="vq-1">
+            <span class="vq-q">What is the total cost of ownership?</span>
+            <span class="vq-icon" aria-hidden="true"><svg width="13" height="8" viewBox="0 0 13 8" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <div class="vq-panel" id="vq-1" hidden>
+            <p class="vq-a">Ask for the full picture, not just the per-verification price. Will you separately fund UX
+              design, consent infrastructure, eligibility logic, security authorization, accessibility compliance, and
+              ongoing maintenance?</p>
+          </div>
+        </div>
+
+        <div class="vq-item">
+          <button class="vq-trigger" aria-expanded="false" aria-controls="vq-2">
+            <span class="vq-q">Who is responsible for accessibility compliance?</span>
+            <span class="vq-icon" aria-hidden="true"><svg width="13" height="8" viewBox="0 0 13 8" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <div class="vq-panel" id="vq-2" hidden>
+            <p class="vq-a">If the product embeds third-party login interfaces or components the vendor does not
+              control, who remediates accessibility failures in those components? VMI's accessibility is independently
+              audited by a third party, funded by AARP Foundation.</p>
+          </div>
+        </div>
+
+        <div class="vq-item">
+          <button class="vq-trigger" aria-expanded="false" aria-controls="vq-3">
+            <span class="vq-q">Is there a data validation layer?</span>
+            <span class="vq-icon" aria-hidden="true"><svg width="13" height="8" viewBox="0 0 13 8" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <div class="vq-panel" id="vq-3" hidden>
+            <p class="vq-a">Raw payroll data is not always usable for eligibility determinations. What happens when a
+              report is missing pay dates, gross pay, or hours data? After login, what happens if accounts are
+              completely empty or the most recent pay date is 5 years old. Does the product catch that and communicate
+              to the client that they need to verify another way before it reaches a caseworker, or does the caseworker
+              find out and have to reach out to the client? VMI blocks reports that do not meet program-specific quality
+              standards and redirects applicants to existing verification options.</p>
+          </div>
+        </div>
+
+        <div class="vq-item">
+          <button class="vq-trigger" aria-expanded="false" aria-controls="vq-4">
+            <span class="vq-q">What happens if you need to switch vendors?</span>
+            <span class="vq-icon" aria-hidden="true"><svg width="13" height="8" viewBox="0 0 13 8" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <div class="vq-panel" id="vq-4" hidden>
+            <p class="vq-a">Can you take the code, the architecture, and the documentation with you? Or do you start
+              over? VMI is open source under AGPL-3.0. The full codebase is published on GitHub.</p>
+          </div>
+        </div>
+
+        <div class="vq-item">
+          <button class="vq-trigger" aria-expanded="false" aria-controls="vq-5">
+            <span class="vq-q">How does pricing change as usage scales?</span>
+            <span class="vq-icon" aria-hidden="true"><svg width="13" height="8" viewBox="0 0 13 8" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <div class="vq-panel" id="vq-5" hidden>
+            <p class="vq-a">Does the per-unit cost go up with volume, stay flat, or go down? VMI is operated at cost
+              by a nonprofit. Per-state costs decrease as more states join the platform <em>regardless of whether an
+                individual state's own volume increases</em>.</p>
+          </div>
+        </div>
+
+        <div class="vq-item">
+          <button class="vq-trigger" aria-expanded="false" aria-controls="vq-6">
+            <span class="vq-q">Can you switch data providers without rebuilding?</span>
+            <span class="vq-icon" aria-hidden="true"><svg width="13" height="8" viewBox="0 0 13 8" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <div class="vq-panel" id="vq-6" hidden>
+            <p class="vq-a">VMI sits above the data layer — states integrate once with the platform, not with
+              individual data providers. If a payroll aggregator raises prices or drops in quality, VMI can swap them
+              out and absorb the normalization work. The state's integration never changes.</p>
+          </div>
+        </div>
+
+        <div class="vq-item">
+          <button class="vq-trigger" aria-expanded="false" aria-controls="vq-7">
+            <span class="vq-q">What implementation support is included?</span>
+            <span class="vq-icon" aria-hidden="true"><svg width="13" height="8" viewBox="0 0 13 8" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+          <div class="vq-panel" id="vq-7" hidden>
+            <p class="vq-a">Does the vendor deliver data and walk away, or embed with your team? VMI engagements
+              include discovery sprints, caseworker and applicant interviews, case review analysis, and ongoing service
+              design improvements throughout the partnership.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       ACCESSIBLE BY DESIGN
+       ═══════════════════════════════════════════════ -->
+  <section class="access-section section-pad" id="accessibility">
+    <div class="section-inner">
+      <div class="access-grid">
+        <div>
+          <h2 class="section-h reveal">Accessible by design, not as an afterthought</h2>
+          <div class="access-body reveal d1">
+            <p>DPW is investing in accessibility research in partnership with the AARP Foundation, with independent
+              third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility
+              standards. The platform supports English and Spanish.</p>
+            <p>We do not treat accessibility as a compliance checkbox. We are conducting original research into how
+              income verification tools can be made usable for older adults, people with disabilities, and individuals
+              with limited English proficiency. Findings from this research will be published and shared with the
+              field.</p>
+          </div>
+          <div class="access-stat reveal d2">
+            <span class="access-stat-num">65%</span>
+            <p class="access-stat-text">of our users access VMI on a smartphone. The platform is built
+              mobile-first.</p>
+          </div>
+          <div class="placeholder-notice reveal d3">
+            Accessibility research findings — placeholder
+          </div>
+        </div>
+        <div class="access-photo reveal d2" role="img" aria-label="Photo placeholder">
+          <span class="access-photo-label">Photo placeholder</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       PATH TO A PILOT — Horizontal timeline
+       ═══════════════════════════════════════════════ -->
+  <section class="pilot section-pad" id="path-to-pilot">
+    <div class="section-inner">
+      <h2 class="section-h reveal">The path to a pilot</h2>
+
+      <div class="pilot-timeline reveal d1" role="list">
+
+        <div class="pt-step" role="listitem">
+          <div class="pt-num" aria-hidden="true">
+            <span class="pt-n">01</span>
+            <span class="pt-lbl">Step</span>
+          </div>
+          <div class="pt-content">
+            <h3>Discovery<br><small style="font-weight:400;color:var(--aluminum)">(2–4 weeks)</small></h3>
+            <p>Meetings with executive leadership. Discovery sprint with interviews of policy experts, caseworkers, QC
+              workers, community-based organizations, and applicants. Vendor coordination and integration scoping.</p>
+          </div>
+        </div>
+
+        <div class="pt-step" role="listitem">
+          <div class="pt-num" aria-hidden="true">
+            <span class="pt-n">02</span>
+            <span class="pt-lbl">Step</span>
+          </div>
+          <div class="pt-content">
+            <h3>Configuration &amp; integration<br><small style="font-weight:400;color:var(--aluminum)">(4–6 weeks)</small></h3>
+            <p>Technical integration setup (SFTP, S3, encrypted email, or webhooks API). State-specific configuration:
+              branding, consent language, report format.</p>
+          </div>
+        </div>
+
+        <div class="pt-step" role="listitem">
+          <div class="pt-num" aria-hidden="true">
+            <span class="pt-n">03</span>
+            <span class="pt-lbl">Step</span>
+          </div>
+          <div class="pt-content">
+            <h3>Pilot launch</h3>
+            <p>Launch with a defined population. Data collection and analysis. Iterative improvements based on
+              caseworker and applicant feedback.</p>
+          </div>
+        </div>
+
+        <div class="pt-step" role="listitem">
+          <div class="pt-num" aria-hidden="true">
+            <span class="pt-n">04</span>
+            <span class="pt-lbl">Step</span>
+          </div>
+          <div class="pt-content">
+            <h3>Expansion</h3>
+            <p>Scale to broader populations and additional programs based on pilot data.</p>
+          </div>
+        </div>
+
+      </div><!-- /pilot-timeline -->
+
+      <p class="pilot-note reveal">Pennsylvania launched in six weeks from kickoff to go-live and scaled to statewide
+        availability eight weeks later. DPW moves at the speed of the state's capacity. Tightly scoped integrations can
+        launch in as little as four weeks; broader engagements typically take 8 to 12.</p>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       IN THE FIELD — Cards with colored tops
+       ═══════════════════════════════════════════════ -->
+  <section class="field section-pad" id="in-the-field">
+    <div class="section-inner">
+      <h2 class="section-h reveal">In the field</h2>
+      <div class="case-grid">
+
+        <div class="case-card-v3 reveal d1">
+          <div class="case-top">
+            <div class="case-top-content">
+              <span class="case-state">Pennsylvania</span>
+              <h3>Pennsylvania Department of Human Services</h3>
+            </div>
+          </div>
+          <div class="case-body-v3">
+            <p class="case-placeholder">Case study forthcoming — pending draft and approval from PA DHS.</p>
+            <p class="case-structure">Structure: the problem, DPW's approach, implementation timeline, outcome metrics,
+              and a quote from agency leadership.</p>
+          </div>
+        </div>
+
+        <div class="case-card-v3 reveal d2">
+          <div class="case-top">
+            <div class="case-top-content">
+              <span class="case-state">Arizona</span>
+              <h3>Arizona Department of Economic Security</h3>
+            </div>
+          </div>
+          <div class="case-body-v3">
+            <p class="case-placeholder">Case study forthcoming — pending draft and approval from AZ DES.</p>
+            <p class="case-structure">Structure: the problem, DPW's approach, implementation timeline, outcome metrics,
+              and a quote from agency leadership.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER CTA
+       ═══════════════════════════════════════════════ -->
+  <div class="footer-cta">
+    <div class="footer-cta-inner">
+      <h2 class="fca-h reveal">Ready to pilot <i>Verify My Income</i> in your jurisdiction?<br>Let's talk.</h2>
+      <p class="fca-sub reveal d1">No procurement required to begin the conversation.</p>
+      <a href="/contact" class="btn btn-white reveal d2">Request a Demo</a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-cta-block">
+          <h2 class="footer-hero">Ready to pilot <i>Verify My Income</i> in your jurisdiction? Let's talk.</h2>
+          <p class="footer-sub">No procurement required to begin the conversation.</p>
+          <a href="/contact" class="footer-demo">Request a Demo <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <a href="/" class="footer-logo">
+          <img src="../Logo/Extended%20Logo/SVG/Dark/Duo-copper.svg" alt="Digital Public Works">
+        </a>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-tagline">Digital Public Works is an independent 501(c)(3) nonprofit.</p>
+        <p class="footer-contact">
+          <a href="mailto:info@digitalpublicworks.org">info@digitalpublicworks.org</a>
+          <span>2261 Market Street, Suite 32572, San Francisco, CA 94114</span>
+        </p>
+        <div class="footer-links">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/accessibility">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── MOBILE NAV ────────────────────────────── */
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.add('open');
+    });
+    document.getElementById('mobileClose').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.remove('open');
+    });
+
+    /* ── SCROLL REVEAL ─────────────────────────── */
+    const revObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    /* ── PROBLEM/SOLUTION TABS ─────────────────── */
+    document.querySelectorAll('.ps-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.ps-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.ps-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const panel = document.getElementById('ps-panel-' + btn.dataset.ps);
+        if (panel) panel.classList.add('active');
+      });
+    });
+
+    /* ── VENDOR QUESTION ACCORDION ─────────────── */
+    document.querySelectorAll('.vq-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        document.querySelectorAll('.vq-trigger').forEach(b => {
+          b.setAttribute('aria-expanded', 'false');
+          b.nextElementSibling.hidden = true;
+        });
+        if (!isOpen) {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.nextElementSibling.hidden = false;
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

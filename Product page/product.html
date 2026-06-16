@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify My Income — Digital Public Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ─── RESET ───────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       DESIGN TOKENS  (identical to home-v3b.html)
+       ═══════════════════════════════════════════════════════════════════ */
+    :root {
+
+      /* ── COLOR ──────────────────────────────────────────────────────── */
+      --forge: #1E272E;
+      /* primary dark — white on forge ≈ 18:1 ✅ */
+      --copper: #C77234;
+      /* brand copper */
+      --deep-copper: #9F5528;
+      /* white on deep-copper = 4.8:1 ✅ */
+      --steel: #3A4E5C;
+      /* mid-dark blue-grey */
+      --park-green: #316844;
+      --verdigris: #56A374;
+      --aluminum: #A9B0B6;
+      --light-al: #D0D5D8;
+      --white: #FFFFFF;
+      --cool-white: #F6F7F8;
+      --white-gold: #D4CAA8;
+      --molten-gold: #E9A030;
+      --rose-gold: #DEB0A0;
+
+      /* ── TYPE SCALE ─────────────────────────────────────────────────
+         TIER       VARIABLE       VALUE                    FONT                    WT   USE
+         ─────────────────────────────────────────────────────────────────────────────────
+         Display    --t-display    clamp(44px,5.5vw,68px)   Space Grotesk           700  Hero h1 only
+         Headline   --t-headline   clamp(28px,3.5vw,44px)   Space Grotesk           700  Section h2s
+         Subhead    --t-subhead    clamp(18px,2.2vw,24px)   Space Grotesk           700  h3, h4, pull quotes
+         Body       --t-body       17px                     Atkinson Hyperlegible   400  All paragraphs, card text
+         Label      --t-label      12px                     Space Grotesk           700  Nav, badges, captions, footer
+         Button     --t-button     14px                     Space Grotesk           700  Buttons
+         Exception:
+         Data       --t-data       14px                     Atkinson Hyperlegible   400  Table cells ONLY
+         ─────────────────────────────────────────────────────────────────────────── */
+      --t-display: clamp(44px, 5.5vw, 68px);
+      --t-headline: clamp(28px, 3.5vw, 44px);
+      --t-subhead: clamp(18px, 2.2vw, 24px);
+      --t-body: 17px;
+      --t-label: 12px;
+      --t-data: 14px;
+      --t-decorative-mark: clamp(64px, 9vw, 120px);
+      --t-button: 14px;
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      font-size: var(--t-body);
+      line-height: 1.75;
+      color: var(--forge);
+      background: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ─── MOTION ──────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .reveal.vis {
+      opacity: 1;
+      transform: none
+    }
+
+    .d1 { transition-delay: .1s }
+    .d2 { transition-delay: .2s }
+    .d3 { transition-delay: .3s }
+    .d4 { transition-delay: .4s }
+
+    /* ─── NAV ────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--forge);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(20px, 5vw, 64px);
+    }
+
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .nav-logo img {
+      height: 42px;
+      display: block;
+      width: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--light-al);
+      text-decoration: none;
+      transition: color .15s;
+    }
+
+    .nav-links a.current-page {
+      color: var(--rose-gold);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.current-page:hover {
+      color: var(--verdigris)
+    }
+
+    .nav-cta {
+      background: var(--copper) !important;
+      color: #000 !important;
+      padding: 10px 24px;
+      border-radius: 2px;
+      font-size: var(--t-button);
+      text-transform: none;
+      transition: background .15s !important;
+    }
+
+    .nav-cta:hover {
+      background: var(--deep-copper) !important
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.9)
+    }
+
+    /* ─── MOBILE MENU ─────────────────────────────── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--forge);
+      z-index: 300;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .mobile-menu.open {
+      display: flex
+    }
+
+    .mobile-menu a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      transition: color .15s;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--copper)
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--light-al);
+      font-size: var(--t-subhead);
+      cursor: pointer;
+    }
+
+    /* ─── BUTTONS ─────────────────────────────────── */
+    .btn {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: var(--t-button);
+      letter-spacing: 0.06em;
+      text-transform: none;
+      padding: 13px 28px;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .btn-forge {
+      background: var(--forge);
+      color: #fff
+    }
+
+    .btn-forge:hover {
+      background: var(--steel)
+    }
+
+    .btn-copper {
+      background: var(--copper);
+      color: #fff
+    }
+
+    .btn-copper:hover {
+      background: var(--deep-copper)
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--forge);
+      border: 1.5px solid var(--light-al);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--forge)
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--deep-copper)
+    }
+
+    .btn-white:hover {
+      background: var(--cool-white)
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .hero {
+      background: var(--white);
+      min-height: calc(100dvh - 74px);
+      padding: clamp(24px, 4vw, 40px) clamp(20px, 5vw, 64px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr min(460px, 38vw);
+      gap: clamp(32px, 5vw, 72px);
+      align-items: center;
+      padding-bottom: clamp(24px, 3vw, 36px);
+      flex: 1;
+    }
+
+    /* Label tier: product name eyebrow */
+    .hero-eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    /* Display tier: hero headline */
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-display);
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.022em;
+      color: var(--forge);
+      margin-bottom: 20px;
+    }
+
+    /* Subhead tier: hero subtitle/tagline */
+    .hero-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--steel);
+      line-height: 1.35;
+      margin-bottom: 24px;
+      max-width: 52ch;
+    }
+
+    /* Body tier: hero sub-copy */
+    .hero-sub {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      max-width: 56ch;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* hero image */
+    .hero-img {
+      border-radius: 2px;
+      overflow: hidden;
+      aspect-ratio: 4/5;
+      position: relative
+    }
+
+    .hero-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    /* ─── FLOW DIAGRAM PLACEHOLDER ───────────────── */
+    .flow-section {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+      padding: clamp(48px, 6vw, 72px) clamp(20px, 5vw, 64px);
+    }
+
+    .flow-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .flow-placeholder {
+      background: var(--white);
+      border: 2px dashed var(--light-al);
+      border-radius: 2px;
+      padding: 56px 24px;
+      text-align: center;
+    }
+
+    .flow-note {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+    }
+
+    /* ─── SECTION BASE (reused) ───────────────────── */
+    .section-pad {
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
+    }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Headline tier: all section h2s */
+    .section-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-headline);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.018em;
+      color: var(--forge);
+      margin-bottom: 24px;
+    }
+
+    /* Body tier: section intro paragraphs */
+    .section-intro {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      max-width: 68ch;
+      margin-bottom: 48px;
+    }
+
+    /* ─── INTEGRATION OPTIONS ─────────────────────── */
+    .integration {
+      background: var(--white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .integration-opts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .io-card {
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      padding: clamp(20px, 3vw, 32px);
+      background: var(--white);
+      position: relative;
+      transition: box-shadow .2s, border-color .2s;
+    }
+
+    .io-card:hover {
+      border-color: rgba(199, 114, 52, 0.35);
+      box-shadow: 0 6px 24px rgba(30, 39, 46, 0.07);
+    }
+
+    .io-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--copper);
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    /* Subhead tier: option name */
+    .io-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .io-badge {
+      display: inline-block;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--steel);
+      background: var(--cool-white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      padding: 3px 8px;
+      margin-top: 10px;
+    }
+
+    /* Body tier: integration delivery note */
+    .integration-delivery {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      border-left: 3px solid var(--light-al);
+      padding: 16px 24px;
+      margin-top: 8px;
+    }
+
+    .diagram-placeholder {
+      background: var(--cool-white);
+      border: 2px dashed var(--light-al);
+      border-radius: 2px;
+      padding: 40px 24px;
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    /* ─── PROBLEM + SOLUTION CARDS ─────────────────── */
+    .prob-section {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .sol-section {
+      background: var(--white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .ps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .ps-card {
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: box-shadow .25s, transform .25s;
+    }
+
+    .sol-section .ps-card {
+      background: var(--cool-white);
+    }
+
+    .ps-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(30, 39, 46, 0.09);
+    }
+
+    .ps-accent {
+      height: 3px;
+      background: var(--copper);
+    }
+
+    .sol-section .ps-accent {
+      background: var(--verdigris);
+    }
+
+    .ps-body {
+      padding: clamp(20px, 3vw, 32px);
+    }
+
+    /* Label tier: card number */
+    .ps-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--copper);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .sol-section .ps-num {
+      color: var(--verdigris);
+    }
+
+    /* Subhead tier: card title */
+    .ps-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    /* Body tier: card body */
+    .ps-card p {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+    }
+
+    /* ─── COMPARISON TABLE (full) ─────────────────── */
+    .compare-full {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .ct-wrap {
+      overflow-x: auto
+    }
+
+    table.ct {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    table.ct thead {
+      background: var(--forge)
+    }
+
+    table.ct th {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 16px 20px;
+      text-align: left;
+      color: var(--rose-gold);
+    }
+
+    table.ct th.vmi-head {
+      color: var(--verdigris);
+    }
+
+    table.ct th:first-child {
+      width: 16%;
+      color: var(--light-al)
+    }
+
+    table.ct td {
+      font-size: var(--t-data);
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--cool-white);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    table.ct tr:last-child td {
+      border-bottom: none
+    }
+
+    .ct-dim {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--steel);
+    }
+
+    .ct-them {
+      color: var(--steel)
+    }
+
+    .ct-vmi {
+      color: var(--forge);
+      font-weight: 700;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      background: rgba(86, 163, 116, 0.05);
+    }
+
+    .ct-check {
+      color: var(--verdigris);
+      margin-right: 7px;
+      font-weight: 700;
+    }
+
+    /* ─── VENDOR QUESTIONS ────────────────────────── */
+    .vendor-q {
+      background: var(--white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .vq-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .vq-item {
+      border-bottom: 1px solid var(--light-al);
+      padding: clamp(20px, 3vw, 32px) 0;
+    }
+
+    .vq-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Subhead tier: question */
+    .vq-q {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      margin-bottom: 14px;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    /* Body tier: answer */
+    .vq-a {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      max-width: 80ch;
+    }
+
+    /* ─── ACCESSIBILITY SECTION ───────────────────── */
+    .access-section {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: clamp(48px, 7vw, 100px);
+      align-items: stretch;
+    }
+
+    .access-body p {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      margin-bottom: 18px;
+      max-width: 56ch;
+    }
+
+    .access-body p:last-child {
+      margin-bottom: 0
+    }
+
+    /* Label tier: accessibility stat callout */
+    .access-stat {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-left: 4px solid var(--copper);
+      border-radius: 2px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+
+    .access-stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 700;
+      color: var(--copper);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .access-stat-text {
+      font-size: var(--t-body);
+      color: var(--steel);
+      line-height: 1.5;
+      padding-top: 4px;
+    }
+
+    .access-photo {
+      border-radius: 2px;
+      overflow: hidden;
+      align-self: stretch;
+    }
+
+    .access-photo img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      min-height: 400px;
+    }
+
+    .placeholder-notice {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+      background: var(--white);
+      border: 2px dashed var(--light-al);
+      border-radius: 2px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 28px;
+    }
+
+    /* ─── PILOT STEPS ─────────────────────────────── */
+    .pilot {
+      background: var(--white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .pilot-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(48px, 7vw, 100px);
+      align-items: start;
+    }
+
+    .steps {
+      position: relative;
+    }
+
+    .steps-line {
+      position: absolute;
+      left: 35px;
+      top: 56px;
+      bottom: 56px;
+      width: 2px;
+      border-radius: 2px;
+      background: linear-gradient(to bottom, var(--copper), var(--light-al));
+      opacity: 0.28;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: clamp(16px, 2.5vw, 28px);
+      padding: clamp(14px, 2vw, 22px) 0;
+      align-items: start;
+      position: relative;
+    }
+
+    .step-badge {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--light-al);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      transition: border-color .25s;
+    }
+
+    .step:hover .step-badge {
+      border-color: var(--copper)
+    }
+
+    .step-n {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--copper);
+      line-height: 1;
+    }
+
+    .step-lbl {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      color: var(--aluminum);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .step-content {
+      background: var(--white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      padding: clamp(16px, 2.2vw, 24px);
+      transition: border-color .2s, transform .2s ease, box-shadow .2s ease;
+    }
+
+    .step:hover .step-content {
+      border-color: rgba(199, 114, 52, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(30, 39, 46, 0.07);
+    }
+
+    /* Label tier: step duration */
+    .step-duration {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--copper);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    /* Subhead tier: step title */
+    .step-content h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .step-content p {
+      font-size: var(--t-body);
+      line-height: 1.8;
+      color: var(--steel)
+    }
+
+    .pilot-aside {
+      padding-top: 16px;
+    }
+
+    .pilot-photo {
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .pilot-photo img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    /* Body tier: pilot launch note */
+    .pilot-note {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      border-left: 3px solid var(--rose-gold);
+      padding: 18px 24px;
+      margin-bottom: 28px;
+    }
+
+    /* ─── IN THE FIELD ────────────────────────────── */
+    .field {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al);
+    }
+
+    .field-placeholder {
+      background: var(--white);
+      border: 2px dashed var(--light-al);
+      border-radius: 2px;
+      padding: 56px 24px;
+      text-align: center;
+    }
+
+    .field-placeholder-note {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+      margin-bottom: 12px;
+    }
+
+    .field-placeholder-sub {
+      font-size: var(--t-body);
+      color: var(--light-al);
+    }
+
+    /* ─── FOOTER CTA ──────────────────────────────── */
+    .footer-cta {
+      background: var(--copper);
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-cta::before {
+      content: '';
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      top: -180px;
+      right: -100px;
+      pointer-events: none;
+    }
+
+    .footer-cta-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative
+    }
+
+    .fca-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-headline);
+      font-weight: 700;
+      color: #000;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      margin-bottom: 12px;
+    }
+
+    .fca-sub {
+      font-size: var(--t-body);
+      color: #000;
+      margin-bottom: 32px;
+      line-height: 1.65;
+    }
+
+    /* ─── FOOTER ──────────────────────────────────── */
+    footer {
+      background: var(--forge);
+      padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 64px) clamp(24px, 3vw, 36px);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 28px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding-bottom: 60px;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .footer-logo img {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .footer-cta-block {
+      max-width: 640px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .footer-hero {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: #fff;
+    }
+
+    .footer-sub {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--light-al);
+      max-width: 54ch;
+    }
+
+    .footer-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin-top: 4px;
+      padding: 0;
+      background: transparent;
+      color: var(--rose-gold);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    .footer-demo:hover {
+      color: var(--verdigris);
+    }
+
+    .footer-demo .arrow {
+      font-size: 16px;
+      line-height: 1;
+      transition: transform .18s;
+    }
+
+    .footer-demo:hover .arrow {
+      transform: translateX(3px);
+    }
+
+    .footer-contact {
+      font-size: 15px;
+      color: var(--light-al);
+      line-height: 1.8;
+      display: grid;
+      gap: 4px;
+    }
+
+    .footer-contact a {
+      color: var(--light-al);
+      text-decoration: none
+    }
+
+    .footer-contact a:hover {
+      color: #fff
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding-top: 4px;
+    }
+
+    .footer-tagline {
+      font-size: 15px;
+      color: var(--light-al);
+      max-width: 34ch;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 15px;
+      color: var(--light-al);
+      text-decoration: none
+    }
+
+    .footer-links a:hover {
+      color: #fff
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+
+      .hero-img {
+        max-width: 480px;
+        aspect-ratio: 16/9
+      }
+
+      .integration-opts {
+        grid-template-columns: 1fr
+      }
+
+      .access-grid {
+        grid-template-columns: 1fr
+      }
+
+      .pilot-layout {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none
+      }
+
+      .hamburger {
+        display: flex
+      }
+
+      .ps-grid {
+        grid-template-columns: 1fr
+      }
+
+      table.ct th:first-child,
+      table.ct td:first-child {
+        display: none
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">✕</button>
+    <a href="/">Home</a>
+    <a href="/product" class="current-page">Product</a>
+    <a href="/impact">Impact</a>
+    <a href="/insights">Insights</a>
+    <a href="/about">About</a>
+    <a href="/careers">Careers</a>
+    <a href="/contact">Contact</a>
+    <a href="/contact" class="btn btn-copper" style="margin-top:8px">Request a demo</a>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="../Logo/Stacked%20Logo/SVG/Dark/Duo-copper.svg" alt="Digital Public Works">
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/product" class="current-page">Product</a>
+      <a href="/impact">Impact</a>
+      <a href="/insights">Insights</a>
+      <a href="/about">About</a>
+      <a href="/careers">Careers</a>
+      <a href="/contact">Contact</a>
+      <a href="/contact" class="nav-cta">Request a demo</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-grid">
+
+        <!-- Left: headline + copy -->
+        <div class="reveal">
+          <span class="hero-eyebrow">Digital Public Works</span>
+          <h1>Verify My Income</h1>
+          <p class="hero-tagline">The verification service layer between payroll data and state benefit systems</p>
+          <p class="hero-sub">VMI is an end-to-end verification service that handles the entire journey income data
+            takes, from the applicant's payroll provider, through a consent-driven workflow, to a caseworker-ready
+            report delivered to the state's eligibility system. VMI is designed around enrollment outcomes, not just
+            data retrieval.</p>
+          <div class="hero-actions">
+            <a href="/contact" class="btn btn-forge">Request a Demo</a>
+            <a href="#path-to-pilot" class="btn btn-outline">See the path to a pilot</a>
+          </div>
+        </div>
+
+        <!-- Right: photo -->
+        <div class="hero-img reveal d2">
+          <img
+            src="https://images.unsplash.com/photo-1583777458845-047acbeb7d21?auto=format&fit=crop&w=900&q=80"
+            alt="Caseworker reviewing income verification with a client"
+            loading="eager" width="900" height="1125">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT FLOW DIAGRAM PLACEHOLDER -->
+  <div class="flow-section">
+    <div class="flow-inner reveal">
+      <div class="flow-placeholder">
+        <p class="flow-note">VMI product flow diagram — DPW asset to be inserted here</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUILT TO FIT YOUR SYSTEMS -->
+  <section class="integration section-pad" id="integration">
+    <div class="section-inner">
+      <h2 class="section-h reveal">Built to fit your systems</h2>
+      <p class="section-intro reveal d1">VMI integrates with existing state benefit systems through multiple deployment
+        options:</p>
+
+      <div class="integration-opts">
+        <div class="io-card reveal d1">
+          <span class="io-num">Option 01</span>
+          <h3>API integration with state eligibility systems</h3>
+        </div>
+        <div class="io-card reveal d2">
+          <span class="io-num">Option 02</span>
+          <h3>Standalone portal accessible via unique link per household</h3>
+        </div>
+        <div class="io-card reveal d3">
+          <span class="io-num">Option 03</span>
+          <h3>Embedded widget in state application portals</h3>
+          <span class="io-badge">Coming soon</span>
+        </div>
+      </div>
+
+      <p class="integration-delivery reveal">Each state deployment is white-labeled and configured to match the state's
+        branding, communication preferences, and data requirements. Income reports are delivered via SFTP, S3, encrypted
+        email, or webhooks API to fit existing state infrastructure.</p>
+
+      <div class="diagram-placeholder reveal d1">
+        <p class="flow-note">Integration options diagram — DPW asset to be inserted here</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE VERIFICATION PROBLEM -->
+  <section class="prob-section section-pad" id="the-problem">
+    <div class="section-inner">
+      <div style="display:grid;grid-template-columns:1fr min(380px,36vw);gap:clamp(40px,6vw,80px);align-items:start;margin-bottom:48px;" class="reveal">
+        <div>
+          <h2 class="section-h" style="margin-bottom:0">The verification problem</h2>
+        </div>
+        <div style="border-radius:2px;overflow:hidden;aspect-ratio:4/3;">
+          <img
+            src="https://images.unsplash.com/photo-1564156280315-1d42b4651629?auto=format&fit=crop&w=760&q=80"
+            alt="A father holding his young child — families who depend on benefit programs"
+            loading="lazy" width="760" height="570"
+            style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;">
+        </div>
+      </div>
+
+      <div class="ps-grid">
+        <div class="ps-card reveal d1">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Problem 01</span>
+            <h3>No verification layer</h3>
+            <p>States receive raw data from commercial databases or paper documents, but have no service layer to
+              validate, contextualize, and deliver that data in a format caseworkers can act on immediately. The result:
+              follow-up calls, manual processing, and delayed enrollment.</p>
+          </div>
+        </div>
+        <div class="ps-card reveal d2">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Problem 02</span>
+            <h3>Burden on caseworkers</h3>
+            <p>When electronic verification fails, caseworkers must manually process documents, make follow-up calls,
+              and request additional information from applicants.</p>
+          </div>
+        </div>
+        <div class="ps-card reveal d3">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Problem 03</span>
+            <h3>Time tax on applicants</h3>
+            <p>People are required to track down pay stubs, print forms, and submit documents to prove their income.
+              Access to benefits is delayed by days or weeks.</p>
+          </div>
+        </div>
+        <div class="ps-card reveal d4">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Problem 04</span>
+            <h3>Raw data is not verification</h3>
+            <p>Payroll aggregators can connect to employer systems and pull income records. But raw aggregator data
+              frequently lacks the information caseworkers need for accurate eligibility determinations, including
+              missing pay dates, no gross pay amounts, or no hours data. Without a verification layer that validates and
+              transforms that data, incomplete records reach the caseworker and drive errors.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW VMI SOLVES EACH PROBLEM -->
+  <section class="sol-section section-pad" id="solutions">
+    <div class="section-inner">
+      <h2 class="section-h reveal">How VMI solves each problem</h2>
+
+      <div class="ps-grid">
+        <div class="ps-card reveal d1">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Solution 01</span>
+            <h3>A purpose-built verification layer</h3>
+            <p>VMI handles the entire data journey: consent management, payroll connection, data validation, QA review,
+              and delivery of a standardized income report to the caseworker. States get a complete service, not just a
+              data feed.</p>
+          </div>
+        </div>
+        <div class="ps-card reveal d2">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Solution 02</span>
+            <h3>Easier work for caseworkers</h3>
+            <p>93% of caseworkers find VMI's income reports just as easy or easier to use than existing methods. Every
+              report goes through data validation and sufficiency checks (think automated QA) before it reaches a
+              caseworker. Fewer follow-up calls. Less manual data entry.</p>
+          </div>
+        </div>
+        <div class="ps-card reveal d3">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Solution 03</span>
+            <h3>Minutes, not days, for applicants</h3>
+            <p>Applicants verify income in under 5 minutes. No documents to find or upload. 85% of applicants report no
+              difficulty completing the process.</p>
+          </div>
+        </div>
+        <div class="ps-card reveal d4">
+          <div class="ps-accent"></div>
+          <div class="ps-body">
+            <span class="ps-num">Solution 04</span>
+            <h3>A programmatic quality gate</h3>
+            <p>Every aggregator response passes through VMI's validation layer before any data reaches a state agency.
+              Reports that do not meet eligibility-grade standards are rejected, and the applicant is routed to an
+              alternative. States receive only verified, caseworker-ready data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON TABLE -->
+  <section class="compare-full section-pad" id="comparison">
+    <div class="section-inner">
+      <h2 class="section-h reveal">Traditional Approaches vs. VMI</h2>
+      <div class="ct-wrap reveal d1">
+        <table class="ct" aria-label="Traditional approaches vs. VMI comparison">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Traditional Approaches</th>
+              <th scope="col" class="vmi-head">VMI — Digital Public Works</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ct-dim">What you get</td>
+              <td class="ct-them">A data connection, a bundled add-on to a larger contract, or a commercial product.
+                The state fills the gaps.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>A complete verification service. Consent,
+                benefits-specific data validation, and caseworker-ready reports included.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Pricing</td>
+              <td class="ct-them">Commercial pricing that rises over time. Some vendors bundle verification into larger
+                contracts, hiding the true cost.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>Nonprofit, at cost. Price decreases as more states join
+                the platform.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Data quality</td>
+              <td class="ct-them">Raw data delivered as-is. No validation against program requirements. Incomplete or
+                unusable records reach caseworkers.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>Every report passes through programmatic validation.
+                Reports that do not meet eligibility-grade standards are rejected and applicants are redirected to
+                existing options.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Open source</td>
+              <td class="ct-them">Proprietary. No visibility into how the system works.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>Full codebase published under AGPL-3.0 on GitHub.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Vendor lock-in</td>
+              <td class="ct-them">High. Switching vendors means rebuilding. Some states are locked into multi-year
+                contracts with no exit path.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>None. If DPW ceased to exist, states retain full access
+                to the code, architecture, and documentation.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Accessibility</td>
+              <td class="ct-them">State inherits responsibility for all embedded components, including third-party
+                interfaces it does not control.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>WCAG 2.1 AA commitment with independent third-party
+                auditing funded by AARP Foundation.</td>
+            </tr>
+            <tr>
+              <td class="ct-dim">Service model</td>
+              <td class="ct-them">Per-verification billing regardless of eligibility value.</td>
+              <td class="ct-vmi"><span class="ct-check">✓</span>Embedded partnership: discovery sprints, case reviews,
+                ongoing service design, and workflow improvement.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUESTIONS TO ASK ANY INCOME VERIFICATION VENDOR -->
+  <section class="vendor-q section-pad" id="vendor-questions">
+    <div class="section-inner">
+      <h2 class="section-h reveal">Questions to Ask Any Income Verification Vendor</h2>
+
+      <div class="vq-list">
+        <div class="vq-item reveal d1">
+          <p class="vq-q">What is the total cost of ownership?</p>
+          <p class="vq-a">Ask for the full picture, not just the per-verification price. Will you separately fund UX
+            design, consent infrastructure, eligibility logic, security authorization, accessibility compliance, and
+            ongoing maintenance?</p>
+        </div>
+        <div class="vq-item reveal d2">
+          <p class="vq-q">Who is responsible for accessibility compliance?</p>
+          <p class="vq-a">If the product embeds third-party login interfaces or components the vendor does not control,
+            who remediates accessibility failures in those components? VMI's accessibility is independently audited by a
+            third party, funded by AARP Foundation.</p>
+        </div>
+        <div class="vq-item reveal d1">
+          <p class="vq-q">Is there a data validation layer?</p>
+          <p class="vq-a">Raw payroll data is not always usable for eligibility determinations. What happens when a
+            report is missing pay dates, gross pay, or hours data? After login, what happens if accounts are completely
+            empty or the most recent pay date is 5 years old. Does the product catch that and communicate to the client
+            that they need to verify another way before it reaches a caseworker, or does the caseworker find out and
+            have to reach out to the client? VMI blocks reports that do not meet program-specific quality standards and
+            redirects applicants to existing verification options.</p>
+        </div>
+        <div class="vq-item reveal d2">
+          <p class="vq-q">What happens if you need to switch vendors?</p>
+          <p class="vq-a">Can you take the code, the architecture, and the documentation with you? Or do you start
+            over? VMI is open source under AGPL-3.0. The full codebase is published on GitHub.</p>
+        </div>
+        <div class="vq-item reveal d1">
+          <p class="vq-q">How does pricing change as usage scales?</p>
+          <p class="vq-a">Does the per-unit cost go up with volume, stay flat, or go down? VMI is operated at cost by a
+            nonprofit. Per-state costs decrease as more states join the platform <em>regardless of whether an individual
+            state's own volume increases</em>.</p>
+        </div>
+        <div class="vq-item reveal d2">
+          <p class="vq-q">Can you switch data providers without rebuilding?</p>
+          <p class="vq-a">VMI sits above the data layer — states integrate once with the platform, not with individual
+            data providers. If a payroll aggregator raises prices or drops in quality, VMI can swap them out and absorb
+            the normalization work. The state's integration never changes.</p>
+        </div>
+        <div class="vq-item reveal d1">
+          <p class="vq-q">What implementation support is included?</p>
+          <p class="vq-a">Does the vendor deliver data and walk away, or embed with your team? VMI engagements include
+            discovery sprints, caseworker and applicant interviews, case review analysis, and ongoing service design
+            improvements throughout the partnership.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCESSIBLE BY DESIGN -->
+  <section class="access-section section-pad" id="accessibility">
+    <div class="section-inner">
+      <div class="access-grid">
+        <div>
+          <h2 class="section-h reveal">Accessible by design, not as an afterthought</h2>
+          <div class="access-body reveal d1">
+            <p>DPW is investing in accessibility research in partnership with the AARP Foundation, with independent
+              third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility
+              standards. The platform supports English and Spanish.</p>
+            <p>We do not treat accessibility as a compliance checkbox. We are conducting original research into how
+              income verification tools can be made usable for older adults, people with disabilities, and individuals
+              with limited English proficiency. Findings from this research will be published and shared with the
+              field.</p>
+          </div>
+          <div class="access-stat reveal d2">
+            <span class="access-stat-num">65%</span>
+            <p class="access-stat-text">of our users access VMI on a smartphone. The platform is built mobile-first.</p>
+          </div>
+          <div class="placeholder-notice reveal d3">
+            Accessibility research findings — coming soon
+          </div>
+        </div>
+        <div class="access-photo reveal d2">
+          <img
+            src="https://images.unsplash.com/photo-1675179182019-3c0804f517af?auto=format&fit=crop&w=800&q=80"
+            alt="An older adult using a cell phone to verify her income"
+            loading="lazy" width="800" height="1000">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE PATH TO A PILOT -->
+  <section class="pilot section-pad" id="path-to-pilot">
+    <div class="section-inner">
+      <h2 class="section-h reveal">The path to a pilot</h2>
+
+      <div class="pilot-layout">
+        <!-- Left: steps -->
+        <div>
+          <div class="steps">
+            <div class="steps-line" aria-hidden="true"></div>
+
+            <div class="step reveal d1">
+              <div class="step-badge" aria-hidden="true">
+                <span class="step-n">01</span>
+                <span class="step-lbl">Step</span>
+              </div>
+              <div class="step-content">
+                <span class="step-duration">2–4 weeks</span>
+                <h3>Discovery</h3>
+                <p>Meetings with executive leadership. Discovery sprint with interviews of policy experts, caseworkers,
+                  QC workers, community-based organizations, and applicants. Vendor coordination and integration
+                  scoping.</p>
+              </div>
+            </div>
+
+            <div class="step reveal d2">
+              <div class="step-badge" aria-hidden="true">
+                <span class="step-n">02</span>
+                <span class="step-lbl">Step</span>
+              </div>
+              <div class="step-content">
+                <span class="step-duration">4–6 weeks</span>
+                <h3>Configuration and integration</h3>
+                <p>Technical integration setup (SFTP, S3, encrypted email, or webhooks API). State-specific
+                  configuration: branding, consent language, report format.</p>
+              </div>
+            </div>
+
+            <div class="step reveal d3">
+              <div class="step-badge" aria-hidden="true">
+                <span class="step-n">03</span>
+                <span class="step-lbl">Step</span>
+              </div>
+              <div class="step-content">
+                <h3>Pilot launch</h3>
+                <p>Launch with a defined population. Data collection and analysis. Iterative improvements based on
+                  caseworker and applicant feedback.</p>
+              </div>
+            </div>
+
+            <div class="step reveal d4">
+              <div class="step-badge" aria-hidden="true">
+                <span class="step-n">04</span>
+                <span class="step-lbl">Step</span>
+              </div>
+              <div class="step-content">
+                <h3>Expansion</h3>
+                <p>Scale to broader populations and additional programs based on pilot data.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: photo + note + CTA -->
+        <div class="pilot-aside reveal d1">
+          <div class="pilot-photo">
+            <img
+              src="https://images.unsplash.com/photo-1758874573280-bf3f15cbbf3f?auto=format&fit=crop&w=800&q=80"
+              alt="A caseworker reviewing implementation documentation"
+              loading="lazy" width="800" height="600">
+          </div>
+          <p class="pilot-note">Pennsylvania launched in six weeks from kickoff to go-live and scaled to statewide
+            availability eight weeks later. DPW moves at the speed of the state's capacity. Tightly scoped integrations
+            can launch in as little as four weeks; broader engagements typically take 8 to 12.</p>
+          <a href="/contact" class="btn btn-forge">Request a Demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IN THE FIELD -->
+  <section class="field section-pad" id="in-the-field">
+    <div class="section-inner">
+      <h2 class="section-h reveal">In the field</h2>
+      <div class="field-placeholder reveal d1">
+        <p class="field-placeholder-note">Pennsylvania and Arizona case studies — coming soon</p>
+        <p class="field-placeholder-sub" style="font-size:var(--t-body);color:var(--aluminum);margin-top:8px;">Each
+          case study: the problem, DPW's approach, implementation timeline, outcome metrics, and a quote from agency
+          leadership.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <div class="footer-cta">
+    <div class="footer-cta-inner">
+      <h2 class="fca-h reveal">Ready to pilot <i>Verify My Income</i> in your jurisdiction?<br>Let's talk.</h2>
+      <p class="fca-sub reveal d1">No procurement required to begin the conversation.</p>
+      <a href="/contact" class="btn btn-white reveal d2">Request a Demo</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-cta-block">
+          <h2 class="footer-hero">Ready to pilot <i>Verify My Income</i> in your jurisdiction? Let's talk.</h2>
+          <p class="footer-sub">No procurement required to begin the conversation.</p>
+          <a href="/contact" class="footer-demo">Request a Demo <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <a href="/" class="footer-logo">
+          <img src="../Logo/Extended%20Logo/SVG/Dark/Duo-copper.svg" alt="Digital Public Works">
+        </a>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-tagline">Digital Public Works is an independent 501(c)(3) nonprofit.</p>
+        <p class="footer-contact">
+          <a href="mailto:info@digitalpublicworks.org">info@digitalpublicworks.org</a>
+          <span>2261 Market Street, Suite 32572, San Francisco, CA 94114</span>
+        </p>
+        <div class="footer-links">
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/accessibility">Accessibility</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── MOBILE NAV ─────────────────────────────── */
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.add('open');
+    });
+    document.getElementById('mobileClose').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.remove('open');
+    });
+
+    /* ── SCROLL REVEAL ──────────────────────────── */
+    const revObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target) }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+  </script>
+
+</body>
+
+</html>
