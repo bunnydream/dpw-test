@@ -48,6 +48,8 @@
       --molten-gold: #E9A030;
       --rose-gold: #DEB0A0;
       /* warm accent */
+      --pale-verdigris: #EBF5F0;
+      /* pale verdigris — VMI table column bg */
 
       /* ── TYPE SCALE ─────────────────────────────────────────────────
          Five tiers. Every font-size in this file uses one of these
@@ -408,8 +410,6 @@
       gap: 0;
       position: relative;
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al);
-      border-bottom: 1px solid var(--light-al);
     }
 
     .stat-cell {
@@ -421,7 +421,7 @@
       content: '';
       display: block;
       width: 100%;
-      height: 4px;
+      height: 6px;
       background: var(--copper);
       margin-bottom: 18px;
     }
@@ -486,7 +486,7 @@
       width: 100%;
       border-collapse: collapse;
       background: var(--white);
-      border: 1px solid var(--light-al);
+      border: none;
       border-radius: 2px;
       overflow: hidden;
     }
@@ -547,7 +547,7 @@
       color: var(--forge);
       font-weight: 700;
       font-family: 'Atkinson Hyperlegible', sans-serif;
-      background: var(--cool-white);
+      background: var(--pale-verdigris);
     }
 
     .ct-check {
@@ -566,7 +566,6 @@
     /* ─── PRESSURE ────────────────────────────────── */
     .pressure {
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
 
@@ -671,7 +670,6 @@
     /* ─── HOW IT WORKS ────────────────────────────── */
     .how {
       background: var(--white);
-      border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
 
@@ -758,8 +756,8 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: var(--white);
-      border: 2px solid var(--light-al);
+      background: #FBF0E8;
+      border: none;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -767,11 +765,6 @@
       flex-shrink: 0;
       position: relative;
       z-index: 1;
-      transition: border-color .25s;
-    }
-
-    .step:hover .step-badge {
-      border-color: var(--copper)
     }
 
     /* Subhead tier: step number in badge */
@@ -788,23 +781,16 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: var(--t-label);
       font-weight: 700;
-      color: var(--aluminum);
+      color: var(--steel);
       letter-spacing: 0.07em;
       text-transform: uppercase;
     }
 
     .step-content {
-      background: var(--white);
-      border: 1px solid var(--light-al);
+      background: var(--cool-white);
+      border: none;
       border-radius: 2px;
       padding: clamp(18px, 2.5vw, 28px);
-      transition: border-color .2s, transform .2s ease, box-shadow .2s ease;
-    }
-
-    .step:hover .step-content {
-      border-color: var(--copper);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 24px var(--light-al);
     }
 
     /* Subhead tier: step titles */
@@ -827,7 +813,6 @@
     /* ─── STORIES ─────────────────────────────────── */
     .stories {
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
 
@@ -872,15 +857,9 @@
 
     .story-card {
       background: var(--cool-white);
-      border: 1px solid var(--light-al);
+      border: none;
       border-radius: 2px;
       overflow: hidden;
-      transition: box-shadow .25s, transform .25s;
-    }
-
-    .story-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px var(--light-al);
     }
 
     .card-accent {
@@ -943,7 +922,6 @@
     /* ─── MODEL ───────────────────────────────────── */
     .model {
       background: var(--white);
-      border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
 
@@ -1013,7 +991,6 @@
     /* ─── QUOTES ──────────────────────────────────── */
     .quotes {
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al);
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
     }
 
@@ -1066,7 +1043,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2px;
-      border-top: 1px solid var(--light-al);
     }
 
     .q-sm {
@@ -1679,12 +1655,15 @@
           <div class="card-accent"></div>
           <div class="card-body">
             <div class="card-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 13h8v1.5H8V13zm0 3h8v1.5H8V16zm0-6h3v1.5H8V10z" />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
               </svg>
             </div>
-            <span class="card-n">Finding 01</span>
+            <span class="card-n">Finding 1</span>
             <h4>A form question that created unnecessary work</h4>
             <p>In one state, the application asked for a specific number of hours worked rather than a range. When
               paystubs showed normal week-to-week variation, caseworkers were forced to issue unnecessary Requests for
@@ -1696,14 +1675,12 @@
           <div class="card-accent"></div>
           <div class="card-body">
             <div class="card-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" fill="white" />
-                <path d="M3.51 3.51L20.49 20.49" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                  fill="none" />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
               </svg>
             </div>
-            <span class="card-n">Finding 02</span>
+            <span class="card-n">Finding 2</span>
             <h4>40% of applicants did not know they had a next step</h4>
             <p>In another state, approximately 40% of SNAP renewal applicants were not submitting required income
               documents because they did not realize they needed to. DPW worked with the state to add a clear alert on
@@ -1715,12 +1692,13 @@
           <div class="card-accent"></div>
           <div class="card-body">
             <div class="card-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"/>
+                <polyline points="23 20 23 14 17 14"/>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
               </svg>
             </div>
-            <span class="card-n">Finding 03</span>
+            <span class="card-n">Finding 3</span>
             <h4>Caseworkers were over-verifying without realizing it</h4>
             <p>DPW's case review analysis found caseworkers frequently requesting household composition verification at
               unnecessary steps in the benefit lifecycle. After DPW flagged this pattern, a policy bulletin was

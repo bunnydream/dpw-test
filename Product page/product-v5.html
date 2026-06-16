@@ -11,269 +11,844 @@
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
     :root {
-      --forge:       #1E272E;
-      --copper:      #C77234;
+      --forge: #1E272E;
+      --copper: #C77234;
       --deep-copper: #9F5528;
-      --steel:       #3A4E5C;
-      --park-green:  #316844;
-      --verdigris:   #56A374;
-      --aluminum:    #A9B0B6;
-      --light-al:    #D0D5D8;
-      --white:       #FFFFFF;
-      --cool-white:  #F6F7F8;
-      --white-gold:  #D4CAA8;
+      --steel: #3A4E5C;
+      --park-green: #316844;
+      --verdigris: #56A374;
+      --aluminum: #A9B0B6;
+      --light-al: #D0D5D8;
+      --white: #FFFFFF;
+      --cool-white: #F6F7F8;
+      --white-gold: #D4CAA8;
       --molten-gold: #E9A030;
-      --rose-gold:   #DEB0A0;
+      --rose-gold: #DEB0A0;
 
-      --t-display:  clamp(44px, 5.5vw, 68px);
+      --t-display: clamp(44px, 5.5vw, 68px);
       --t-headline: clamp(28px, 3.5vw, 44px);
-      --t-subhead:  clamp(18px, 2.2vw, 24px);
-      --t-body:     17px;
-      --t-label:    12px;
-      --t-data:     14px;
-      --t-button:   14px;
+      --t-subhead: clamp(18px, 2.2vw, 24px);
+      --t-body: 17px;
+      --t-label: 14px;
+      --t-data: 14px;
+      --t-button: 14px;
     }
 
-    html { scroll-behavior: smooth }
+    html {
+      scroll-behavior: smooth
+    }
+
     body {
       font-family: 'Atkinson Hyperlegible', sans-serif;
-      font-size: var(--t-body); line-height: 1.75;
-      color: var(--forge); background: var(--white); overflow-x: hidden;
+      font-size: var(--t-body);
+      line-height: 1.75;
+      color: var(--forge);
+      background: var(--white);
+      overflow-x: hidden;
     }
 
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s cubic-bezier(.22,1,.36,1) }
-    .reveal.vis { opacity: 1; transform: none }
-    .d1 { transition-delay: .1s }
-    .d2 { transition-delay: .2s }
-    .d3 { transition-delay: .3s }
-    .d4 { transition-delay: .4s }
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s cubic-bezier(.22, 1, .36, 1)
+    }
+
+    .reveal.vis {
+      opacity: 1;
+      transform: none
+    }
+
+    .d1 {
+      transition-delay: .1s
+    }
+
+    .d2 {
+      transition-delay: .2s
+    }
+
+    .d3 {
+      transition-delay: .3s
+    }
+
+    .d4 {
+      transition-delay: .4s
+    }
 
     /* ─── NAV ─── */
     nav {
-      position: sticky; top: 0; z-index: 200;
-      background: var(--forge); height: 74px;
-      display: flex; align-items: center; justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--forge);
+      height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 0 clamp(20px, 5vw, 64px);
     }
-    .nav-logo { display: inline-flex; align-items: center }
-    .nav-logo img { height: 42px; display: block; width: auto }
-    .nav-links { display: flex; align-items: center; gap: 30px }
+
+    .nav-logo {
+      display: inline-flex;
+      align-items: center
+    }
+
+    .nav-logo img {
+      height: 42px;
+      display: block;
+      width: auto
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px
+    }
+
     .nav-links a {
-      font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700;
-      letter-spacing: 0.06em; color: var(--light-al); text-decoration: none; transition: color .15s;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--light-al);
+      text-decoration: none;
+      transition: color .15s;
     }
-    .nav-links a.current-page { color: var(--rose-gold) }
-    .nav-links a:hover, .nav-links a.current-page:hover { color: var(--verdigris) }
+
+    .nav-links a.current-page {
+      color: var(--rose-gold)
+    }
+
+    .nav-links a:hover,
+    .nav-links a.current-page:hover {
+      color: var(--verdigris)
+    }
+
     .nav-cta {
-      background: var(--copper) !important; color: #000 !important;
-      padding: 10px 24px; border-radius: 2px;
-      font-size: var(--t-button); transition: background .15s !important;
+      background: var(--copper) !important;
+      color: #000 !important;
+      padding: 10px 24px;
+      border-radius: 2px;
+      font-size: var(--t-button);
+      transition: background .15s !important;
     }
-    .nav-cta:hover { background: var(--deep-copper) !important }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; background: none; border: none }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--light-al) }
+
+    .nav-cta:hover {
+      background: var(--deep-copper) !important
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--light-al)
+    }
 
     .mobile-menu {
-      display: none; position: fixed; inset: 0;
-      background: var(--forge); z-index: 300;
-      flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--forge);
+      z-index: 300;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
     }
-    .mobile-menu.open { display: flex }
-    .mobile-menu a { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-subhead); font-weight: 700; color: var(--white); text-decoration: none; transition: color .15s }
-    .mobile-menu a:hover { color: var(--verdigris) }
-    .mobile-menu .btn-copper { color: #000; font-size: var(--t-button); transition: all .18s }
-    .mobile-close { position: absolute; top: 20px; right: 24px; background: none; border: none; color: var(--light-al); font-size: var(--t-subhead); cursor: pointer }
+
+    .mobile-menu.open {
+      display: flex
+    }
+
+    .mobile-menu a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+      transition: color .15s
+    }
+
+    .mobile-menu a:hover {
+      color: var(--verdigris)
+    }
+
+    .mobile-menu .btn-copper {
+      color: #000;
+      font-size: var(--t-button);
+      transition: all .18s
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--light-al);
+      font-size: var(--t-subhead);
+      cursor: pointer
+    }
 
     /* ─── BUTTONS ─── */
     .btn {
-      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
-      font-size: var(--t-button); letter-spacing: 0.06em;
-      padding: 13px 28px; text-decoration: none;
-      display: inline-block; border-radius: 2px; border: none; cursor: pointer; transition: all .18s;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: var(--t-button);
+      letter-spacing: 0.06em;
+      padding: 13px 28px;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 2px;
+      border: none;
+      cursor: pointer;
+      transition: all .18s;
     }
-    .btn-forge   { background: var(--forge); color: var(--white) }
-    .btn-forge:hover { background: var(--steel) }
-    .btn-copper  { background: var(--copper); color: #000 }
-    .btn-copper:hover { background: var(--deep-copper) }
-    .btn-outline { background: transparent; color: var(--forge); border: 1.5px solid var(--light-al) }
-    .btn-outline:hover { border-color: var(--forge) }
-    .btn-white   { background: var(--white); color: var(--deep-copper) }
-    .btn-white:hover { background: var(--cool-white) }
+
+    .btn-forge {
+      background: var(--forge);
+      color: var(--white)
+    }
+
+    .btn-forge:hover {
+      background: var(--steel)
+    }
+
+    .btn-copper {
+      background: var(--copper);
+      color: #000
+    }
+
+    .btn-copper:hover {
+      background: var(--deep-copper)
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--forge);
+      border: 1.5px solid var(--light-al)
+    }
+
+    .btn-outline:hover {
+      border-color: var(--forge)
+    }
+
+    .btn-white {
+      background: var(--white);
+      color: var(--deep-copper)
+    }
+
+    .btn-white:hover {
+      background: var(--cool-white)
+    }
 
     /* ─── SECTION BASE ─── */
-    .section-pad { padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) }
-    .section-inner { max-width: 1200px; margin: 0 auto }
-    .section-h {
-      font-family: 'Space Grotesk', sans-serif; font-size: var(--t-headline); font-weight: 700;
-      line-height: 1.2; letter-spacing: -0.018em; color: var(--forge); margin-bottom: 24px;
+    .section-pad {
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px)
     }
-    .section-intro { font-size: var(--t-body); line-height: 1.82; color: var(--steel); max-width: 68ch; margin-bottom: 48px }
+
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto
+    }
+
+    .section-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-headline);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.018em;
+      color: var(--forge);
+      margin-bottom: 24px;
+    }
+
+    .section-intro {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      max-width: 68ch;
+      margin-bottom: 48px
+    }
 
     /* ─── HERO ─── */
     .hero {
-      background: var(--white); min-height: calc(100dvh - 74px);
+      background: var(--white);
+      min-height: calc(100dvh - 74px);
       padding: clamp(24px, 4vw, 40px) clamp(20px, 5vw, 64px);
-      overflow: hidden; display: flex; flex-direction: column;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    .hero-inner { max-width: 1200px; margin: 0 auto; width: 100%; flex: 1; display: flex; flex-direction: column; justify-content: center }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center
+    }
+
     .hero-grid {
-      display: grid; grid-template-columns: 1fr min(460px, 38vw);
-      gap: clamp(32px, 5vw, 72px); align-items: center;
-      padding-bottom: clamp(24px, 3vw, 36px); flex: 1;
+      display: grid;
+      grid-template-columns: 1fr min(460px, 38vw);
+      gap: clamp(32px, 5vw, 72px);
+      align-items: center;
+      padding-bottom: clamp(24px, 3vw, 36px);
+      flex: 1;
     }
-    h1 { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-display); font-weight: 700; line-height: 1.04; letter-spacing: -0.022em; color: var(--forge); margin-bottom: 20px }
-    .hero-tagline { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-subhead); font-weight: 700; color: var(--steel); line-height: 1.35; margin-bottom: 24px; max-width: 52ch }
-    .hero-sub { font-size: var(--t-body); line-height: 1.82; color: var(--steel); max-width: 56ch; margin-bottom: 32px }
-    .hero-img { border-radius: 2px; overflow: hidden; aspect-ratio: 4/5 }
-    .hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-display);
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: -0.022em;
+      color: var(--forge);
+      margin-bottom: 20px
+    }
+
+    .hero-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--steel);
+      line-height: 1.35;
+      margin-bottom: 24px;
+      max-width: 52ch
+    }
+
+    .hero-sub {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      max-width: 56ch;
+      margin-bottom: 32px
+    }
+
+    .hero-img {
+      overflow: visible;
+      display: flex;
+      align-items: flex-end;
+      align-self: stretch;
+    }
+
+    .hero-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      object-position: center bottom;
+    }
 
     /* ═══════════════════════════════════════════════
        INTEGRATION — V3 TALL CARDS
        Option label: copper text only (no box)
        No checkmarks
        ═══════════════════════════════════════════════ */
-    .integration { background: var(--cool-white); border-top: 1px solid var(--light-al) }
-    .io-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px }
+    .integration {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al)
+    }
+
+    .io-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px
+    }
+
     .io-card {
-      background: var(--white); border: 1px solid var(--light-al);
-      border-radius: 2px; overflow: hidden; display: flex; flex-direction: column;
-      transition: box-shadow .2s, border-color .2s;
+      background: var(--white);
+      border: none;
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    .io-card:hover { border-color: var(--copper); box-shadow: 0 8px 24px var(--light-al) }
+
+    /* Photo placeholder */
     .io-top {
-      background: var(--cool-white); aspect-ratio: 4/3;
-      display: flex; align-items: center; justify-content: center;
-      border-bottom: 1px solid var(--light-al); position: relative;
+      background: var(--light-al);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
-    .io-top::before, .io-top::after {
-      content: ''; position: absolute; width: 50%; height: 50%;
-      border: 1.5px dashed var(--light-al); border-radius: 2px;
-    }
-    .io-top::before { top: 16px; left: 16px; border-right: none; border-bottom: none }
-    .io-top::after  { bottom: 16px; right: 16px; border-left: none; border-top: none }
+
     .io-top-icon {
-      width: 56px; height: 56px; border-radius: 50%;
-      background: var(--white); border: 1.5px solid var(--light-al);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--copper); position: relative; z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      opacity: 0.55;
     }
-    .io-body { padding: clamp(20px, 3vw, 32px); flex: 1; display: flex; flex-direction: column }
-    /* Option label — copper text only, no box */
+
+    .io-body {
+      padding: clamp(20px, 3vw, 32px);
+      flex: 1;
+      display: flex;
+      flex-direction: column
+    }
+
+    /* Option label — deep-copper text only, no box (WCAG AA: ~5.4:1 on white) */
     .io-pill {
       display: block;
-      color: var(--copper);
+      color: var(--deep-copper);
       font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label); font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       margin-bottom: 12px;
     }
-    .io-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-subhead); font-weight: 700; color: var(--forge); margin-bottom: 10px; line-height: 1.3 }
-    .io-desc { font-size: var(--t-body); color: var(--steel); line-height: 1.75 }
-    .integration-note { font-size: var(--t-body); line-height: 1.82; color: var(--steel); border-left: 3px solid var(--light-al); padding: 16px 24px; margin-top: 8px }
+
+    .io-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      margin-bottom: 10px;
+      line-height: 1.3
+    }
+
+    .io-desc {
+      font-size: var(--t-body);
+      color: var(--steel);
+      line-height: 1.75
+    }
+
+    .integration-note {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      border-left: 3px solid var(--light-al);
+      padding: 16px 24px;
+      margin-top: 8px
+    }
 
     /* ═══════════════════════════════════════════════
        THE VERIFICATION PROBLEM — V4 ACCORDION
        ═══════════════════════════════════════════════ */
-    .ps-section { background: var(--white); border-top: 1px solid var(--light-al) }
-    .ps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(48px, 7vw, 96px); align-items: start }
-    .ps-visual {
-      position: sticky; top: 90px; background: var(--cool-white);
-      border: 1px solid var(--light-al); border-radius: 2px; aspect-ratio: 3/4;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; gap: 10px; padding: 40px 24px;
+    .ps-section {
+      background: var(--white);
+      border-top: 1px solid var(--light-al)
     }
-    .ps-visual-icon { color: var(--aluminum) }
-    .ps-visual-type { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--aluminum) }
-    .ps-visual-desc { font-size: 15px; color: var(--aluminum); line-height: 1.55; max-width: 28ch }
-    .ps-right-intro { font-size: var(--t-body); line-height: 1.82; color: var(--steel); margin-bottom: 40px; max-width: 52ch }
-    .ps-acc-list { border-top: 1px solid var(--light-al) }
-    .ps-acc-item { border-bottom: 1px solid var(--light-al) }
-    .ps-acc-trigger { display: flex; align-items: center; gap: 16px; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: clamp(16px, 2.5vw, 22px) 0 }
-    .ps-acc-trigger:hover .ps-acc-title { color: var(--copper) }
-    .ps-acc-icon { color: var(--copper); flex-shrink: 0 }
-    .ps-acc-title { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-body); font-weight: 700; color: var(--forge); flex: 1; line-height: 1.3; transition: color .15s }
-    .ps-acc-chevron { flex-shrink: 0; color: var(--aluminum); transition: transform .2s ease }
-    .ps-acc-trigger[aria-expanded="true"] .ps-acc-chevron { transform: rotate(180deg) }
-    .ps-acc-panel { padding: 0 0 22px 48px }
-    .ps-acc-problem { font-size: var(--t-body); line-height: 1.82; color: var(--steel); margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--light-al) }
-    .ps-acc-sol-label { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--verdigris); display: block; margin-bottom: 6px }
-    .ps-acc-solution { font-size: var(--t-body); line-height: 1.82; color: var(--forge) }
+
+    .ps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(48px, 7vw, 96px);
+      align-items: start
+    }
+
+    .ps-visual {
+      position: sticky;
+      top: 90px;
+      background: var(--cool-white);
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      aspect-ratio: 3/4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      padding: 40px 24px;
+    }
+
+    .ps-visual-icon {
+      color: var(--aluminum)
+    }
+
+    .ps-visual-type {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--aluminum)
+    }
+
+    .ps-visual-desc {
+      font-size: 15px;
+      color: var(--aluminum);
+      line-height: 1.55;
+      max-width: 28ch
+    }
+
+    .ps-right-intro {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      margin-bottom: 40px;
+      max-width: 52ch
+    }
+
+    .ps-acc-list {
+      border-top: 1px solid var(--light-al)
+    }
+
+    .ps-acc-item {
+      border-bottom: 1px solid var(--light-al)
+    }
+
+    .ps-acc-trigger {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: clamp(16px, 2.5vw, 22px) 0
+    }
+
+    .ps-acc-trigger:hover .ps-acc-title {
+      color: var(--deep-copper)
+    }
+
+    .ps-acc-icon {
+      color: var(--copper);
+      flex-shrink: 0
+    }
+
+    .ps-acc-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-body);
+      font-weight: 700;
+      color: var(--forge);
+      flex: 1;
+      line-height: 1.3;
+      transition: color .15s
+    }
+
+    .ps-acc-chevron {
+      flex-shrink: 0;
+      color: var(--aluminum);
+      transition: transform .2s ease
+    }
+
+    .ps-acc-trigger[aria-expanded="true"] .ps-acc-chevron {
+      transform: rotate(180deg)
+    }
+
+    .ps-acc-panel {
+      padding: 0 0 22px 48px
+    }
+
+    .ps-acc-problem {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--light-al)
+    }
+
+    .ps-acc-sol-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--park-green);
+      display: block;
+      margin-bottom: 6px
+    }
+
+    .ps-acc-solution {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--forge)
+    }
 
     /* ─── TABLE HEADER BADGES ─── */
-    .ct-x-badge, .ct-check-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 20px; height: 20px; border-radius: 50%;
-      margin-right: 8px; vertical-align: middle; flex-shrink: 0;
+    .ct-x-badge,
+    .ct-check-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      flex-shrink: 0;
     }
-    .ct-x-badge { background: #e05252 }
-    .ct-check-badge { background: var(--verdigris) }
+
+    .ct-x-badge {
+      background: #e05252
+    }
+
+    .ct-check-badge {
+      background: var(--verdigris)
+    }
 
     /* ─── COMPARISON TABLE ─── */
-    .compare-full { background: var(--cool-white); border-top: 1px solid var(--light-al) }
-    .ct-wrap { overflow-x: auto }
-    table.ct { width: 100%; border-collapse: collapse; background: var(--white); border: 1px solid var(--light-al); border-radius: 2px; overflow: hidden }
-    table.ct thead { background: var(--forge) }
-    table.ct th { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 16px 20px; text-align: left; color: var(--rose-gold) }
-    table.ct th.vmi-head { color: var(--verdigris) }
-    table.ct th:first-child { width: 16%; color: var(--light-al) }
-    table.ct td { font-size: var(--t-data); padding: 14px 20px; border-bottom: 1px solid var(--cool-white); vertical-align: top; line-height: 1.6 }
-    table.ct tr:last-child td { border-bottom: none }
-    .ct-dim { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-label); font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--steel) }
-    .ct-them { color: var(--steel) }
-    .ct-vmi { color: var(--forge); font-weight: 700; font-family: 'Atkinson Hyperlegible', sans-serif; background: var(--cool-white) }
+    .compare-full {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al)
+    }
+
+    .ct-wrap {
+      overflow-x: auto
+    }
+
+    table.ct {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border: none;
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    table.ct thead {
+      background: var(--forge)
+    }
+
+    table.ct th {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 16px 20px;
+      text-align: left;
+      color: var(--rose-gold)
+    }
+
+    table.ct th.vmi-head {
+      color: var(--verdigris)
+    }
+
+    table.ct th:first-child {
+      width: 16%;
+      color: var(--light-al)
+    }
+
+    table.ct td {
+      font-size: var(--t-data);
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--light-al);
+      vertical-align: top;
+      line-height: 1.6
+    }
+
+    table.ct tr:last-child td {
+      border-bottom: none
+    }
+
+    .ct-dim {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--steel)
+    }
+
+    .ct-them {
+      color: var(--steel)
+    }
+
+    .ct-vmi {
+      color: var(--forge);
+      font-weight: 700;
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      background: #EBF5F0
+    }
 
     /* ═══════════════════════════════════════════════
        VENDOR QUESTIONS — bigger bare chevrons
        ═══════════════════════════════════════════════ */
-    .vendor-q { background: var(--white); border-top: 1px solid var(--light-al) }
-    .vq-list { display: grid; gap: 0 }
-    .vq-item { border-bottom: 1px solid var(--light-al) }
-    .vq-item:first-child { border-top: 1px solid var(--light-al) }
-    .vq-trigger {
-      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      padding: clamp(18px, 2.5vw, 26px) 0; background: none; border: none; cursor: pointer; text-align: left;
+    .vendor-q {
+      background: var(--white);
+      border-top: 1px solid var(--light-al)
     }
-    .vq-trigger:hover .vq-q { color: var(--copper) }
-    .vq-q { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-subhead); font-weight: 700; color: var(--forge); line-height: 1.3; letter-spacing: -0.01em; transition: color .15s }
-    .vq-chevron { flex-shrink: 0; color: var(--copper); transition: transform .2s ease }
-    .vq-trigger[aria-expanded="true"] .vq-chevron { transform: rotate(180deg) }
-    .vq-panel { padding: 0 0 clamp(18px, 2.5vw, 26px) }
-    .vq-a { font-size: var(--t-body); line-height: 1.82; color: var(--steel); max-width: 80ch }
-    .vq-a em { color: var(--forge); font-style: italic }
+
+    .vq-list {
+      display: grid;
+      gap: 0
+    }
+
+    .vq-item {
+      border-bottom: 1px solid var(--light-al)
+    }
+
+    .vq-item:first-child {
+      border-top: 1px solid var(--light-al)
+    }
+
+    .vq-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: clamp(18px, 2.5vw, 26px) 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .vq-trigger:hover .vq-q {
+      color: var(--deep-copper)
+    }
+
+    .vq-q {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      transition: color .15s
+    }
+
+    .vq-chevron {
+      flex-shrink: 0;
+      color: var(--copper);
+      transition: transform .2s ease;
+      align-self: center;
+      display: flex;
+      align-items: center
+    }
+
+    .vq-trigger[aria-expanded="true"] .vq-chevron {
+      transform: rotate(180deg)
+    }
+
+    .vq-panel {
+      padding: 0 0 clamp(18px, 2.5vw, 26px)
+    }
+
+    .vq-a {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      max-width: 80ch
+    }
+
+    .vq-a em {
+      color: var(--forge);
+      font-style: italic
+    }
 
     /* ─── ACCESSIBILITY ─── */
-    .access-section { background: var(--cool-white); border-top: 1px solid var(--light-al) }
-    .access-grid { display: grid; grid-template-columns: 3fr 2fr; gap: clamp(48px, 7vw, 100px); align-items: stretch }
-    .access-body p { font-size: var(--t-body); line-height: 1.82; color: var(--steel); margin-bottom: 18px; max-width: 56ch }
-    .access-body p:last-child { margin-bottom: 0 }
-    .access-stat {
-      display: flex; align-items: flex-start; gap: 16px; background: var(--white);
-      border: 1px solid var(--light-al); border-left: 4px solid var(--copper);
-      border-radius: 2px; padding: 20px 24px; margin: 28px 0;
+    .access-section {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al)
     }
-    .access-stat-num { font-family: 'Space Grotesk', sans-serif; font-size: clamp(32px, 4vw, 48px); font-weight: 700; color: var(--copper); line-height: 1; flex-shrink: 0 }
-    .access-stat-text { font-size: var(--t-body); color: var(--steel); line-height: 1.5; padding-top: 4px }
-    .access-photo { border-radius: 2px; overflow: hidden; align-self: stretch }
-    .access-photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; min-height: 400px }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: clamp(48px, 7vw, 100px);
+      align-items: stretch
+    }
+
+    .access-body p {
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      margin-bottom: 18px;
+      max-width: 56ch
+    }
+
+    .access-body p:last-child {
+      margin-bottom: 0
+    }
+
+    .access-stat {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: var(--white);
+      border: none;
+      border-left: 4px solid var(--copper);
+      border-radius: 2px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+
+    .access-stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 700;
+      color: var(--copper);
+      line-height: 1;
+      flex-shrink: 0
+    }
+
+    .access-stat-text {
+      font-size: var(--t-body);
+      color: var(--steel);
+      line-height: 1.5;
+      padding-top: 4px
+    }
+
+    .access-photo {
+      border-radius: 2px;
+      overflow: hidden;
+      align-self: stretch
+    }
+
+    .access-photo img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      min-height: 400px
+    }
 
     /* ═══════════════════════════════════════════════
        PILOT — V2 VERTICAL STEPS (centered)
        ═══════════════════════════════════════════════ */
-    .pilot { background: var(--white); border-top: 1px solid var(--light-al) }
+    .pilot {
+      background: var(--white);
+      border-top: 1px solid var(--light-al)
+    }
 
     .steps {
       position: relative;
       max-width: 820px;
-      margin: 0 auto; /* centered */
+      margin: 0 auto;
+      /* centered */
     }
 
     .steps-line {
       position: absolute;
-      left: 35px; top: 56px; bottom: 56px;
-      width: 2px; border-radius: 2px;
+      left: 35px;
+      top: 56px;
+      bottom: 56px;
+      width: 2px;
+      border-radius: 2px;
       background: linear-gradient(to bottom, var(--copper), var(--light-al));
       opacity: 0.28;
     }
@@ -288,117 +863,397 @@
     }
 
     .step-badge {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: var(--white); border: 2px solid var(--light-al);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      flex-shrink: 0; position: relative; z-index: 1;
-      transition: border-color .25s;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #FBF0E8;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
     }
-    .step:hover .step-badge { border-color: var(--copper) }
 
     .step-n {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-subhead); font-weight: 700;
-      color: var(--copper); line-height: 1;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--copper);
+      line-height: 1;
     }
+
     .step-lbl {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label); font-weight: 700;
-      color: var(--aluminum); letter-spacing: 0.07em; text-transform: uppercase;
+      font-size: var(--t-label);
+      font-weight: 700;
+      color: var(--steel);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
     }
 
     .step-content {
-      background: var(--white); border: 1px solid var(--light-al);
-      border-radius: 2px; padding: clamp(16px, 2.2vw, 24px);
-      transition: border-color .2s, transform .2s ease, box-shadow .2s ease;
+      background: var(--cool-white);
+      border: none;
+      border-radius: 2px;
+      padding: clamp(16px, 2.2vw, 24px);
     }
-    .step:hover .step-content {
-      border-color: var(--copper);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px var(--light-al);
-    }
+
     .step-content h3 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-subhead); font-weight: 700;
-      color: var(--forge); margin-bottom: 10px; letter-spacing: -0.01em;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
     }
-    .step-content p { font-size: var(--t-body); line-height: 1.8; color: var(--steel) }
+
+    .step-content p {
+      font-size: var(--t-body);
+      line-height: 1.8;
+      color: var(--steel)
+    }
 
     .pilot-note {
-      font-size: var(--t-body); line-height: 1.82; color: var(--steel);
-      margin-top: 36px; max-width: 820px;
-      margin-left: auto; margin-right: auto; /* centered */
+      font-size: var(--t-body);
+      line-height: 1.82;
+      color: var(--steel);
+      margin-top: 36px;
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+      /* centered */
     }
 
     /* ═══════════════════════════════════════════════
        IN THE FIELD — photo flush at bottom via margin-top: auto
        ═══════════════════════════════════════════════ */
-    .field { background: var(--cool-white); border-top: 1px solid var(--light-al) }
-    .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: stretch }
-    .case-card { background: var(--white); border: 1px solid var(--light-al); border-radius: 2px; overflow: hidden; display: flex; flex-direction: column }
-    .case-text { padding: clamp(24px, 3.5vw, 40px); flex-shrink: 0 }
-    .case-state { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-label); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--copper); display: block; margin-bottom: 10px }
-    .case-card h3 { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-subhead); font-weight: 700; color: var(--forge); line-height: 1.3; margin-bottom: 14px }
-    .case-detail { font-size: 15px; line-height: 1.7; color: var(--steel) }
+    .field {
+      background: var(--cool-white);
+      border-top: 1px solid var(--light-al)
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: stretch
+    }
+
+    .case-card {
+      background: var(--white);
+      border: none;
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .case-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--copper);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .28s ease;
+      z-index: 2;
+    }
+
+    .case-card:hover::before {
+      transform: scaleX(1)
+    }
+
+    .case-text {
+      padding: clamp(24px, 3.5vw, 40px);
+      flex-shrink: 0
+    }
+
+    .case-state {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--copper);
+      display: block;
+      margin-bottom: 10px
+    }
+
+    .case-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-subhead);
+      font-weight: 700;
+      color: var(--forge);
+      line-height: 1.3;
+      margin-bottom: 14px
+    }
+
+    .case-detail {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--steel)
+    }
+
     /* margin-top: auto pushes photo flush to bottom regardless of text height */
     .case-photo {
       height: 260px;
       flex-shrink: 0;
       margin-top: auto;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; gap: 10px;
-      background: var(--light-al); padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      background: var(--light-al);
+      padding: 32px 24px;
     }
-    .case-photo .ph-icon { color: var(--aluminum) }
-    .case-photo .ph-type { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--aluminum) }
-    .case-photo .ph-desc { font-size: 15px; color: var(--aluminum); line-height: 1.55; max-width: 26ch }
+
+    .case-photo .ph-icon {
+      color: var(--aluminum)
+    }
+
+    .case-photo .ph-type {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--aluminum)
+    }
+
+    .case-photo .ph-desc {
+      font-size: 15px;
+      color: var(--aluminum);
+      line-height: 1.55;
+      max-width: 26ch
+    }
 
     /* ─── FOOTER CTA ─── */
-    .footer-cta { background: var(--copper); padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px); text-align: center; position: relative; overflow: hidden }
-    .footer-cta-inner { max-width: 640px; margin: 0 auto; position: relative }
-    .fca-h { font-family: 'Space Grotesk', sans-serif; font-size: var(--t-headline); font-weight: 700; color: #000; line-height: 1.1; letter-spacing: -0.015em; margin-bottom: 12px }
-    .fca-sub { font-size: var(--t-body); color: #000; margin-bottom: 32px; line-height: 1.65 }
+    .footer-cta {
+      background: var(--copper);
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
+      text-align: center;
+      position: relative;
+      overflow: hidden
+    }
+
+    .footer-cta-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative
+    }
+
+    .fca-h {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-headline);
+      font-weight: 700;
+      color: #000;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      margin-bottom: 12px
+    }
+
+    .fca-sub {
+      font-size: var(--t-body);
+      color: #000;
+      margin-bottom: 32px;
+      line-height: 1.65
+    }
 
     /* ─── FOOTER ─── */
-    footer { background: var(--forge); padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 64px) clamp(24px, 3vw, 36px) }
-    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; gap: 28px }
-    .footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; flex-wrap: wrap; padding-bottom: 60px }
-    .footer-logo { display: inline-flex; align-items: center }
-    .footer-logo img { height: 32px; width: auto; display: block }
-    .footer-cta-block { max-width: 640px; display: grid; gap: 6px }
-    .footer-hero { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; color: var(--white) }
-    .footer-sub { font-size: 15px; line-height: 1.8; color: var(--light-al); max-width: 54ch }
-    .footer-demo { display: inline-flex; align-items: center; gap: 8px; width: fit-content; margin-top: 4px; background: transparent; color: var(--rose-gold); font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-decoration: none }
-    .footer-demo:hover { color: var(--verdigris) }
-    .footer-demo .arrow { font-size: 16px; line-height: 1; transition: transform .18s }
-    .footer-demo:hover .arrow { transform: translateX(3px) }
-    .footer-contact { font-size: 15px; color: var(--light-al); line-height: 1.8; display: grid; gap: 4px }
-    .footer-contact a { color: var(--light-al); text-decoration: none }
-    .footer-contact a:hover { color: var(--white) }
-    .footer-bottom { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 18px; padding-top: 4px }
-    .footer-tagline { font-size: 15px; color: var(--light-al); max-width: 34ch }
-    .footer-links { display: flex; gap: 20px; flex-wrap: wrap }
-    .footer-links a { font-size: 15px; color: var(--light-al); text-decoration: none }
-    .footer-links a:hover { color: var(--white) }
+    footer {
+      background: var(--forge);
+      padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 64px) clamp(24px, 3vw, 36px)
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 28px
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding-bottom: 60px
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: center
+    }
+
+    .footer-logo img {
+      height: 32px;
+      width: auto;
+      display: block
+    }
+
+    .footer-cta-block {
+      max-width: 640px;
+      display: grid;
+      gap: 6px
+    }
+
+    .footer-hero {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--white)
+    }
+
+    .footer-sub {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--light-al);
+      max-width: 54ch
+    }
+
+    .footer-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin-top: 4px;
+      background: transparent;
+      color: var(--rose-gold);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-decoration: none
+    }
+
+    .footer-demo:hover {
+      color: var(--verdigris)
+    }
+
+    .footer-demo .arrow {
+      font-size: 16px;
+      line-height: 1;
+      transition: transform .18s
+    }
+
+    .footer-demo:hover .arrow {
+      transform: translateX(3px)
+    }
+
+    .footer-contact {
+      font-size: 15px;
+      color: var(--light-al);
+      line-height: 1.8;
+      display: grid;
+      gap: 4px
+    }
+
+    .footer-contact a {
+      color: var(--light-al);
+      text-decoration: none
+    }
+
+    .footer-contact a:hover {
+      color: var(--white)
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding-top: 4px
+    }
+
+    .footer-tagline {
+      font-size: 15px;
+      color: var(--light-al);
+      max-width: 34ch
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap
+    }
+
+    .footer-links a {
+      font-size: 15px;
+      color: var(--light-al);
+      text-decoration: none
+    }
+
+    .footer-links a:hover {
+      color: var(--white)
+    }
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1024px) {
-      .hero-grid { grid-template-columns: 1fr }
-      .hero-img { max-width: 480px; aspect-ratio: 16/9 }
-      .io-grid { grid-template-columns: 1fr }
-      .ps-grid { grid-template-columns: 1fr }
-      .ps-visual { position: static; aspect-ratio: 16/9 }
-      .access-grid { grid-template-columns: 1fr }
-      .steps { max-width: 100% }
+      .hero-grid {
+        grid-template-columns: 1fr
+      }
+
+      .hero-img {
+        max-width: 480px;
+        align-self: auto;
+      }
+
+      .io-grid {
+        grid-template-columns: 1fr
+      }
+
+      .ps-grid {
+        grid-template-columns: 1fr
+      }
+
+      .ps-visual {
+        position: static;
+        aspect-ratio: 16/9
+      }
+
+      .access-grid {
+        grid-template-columns: 1fr
+      }
+
+      .steps {
+        max-width: 100%
+      }
     }
+
     @media (max-width: 768px) {
-      .nav-links { display: none }
-      .hamburger { display: flex }
-      table.ct th:first-child, table.ct td:first-child { display: none }
-      .case-grid { grid-template-columns: 1fr }
-      .io-grid { grid-template-columns: 1fr }
+      .nav-links {
+        display: none
+      }
+
+      .hamburger {
+        display: flex
+      }
+
+      table.ct th:first-child,
+      table.ct td:first-child {
+        display: none
+      }
+
+      .case-grid {
+        grid-template-columns: 1fr
+      }
+
+      .io-grid {
+        grid-template-columns: 1fr
+      }
     }
   </style>
 </head>
@@ -453,8 +1308,8 @@
           <a href="/contact" class="btn btn-forge" style="margin-top:8px">Request a Demo</a>
         </div>
         <div class="hero-img reveal d2">
-          <img src="https://images.unsplash.com/photo-1583777458845-047acbeb7d21?auto=format&fit=crop&w=900&q=80"
-            alt="Caseworker reviewing income verification with a client" loading="eager" width="900" height="1125">
+          <img src="../public/images/Product hero image.png"
+            alt="VMI product interface showing income verification on mobile" loading="eager">
         </div>
       </div>
     </div>
@@ -468,7 +1323,8 @@
   <section class="integration section-pad" id="integration">
     <div class="section-inner">
       <h2 class="section-h reveal">Built to fit your systems</h2>
-      <p class="section-intro reveal d1">VMI integrates with existing state benefit systems through multiple deployment options:</p>
+      <p class="section-intro reveal d1">VMI integrates with existing state benefit systems through multiple deployment
+        options:</p>
 
       <div class="io-grid">
 
@@ -476,13 +1332,18 @@
         <div class="io-card reveal d1">
           <div class="io-top">
             <div class="io-top-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 16H17M17 16L14 13M17 16L14 19M17 8H7M7 8L10 5M7 8L10 11" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.25"/>
+                <path d="M21 15L16 10L11 15L8 12L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
           </div>
           <div class="io-body">
-            <span class="io-pill">Option 01</span>
+            <span class="io-pill">Option 1</span>
             <h3>API integration with state eligibility systems</h3>
-            <p class="io-desc">Connect VMI directly to your existing eligibility infrastructure. Income reports are delivered in real time to your system of record via SFTP, S3, encrypted email, or webhooks API.</p>
+            <p class="io-desc">Connect VMI directly to your existing eligibility infrastructure. Income reports are
+              delivered in real time to your system of record via SFTP, S3, encrypted email, or webhooks API.</p>
           </div>
         </div>
 
@@ -490,13 +1351,18 @@
         <div class="io-card reveal d2">
           <div class="io-top">
             <div class="io-top-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V8H20M9 15L12 18L15 15M12 18V12" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.25"/>
+                <path d="M21 15L16 10L11 15L8 12L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
           </div>
           <div class="io-body">
-            <span class="io-pill">Option 02</span>
+            <span class="io-pill">Option 2</span>
             <h3>Standalone portal accessible via unique link per household</h3>
-            <p class="io-desc">Launch fast with zero development resources. Each household receives a unique link to a fully hosted, state-branded VMI portal in English and Spanish.</p>
+            <p class="io-desc">Launch fast with zero development resources. Each household receives a unique link to a
+              fully hosted, state-branded VMI portal in English and Spanish.</p>
           </div>
         </div>
 
@@ -504,13 +1370,18 @@
         <div class="io-card reveal d3">
           <div class="io-top">
             <div class="io-top-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.75"/><path d="M8 21H16M12 17V21" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><path d="M7 8H17M7 11H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.25"/>
+                <path d="M21 15L16 10L11 15L8 12L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
           </div>
           <div class="io-body">
-            <span class="io-pill">Option 03</span>
+            <span class="io-pill">Option 3</span>
             <h3>Embedded widget in state application portals</h3>
-            <p class="io-desc">Incorporate VMI directly into your existing application flow. Applicants never leave your portal during the verification step.</p>
+            <p class="io-desc">Incorporate VMI directly into your existing application flow. Applicants never leave your
+              portal during the verification step.</p>
           </div>
         </div>
 
@@ -530,74 +1401,128 @@
 
         <div class="ps-visual reveal">
           <span class="ps-visual-icon" aria-hidden="true">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M3 5H21M3 12H21M3 19H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+              <path d="M3 5H21M3 12H21M3 19H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
           </span>
           <span class="ps-visual-type">Diagram</span>
-          <p class="ps-visual-desc">VMI data flow — applicant → payroll connection → VMI validation → caseworker-ready report → state eligibility system</p>
+          <p class="ps-visual-desc">VMI data flow — applicant → payroll connection → VMI validation → caseworker-ready
+            report → state eligibility system</p>
         </div>
 
         <div class="ps-right reveal d1">
           <h2 class="section-h">The verification problem</h2>
-          <p class="ps-right-intro">States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service.</p>
+          <p class="ps-right-intro">States face four systemic problems with income verification. VMI is built to address
+            all of them — not as a data feed, but as a complete service.</p>
 
           <div class="ps-acc-list">
 
             <div class="ps-acc-item">
               <button class="ps-acc-trigger" aria-expanded="true" aria-controls="ps-1">
-                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><circle cx="18" cy="18" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M17 18H18V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                    fill="none">
+                    <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="1.75"
+                      stroke-linecap="round" />
+                    <circle cx="18" cy="18" r="3" stroke="currentColor" stroke-width="1.5" />
+                    <path d="M17 18H18V20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                  </svg></span>
                 <span class="ps-acc-title">No verification layer</span>
-                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9" fill="none"><path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9"
+                    fill="none">
+                    <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></span>
               </button>
               <div class="ps-acc-panel" id="ps-1">
-                <p class="ps-acc-problem">States receive raw data from commercial databases or paper documents, but have no service layer to validate, contextualize, and deliver that data in a format caseworkers can act on immediately. The result: follow-up calls, manual processing, and delayed enrollment.</p>
+                <p class="ps-acc-problem">States receive raw data from commercial databases or paper documents, but have
+                  no service layer to validate, contextualize, and deliver that data in a format caseworkers can act on
+                  immediately. The result: follow-up calls, manual processing, and delayed enrollment.</p>
                 <div class="ps-acc-solution">
                   <span class="ps-acc-sol-label">How VMI solves it</span>
-                  VMI handles the entire data journey: consent management, payroll connection, data validation, QA review, and delivery of a standardized income report to the caseworker. States get a complete service, not just a data feed.
+                  VMI handles the entire data journey: consent management, payroll connection, data validation, QA
+                  review, and delivery of a standardized income report to the caseworker. States get a complete service,
+                  not just a data feed.
                 </div>
               </div>
             </div>
 
             <div class="ps-acc-item">
               <button class="ps-acc-trigger" aria-expanded="false" aria-controls="ps-2">
-                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.75"/><path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                    fill="none">
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.75" />
+                    <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21" stroke="currentColor"
+                      stroke-width="1.25" stroke-linecap="round" />
+                  </svg></span>
                 <span class="ps-acc-title">Burden on caseworkers</span>
-                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9" fill="none"><path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9"
+                    fill="none">
+                    <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></span>
               </button>
               <div class="ps-acc-panel" id="ps-2" hidden>
-                <p class="ps-acc-problem">When electronic verification fails, caseworkers must manually process documents, make follow-up calls, and request additional information from applicants.</p>
+                <p class="ps-acc-problem">When electronic verification fails, caseworkers must manually process
+                  documents, make follow-up calls, and request additional information from applicants.</p>
                 <div class="ps-acc-solution">
                   <span class="ps-acc-sol-label">How VMI solves it</span>
-                  93% of caseworkers find VMI's income reports just as easy or easier to use than existing methods. Every report goes through data validation and sufficiency checks before it reaches a caseworker. Fewer follow-up calls. Less manual data entry.
+                  93% of caseworkers find VMI's income reports just as easy or easier to use than existing methods.
+                  Every report goes through data validation and sufficiency checks before it reaches a caseworker. Fewer
+                  follow-up calls. Less manual data entry.
                 </div>
               </div>
             </div>
 
             <div class="ps-acc-item">
               <button class="ps-acc-trigger" aria-expanded="false" aria-controls="ps-3">
-                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"/><path d="M12 7V12L15 15" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></span>
+                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                    fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75" />
+                    <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" />
+                  </svg></span>
                 <span class="ps-acc-title">Time tax on applicants</span>
-                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9" fill="none"><path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9"
+                    fill="none">
+                    <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></span>
               </button>
               <div class="ps-acc-panel" id="ps-3" hidden>
-                <p class="ps-acc-problem">People are required to track down pay stubs, print forms, and submit documents to prove their income. Access to benefits is delayed by days or weeks.</p>
+                <p class="ps-acc-problem">People are required to track down pay stubs, print forms, and submit documents
+                  to prove their income. Access to benefits is delayed by days or weeks.</p>
                 <div class="ps-acc-solution">
                   <span class="ps-acc-sol-label">How VMI solves it</span>
-                  Applicants verify income in under 5 minutes. No documents to find or upload. 85% of applicants report no difficulty completing the process.
+                  Applicants verify income in under 5 minutes. No documents to find or upload. 85% of applicants report
+                  no difficulty completing the process.
                 </div>
               </div>
             </div>
 
             <div class="ps-acc-item">
               <button class="ps-acc-trigger" aria-expanded="false" aria-controls="ps-4">
-                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 6L9 3L15 6L21 3V18L15 21L9 18L3 21V6Z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 3V18M15 6V21" stroke="currentColor" stroke-width="1.75"/></svg></span>
+                <span class="ps-acc-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                    fill="none">
+                    <path d="M3 6L9 3L15 6L21 3V18L15 21L9 18L3 21V6Z" stroke="currentColor" stroke-width="1.75"
+                      stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M9 3V18M15 6V21" stroke="currentColor" stroke-width="1.75" />
+                  </svg></span>
                 <span class="ps-acc-title">Raw data is not verification</span>
-                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9" fill="none"><path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ps-acc-chevron" aria-hidden="true"><svg width="14" height="9" viewBox="0 0 14 9"
+                    fill="none">
+                    <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></span>
               </button>
               <div class="ps-acc-panel" id="ps-4" hidden>
-                <p class="ps-acc-problem">Payroll aggregators can connect to employer systems and pull income records. But raw aggregator data frequently lacks the information caseworkers need, including missing pay dates, no gross pay amounts, or no hours data. Without a verification layer, incomplete records reach the caseworker and drive errors.</p>
+                <p class="ps-acc-problem">Payroll aggregators can connect to employer systems and pull income records.
+                  But raw aggregator data frequently lacks the information caseworkers need, including missing pay
+                  dates, no gross pay amounts, or no hours data. Without a verification layer, incomplete records reach
+                  the caseworker and drive errors.</p>
                 <div class="ps-acc-solution">
                   <span class="ps-acc-sol-label">How VMI solves it</span>
-                  Every aggregator response passes through VMI's validation layer before any data reaches a state agency. Reports that do not meet eligibility-grade standards are rejected, and the applicant is routed to an alternative. States receive only verified, caseworker-ready data.
+                  Every aggregator response passes through VMI's validation layer before any data reaches a state
+                  agency. Reports that do not meet eligibility-grade standards are rejected, and the applicant is routed
+                  to an alternative. States receive only verified, caseworker-ready data.
                 </div>
               </div>
             </div>
@@ -619,25 +1544,37 @@
           <thead>
             <tr>
               <th scope="col"></th>
-              <th scope="col"><span class="ct-x-badge" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 1.5L8.5 8.5M8.5 1.5L1.5 8.5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></span>Traditional Approaches</th>
-              <th scope="col" class="vmi-head"><span class="ct-check-badge" aria-hidden="true"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>VMI — Digital Public Works</th>
+              <th scope="col"><span class="ct-x-badge" aria-hidden="true"><svg width="10" height="10"
+                    viewBox="0 0 10 10" fill="none">
+                    <path d="M1.5 1.5L8.5 8.5M8.5 1.5L1.5 8.5" stroke="white" stroke-width="2" stroke-linecap="round" />
+                  </svg></span>Traditional Approaches</th>
+              <th scope="col" class="vmi-head"><span class="ct-check-badge" aria-hidden="true"><svg width="11"
+                    height="9" viewBox="0 0 11 9" fill="none">
+                    <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></span>VMI — Digital Public Works</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td class="ct-dim">What you get</td>
-              <td class="ct-them">A data connection, a bundled add-on to a larger contract, or a commercial product. The state fills the gaps.</td>
-              <td class="ct-vmi">A complete verification service. Consent, benefits-specific data validation, and caseworker-ready reports included.</td>
+              <td class="ct-them">A data connection, a bundled add-on to a larger contract, or a commercial product. The
+                state fills the gaps.</td>
+              <td class="ct-vmi">A complete verification service. Consent, benefits-specific data validation, and
+                caseworker-ready reports included.</td>
             </tr>
             <tr>
               <td class="ct-dim">Pricing</td>
-              <td class="ct-them">Commercial pricing that rises over time. Some vendors bundle verification into larger contracts, hiding the true cost.</td>
+              <td class="ct-them">Commercial pricing that rises over time. Some vendors bundle verification into larger
+                contracts, hiding the true cost.</td>
               <td class="ct-vmi">Nonprofit, at cost. Price decreases as more states join the platform.</td>
             </tr>
             <tr>
               <td class="ct-dim">Data quality</td>
-              <td class="ct-them">Raw data delivered as-is. No validation against program requirements. Incomplete or unusable records reach caseworkers.</td>
-              <td class="ct-vmi">Every report passes through programmatic validation. Reports that do not meet eligibility-grade standards are rejected and applicants are redirected to existing options.</td>
+              <td class="ct-them">Raw data delivered as-is. No validation against program requirements. Incomplete or
+                unusable records reach caseworkers.</td>
+              <td class="ct-vmi">Every report passes through programmatic validation. Reports that do not meet
+                eligibility-grade standards are rejected and applicants are redirected to existing options.</td>
             </tr>
             <tr>
               <td class="ct-dim">Open source</td>
@@ -646,18 +1583,23 @@
             </tr>
             <tr>
               <td class="ct-dim">Vendor lock-in</td>
-              <td class="ct-them">High. Switching vendors means rebuilding. Some states are locked into multi-year contracts with no exit path.</td>
-              <td class="ct-vmi">None. If DPW ceased to exist, states retain full access to the code, architecture, and documentation.</td>
+              <td class="ct-them">High. Switching vendors means rebuilding. Some states are locked into multi-year
+                contracts with no exit path.</td>
+              <td class="ct-vmi">None. If DPW ceased to exist, states retain full access to the code, architecture, and
+                documentation.</td>
             </tr>
             <tr>
               <td class="ct-dim">Accessibility</td>
-              <td class="ct-them">State inherits responsibility for all embedded components, including third-party interfaces it does not control.</td>
-              <td class="ct-vmi">WCAG 2.1 AA commitment with independent third-party auditing funded by AARP Foundation.</td>
+              <td class="ct-them">State inherits responsibility for all embedded components, including third-party
+                interfaces it does not control.</td>
+              <td class="ct-vmi">WCAG 2.1 AA commitment with independent third-party auditing funded by AARP Foundation.
+              </td>
             </tr>
             <tr>
               <td class="ct-dim">Service model</td>
               <td class="ct-them">Per-verification billing regardless of eligibility value.</td>
-              <td class="ct-vmi">Embedded partnership: discovery sprints, case reviews, ongoing service design, and workflow improvement.</td>
+              <td class="ct-vmi">Embedded partnership: discovery sprints, case reviews, ongoing service design, and
+                workflow improvement.</td>
             </tr>
           </tbody>
         </table>
@@ -679,11 +1621,16 @@
           <button class="vq-trigger" aria-expanded="false" aria-controls="vq-1">
             <span class="vq-q">What is the total cost of ownership?</span>
             <span class="vq-chevron" aria-hidden="true">
-              <svg width="22" height="14" viewBox="0 0 14 9" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="28" height="18" viewBox="0 0 14 9" fill="none">
+                <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <div class="vq-panel" id="vq-1" hidden>
-            <p class="vq-a">Ask for the full picture, not just the per-verification price. Will you separately fund UX design, consent infrastructure, eligibility logic, security authorization, accessibility compliance, and ongoing maintenance?</p>
+            <p class="vq-a">Ask for the full picture, not just the per-verification price. Will you separately fund UX
+              design, consent infrastructure, eligibility logic, security authorization, accessibility compliance, and
+              ongoing maintenance?</p>
           </div>
         </div>
 
@@ -691,11 +1638,16 @@
           <button class="vq-trigger" aria-expanded="false" aria-controls="vq-2">
             <span class="vq-q">Who is responsible for accessibility compliance?</span>
             <span class="vq-chevron" aria-hidden="true">
-              <svg width="22" height="14" viewBox="0 0 14 9" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="28" height="18" viewBox="0 0 14 9" fill="none">
+                <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <div class="vq-panel" id="vq-2" hidden>
-            <p class="vq-a">If the product embeds third-party login interfaces or components the vendor does not control, who remediates accessibility failures in those components? VMI's accessibility is independently audited by a third party, funded by AARP Foundation.</p>
+            <p class="vq-a">If the product embeds third-party login interfaces or components the vendor does not
+              control, who remediates accessibility failures in those components? VMI's accessibility is independently
+              audited by a third party, funded by AARP Foundation.</p>
           </div>
         </div>
 
@@ -703,11 +1655,18 @@
           <button class="vq-trigger" aria-expanded="false" aria-controls="vq-3">
             <span class="vq-q">Is there a data validation layer?</span>
             <span class="vq-chevron" aria-hidden="true">
-              <svg width="22" height="14" viewBox="0 0 14 9" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="28" height="18" viewBox="0 0 14 9" fill="none">
+                <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <div class="vq-panel" id="vq-3" hidden>
-            <p class="vq-a">Raw payroll data is not always usable for eligibility determinations. What happens when a report is missing pay dates, gross pay, or hours data? After login, what happens if accounts are completely empty or the most recent pay date is 5 years old? Does the product catch that and redirect the client before it reaches a caseworker, or does the caseworker find out? VMI blocks reports that do not meet program-specific quality standards and redirects applicants to existing verification options.</p>
+            <p class="vq-a">Raw payroll data is not always usable for eligibility determinations. What happens when a
+              report is missing pay dates, gross pay, or hours data? After login, what happens if accounts are
+              completely empty or the most recent pay date is 5 years old? Does the product catch that and redirect the
+              client before it reaches a caseworker, or does the caseworker find out? VMI blocks reports that do not
+              meet program-specific quality standards and redirects applicants to existing verification options.</p>
           </div>
         </div>
 
@@ -715,11 +1674,15 @@
           <button class="vq-trigger" aria-expanded="false" aria-controls="vq-4">
             <span class="vq-q">What happens if you need to switch vendors?</span>
             <span class="vq-chevron" aria-hidden="true">
-              <svg width="22" height="14" viewBox="0 0 14 9" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="28" height="18" viewBox="0 0 14 9" fill="none">
+                <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <div class="vq-panel" id="vq-4" hidden>
-            <p class="vq-a">Can you take the code, the architecture, and the documentation with you? Or do you start over? VMI is open source under AGPL-3.0. The full codebase is published on GitHub.</p>
+            <p class="vq-a">Can you take the code, the architecture, and the documentation with you? Or do you start
+              over? VMI is open source under AGPL-3.0. The full codebase is published on GitHub.</p>
           </div>
         </div>
 
@@ -727,11 +1690,16 @@
           <button class="vq-trigger" aria-expanded="false" aria-controls="vq-5">
             <span class="vq-q">How does pricing change as usage scales?</span>
             <span class="vq-chevron" aria-hidden="true">
-              <svg width="22" height="14" viewBox="0 0 14 9" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="28" height="18" viewBox="0 0 14 9" fill="none">
+                <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <div class="vq-panel" id="vq-5" hidden>
-            <p class="vq-a">Does the per-unit cost go up with volume, stay flat, or go down? VMI is operated at cost by a nonprofit. Per-state costs decrease as more states join the platform <em>regardless of whether an individual state's own volume increases</em>.</p>
+            <p class="vq-a">Does the per-unit cost go up with volume, stay flat, or go down? VMI is operated at cost by
+              a nonprofit. Per-state costs decrease as more states join the platform <em>regardless of whether an
+                individual state's own volume increases</em>.</p>
           </div>
         </div>
 
@@ -739,11 +1707,16 @@
           <button class="vq-trigger" aria-expanded="false" aria-controls="vq-6">
             <span class="vq-q">Can you switch data providers without rebuilding?</span>
             <span class="vq-chevron" aria-hidden="true">
-              <svg width="22" height="14" viewBox="0 0 14 9" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="28" height="18" viewBox="0 0 14 9" fill="none">
+                <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <div class="vq-panel" id="vq-6" hidden>
-            <p class="vq-a">VMI sits above the data layer — states integrate once with the platform, not with individual data providers. If a payroll aggregator raises prices or drops in quality, VMI can swap them out and absorb the normalization work. The state's integration never changes.</p>
+            <p class="vq-a">VMI sits above the data layer — states integrate once with the platform, not with individual
+              data providers. If a payroll aggregator raises prices or drops in quality, VMI can swap them out and
+              absorb the normalization work. The state's integration never changes.</p>
           </div>
         </div>
 
@@ -751,11 +1724,16 @@
           <button class="vq-trigger" aria-expanded="false" aria-controls="vq-7">
             <span class="vq-q">What implementation support is included?</span>
             <span class="vq-chevron" aria-hidden="true">
-              <svg width="22" height="14" viewBox="0 0 14 9" fill="none"><path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="28" height="18" viewBox="0 0 14 9" fill="none">
+                <path d="M1 1L6.5 6.5L12 1" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <div class="vq-panel" id="vq-7" hidden>
-            <p class="vq-a">Does the vendor deliver data and walk away, or embed with your team? VMI engagements include discovery sprints, caseworker and applicant interviews, case review analysis, and ongoing service design improvements throughout the partnership.</p>
+            <p class="vq-a">Does the vendor deliver data and walk away, or embed with your team? VMI engagements include
+              discovery sprints, caseworker and applicant interviews, case review analysis, and ongoing service design
+              improvements throughout the partnership.</p>
           </div>
         </div>
 
@@ -871,14 +1849,20 @@
             <span class="case-state">Pennsylvania</span>
             <h3>Pennsylvania Department of Human Services</h3>
             <p class="case-detail">Case study forthcoming — pending draft and approval from PA DHS.</p>
-            <p class="case-detail" style="color:var(--aluminum);font-size:14px;margin-top:8px">Structure: the problem, DPW's approach, implementation timeline, outcome metrics, and a quote from agency leadership.</p>
+            <p class="case-detail" style="color:var(--aluminum);font-size:14px;margin-top:8px">Structure: the problem,
+              DPW's approach, implementation timeline, outcome metrics, and a quote from agency leadership.</p>
           </div>
           <div class="case-photo">
             <span class="ph-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9L21 9" stroke="currentColor" stroke-width="1.5"/></svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" />
+                <path d="M3 9L21 9" stroke="currentColor" stroke-width="1.5" />
+              </svg>
             </span>
             <span class="ph-type">Photo</span>
-            <p class="ph-desc">Pennsylvania — social services office, caseworker with client, or state government building. Warm, human, professional.</p>
+            <p class="ph-desc">Pennsylvania — social services office, caseworker with client, or state government
+              building. Warm, human, professional.</p>
           </div>
         </div>
 
@@ -887,14 +1871,20 @@
             <span class="case-state">Arizona</span>
             <h3>Arizona Department of Economic Security</h3>
             <p class="case-detail">Case study forthcoming — pending draft and approval from AZ DES.</p>
-            <p class="case-detail" style="color:var(--aluminum);font-size:14px;margin-top:8px">Structure: the problem, DPW's approach, implementation timeline, outcome metrics, and a quote from agency leadership.</p>
+            <p class="case-detail" style="color:var(--aluminum);font-size:14px;margin-top:8px">Structure: the problem,
+              DPW's approach, implementation timeline, outcome metrics, and a quote from agency leadership.</p>
           </div>
           <div class="case-photo">
             <span class="ph-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M3 9L21 9" stroke="currentColor" stroke-width="1.5"/></svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" />
+                <path d="M3 9L21 9" stroke="currentColor" stroke-width="1.5" />
+              </svg>
             </span>
             <span class="ph-type">Photo</span>
-            <p class="ph-desc">Arizona — state agency office, community outreach setting, or outdoor Southwest scene. Approachable, warm.</p>
+            <p class="ph-desc">Arizona — state agency office, community outreach setting, or outdoor Southwest scene.
+              Approachable, warm.</p>
           </div>
         </div>
 
@@ -984,4 +1974,5 @@
   </script>
 
 </body>
+
 </html>

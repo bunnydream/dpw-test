@@ -13,6 +13,82 @@ Use this file to initialize a new chat. Paste it at the start of a new conversat
 
 ---
 
+## ⚠️ Most Recent Work — product-v5.html
+
+The active product page is **`/Users/bellabesuud/Desktop/dpw-test/Product page/product-v5.html`**.
+This file combines v2 (content/nav/table/footer) + v3 (integration cards) + v4 (accordion/pilot/field cards).
+
+### Current state of every section
+
+**Hero**
+- `min-height: calc(100dvh - 74px)`, white bg
+- Two-column grid; CTA = `.btn.btn-forge` ("Request a Demo")
+- Hero image: `src="../public/images/Product hero image.png"` (local PNG)
+- Image CSS: `.hero-img { overflow: visible; display: flex; align-items: flex-end; align-self: stretch; }` — bottom of image aligns with bottom of viewport
+- `.hero-img img { width: 100%; height: auto; object-fit: contain; object-position: center bottom; }`
+
+**Built to Fit Your Systems** (`#integration`)
+- Section bg: `--cool-white`
+- `.io-card`: `border: none`, no hover animation
+- `.io-top` (photo area): `background: var(--light-al)`, `aspect-ratio: 4/3`, no `border-bottom`, white image-frame SVG at 55% opacity — acts as gray photo placeholder
+- `.io-pill`: `color: var(--deep-copper)`, uppercase 14px bold — text reads "Option 1 / Option 2 / Option 3" (no leading zeros)
+- No checkmark lists in cards
+
+**The Verification Problem** (`#the-problem`)
+- Sticky diagram left, accordion right
+- Accordion hover: `.ps-acc-trigger:hover .ps-acc-title { color: var(--deep-copper) }`
+- "How VMI solves it" label (`.ps-acc-sol-label`): `color: var(--park-green)` (WCAG AA safe — ~6.3:1)
+
+**Accessible by Design** (`#accessible`)
+- Stat box (`.access-stat`): no outer border; `border-left: 4px solid var(--copper)` only
+
+**The Path to a Pilot** (`#pilot`)
+- Vertical step design (v2 style), `max-width: 820px; margin: 0 auto` (centered)
+- `.step-badge`: `background: #FBF0E8` (pale copper), `border: none`, `aria-hidden="true"`
+- `.step-n` (numbers "01"–"04"): `color: var(--copper)` — borderline WCAG at 18px but large text at most viewports
+- `.step-lbl` ("STEP"): `color: var(--steel)` ✅ WCAG AA
+- `.step-content`: `background: var(--cool-white)`, `border: none`, no hover animation
+
+**In the Field** (`#field`)
+- `.case-card`: `border: none`
+- Copper top-line animation: `::before` pseudo, `height: 5px`, `scaleX(0→1)` on hover
+- Photos: `height: 260px; margin-top: auto` (flush bottom, equal height)
+
+**Traditional Approaches vs. VMI** (`#compare`)
+- `table.ct`: `border: none` (no outer border)
+- Row dividers: `border-bottom: 1px solid var(--light-al)` — visible on both columns
+- VMI column (`.ct-vmi`): `background: #EBF5F0` (pale verdigris)
+- Header badges: filled circles — `.ct-x-badge { background: #e05252 }`, `.ct-check-badge { background: var(--verdigris) }` with inline SVG stroke="white"
+
+**Questions to Ask Any Income Verification Vendor** (`#vendor-q`)
+- Chevrons: `width="28" height="18" viewBox="0 0 14 9"`, `stroke-width="1.25"`
+- Hover: `.vq-trigger:hover .vq-q { color: var(--deep-copper) }`
+
+### WCAG AA status in product-v5.html
+| Element | Color | Contrast | Status |
+|---|---|---|---|
+| `.io-pill` "OPTION 1" | deep-copper on white | ~5.4:1 | ✅ AA |
+| `.ps-acc-sol-label` | park-green on white | ~6.3:1 | ✅ AA |
+| `.ps-acc-title` hover | deep-copper on white | ~5.4:1 | ✅ AA |
+| `.vq-q` hover | deep-copper on white | ~5.4:1 | ✅ AA |
+| `.step-lbl` "STEP" | steel on #FBF0E8 | ~6.8:1 | ✅ AA |
+| `.step-n` "01"–"04" | copper on #FBF0E8 | ~3.2:1 | ⚠️ borderline — large text only |
+| `btn-copper` text | #000 on copper | ~5.9:1 | ✅ AA |
+| `nav-cta` text | #000 on copper | ~5.9:1 | ✅ AA |
+
+---
+
+## home-FINAL.html — recent changes
+
+File: `/Users/bellabesuud/Desktop/dpw-test/FINAL PAGES/home-FINAL.html`
+
+- `.ct-check` updated to filled circle: `background: var(--verdigris); width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;`
+- All `<span class="ct-check">✓</span>` replaced with inline SVG checkmark (`stroke="white"`)
+
+---
+
+---
+
 ## File map
 
 ```
@@ -21,20 +97,28 @@ dpw-test/
 ├── summary.md                             ← this file
 ├── DPW Website Copy.docx                  ← authoritative copy — use VERBATIM
 ├── Brand Guide/                           ← brand guidelines, color palette
-├── Logo/
-│   ├── Extended Logo/SVG/Dark/Duo-copper.svg    ← footer logo
-│   └── Stacked Logo/SVG/Dark/Duo-copper.svg     ← nav logo
+├── public/
+│   ├── images/
+│   │   └── Product hero image.png         ← hero image for product page
+│   └── logo/
+│       ├── extended-light/Duo-copper.svg
+│       ├── extended-dark/Duo-aluminum.svg
+│       ├── extended-dark/Duo-copper.svg
+│       └── stacked-dark/Duo-copper.svg
+├── FINAL PAGES/
+│   └── home-FINAL.html                    ← working file for home page — all edits here
 ├── Home page/
-│   ├── home-FINAL.html                    ← working file — all fixes applied here
 │   └── home-shareable.html                ← client-ready: logos embedded as inline SVG
 └── Product page/
-    ├── product.html                       ← product page v1 (complete)
-    └── product-v2.html                    ← product page v2 (complete, current)
+    ├── product-v5.html                    ← ✅ ACTIVE WORKING FILE
+    ├── product-v4.html                    ← reference only
+    ├── product-v3.html                    ← reference only
+    └── product-v2.html                    ← reference only (v2 pilot/step design source)
 ```
 
+**product-v5.html is the active product page.** All product edits go here.
 **home-FINAL.html is the working file for the home page.** All edits go here.
-**home-shareable.html** is generated from home-FINAL.html with logos embedded inline — recreate it when sending to clients (logos use relative paths that break when the file is sent alone).
-**home-v3b.html is the design reference for all pages.** Copy its nav, footer, CSS tokens, and section patterns exactly.
+**home-shareable.html** is generated from home-FINAL.html with logos embedded inline — recreate when sending to clients (relative paths break outside the folder).
 
 ---
 
@@ -162,25 +246,9 @@ All failures resolved. Key changes made:
 
 ---
 
-## product-v2.html — current state
+## product-v2.html — reference only
 
-All sections complete. Key differences from product.html (v1):
-
-| Section | What's in v2 |
-|---|---|
-| Hero | No "Digital Public Works" eyebrow; no CTA buttons |
-| Integration option 3 | "Insert diagram showing integration options" note |
-| Problem/solution | Combined section, h2 "The verification problem", 4 paired rows with → arrow between problem (left) and solution (right); column labels in copper/verdigris |
-| Comparison table | ✗ red in "Traditional Approaches" header, ✓ green in "VMI" header; no green checkmarks in cells |
-| Vendor questions | Accordion (SVG chevron icon flips 180° on open, one-open-at-a-time JS) |
-| Accessibility | "Accessibility research findings — placeholder" |
-| Pilot steps | Duration in parentheses: "Discovery (2–4 weeks)", "Configuration and integration (4–6 weeks)" |
-| Pilot note | PA launch note as plain paragraph below steps (no border, no sidebar) |
-| In the field | 2 dashed placeholder cards: Pennsylvania DHS + Arizona DES |
-
-Photos in product-v2.html:
-- **Hero:** `photo-1583777458845-047acbeb7d21`
-- **Accessibility:** `photo-1675179182019-3c0804f517af`
+Used as the source for the pilot/step vertical design. Do not edit. See product-v5.html for the active version.
 
 ---
 
