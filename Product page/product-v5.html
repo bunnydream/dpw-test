@@ -291,30 +291,19 @@
     /* ─── HERO ─── */
     .hero {
       background: var(--white);
-      min-height: calc(100dvh - 74px);
-      padding: clamp(24px, 4vw, 40px) clamp(20px, 5vw, 64px);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .hero-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center
-    }
-
-    .hero-grid {
+      height: calc(100dvh - 74px);
       display: grid;
-      grid-template-columns: 1fr min(460px, 38vw);
-      gap: clamp(32px, 5vw, 72px);
-      align-items: center;
-      padding-bottom: clamp(24px, 3vw, 36px);
-      flex: 1;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      align-self: center;
     }
 
     h1 {
@@ -346,18 +335,19 @@
     }
 
     .hero-img {
-      overflow: visible;
       display: flex;
       align-items: flex-end;
-      align-self: stretch;
+      justify-content: center;
+      padding: clamp(40px, 5vw, 72px) clamp(24px, 4vw, 56px) 0;
+      overflow: hidden;
     }
 
     .hero-img img {
       width: 100%;
-      height: auto;
+      height: 100%;
+      max-height: 100%;
       display: block;
       object-fit: contain;
-      object-position: center bottom;
     }
 
     /* ═══════════════════════════════════════════════
@@ -367,7 +357,6 @@
        ═══════════════════════════════════════════════ */
     .integration {
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al)
     }
 
     .io-grid {
@@ -386,22 +375,17 @@
       flex-direction: column;
     }
 
-    /* Photo placeholder */
+    /* Photo */
     .io-top {
-      background: var(--light-al);
       aspect-ratio: 4/3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+      overflow: hidden;
     }
 
-    .io-top-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--white);
-      opacity: 0.55;
+    .io-top img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .io-body {
@@ -452,7 +436,6 @@
        ═══════════════════════════════════════════════ */
     .ps-section {
       background: var(--white);
-      border-top: 1px solid var(--light-al)
     }
 
     .ps-grid {
@@ -465,37 +448,16 @@
     .ps-visual {
       position: sticky;
       top: 90px;
-      background: var(--cool-white);
-      border: 1px solid var(--light-al);
       border-radius: 2px;
+      overflow: hidden;
       aspect-ratio: 3/4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 10px;
-      padding: 40px 24px;
     }
 
-    .ps-visual-icon {
-      color: var(--aluminum)
-    }
-
-    .ps-visual-type {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label);
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--aluminum)
-    }
-
-    .ps-visual-desc {
-      font-size: 15px;
-      color: var(--aluminum);
-      line-height: 1.55;
-      max-width: 28ch
+    .ps-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
 
     .ps-right-intro {
@@ -610,7 +572,6 @@
     /* ─── COMPARISON TABLE ─── */
     .compare-full {
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al)
     }
 
     .ct-wrap {
@@ -621,7 +582,7 @@
       width: 100%;
       border-collapse: collapse;
       background: var(--white);
-      border: none;
+      border: 1px solid var(--light-al);
       border-radius: 2px;
       overflow: hidden
     }
@@ -687,7 +648,6 @@
        ═══════════════════════════════════════════════ */
     .vendor-q {
       background: var(--white);
-      border-top: 1px solid var(--light-al)
     }
 
     .vq-list {
@@ -762,14 +722,13 @@
     /* ─── ACCESSIBILITY ─── */
     .access-section {
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al)
-    }
-
-    .access-grid {
       display: grid;
       grid-template-columns: 3fr 2fr;
-      gap: clamp(48px, 7vw, 100px);
-      align-items: stretch
+      overflow: hidden;
+    }
+
+    .access-left {
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
     }
 
     .access-body p {
@@ -813,9 +772,7 @@
     }
 
     .access-photo {
-      border-radius: 2px;
       overflow: hidden;
-      align-self: stretch
     }
 
     .access-photo img {
@@ -824,7 +781,6 @@
       display: block;
       object-fit: cover;
       object-position: center;
-      min-height: 400px
     }
 
     /* ═══════════════════════════════════════════════
@@ -832,7 +788,13 @@
        ═══════════════════════════════════════════════ */
     .pilot {
       background: var(--white);
-      border-top: 1px solid var(--light-al)
+    }
+
+    .pilot .section-h {
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
     }
 
     .steps {
@@ -932,7 +894,6 @@
        ═══════════════════════════════════════════════ */
     .field {
       background: var(--cool-white);
-      border-top: 1px solid var(--light-al)
     }
 
     .case-grid {
@@ -1001,39 +962,19 @@
       color: var(--steel)
     }
 
-    /* margin-top: auto pushes photo flush to bottom regardless of text height */
+    /* photo flush to bottom regardless of text height */
     .case-photo {
       height: 260px;
       flex-shrink: 0;
       margin-top: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 10px;
-      background: var(--light-al);
-      padding: 32px 24px;
+      overflow: hidden;
     }
 
-    .case-photo .ph-icon {
-      color: var(--aluminum)
-    }
-
-    .case-photo .ph-type {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label);
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--aluminum)
-    }
-
-    .case-photo .ph-desc {
-      font-size: 15px;
-      color: var(--aluminum);
-      line-height: 1.55;
-      max-width: 26ch
+    .case-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     /* ─── FOOTER CTA ─── */
@@ -1202,13 +1143,18 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1024px) {
-      .hero-grid {
-        grid-template-columns: 1fr
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-left {
+        padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px);
       }
 
       .hero-img {
-        max-width: 480px;
-        align-self: auto;
+        padding: clamp(24px, 4vw, 40px) clamp(20px, 5vw, 48px);
+        order: 2;
       }
 
       .io-grid {
@@ -1221,11 +1167,27 @@
 
       .ps-visual {
         position: static;
-        aspect-ratio: 16/9
+        aspect-ratio: 16/9;
+        order: 2;
       }
 
-      .access-grid {
-        grid-template-columns: 1fr
+      .ps-right {
+        order: 1;
+      }
+
+      .access-section {
+        grid-template-columns: 1fr;
+      }
+
+      .access-left {
+        padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
+        order: 1;
+      }
+
+      .access-photo {
+        aspect-ratio: 4/3;
+        max-height: 420px;
+        order: 2;
       }
 
       .steps {
@@ -1296,22 +1258,18 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-grid">
-        <div class="reveal">
-          <h1>Verify My Income</h1>
-          <p class="hero-tagline">The verification service layer between payroll data and state benefit systems</p>
-          <p class="hero-sub">VMI is an end-to-end verification service that handles the entire journey income data
-            takes, from the applicant's payroll provider, through a consent-driven workflow, to a caseworker-ready
-            report delivered to the state's eligibility system. VMI is designed around enrollment outcomes, not just
-            data retrieval.</p>
-          <a href="/contact" class="btn btn-forge" style="margin-top:8px">Request a Demo</a>
-        </div>
-        <div class="hero-img reveal d2">
-          <img src="../public/images/Product hero image.png"
-            alt="VMI product interface showing income verification on mobile" loading="eager">
-        </div>
-      </div>
+    <div class="hero-left reveal">
+      <h1>Verify My Income</h1>
+      <p class="hero-tagline">The verification service layer between payroll data and state benefit systems</p>
+      <p class="hero-sub">VMI is an end-to-end verification service that handles the entire journey income data
+        takes, from the applicant's payroll provider, through a consent-driven workflow, to a caseworker-ready
+        report delivered to the state's eligibility system. VMI is designed around enrollment outcomes, not just
+        data retrieval.</p>
+      <a href="/contact" class="btn btn-forge" style="margin-top:8px">Request a Demo</a>
+    </div>
+    <div class="hero-img reveal d2">
+      <img src="../public/images/Product hero image.png"
+        alt="VMI product interface showing income verification on mobile" loading="eager">
     </div>
   </section>
 
@@ -1331,13 +1289,8 @@
         <!-- Card 1 -->
         <div class="io-card reveal d1">
           <div class="io-top">
-            <div class="io-top-icon" aria-hidden="true">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.25"/>
-                <path d="M21 15L16 10L11 15L8 12L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+            <img src="https://images.unsplash.com/photo-1774208207678-d4adf2008b09?auto=format&fit=crop&w=800&q=80"
+              alt="Classical government building with columns and dome" loading="lazy">
           </div>
           <div class="io-body">
             <span class="io-pill">Option 1</span>
@@ -1350,13 +1303,8 @@
         <!-- Card 2 -->
         <div class="io-card reveal d2">
           <div class="io-top">
-            <div class="io-top-icon" aria-hidden="true">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.25"/>
-                <path d="M21 15L16 10L11 15L8 12L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+            <img src="https://images.unsplash.com/photo-1564156280315-1d42b4651629?auto=format&fit=crop&w=800&q=80"
+              alt="Father carrying baby boy" loading="lazy">
           </div>
           <div class="io-body">
             <span class="io-pill">Option 2</span>
@@ -1369,13 +1317,8 @@
         <!-- Card 3 -->
         <div class="io-card reveal d3">
           <div class="io-top">
-            <div class="io-top-icon" aria-hidden="true">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="1.25"/>
-                <path d="M21 15L16 10L11 15L8 12L3 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+            <img src="https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=800&q=80"
+              alt="MacBook Pro showing programming language" loading="lazy">
           </div>
           <div class="io-body">
             <span class="io-pill">Option 3</span>
@@ -1400,14 +1343,9 @@
       <div class="ps-grid">
 
         <div class="ps-visual reveal">
-          <span class="ps-visual-icon" aria-hidden="true">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-              <path d="M3 5H21M3 12H21M3 19H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-            </svg>
-          </span>
-          <span class="ps-visual-type">Diagram</span>
-          <p class="ps-visual-desc">VMI data flow — applicant → payroll connection → VMI validation → caseworker-ready
-            report → state eligibility system</p>
+          <img src="../public/images/product-verify.png"
+            alt="VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
+            loading="lazy">
         </div>
 
         <div class="ps-right reveal d1">
@@ -1742,31 +1680,27 @@
   </section>
 
 
-  <!-- ACCESSIBLE BY DESIGN (placeholder removed) -->
-  <section class="access-section section-pad" id="accessibility">
-    <div class="section-inner">
-      <div class="access-grid">
-        <div>
-          <h2 class="section-h reveal">Accessible by design, not as an afterthought</h2>
-          <div class="access-body reveal d1">
-            <p>DPW is investing in accessibility research in partnership with the AARP Foundation, with independent
-              third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility
-              standards. The platform supports English and Spanish.</p>
-            <p>We do not treat accessibility as a compliance checkbox. We are conducting original research into how
-              income verification tools can be made usable for older adults, people with disabilities, and individuals
-              with limited English proficiency. Findings from this research will be published and shared with the
-              field.</p>
-          </div>
-          <div class="access-stat reveal d2">
-            <span class="access-stat-num">65%</span>
-            <p class="access-stat-text">of our users access VMI on a smartphone. The platform is built mobile-first.</p>
-          </div>
-        </div>
-        <div class="access-photo reveal d2">
-          <img src="https://images.unsplash.com/photo-1675179182019-3c0804f517af?auto=format&fit=crop&w=800&q=80"
-            alt="An older adult using a cell phone to verify her income" loading="lazy" width="800" height="1000">
-        </div>
+  <!-- ACCESSIBLE BY DESIGN -->
+  <section class="access-section" id="accessibility">
+    <div class="access-left">
+      <h2 class="section-h reveal">Accessible by design, not as an afterthought</h2>
+      <div class="access-body reveal d1">
+        <p>DPW is investing in accessibility research in partnership with the AARP Foundation, with independent
+          third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility
+          standards. The platform supports English and Spanish.</p>
+        <p>We do not treat accessibility as a compliance checkbox. We are conducting original research into how
+          income verification tools can be made usable for older adults, people with disabilities, and individuals
+          with limited English proficiency. Findings from this research will be published and shared with the
+          field.</p>
       </div>
+      <div class="access-stat reveal d2">
+        <span class="access-stat-num">65%</span>
+        <p class="access-stat-text">of our users access VMI on a smartphone. The platform is built mobile-first.</p>
+      </div>
+    </div>
+    <div class="access-photo reveal d2">
+      <img src="https://images.unsplash.com/photo-1675179182019-3c0804f517af?auto=format&fit=crop&w=800&q=80"
+        alt="An older adult using a cell phone to verify her income" loading="lazy">
     </div>
   </section>
 
@@ -1849,20 +1783,10 @@
             <span class="case-state">Pennsylvania</span>
             <h3>Pennsylvania Department of Human Services</h3>
             <p class="case-detail">Case study forthcoming — pending draft and approval from PA DHS.</p>
-            <p class="case-detail" style="color:var(--aluminum);font-size:14px;margin-top:8px">Structure: the problem,
-              DPW's approach, implementation timeline, outcome metrics, and a quote from agency leadership.</p>
           </div>
           <div class="case-photo">
-            <span class="ph-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
-                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" />
-                <path d="M3 9L21 9" stroke="currentColor" stroke-width="1.5" />
-              </svg>
-            </span>
-            <span class="ph-type">Photo</span>
-            <p class="ph-desc">Pennsylvania — social services office, caseworker with client, or state government
-              building. Warm, human, professional.</p>
+            <img src="https://images.unsplash.com/photo-1576082176859-e557bdc7b1b4?auto=format&fit=crop&w=800&q=80"
+              alt="Pennsylvania State Capitol building" loading="lazy">
           </div>
         </div>
 
@@ -1871,20 +1795,10 @@
             <span class="case-state">Arizona</span>
             <h3>Arizona Department of Economic Security</h3>
             <p class="case-detail">Case study forthcoming — pending draft and approval from AZ DES.</p>
-            <p class="case-detail" style="color:var(--aluminum);font-size:14px;margin-top:8px">Structure: the problem,
-              DPW's approach, implementation timeline, outcome metrics, and a quote from agency leadership.</p>
           </div>
           <div class="case-photo">
-            <span class="ph-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" />
-                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" />
-                <path d="M3 9L21 9" stroke="currentColor" stroke-width="1.5" />
-              </svg>
-            </span>
-            <span class="ph-type">Photo</span>
-            <p class="ph-desc">Arizona — state agency office, community outreach setting, or outdoor Southwest scene.
-              Approachable, warm.</p>
+            <img src="https://images.unsplash.com/photo-1729041473171-b4d8b85c4d7b?auto=format&fit=crop&w=800&q=80"
+              alt="Arizona State Capitol building with flag" loading="lazy">
           </div>
         </div>
 
