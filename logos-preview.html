@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DPW — Logos Section Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forge: #1E272E;
+      --copper: #C77234;
+      --steel: #3A4E5C;
+      --aluminum: #A9B0B6;
+      --light-al: #D0D5D8;
+      --white: #FFFFFF;
+      --cool-white: #F6F7F8;
+      --t-label: 14px;
+      --t-body: 17px;
+      --t-small: 15px;
+    }
+
+    body {
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      background: var(--cool-white);
+      color: var(--forge);
+      padding: 48px 24px;
+    }
+
+    .preview-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    /* ─── LOGOS SECTION ─── */
+    .logos-section {
+      background: var(--white);
+      padding: clamp(48px, 6vw, 72px) clamp(20px, 5vw, 64px);
+      border: 1px solid var(--light-al);
+      border-radius: 2px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .logos-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .logos-row {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .logos-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--light-al);
+    }
+
+    .logos-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+    }
+
+    .logos-strip {
+      display: flex;
+      align-items: center;
+      gap: clamp(24px, 4vw, 48px);
+      flex-wrap: wrap;
+    }
+
+    .logo-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      opacity: 0.55;
+      filter: grayscale(100%);
+      transition: opacity .2s, filter .2s;
+      flex-shrink: 0;
+    }
+
+    .logo-item:hover {
+      opacity: 1;
+      filter: grayscale(0%);
+    }
+
+    .logo-item img {
+      height: 100%;
+      width: auto;
+      max-width: 140px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      color: var(--steel);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      opacity: 0.65;
+      transition: opacity .2s;
+      border: 1.5px solid var(--light-al);
+      padding: 10px 18px;
+      border-radius: 2px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .logo-text:hover {
+      opacity: 1;
+      border-color: var(--steel);
+    }
+
+    .logo-placeholder {
+      height: 44px;
+      min-width: 140px;
+      border: 1.5px dashed var(--light-al);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+
+    .logo-placeholder span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+    }
+
+    .note {
+      font-size: var(--t-small);
+      color: var(--aluminum);
+      font-style: italic;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .logos-strip { gap: 16px; }
+      .logo-item { height: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <p class="preview-label">DPW Website — Logos Section (mockup for partner review)</p>
+
+  <section class="logos-section">
+    <div class="logos-inner">
+
+      <!-- Row 1: Trusted by -->
+      <div class="logos-row">
+        <p class="logos-label">Trusted by</p>
+        <div class="logos-strip">
+          <div class="logo-placeholder">
+            <span>PA DHS</span>
+          </div>
+          <div class="logo-placeholder">
+            <span>AZ DES</span>
+          </div>
+          <div class="logo-placeholder">
+            <span>Your agency here</span>
+          </div>
+        </div>
+        <p class="note">Logos shown as placeholders — pending permission to display.</p>
+      </div>
+
+      <div class="logos-divider"></div>
+
+      <!-- Row 2: Backed by -->
+      <div class="logos-row">
+        <p class="logos-label">Backed by</p>
+        <div class="logos-strip">
+          <a href="https://www.drkfoundation.org" class="logo-text" target="_blank" rel="noopener">DRK Foundation</a>
+          <a href="https://www.aarp.org/aarp-foundation/" class="logo-text" target="_blank" rel="noopener">AARP Foundation</a>
+          <a href="https://familiesandworkers.org" class="logo-text" target="_blank" rel="noopener">Families and Workers Fund</a>
+          <a href="https://www.pritzkerchildrensinitiative.org" class="logo-text" target="_blank" rel="noopener">Pritzker Children's Initiative</a>
+        </div>
+        <p class="note">Funder logo image files can replace these text badges once assets are provided.</p>
+      </div>
+
+    </div>
+  </section>
+
+</body>
+</html>

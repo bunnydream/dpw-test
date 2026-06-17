@@ -609,6 +609,129 @@
       line-height: 1.65;
     }
 
+    /* ─── LOGOS SECTION ──────────────────────────── */
+    .logos-section {
+      background: var(--white);
+      padding: clamp(48px, 6vw, 72px) clamp(20px, 5vw, 64px);
+      border-top: 1px solid var(--light-al);
+      border-bottom: 1px solid var(--light-al);
+    }
+
+    .logos-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .logos-row {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .logos-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--light-al);
+    }
+
+    .logos-label {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+    }
+
+    .logos-strip {
+      display: flex;
+      align-items: center;
+      gap: clamp(24px, 4vw, 56px);
+      flex-wrap: wrap;
+    }
+
+    /* Real logos — grayscale at rest, brand color on hover */
+    .logo-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 44px;
+      opacity: 0.55;
+      filter: grayscale(100%);
+      transition: opacity .2s, filter .2s;
+      flex-shrink: 0;
+    }
+
+    .logo-item:hover {
+      opacity: 1;
+      filter: grayscale(0%);
+    }
+
+    .logo-item img {
+      height: 100%;
+      width: auto;
+      max-width: 140px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Text-based logo fallback (for orgs without image yet) */
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      color: var(--steel);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      opacity: 0.6;
+      transition: opacity .2s;
+      border: 1.5px solid var(--light-al);
+      padding: 10px 18px;
+      border-radius: 2px;
+    }
+
+    .logo-text:hover {
+      opacity: 1;
+    }
+
+    /* Placeholder box for pending logos */
+    .logo-placeholder {
+      height: 44px;
+      min-width: 120px;
+      border: 1.5px dashed var(--light-al);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+    }
+
+    .logo-placeholder span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--aluminum);
+    }
+
+    @media (max-width: 768px) {
+      .logos-strip {
+        gap: 20px;
+      }
+
+      .logo-item {
+        height: 36px;
+      }
+
+      .logo-item img {
+        max-width: 110px;
+      }
+    }
+
     /* ─── RESPONSIVE ──────────────────────────────── */
     @media (max-width: 1024px) {
       .hero {
@@ -847,6 +970,42 @@
       <p class="stat-label">Faster than manual verification</p>
     </div>
   </div>
+
+  <!-- LOGOS — hidden at launch. Activate by removing style="display:none"
+       CMS: sections table, type='logo_row', visible=false
+       Waiting on: partner logo permissions (PA DHS, AZ DES) + pending funder confirmations -->
+  <section class="logos-section" id="logos" style="display:none" aria-label="Partners and funders">
+    <div class="logos-inner">
+
+      <!-- Trusted by: state agency partners -->
+      <div class="logos-row">
+        <p class="logos-label">Trusted by</p>
+        <div class="logos-strip">
+          <!-- Replace placeholders with actual logo <img> tags when permissions confirmed -->
+          <div class="logo-placeholder"><span>PA DHS — pending</span></div>
+          <div class="logo-placeholder"><span>AZ DES — pending</span></div>
+          <div class="logo-placeholder"><span>Partner logo</span></div>
+        </div>
+      </div>
+
+      <div class="logos-divider"></div>
+
+      <!-- Backed by: funders (confirmed) -->
+      <div class="logos-row">
+        <p class="logos-label">Backed by</p>
+        <div class="logos-strip">
+          <!-- Confirmed funders — swap text logos for image logos when assets available -->
+          <a href="https://www.drkfoundation.org" class="logo-text" target="_blank" rel="noopener">DRK Foundation</a>
+          <a href="https://www.aarp.org/aarp-foundation/" class="logo-text" target="_blank" rel="noopener">AARP Foundation</a>
+          <a href="https://familiesandworkers.org" class="logo-text" target="_blank" rel="noopener">Families and Workers Fund</a>
+          <a href="https://www.pritzkerchildrensinitiative.org" class="logo-text" target="_blank" rel="noopener">Pritzker Children's Initiative</a>
+          <!-- Pending confirmation: Samvid Ventures, Vanguard Charitable, Next Ladder Ventures, Kellogg Foundation, Google.org -->
+          <div class="logo-placeholder"><span>+ more</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <!-- COMPARISON TEASER -->
   <section class="compare-teaser">
