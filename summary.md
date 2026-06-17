@@ -19,6 +19,9 @@ Use this file to initialize a new chat.
 |------|---------|
 | `FINAL PAGES/home-FINAL.html` | Home page — all edits go here |
 | `FINAL PAGES/product-FINAL.html` | Product/VMI page — all edits go here |
+| `FINAL PAGES/impact-FINAL.html` | Impact page — all edits go here |
+| `impact-standalone.html` | Self-contained impact page (shared.css inlined) — for client email only |
+| `shared.css` | Shared stylesheet (656 lines) — linked from all FINAL pages as `../shared.css` |
 
 Everything else (older versioned files) is reference only. Do not edit them.
 
@@ -42,7 +45,10 @@ Everything else (older versioned files) is reference only. Do not edit them.
 dpw-test/
 ├── FINAL PAGES/
 │   ├── home-FINAL.html          ← active home page
-│   └── product-FINAL.html       ← active product page
+│   ├── product-FINAL.html       ← active product page
+│   └── impact-FINAL.html        ← active impact page
+├── impact-standalone.html       ← client email version (shared.css inlined)
+├── shared.css                   ← shared stylesheet (linked as ../shared.css from FINAL PAGES/)
 ├── public/
 │   └── images/
 │       ├── Product hero image.png   ← product hero (right column)
@@ -54,6 +60,7 @@ dpw-test/
 ```
 
 Image paths from `FINAL PAGES/` are `../public/images/filename.png`.
+Unsplash images (impact page heroes, case study photos) are external CDN URLs — no local file needed.
 
 To extract copy: `pandoc "DPW Website Copy.docx" -o /tmp/webcopy.md`
 
@@ -233,10 +240,49 @@ Hero HTML:
 
 ---
 
+## impact-FINAL.html — Current State
+
+### Section backgrounds
+| Section | Background |
+|---------|-----------|
+| Hero | `--white` |
+| Stats row | `--white` |
+| Families ("From hours of paperwork…") | `--cool-white` |
+| Voices carousel ("Real people…") | `--white` |
+| Voice cards | `--cool-white` |
+| Deployed / Case studies | `--cool-white` |
+| Year in Review | `--white` |
+| Funding model | `--cool-white` |
+| CTA | `--copper` |
+
+### Stat bar animation
+Same as home page — orange bar animates left-to-right on scroll via IntersectionObserver adding `.vis`. All `.stat-cell` elements have `.reveal` and delay classes (`.d1`–`.d4`).
+
+### Voices carousel
+- Peek-style: 2 full cards + half of 3rd visible
+- Card width formula: `Math.floor((visW - GAP) / 2.5)` where `GAP = 20`
+- Square dot indicators, back/forward arrow buttons
+- Extra spacing between heading and carousel: `margin-bottom: 48px` on `.voices-inner`
+
+### Case study cards
+```html
+<a href="#" class="case-card reveal d1">...</a>
+```
+```css
+.case-card { text-decoration: none; color: inherit; }
+.field .section-h { margin-bottom: 48px; }  /* extra padding before case grid */
+```
+
+### Footer
+No `footer-sub` paragraph. Uses `footer-cta-block` class. Matches home page universal footer exactly.
+
+---
+
 ## Pending / Not Yet Implemented
 
-- **Quote carousel** — design discussed and approved (peek-style, CMS toggle for anonymous/named attribution). User said "don't implement this yet."
-- Pages still to build: Impact, Insights, About, Careers, Contact
+- Pages still to build: Insights, About, Careers, Contact
+- Case study content: both PA and AZ cards say "forthcoming — pending approval"
+- Annual report PDF: `href="#"` placeholder — replace with final PDF URL before launch
 
 ---
 
@@ -251,6 +297,12 @@ Hero HTML:
 
 ---
 
-## How to Create a Client-Ready Email Version
+## How to Create a Client-Ready Standalone Version
 
-When sending to a client, images must be base64-embedded because relative paths break outside the folder. Save as `*-email.html`. Only do this when explicitly asked — main HTML files always use relative paths.
+When sending a page to a client via email, inline `shared.css` into a single `<style>` block and remove the `<link rel="stylesheet" href="../shared.css">` tag. Save as `*-standalone.html` or `*-email.html` in the root `dpw-test/` folder (not inside `FINAL PAGES/`).
+
+**Already done:** `impact-standalone.html` exists at the root level.
+
+Google Fonts CDN and Unsplash image URLs remain as-is — they require internet but that's fine for an email preview.
+
+Only create standalone versions when explicitly asked — main `FINAL PAGES/` files always link to `../shared.css`.

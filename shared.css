@@ -21,21 +21,33 @@
 :root {
 
   /* COLORS */
-  --forge:              #1E272E;   /* primary dark — nav/footer bg */
-  --copper:             #C77234;   /* brand copper — large text only on white (3.57:1) */
-  --deep-copper:        #9F5528;   /* small text on white = 5.52:1 ✅ AA */
-  --steel:              #3A4E5C;   /* body text secondary — 8.66:1 on white ✅ */
-  --park-green:         #316844;   /* checkmarks/positive — 6.57:1 on white ✅ */
-  --verdigris:          #56A374;   /* accent green — decorative/large text only */
-  --aluminum:           #A9B0B6;   /* muted grey — decorative only */
-  --light-al:           #D0D5D8;   /* borders, dividers, box-shadows */
-  --white:              #FFFFFF;
-  --cool-white:         #F6F7F8;   /* alternating section bg */
-  --white-gold:         #D4CAA8;
-  --molten-gold:        #E9A030;
-  --rose-gold:          #DEB0A0;   /* nav current-page link, footer demo link */
-  --pale-verdigris:     #EBF5F0;   /* VMI table column bg */
-  --pale-verdigris-rule:#CDDFD8;   /* row divider within pale-verdigris column */
+  --forge: #1E272E;
+  /* primary dark — nav/footer bg */
+  --copper: #C77234;
+  /* brand copper — large text only on white (3.57:1) */
+  --deep-copper: #9F5528;
+  /* small text on white = 5.52:1 ✅ AA */
+  --steel: #3A4E5C;
+  /* body text secondary — 8.66:1 on white ✅ */
+  --park-green: #316844;
+  /* checkmarks/positive — 6.57:1 on white ✅ */
+  --verdigris: #56A374;
+  /* accent green — decorative/large text only */
+  --aluminum: #A9B0B6;
+  /* muted grey — decorative only */
+  --light-al: #D0D5D8;
+  /* borders, dividers, box-shadows */
+  --white: #FFFFFF;
+  --cool-white: #F6F7F8;
+  /* alternating section bg */
+  --white-gold: #D4CAA8;
+  --molten-gold: #E9A030;
+  --rose-gold: #DEB0A0;
+  /* nav current-page link, footer demo link */
+  --pale-verdigris: #EBF5F0;
+  /* VMI table column bg */
+  --pale-verdigris-rule: #CDDFD8;
+  /* row divider within pale-verdigris column */
 
   /* TYPE SCALE
      Every font-size uses one of these variables — no raw px values.
@@ -51,15 +63,16 @@
      Button     --t-button          14px                    Space Grotesk         700   Buttons
      Data       --t-data            14px                    Atkinson Hyperlegible 400   Table cells ONLY
      ──────────────────────────────────────────────────────────────────────────────────── */
-  --t-display:          clamp(44px, 5.5vw, 68px);
-  --t-headline:         clamp(28px, 3.5vw, 44px);
-  --t-subhead:          clamp(18px, 2.2vw, 24px);
-  --t-body:             17px;
-  --t-small:            15px;
-  --t-label:            14px;
-  --t-data:             14px;
-  --t-button:           14px;
-  --t-decorative-mark:  clamp(64px, 9vw, 120px); /* ornamental only — not a type tier */
+  --t-display: clamp(44px, 5.5vw, 68px);
+  --t-headline: clamp(28px, 3.5vw, 44px);
+  --t-subhead: clamp(18px, 2.2vw, 24px);
+  --t-body: 17px;
+  --t-small: 15px;
+  --t-label: 14px;
+  --t-data: 14px;
+  --t-button: 14px;
+  --t-decorative-mark: clamp(64px, 9vw, 120px);
+  /* ornamental only — not a type tier */
 }
 
 
@@ -90,10 +103,21 @@ body {
   transform: none;
 }
 
-.d1 { transition-delay: .1s; }
-.d2 { transition-delay: .2s; }
-.d3 { transition-delay: .3s; }
-.d4 { transition-delay: .4s; }
+.d1 {
+  transition-delay: .1s;
+}
+
+.d2 {
+  transition-delay: .2s;
+}
+
+.d3 {
+  transition-delay: .3s;
+}
+
+.d4 {
+  transition-delay: .4s;
+}
 
 
 /* ─── NAV ────────────────────────────────────────────────── */
@@ -304,7 +328,7 @@ nav {
   line-height: 1.2;
   letter-spacing: -0.018em;
   color: var(--forge);
-  margin-bottom: 24px;
+  margin-bottom: 100px;
 }
 
 /* Section intro paragraph */
@@ -579,7 +603,8 @@ footer {
 }
 
 .footer-demo .arrow {
-  font-size: 16px; /* ornamental — exempt from type scale */
+  font-size: 16px;
+  /* ornamental — exempt from type scale */
   line-height: 1;
   transition: transform .18s;
 }
