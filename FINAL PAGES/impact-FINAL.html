@@ -39,7 +39,7 @@
       line-height: 1.04;
       letter-spacing: -0.022em;
       color: var(--forge);
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .hero-tagline {
@@ -49,7 +49,6 @@
       color: var(--steel);
       line-height: 1.35;
       margin-bottom: 0;
-      /* allow tagline to extend naturally past h1 width */
       white-space: normal;
       max-width: 38ch;
     }
@@ -63,7 +62,7 @@
 
     .hero-heading-stack {
       max-width: 100%;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
     }
 
     .hero-img {
@@ -91,7 +90,7 @@
     }
 
     .stat-cell {
-      padding: clamp(64px, 8vw, 96px) clamp(16px, 2vw, 24px) clamp(52px, 7vw, 80px);
+      padding: clamp(48px, 6vw, 80px) clamp(14px, 1.8vw, 22px) clamp(40px, 5vw, 64px);
     }
 
     .stat-cell::before {
@@ -100,26 +99,35 @@
       width: 100%;
       height: 6px;
       background: var(--copper);
-      margin-bottom: 18px;
+      margin-bottom: 16px;
+      /* animate in on scroll */
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+    }
+
+    .stat-cell.vis::before {
+      transform: scaleX(1);
     }
 
     .stat-num {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(28px, 3.4vw, 48px);
+      font-size: clamp(18px, 2vw, 28px);
       font-weight: 700;
       color: var(--forge);
-      line-height: 0.95;
-      letter-spacing: -0.03em;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
       display: block;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      white-space: nowrap;
     }
 
     .stat-label {
-      font-size: var(--t-body);
+      font-size: var(--t-small);
       color: var(--steel);
       line-height: 1.45;
       text-transform: lowercase;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.08em;
     }
 
 
@@ -263,6 +271,7 @@
     .voices-inner {
       /* same left edge as carousel so heading aligns with first card */
       padding: 0 clamp(20px, 5vw, 64px) 0 max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+      margin-bottom: 48px;
     }
 
     .voices-carousel-outer {
@@ -367,6 +376,16 @@
     /* ─── CASE STUDIES (exact from product page) ─── */
     .field {
       background: var(--cool-white);
+    }
+
+    .field .section-h {
+      margin-bottom: 48px;
+    }
+
+    /* Case cards are <a> tags — reset link styles */
+    .case-card {
+      text-decoration: none;
+      color: inherit;
     }
 
     .case-grid {
@@ -876,7 +895,7 @@
       <h2 class="section-h reveal">Deployed and delivering results</h2>
       <div class="case-grid">
 
-        <div class="case-card reveal d1">
+        <a href="#" class="case-card reveal d1">
           <div class="case-text">
             <span class="case-state">Pennsylvania</span>
             <h3>Pennsylvania Department of Human Services</h3>
@@ -886,9 +905,9 @@
             <img src="https://images.unsplash.com/photo-1576082176859-e557bdc7b1b4?auto=format&fit=crop&w=800&q=80"
               alt="Pennsylvania State Capitol building" loading="lazy">
           </div>
-        </div>
+        </a>
 
-        <div class="case-card reveal d2">
+        <a href="#" class="case-card reveal d2">
           <div class="case-text">
             <span class="case-state">Arizona</span>
             <h3>Arizona Department of Economic Security</h3>
@@ -898,7 +917,7 @@
             <img src="https://images.unsplash.com/photo-1729041473171-b4d8b85c4d7b?auto=format&fit=crop&w=800&q=80"
               alt="Arizona State Capitol building" loading="lazy">
           </div>
-        </div>
+        </a>
 
       </div>
     </div>
@@ -996,7 +1015,6 @@
       <div class="footer-top">
         <div class="footer-cta-block">
           <h2 class="footer-hero">Ready to pilot <i>Verify My Income</i> in your jurisdiction? Let's talk.</h2>
-          <p class="footer-sub">No procurement required to begin the conversation.</p>
           <a href="/contact" class="footer-demo">Request a Demo <span class="arrow" aria-hidden="true">→</span></a>
         </div>
         <a href="/" class="footer-logo">
