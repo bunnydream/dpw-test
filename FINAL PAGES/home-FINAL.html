@@ -30,17 +30,6 @@
       justify-content: center;
     }
 
-    /* Display tier: hero headline */
-    h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-display);
-      font-weight: 700;
-      line-height: 1.04;
-      letter-spacing: -0.022em;
-      color: var(--forge);
-      margin-bottom: 36px;
-    }
-
     /* Body tier: hero sub-copy */
     .hero-sub {
       font-size: var(--t-body);
@@ -156,15 +145,6 @@
       flex-wrap: wrap;
     }
 
-    /* Headline tier: compare section heading */
-    .ct-h {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-headline);
-      font-weight: 700;
-      letter-spacing: -0.015em;
-      color: var(--forge);
-    }
-
     /* ─── PRESSURE ────────────────────────────────── */
     .pressure {
       background: var(--cool-white);
@@ -182,16 +162,6 @@
       align-items: flex-start;
     }
 
-    /* Headline tier: section heading */
-    .pressure-h {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-headline);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.018em;
-      color: var(--forge);
-      margin-bottom: 24px;
-    }
 
     .pressure-img {
       overflow: hidden;
@@ -236,16 +206,6 @@
       max-width: 62ch;
       gap: 14px;
       align-items: flex-start;
-    }
-
-    .pq-mark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(72px, 10vw, 120px);
-      font-weight: 700;
-      line-height: 0.75;
-      color: var(--copper);
-      margin-top: -6px;
-      flex-shrink: 0;
     }
 
     /* Subhead tier: pull quote text */
@@ -294,32 +254,6 @@
       display: block;
     }
 
-    .how-header {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 24px;
-      margin-bottom: 36px;
-    }
-
-    /* Headline tier: section heading */
-    .how-h {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-headline);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.018em;
-      color: var(--forge);
-    }
-
-    /* Body tier: section sub-copy */
-    .how-sub {
-      font-size: var(--t-body);
-      line-height: 1.8;
-      color: var(--steel);
-      max-width: 64ch;
-      margin: 0;
-    }
 
     /* ─── STORIES/FINDINGS ─────────────────────────────────── */
     .stories {
@@ -332,30 +266,6 @@
       margin: 0 auto
     }
 
-    .stories-header {
-      margin-bottom: 36px;
-      max-width: 700px
-    }
-
-    /* Headline tier: section heading */
-    .stories-h {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-headline);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.018em;
-      color: var(--forge);
-      margin-bottom: 24px;
-    }
-
-    /* Body tier: section sub-copy */
-    .stories-sub {
-      font-size: var(--t-body);
-      line-height: 1.8;
-      color: var(--steel);
-      max-width: 62ch;
-      margin-bottom: 36px;
-    }
 
     /* story card grid */
     .story-cards {
@@ -403,14 +313,8 @@
       display: block;
     }
 
-    /* Subhead tier: card headline */
     .story-card h4 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-subhead);
-      font-weight: 700;
-      color: var(--forge);
       margin-bottom: 12px;
-      line-height: 1.3;
     }
 
     /* Body tier: card body copy */
@@ -445,16 +349,6 @@
       justify-content: center;
     }
 
-    /* Headline tier: section heading */
-    .model-h {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-headline);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.018em;
-      color: var(--forge);
-      margin-bottom: 28px;
-    }
 
     /* Body tier: model body copy */
     .model-body p {
@@ -579,14 +473,9 @@
       position: relative
     }
 
-    /* Headline tier: CTA section heading */
     .cta-h {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-headline);
-      font-weight: 700;
-      color: var(--forge);
+      /* tighter line-height on copper bg — differs from shared h2 */
       line-height: 1.1;
-      letter-spacing: -0.015em;
       margin-bottom: 12px;
     }
 
@@ -642,31 +531,6 @@
       flex-wrap: wrap;
     }
 
-    /* Real logos — grayscale at rest, brand color on hover */
-    .logo-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 44px;
-      opacity: 0.55;
-      filter: grayscale(100%);
-      transition: opacity .2s, filter .2s;
-      flex-shrink: 0;
-    }
-
-    .logo-item:hover {
-      opacity: 1;
-      filter: grayscale(0%);
-    }
-
-    .logo-item img {
-      height: 100%;
-      width: auto;
-      max-width: 140px;
-      object-fit: contain;
-      display: block;
-    }
-
     /* Text-based logo fallback (for orgs without image yet) */
     .logo-text {
       font-family: 'Space Grotesk', sans-serif;
@@ -710,14 +574,6 @@
     @media (max-width: 768px) {
       .logos-strip {
         gap: 20px;
-      }
-
-      .logo-item {
-        height: 36px;
-      }
-
-      .logo-item img {
-        max-width: 110px;
       }
     }
 
@@ -1080,7 +936,7 @@
 
     <!-- Right: heading + body text + pull quote + CTA -->
     <div class="pressure-right">
-      <h2 class="pressure-h reveal">The pressure is real</h2>
+      <h2 class="section-h reveal">The pressure is real</h2>
       <div class="body-cols reveal d1">
         <div class="body-col">
           <p>H.R. 1 expands work requirements for SNAP and Medicaid. The Workforce for the Community Act introduces
@@ -1112,14 +968,10 @@
   <!-- HOW IT WORKS -->
   <section class="how" id="how-vmi-works">
     <div class="how-inner">
-      <div class="how-header">
-        <div class="reveal">
-          <h2 class="how-h">How VMI works</h2>
-        </div>
-        <p class="how-sub reveal d1">VMI handles the entire data journey from the applicant's payroll provider, through
-          a consent-driven workflow, to a caseworker-ready report. States get a complete service, not just a data feed.
-        </p>
-      </div>
+      <h2 class="section-h reveal">How VMI works</h2>
+      <p class="section-intro reveal d1">VMI handles the entire data journey from the applicant's payroll provider, through
+        a consent-driven workflow, to a caseworker-ready report. States get a complete service, not just a data feed.
+      </p>
 
       <div class="how-cols">
         <div class="steps">
@@ -1173,11 +1025,9 @@
   <!-- STORIES -->
   <section class="stories">
     <div class="stories-inner">
-      <div class="stories-header reveal">
-        <h2 class="stories-h">We do not just deliver data.<br> We fix the process.</h2>
-        <p class="stories-sub">Most verification vendors hand off data and walk away. DPW embeds with your team to find
-          and fix the problems no data feed can solve.</p>
-      </div>
+      <h2 class="section-h reveal">We do not just deliver data.<br> We fix the process.</h2>
+      <p class="section-intro reveal d1">Most verification vendors hand off data and walk away. DPW embeds with your team to find
+        and fix the problems no data feed can solve.</p>
 
       <div class="story-cards">
         <div class="story-card reveal d1">
@@ -1252,7 +1102,7 @@
   <section class="model">
     <!-- Left: content -->
     <div class="model-content">
-      <h2 class="model-h reveal">A better model for income verification</h2>
+      <h2 class="section-h reveal">A better model for income verification</h2>
       <div class="model-body reveal d1">
         <p>Traditional verification vendors lock you into rising costs and proprietary systems. When you need to
           switch, you start from scratch.</p>
