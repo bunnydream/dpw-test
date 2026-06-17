@@ -105,6 +105,13 @@
       height: 6px;
       background: var(--copper);
       margin-bottom: 18px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+    }
+
+    .stat-cell.vis::before {
+      transform: scaleX(1);
     }
 
     /* Headline tier: stat numbers (same scale as section headings — they carry equal visual weight) */
@@ -744,8 +751,9 @@
       }
 
       .hero-img {
-        aspect-ratio: 16/9;
-        max-height: 420px;
+        width: 100%;
+        height: 380px;
+        order: 2;
       }
 
       .pressure {
@@ -754,8 +762,8 @@
       }
 
       .pressure-img {
-        aspect-ratio: 4/3;
-        max-height: 400px;
+        width: 100%;
+        height: 360px;
         order: 2;
       }
 
@@ -777,8 +785,8 @@
       }
 
       .model-photo {
-        aspect-ratio: 4/3;
-        max-height: 480px;
+        width: 100%;
+        height: 400px;
       }
 
       .model-content {
@@ -953,19 +961,19 @@
   </section>
 
   <div class="stat-row" role="list" aria-label="Key statistics">
-    <div class="stat-cell" role="listitem">
+    <div class="stat-cell reveal" role="listitem">
       <span class="stat-num">Under 5 min</span>
       <p class="stat-label">Median time to verify income</p>
     </div>
-    <div class="stat-cell" role="listitem">
+    <div class="stat-cell reveal d1" role="listitem">
       <span class="stat-num">85%</span>
       <p class="stat-label">Of applicants report no difficulty</p>
     </div>
-    <div class="stat-cell" role="listitem">
+    <div class="stat-cell reveal d2" role="listitem">
       <span class="stat-num">93%</span>
       <p class="stat-label">Of caseworkers prefer VMI reports</p>
     </div>
-    <div class="stat-cell" role="listitem">
+    <div class="stat-cell reveal d3" role="listitem">
       <span class="stat-num">7.5×</span>
       <p class="stat-label">Faster than manual verification</p>
     </div>

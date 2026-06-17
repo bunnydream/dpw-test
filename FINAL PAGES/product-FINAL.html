@@ -75,8 +75,8 @@
 
     .hero-img {
       overflow: hidden;
-      /* top: white space above image; right/left: breathing room from edges; bottom: 0 = flush */
-      padding: clamp(40px, 5vw, 64px) clamp(24px, 3vw, 48px) 0 clamp(32px, 4vw, 48px);
+      /* top and left: breathing room; right: flush to viewport edge; bottom: 0 = flush */
+      padding: clamp(40px, 5vw, 64px) 0 0 clamp(32px, 4vw, 48px);
       align-self: stretch;
     }
 
@@ -400,6 +400,7 @@
       border-radius: 2px;
       padding: 20px 24px;
       margin: 28px 0;
+      max-width: 56ch;
     }
 
     .access-stat-num {
@@ -575,15 +576,16 @@
 
       .hero-img {
         order: 2;
-        overflow: visible;
-        padding: 0 clamp(20px, 5vw, 48px); /* match page content margins */
-        /* no aspect-ratio or max-height — let image size naturally */
+        overflow: hidden;
+        width: 100%;
+        height: 400px;
+        padding: 0;
       }
 
       .hero-img img {
-        height: auto;           /* natural height — full image visible */
-        object-fit: initial;
-        object-position: initial;
+        height: 100%;
+        object-fit: contain;
+        object-position: center bottom;
       }
 
       .io-grid {
