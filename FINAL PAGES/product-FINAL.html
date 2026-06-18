@@ -75,275 +75,25 @@
 
     /* ═══════════════════════════════════════════════
        INTEGRATION — V3 TALL CARDS
-       Option label: copper text only (no box)
-       No checkmarks
        ═══════════════════════════════════════════════ */
+    /* ─── IO CARDS — see shared.css ─── */
     .integration {
       background: var(--cool-white);
-    }
-
-    .io-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 40px
-    }
-
-    .io-card {
-      background: var(--white);
-      border: none;
-      border-radius: 2px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Photo */
-    .io-top {
-      aspect-ratio: 4/3;
-      overflow: hidden;
-    }
-
-    .io-top img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .io-body {
-      padding: clamp(20px, 3vw, 32px);
-      flex: 1;
-      display: flex;
-      flex-direction: column
-    }
-
-    /* Option label — deep-copper text only, no box (WCAG AA: ~5.4:1 on white) */
-    .io-pill {
-      display: block;
-      color: var(--deep-copper);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label);
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .io-card h3 {
-      margin-bottom: 10px;
-    }
-
-    .io-desc {
-      font-size: var(--t-body);
-      color: var(--steel);
-      line-height: 1.75
-    }
-
-    .integration-note {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--steel);
-      border-left: 3px solid var(--light-al);
-      padding: 16px 24px;
-      margin-top: 8px
     }
 
     /* ═══════════════════════════════════════════════
        THE VERIFICATION PROBLEM — V4 ACCORDION
        ═══════════════════════════════════════════════ */
-    .ps-section {
-      background: var(--white);
-    }
-
-    .ps-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(48px, 7vw, 96px);
-      align-items: start
-    }
-
-    .ps-visual {
-      position: sticky;
-      top: 90px;
-      border-radius: 2px;
-      overflow: hidden;
-      aspect-ratio: 3/4;
-    }
-
-    .ps-visual img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .ps-right-intro {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--steel);
-      margin-bottom: 40px;
-      max-width: 52ch
-    }
-
-    .ps-acc-list {
-      border-top: 1px solid var(--light-al)
-    }
-
-    .ps-acc-item {
-      border-bottom: 1px solid var(--light-al)
-    }
-
-    .ps-acc-trigger {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: clamp(16px, 2.5vw, 22px) 0
-    }
-
-    .ps-acc-trigger:hover .ps-acc-title {
-      color: var(--deep-copper)
-    }
-
-    .ps-acc-icon {
-      color: var(--copper);
-      flex-shrink: 0
-    }
-
-    .ps-acc-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-body);
-      font-weight: 700;
-      color: var(--forge);
-      flex: 1;
-      line-height: 1.3;
-      transition: color .15s
-    }
-
-    .ps-acc-chevron {
-      flex-shrink: 0;
-      color: var(--aluminum);
-      transition: transform .2s ease
-    }
-
-    .ps-acc-trigger[aria-expanded="true"] .ps-acc-chevron {
-      transform: rotate(180deg)
-    }
-
-    .ps-acc-panel {
-      padding: 0 0 22px 48px
-    }
-
-    .ps-acc-problem {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--steel);
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--light-al)
-    }
-
-    .ps-acc-sol-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label);
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--park-green);
-      display: block;
-      margin-bottom: 6px
-    }
-
-    .ps-acc-solution {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--forge)
-    }
+    /* ─── PS-SECTION / PS-ACC — see shared.css ─── */
 
     /* ─── COMPARISON TABLE (product-specific wrapper) ─── */
     .compare-full {
       background: var(--cool-white);
     }
 
-    /* ═══════════════════════════════════════════════
-       VENDOR QUESTIONS — bigger bare chevrons
-       ═══════════════════════════════════════════════ */
+    /* ─── VENDOR QUESTIONS — see shared.css ─── */
     .vendor-q {
       background: var(--white);
-    }
-
-    .vq-list {
-      display: grid;
-      gap: 0
-    }
-
-    .vq-item {
-      border-bottom: 1px solid var(--light-al)
-    }
-
-    .vq-item:first-child {
-      border-top: 1px solid var(--light-al)
-    }
-
-    .vq-trigger {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: clamp(18px, 2.5vw, 26px) 0;
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .vq-trigger:hover .vq-q {
-      color: var(--deep-copper)
-    }
-
-    .vq-q {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-subhead);
-      font-weight: 700;
-      color: var(--forge);
-      line-height: 1.3;
-      letter-spacing: -0.01em;
-      transition: color .15s
-    }
-
-    .vq-chevron {
-      flex-shrink: 0;
-      color: var(--copper);
-      transition: transform .2s ease;
-      align-self: center;
-      display: flex;
-      align-items: center
-    }
-
-    .vq-trigger[aria-expanded="true"] .vq-chevron {
-      transform: rotate(180deg)
-    }
-
-    .vq-panel {
-      padding: 0 0 clamp(18px, 2.5vw, 26px)
-    }
-
-    .vq-a {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--steel);
-      max-width: 80ch
-    }
-
-    .vq-a em {
-      color: var(--forge);
-      font-style: italic
     }
 
     /* ─── ACCESSIBILITY ─── */
@@ -370,34 +120,7 @@
       margin-bottom: 0
     }
 
-    .access-stat {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      background: var(--white);
-      border: none;
-      border-left: 4px solid var(--copper);
-      border-radius: 2px;
-      padding: 20px 24px;
-      margin: 28px 0;
-      max-width: 56ch;
-    }
-
-    .access-stat-num {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(32px, 4vw, 48px);
-      font-weight: 700;
-      color: var(--copper);
-      line-height: 1;
-      flex-shrink: 0
-    }
-
-    .access-stat-text {
-      font-size: var(--t-body);
-      color: var(--steel);
-      line-height: 1.5;
-      padding-top: 4px
-    }
+    /* ─── CALLOUT STAT — see .callout-stat-* in shared.css ─── */
 
     .access-photo {
       overflow: hidden;
@@ -488,24 +211,6 @@
         object-position: center bottom;
       }
 
-      .io-grid {
-        grid-template-columns: 1fr
-      }
-
-      .ps-grid {
-        grid-template-columns: 1fr
-      }
-
-      .ps-visual {
-        position: static;
-        aspect-ratio: 16/9;
-        order: 2;
-      }
-
-      .ps-right {
-        order: 1;
-      }
-
       .access-section {
         grid-template-columns: 1fr;
       }
@@ -526,11 +231,6 @@
       }
     }
 
-    @media (max-width: 768px) {
-      .io-grid {
-        grid-template-columns: 1fr
-      }
-    }
   </style>
 </head>
 
@@ -1062,9 +762,9 @@
           with limited English proficiency. Findings from this research will be published and shared with the
           field.</p>
       </div>
-      <div class="access-stat reveal d2">
-        <span class="access-stat-num">65%</span>
-        <p class="access-stat-text">of our users access VMI on a smartphone. The platform is built mobile-first.</p>
+      <div class="callout-stat reveal d2">
+        <span class="callout-stat-num">65%</span>
+        <p class="callout-stat-text">of our users access VMI on a smartphone. The platform is built mobile-first.</p>
       </div>
     </div>
     <div class="access-photo reveal d2">

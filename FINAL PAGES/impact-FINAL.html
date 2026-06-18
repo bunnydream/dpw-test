@@ -256,122 +256,7 @@
     }
 
 
-    /* ─── VOICES CAROUSEL ─── */
-    .voices {
-      background: var(--white);
-      padding: clamp(72px, 10vw, 112px) 0;
-    }
-
-    .voices-inner {
-      /* same left edge as carousel so heading aligns with first card */
-      padding: 0 clamp(20px, 5vw, 64px) 0 max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
-      margin-bottom: 48px;
-    }
-
-    .voices-carousel-outer {
-      padding-left: max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
-      overflow: hidden;
-    }
-
-    .voices-carousel-track {
-      display: flex;
-      gap: 20px;
-      transition: transform 0.42s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-
-    .voice-card {
-      flex: 0 0 400px;
-      background: var(--cool-white);
-      border-radius: 4px;
-      padding: clamp(24px, 2.5vw, 32px);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .voice-mark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--copper);
-      line-height: 1;
-      opacity: 0.65;
-    }
-
-    .voice-text {
-      font-size: var(--t-body);
-      line-height: 1.72;
-      color: var(--forge);
-      font-style: italic;
-      flex: 1;
-    }
-
-    .voice-attr {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--aluminum);
-    }
-
-    /* Carousel footer */
-    .carousel-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 24px clamp(20px, 5vw, 64px) 0 max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
-    }
-
-    .carousel-dots {
-      display: flex;
-      gap: 5px;
-      align-items: center;
-    }
-
-    .c-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 0;
-      background: var(--aluminum);
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-
-    .c-dot--active {
-      background: var(--forge);
-    }
-
-    .carousel-arrows {
-      display: flex;
-      gap: 8px;
-    }
-
-    .carousel-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--white);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.18s, opacity 0.18s;
-    }
-
-    .carousel-btn:hover {
-      background: var(--light-al);
-    }
-
-    .carousel-btn:disabled {
-      opacity: 0.3;
-      cursor: default;
-    }
-
+    /* ─── VOICES CAROUSEL — see shared.css ─── */
 
     /* ─── CASE STUDIES — see shared.css for .field, .case-* ─── */
     .field .section-h {
@@ -450,43 +335,7 @@
       background: var(--cool-white);
     }
 
-    .funding-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .funding-card {
-      background: var(--white);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .funding-card-accent {
-      height: 6px;
-      background: var(--copper);
-    }
-
-    .funding-card-body {
-      padding: clamp(18px, 2.5vw, 28px);
-    }
-
-    .funding-card-icon {
-      color: var(--copper);
-      display: block;
-      margin-bottom: 14px;
-      line-height: 0;
-    }
-
-    .funding-card h4 {
-      margin-bottom: 12px;
-    }
-
-    .funding-card p {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--steel);
-    }
+    /* ─── FUNDING CARDS — see .content-card-* in shared.css ─── */
 
     .btn-cta-white {
       display: inline-flex;
@@ -556,9 +405,7 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .funding-cards {
-        grid-template-columns: 1fr;
-      }
+
     }
 
     @media (max-width: 500px) {
@@ -925,12 +772,12 @@
       <p class="section-intro reveal d1">DPW's model is built for the long term. As states move from pilots to paid
         contracts, earned revenue from per-verification pricing covers a growing share of operating costs.</p>
 
-      <div class="funding-cards">
+      <div class="content-card-grid">
 
-        <div class="funding-card reveal d1">
-          <div class="funding-card-accent"></div>
-          <div class="funding-card-body">
-            <span class="funding-card-icon" aria-hidden="true">
+        <div class="content-card reveal d1">
+          <div class="content-card-accent"></div>
+          <div class="content-card-body">
+            <span class="content-card-icon" aria-hidden="true">
               <!-- Gift box icon -->
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -947,10 +794,10 @@
           </div>
         </div>
 
-        <div class="funding-card reveal d2">
-          <div class="funding-card-accent"></div>
-          <div class="funding-card-body">
-            <span class="funding-card-icon" aria-hidden="true">
+        <div class="content-card reveal d2">
+          <div class="content-card-accent"></div>
+          <div class="content-card-body">
+            <span class="content-card-icon" aria-hidden="true">
               <!-- Downward trending arrow icon -->
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -964,10 +811,10 @@
           </div>
         </div>
 
-        <div class="funding-card reveal d3">
-          <div class="funding-card-accent"></div>
-          <div class="funding-card-body">
-            <span class="funding-card-icon" aria-hidden="true">
+        <div class="content-card reveal d3">
+          <div class="content-card-accent"></div>
+          <div class="content-card-body">
+            <span class="content-card-icon" aria-hidden="true">
               <!-- Open lock icon -->
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.6"
                 stroke-linecap="round" stroke-linejoin="round">
