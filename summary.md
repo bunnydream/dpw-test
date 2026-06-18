@@ -1,308 +1,232 @@
-# DPW Website — Session Handoff
-
-Use this file to initialize a new chat.
-
----
+# DPW Website — Session Summary
 
 ## Project Overview
+Standalone HTML pages for Digital Public Works (DPW), a nonprofit. No build step. One shared stylesheet. Pages link to `../shared.css`.
 
-**Client:** Digital Public Works (DPW) — 501(c)(3) nonprofit
-**Product:** Verify My Income (VMI) — income verification service for state benefit agencies
-**Work:** Standalone single-file HTML prototypes. NOT a Next.js app.
-**Workspace:** `/Users/bellabesuud/Desktop/dpw-test/`
+**Files:**
+- `/Users/bellabesuud/Desktop/dpw-test/shared.css` — all shared/reusable CSS
+- `/Users/bellabesuud/Desktop/dpw-test/FINAL PAGES/home-FINAL.html`
+- `/Users/bellabesuud/Desktop/dpw-test/FINAL PAGES/product-FINAL.html`
+- `/Users/bellabesuud/Desktop/dpw-test/FINAL PAGES/impact-FINAL.html`
+- `/Users/bellabesuud/Desktop/dpw-test/FINAL PAGES/about-FINAL.html`
+- `/Users/bellabesuud/Desktop/dpw-test/FINAL PAGES/contact-FINAL.html`
+- `/Users/bellabesuud/Desktop/dpw-test/FINAL PAGES/careers-FINAL.html`
+- `/Users/bellabesuud/Desktop/dpw-test/CLAUDE.md` — project notes (logo assets, brand guide, .docx copy)
+- `/Users/bellabesuud/Desktop/dpw-test/DPW Website Copy.docx` — authoritative copy, use EXACTLY
+- `/Users/bellabesuud/Desktop/dpw-test/DPW Brand Guide 2026.pdf` — brand guidelines
 
----
+**Assets:**
+- `public/images/` — `Product hero image.png`, `howVMI-home.png`, `meeting.jpg`, `people-meeting-laptops.png`, `product-verify.png`
+- `public/headshots/` — `Michael.png`, `PatriciaHeadshot-BW.png`, `Kali.png`, `Cle.png`, `Jeff-BW.png`, `Tatiana.png`, `ErikaTom_BW.jpg`, `Anna Banchik.png` (space in filename → `Anna%20Banchik.png` in src), `Runako_bw.jpg`
 
-## Active Files
-
-| File | Purpose |
-|------|---------|
-| `FINAL PAGES/home-FINAL.html` | Home page — all edits go here |
-| `FINAL PAGES/product-FINAL.html` | Product/VMI page — all edits go here |
-| `FINAL PAGES/impact-FINAL.html` | Impact page — all edits go here |
-| `impact-standalone.html` | Self-contained impact page (shared.css inlined) — for client email only |
-| `shared.css` | Shared stylesheet (656 lines) — linked from all FINAL pages as `../shared.css` |
-
-Everything else (older versioned files) is reference only. Do not edit them.
-
----
-
-## Standing Rules (never break these)
-
-1. Copy from `DPW Website Copy.docx` must be used **verbatim** — no paraphrasing.
-2. All pages are **standalone single-file HTML** — no external CSS/JS, no build step.
-3. No raw hex values or `rgba()` in CSS — CSS variables only. `#000` is the sole exception.
-4. Box-shadows and divider borders use `var(--light-al)` (solid color — never rgba).
-5. Main HTML files use **relative image paths**. Never embed base64 images. Only generate `*-email.html` when explicitly asked.
-6. Logos are **inline SVG** — not `<img>` tags.
-7. Always `Read` a file before editing it.
+**Image note:** Unsplash CDN URLs with alphanumeric short IDs (e.g. `photo-yxqVPJFAYHg`) do NOT work — use local images from `public/images/` instead.
 
 ---
 
-## File Structure
+## CSS Architecture
+**Rule:** Shared/reusable styles live in `shared.css`. Page `<style>` blocks contain only page-specific overrides.
 
-```
-dpw-test/
-├── FINAL PAGES/
-│   ├── home-FINAL.html          ← active home page
-│   ├── product-FINAL.html       ← active product page
-│   └── impact-FINAL.html        ← active impact page
-├── impact-standalone.html       ← client email version (shared.css inlined)
-├── shared.css                   ← shared stylesheet (linked as ../shared.css from FINAL PAGES/)
-├── public/
-│   └── images/
-│       ├── Product hero image.png   ← product hero (right column)
-│       ├── howVMI-home.png          ← How VMI Works diagram (home page)
-│       └── product-verify.png
-├── DPW Website Copy.docx        ← source of truth for ALL copy
-├── Brand Guide/                 ← color palette, visual identity
-└── summary.md                   ← this file
-```
+### Design Tokens (CSS variables in shared.css)
+- Colors: `--forge` (dark navy), `--copper`, `--rose-gold`, `--steel` (body text grey), `--light-al` (light silver), `--white`, `--cool-white` (off-white)
+- Type scale: `--t-display`, `--t-headline`, `--t-subhead`, `--t-body`, `--t-small`, `--t-label`, `--t-button`, `--t-data`
+- `--t-display: clamp(44px, 5.5vw, 68px)` — Space Grotesk 700, hero h1 only
 
-Image paths from `FINAL PAGES/` are `../public/images/filename.png`.
-Unsplash images (impact page heroes, case study photos) are external CDN URLs — no local file needed.
-
-To extract copy: `pandoc "DPW Website Copy.docx" -o /tmp/webcopy.md`
-
----
-
-## Design System
-
-### Color Tokens
+### Base Typography (shared.css)
 ```css
---forge:             #1E272E;   /* primary dark — nav/footer bg */
---copper:            #C77234;   /* brand copper — large text only on white (3.57:1, not AA for small text) */
---deep-copper:       #9F5528;   /* small text on white = 5.52:1 ✅ AA */
---steel:             #3A4E5C;   /* body text secondary — 8.66:1 on white ✅ */
---park-green:        #316844;   /* checkmarks/positive — 6.57:1 on white ✅ */
---verdigris:         #56A374;   /* accent green — decorative/large text only (3.05:1) */
---aluminum:          #A9B0B6;   /* muted grey — decorative only, fails AA on white */
---light-al:          #D0D5D8;   /* borders, dividers, box-shadows */
---white:             #FFFFFF;
---cool-white:        #F6F7F8;   /* alternating section bg */
---white-gold:        #D4CAA8;
---molten-gold:       #E9A030;
---rose-gold:         #DEB0A0;   /* nav current-page link, footer demo link */
---pale-verdigris:    #EBF5F0;
---pale-verdigris-rule: #CDDFD8;
+h1 { font: 700 var(--t-display) Space Grotesk; line-height: 1.04; letter-spacing: -0.022em; color: var(--forge); margin-bottom: 100px; max-width: 19ch; }
+/* h2, h3: Space Grotesk 700, forge color */
+.section-h { margin-bottom: 32px; } /* h2 in section headers */
 ```
-
-### Type Scale (identical in both files)
-```css
---t-display:         clamp(44px, 5.5vw, 68px);   /* Space Grotesk 700 — hero h1 ONLY */
---t-headline:        clamp(28px, 3.5vw, 44px);   /* Space Grotesk 700 — section h2s, stat numbers */
---t-subhead:         clamp(18px, 2.2vw, 24px);   /* Space Grotesk 700 — h3, h4, pull quotes */
---t-body:            17px;                        /* Atkinson 400 — all paragraphs */
---t-small:           15px;                        /* Atkinson 400 — secondary text, footer, card details */
---t-label:           14px;                        /* Space Grotesk 700 — nav, badges, table headers */
---t-button:          14px;                        /* Space Grotesk 700 — buttons */
---t-data:            14px;                        /* Atkinson 400 — table cells ONLY */
---t-decorative-mark: clamp(64px, 9vw, 120px);    /* ornamental quote mark — not a type tier */
-```
-
-Every `font-size` in the file must use one of these variables — no hardcoded px values.
-
-### Fonts
-- **Space Grotesk** — headings, labels, nav, buttons
-- **Atkinson Hyperlegible** — body copy, small text, data
-
-### Button Variants
-```css
-.btn-forge:   background: var(--forge);   color: var(--white)
-.btn-copper:  background: var(--copper);  color: #000
-.btn-white:   background: var(--white);   color: var(--deep-copper)
-.btn-outline: background: transparent;   color: var(--forge); border: 1.5px solid var(--light-al)
-```
-
-### Logos (inline SVG)
-- Nav: stacked logo SVG → `.nav-logo svg { height: 40px; width: auto }`
-- Footer: extended logo SVG → `.footer-logo svg { height: 32px; width: auto }`
-
-### Scroll Reveal
-- Classes `.reveal` + `.vis` via IntersectionObserver
-- Delay variants: `.d1` `.d2` `.d3` `.d4`
-- Stats section (home page) is **exempt** — static, no reveal classes, no `data-count` attributes
 
 ---
 
-## home-FINAL.html — Current State
+## Shared Components (all in shared.css)
 
-### Stats Section
-Static (no count-up animation). Tall padding:
+### Body Text
 ```css
-.stat-cell {
-  padding: clamp(72px, 9vw, 108px) clamp(16px, 2.5vw, 28px) clamp(60px, 8vw, 96px);
+.body-text p          /* wrapper for 2+ paragraphs; non-last: mb 24px, last-child: mb 40px; max-width: 68ch */
+.body-p               /* standalone paragraph; mb 40px */
+```
+- `.section-intro` was deleted — replaced with `.body-p` in all pages
+- Universal body text max-width: **68ch**
+
+### Pullquote
+```css
+.pullquote            /* max-width: 68ch, border-top: 2px copper */
+.pq-text              /* Space Grotesk 700, forge color */
+.pq-text em           /* copper, non-italic */
+```
+
+### Inline Note
+```css
+.inline-note          /* border-left: 3px var(--light-al), padding: 16px 24px */
+.inline-note--rose    /* modifier: border-color → var(--rose-gold) */
+```
+
+### Buttons
+```css
+.btn .btn-forge       /* primary CTA */
+.btn .btn-cta         /* secondary */
+```
+
+### Hero (shared base)
+```css
+.hero-sub             /* body text below tagline; mb: 24px */
+.hero-tagline         /* Space Grotesk 700, subhead size, steel color */
+.hero-heading-stack   /* wraps h1 + hero-tagline */
+```
+
+### Section Layout
+```css
+.section-pad          /* vertical section padding */
+.section-inner        /* centered content container, max-width: 1200px */
+.section-h            /* h2 with mb: 32px */
+.ct-header            /* flex row: heading + button, justify: space-between */
+```
+
+### Team Grid (shared.css — used on about page)
+```css
+.team-grid            /* grid, repeat(3, 1fr), gap: 2px base */
+.team-card            /* individual person card */
+.team-photo           /* headshot container */
+.team-info            /* text block: padding clamp(16px, 2vw, 20px) 0 0 0; text-align: left */
+.team-name            /* h3 */
+.team-title-label     /* span, copper color */
+.team-bio             /* body copy */
+```
+About page overrides `.team-grid` in its `<style>` block:
+```css
+.team-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(36px, 4vw, 56px) clamp(28px, 3vw, 40px);
 }
+.team-info { padding: clamp(16px, 2vw, 20px) 0 0 0; }
+@media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .team-grid { grid-template-columns: 1fr; } }
 ```
-HTML: no `reveal` classes, no `data-count`/`data-prefix`/`data-suffix` attributes.
+Team reveal stagger (3-col layout, row by row):
+- Row 1: Michael `reveal`, Patricia `reveal d1`, Kali `reveal d2`
+- Row 2: Cle `reveal`, Jeff `reveal d1`, Tatiana `reveal d2`
+- Row 3: Erika `reveal`, Anna `reveal d1`, Runako `reveal d2`
 
-### How VMI Works — 2-column layout
-Heading in `.how-header` sits **above** the grid (not inside it). Grid = steps (left) + image (right):
+### Funder Strip (shared.css — used on about page)
 ```css
-.how-cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(48px, 6vw, 80px); align-items: flex-start; }
-.how-right img { width: 75%; height: auto; display: block; }
+.funder-strip         /* flex row of badges */
+.funder-badge         /* pill link */
 ```
-Image: `../public/images/howVMI-home.png`
-Mobile: `.how-cols { grid-template-columns: 1fr; }` / `.how-right { order: 2; }`
 
-### CTA Section
-Standalone section — **not part of the footer**. Named `.cta-section` throughout (never `footer-cta`).
+### Form Elements (shared.css — used on contact page)
 ```css
-.cta-section { background: var(--copper); padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px); text-align: center; }
-.cta-inner   { max-width: 640px; margin: 0 auto; }
+.form-stack           /* flex column container */
+.form-group           /* label + input pair */
+.form-label           /* label */
+.form-input           /* text/email/tel input */
+.form-select          /* select */
+.form-textarea        /* textarea */
 ```
-Classes: `.cta-section`, `.cta-inner`, `.cta-h`, `.cta-sub`
 
-### Footer
-Left column: logo + tagline + demo link. Right column: nav links + contact. (Column swap was attempted and reverted — current order is the original.)
+### Contact Layout (shared.css — used on contact page)
+```css
+.contact-pair         /* two-col grid: sticky desc + form card */
+.contact-desc         /* sticky left column */
+.contact-label        /* section eyebrow */
+.contact-form-card    /* white card wrapping form */
+```
+
+### Careers (shared.css)
+```css
+.openings-empty       /* empty state for no open positions */
+```
+
+### Steps (product page)
+```css
+.steps-line           /* left: 35px — vertical copper gradient line */
+.step                 /* grid: 72px 1fr */
+.step-badge           /* 72px circle */
+.step-content         /* cool-white card */
+```
+
+### Stat Row
+```css
+.stat-row             /* grid; shared animation base */
+.stat-cell::before    /* copper bar, scaleX 0→1 on .vis */
+.stat-num             /* Space Grotesk 700, forge */
+.stat-label           /* steel, lowercase */
+```
+Pages override: `grid-template-columns`, padding, background — home: 4 cols, impact: 5 cols.
+
+### Quote Carousel (impact only)
+```css
+.voice-card, .voice-mark, .voice-text, .voice-attr
+.carousel-btn         /* 44px circle, background: var(--cool-white) */
+```
 
 ---
 
-## product-FINAL.html — Current State
+## Per-Page Notes
 
-### Hero
-AidKit-style 50/50ish grid. Image always bottom-flush, full photo always visible, white space above image.
+### home-FINAL.html
+- Hero h1: uses shared (max-width: 19ch, mb: 100px)
+- Stat row: 4 columns, cool-white background
+- Inline note: `inline-note inline-note--rose`
+- `.hero-sub { max-width: 54ch }`
 
-```css
-.hero {
-  background: var(--white);
-  height: calc(100dvh - 74px);        /* exact viewport height — not min-height */
-  display: grid;
-  grid-template-columns: 1fr min(640px, 52vw);
-  overflow: hidden;
-}
+### product-FINAL.html
+- Hero h1 override: `white-space: nowrap` ("Verify My Income" stays 1 line)
+- `.hero-tagline` trick: `max-width: 1px; min-width: 100%` constrains tagline to h1 width
+- Pilot note left border aligns with steps-line: `margin-left: max(35px, calc(50% - 375px))`
+- Access section: `grid-template-columns: 3fr 2fr`
 
-.hero-left {
-  padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px)
-           max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: flex-start; align-self: center;
-}
+### impact-FINAL.html
+- Hero grid: `3fr 2fr`
+- Stat row: 5 columns, white background
 
-h1 {
-  white-space: nowrap;   /* keeps "Verify My Income" on one line */
-  margin-bottom: 16px;
-}
+### about-FINAL.html
+- Hero: `grid-template-columns: 9fr 7fr`, h1 "Our Mission", image `../public/images/people-meeting-laptops.png`
+- Story section: h2 "How Digital Public Works started", image `../public/images/meeting.jpg`, two founding paragraphs, no pullquote
+- Team: 9 people, 3-col grid, real headshots from `../public/headshots/`, text left-aligned flush with image
 
-/* Constrains tagline to h1 width */
-.hero-heading-stack {
-  display: table;        /* shrinks to h1's nowrap width */
-  margin-bottom: 24px;
-}
+### contact-FINAL.html
+- Three stacked contact sections (State Partners / cool-white, Funders / white, General + Address / cool-white)
+- Each section: sticky description column + form card
 
-.hero-tagline { margin-bottom: 0; }
-
-.hero-img {
-  overflow: hidden;
-  padding-right: clamp(56px, 7vw, 100px);   /* breathing room from right edge */
-}
-
-.hero-img img {
-  width: 100%; height: 100%;
-  object-fit: contain;
-  object-position: bottom center;   /* bottom-flush, white space above, never cropped */
-  display: block;
-}
-```
-
-Mobile (`max-width: 1024px`):
-```css
-.hero          { grid-template-columns: 1fr; height: auto; }
-.hero-left     { padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px); }
-h1             { white-space: normal; }
-.hero-img      { aspect-ratio: 4/3; max-height: 420px; order: 2; overflow: hidden; padding-right: 0; }
-```
-
-Hero HTML:
-```html
-<section class="hero">
-  <div class="hero-left reveal">
-    <div class="hero-heading-stack">
-      <h1>Verify My Income</h1>
-      <p class="hero-tagline">The verification service layer between payroll data and state benefit systems</p>
-    </div>
-    <p class="hero-sub">VMI is an end-to-end verification service...</p>
-    <a href="/contact" class="btn btn-forge" style="margin-top:8px">Request a Demo</a>
-  </div>
-  <div class="hero-img reveal d2">
-    <img src="../public/images/Product hero image.png" alt="VMI product interface showing income verification on mobile" loading="eager">
-  </div>
-</section>
-```
-
-### Other Product Page Details
-- **Section separators:** all `border-top: 1px solid var(--light-al)` have been removed from every section
-- **Comparison table:** has gray outline — `table.ct { border: 1px solid var(--light-al); border-collapse: collapse; }`
-- **Path to a pilot heading:** left-aligned — `.pilot .section-h { text-align: left; }`
-- **In the Field cards:** paragraph beginning "Structure: the problem, DPW's approach..." removed from both cards
-- **Access section:** `display: grid; grid-template-columns: 3fr 2fr; overflow: hidden;`
-- **CTA section:** removed from product page (exists on home page only)
+### careers-FINAL.html
+- Hero: `9fr 7fr` split
+- "Who We Are" section: 6-card benefits grid
+- Open Positions: empty state with `careers@digitalpublicworks.org`
 
 ---
 
-## impact-FINAL.html — Current State
-
-### Section backgrounds
-| Section | Background |
-|---------|-----------|
-| Hero | `--white` |
-| Stats row | `--white` |
-| Families ("From hours of paperwork…") | `--cool-white` |
-| Voices carousel ("Real people…") | `--white` |
-| Voice cards | `--cool-white` |
-| Deployed / Case studies | `--cool-white` |
-| Year in Review | `--white` |
-| Funding model | `--cool-white` |
-| CTA | `--copper` |
-
-### Stat bar animation
-Same as home page — orange bar animates left-to-right on scroll via IntersectionObserver adding `.vis`. All `.stat-cell` elements have `.reveal` and delay classes (`.d1`–`.d4`).
-
-### Voices carousel
-- Peek-style: 2 full cards + half of 3rd visible
-- Card width formula: `Math.floor((visW - GAP) / 2.5)` where `GAP = 20`
-- Square dot indicators, back/forward arrow buttons
-- Extra spacing between heading and carousel: `margin-bottom: 48px` on `.voices-inner`
-
-### Case study cards
-```html
-<a href="#" class="case-card reveal d1">...</a>
+## Scroll Reveal
 ```
-```css
-.case-card { text-decoration: none; color: inherit; }
-.field .section-h { margin-bottom: 48px; }  /* extra padding before case grid */
+.reveal + IntersectionObserver → .vis
+Delay classes: .d1, .d2, .d3, .d4 (all confirmed in shared.css)
 ```
-
-### Footer
-No `footer-sub` paragraph. Uses `footer-cta-block` class. Matches home page universal footer exactly.
+Each page has the IntersectionObserver in its `<script>` block.
 
 ---
 
-## Pending / Not Yet Implemented
-
-- Pages still to build: Insights, About, Careers, Contact
-- Case study content: both PA and AZ cards say "forthcoming — pending approval"
-- Annual report PDF: `href="#"` placeholder — replace with final PDF URL before launch
-
----
-
-## Technical Notes
-
-- `max(clamp(), calc((100vw - 1200px) / 2))` — left padding formula for full-bleed sections that replicates centered-layout auto-margin math
-- `clamp()` used throughout for fluid spacing and typography
-- `display: table` on `.hero-heading-stack` — shrinks to h1's intrinsic nowrap width, constraining tagline beneath it
-- `object-fit: contain; object-position: bottom center` — shows full image, bottom-flush, white space above
-- IntersectionObserver for `.reveal` / `.vis` scroll animations
-- Unsplash CDN: `https://images.unsplash.com/photo-[id]?auto=format&fit=crop&w=N&q=80` — get the ID from the `og:image` meta tag, not the page URL slug. Skip any `plus.unsplash.com` URLs (paid).
+## Max-Width Reference
+| Value | Where |
+|-------|-------|
+| 68ch | `.body-text p`, `.pullquote` — universal body text |
+| 56ch | `.access-left .body-text p` — product narrow column |
+| 54ch | `.footer-sub`, `.hero-sub` on home |
+| 52ch | `.ps-right-intro` — product right column |
+| 50ch | `.q-text-sm` — testimonial quote (home) |
+| 44ch | `.hero-note` — hero aside note (home) |
+| 38ch | `.hero-tagline` — impact |
+| 34ch | `.footer-tagline` |
+| 80ch | `.vq-a` — vendor Q&A answer (intentionally wide) |
 
 ---
 
-## How to Create a Client-Ready Standalone Version
-
-When sending a page to a client via email, inline `shared.css` into a single `<style>` block and remove the `<link rel="stylesheet" href="../shared.css">` tag. Save as `*-standalone.html` or `*-email.html` in the root `dpw-test/` folder (not inside `FINAL PAGES/`).
-
-**Already done:** `impact-standalone.html` exists at the root level.
-
-Google Fonts CDN and Unsplash image URLs remain as-is — they require internet but that's fine for an email preview.
-
-Only create standalone versions when explicitly asked — main `FINAL PAGES/` files always link to `../shared.css`.
+## Key Decisions / Things to Know
+- `ch` unit = width of "0" in current font. 68ch ≈ 11 words/line (client target).
+- `.section-intro` deleted everywhere — all uses replaced with `class="body-p reveal d1"`.
+- `btn-cta-white` and `btn-annual` deleted.
+- Carousel arrow buttons: `var(--cool-white)` background.
+- Stat row copper bar animation in shared.css; pages override layout/sizing only.
+- Product pilot note left border aligns with steps-line: `margin-left: max(35px, calc(50% - 375px))`.
+- Unsplash CDN with alphanumeric short IDs doesn't work — use local images only.
+- `Anna Banchik.png` has a space — use `Anna%20Banchik.png` in src attributes.
