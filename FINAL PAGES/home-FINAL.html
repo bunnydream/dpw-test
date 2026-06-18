@@ -35,7 +35,7 @@
       font-size: var(--t-body);
       line-height: 1.82;
       color: var(--steel);
-      max-width: 62ch;
+      max-width: 54ch;
       margin-bottom: 32px;
     }
 
@@ -136,14 +136,7 @@
       margin: 0 auto
     }
 
-    .ct-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 36px;
-      flex-wrap: wrap;
-    }
+    /* .ct-header — see shared.css */
 
     /* ─── PRESSURE ────────────────────────────────── */
     .pressure {
@@ -175,54 +168,8 @@
       object-position: center;
     }
 
-    /* Single-column body text */
-    .body-cols {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: clamp(20px, 3vw, 40px);
-      margin-bottom: 36px;
-    }
 
-    /* Body tier: pressure body copy */
-    .body-col p {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--steel);
-      margin-bottom: 18px;
-      max-width: 62ch;
-    }
-
-    .body-col p:last-child {
-      margin-bottom: 0
-    }
-
-    /* pull quote */
-    .pull-quote {
-      border-top: 2px solid var(--forge);
-      padding: 24px 0;
-      margin-bottom: 12px;
-      display: flex;
-      align-self: flex-start;
-      max-width: 62ch;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    /* Subhead tier: pull quote text */
-    .pq-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-subhead);
-      font-weight: 700;
-      line-height: 1.35;
-      letter-spacing: -0.01em;
-      color: var(--forge);
-      margin: 0;
-    }
-
-    .pq-text em {
-      color: var(--copper);
-      font-style: normal
-    }
+    /* ─── PULLQUOTE — see shared.css ─── */
 
     /* ─── HOW IT WORKS ────────────────────────────── */
     .how {
@@ -267,20 +214,12 @@
     }
 
 
-    /* Stories section: card grid needs bottom margin before outro paragraph */
+    /* Stories section: card grid needs bottom margin before inline-note */
     .content-card-grid {
       margin-bottom: 36px;
     }
 
-    /* Body tier: outro paragraph */
-    .stories-outro {
-      border-left: 3px solid var(--rose-gold);
-      padding: 18px 24px;
-      font-size: var(--t-body);
-      line-height: 1.85;
-      color: var(--steel);
-      background: var(--cool-white);
-    }
+    /* ─── INLINE NOTE (stories outro) — see shared.css + .inline-note--rose above ─── */
 
     /* ─── MODEL ───────────────────────────────────── */
     .model {
@@ -298,18 +237,7 @@
     }
 
 
-    /* Body tier: model body copy */
-    .model-body p {
-      font-size: var(--t-body);
-      line-height: 1.82;
-      color: var(--steel);
-      margin-bottom: 18px;
-      max-width: 62ch;
-    }
-
-    .model-body p:last-child {
-      margin-bottom: 0
-    }
+    /* ─── MODEL BODY TEXT — see shared.css (.body-text) + home .body-text p max-width override ─── */
 
     /* Photo — fills full right column */
     .model-photo {
@@ -594,9 +522,7 @@
         border-right: 1px solid var(--light-al)
       }
 
-      .body-cols {
-        grid-template-columns: 1fr
-      }
+
 
       .quote-pair {
         grid-template-columns: 1fr
@@ -801,7 +727,7 @@
   <section class="compare-teaser">
     <div class="compare-teaser-inner">
       <div class="ct-header reveal">
-        <h2 class="ct-h">At a glance: how VMI compares</h2>
+        <h2>At a glance: how VMI compares</h2>
         <a href="/compare" class="btn btn-outline">See the full comparison</a>
       </div>
       <div class="ct-wrap reveal d1">
@@ -878,26 +804,24 @@
     <!-- Right: heading + body text + pull quote + CTA -->
     <div class="pressure-right">
       <h2 class="section-h reveal">The pressure is real</h2>
-      <div class="body-cols reveal d1">
-        <div class="body-col">
-          <p>H.R. 1 expands work requirements for SNAP and Medicaid. The Workforce for the Community Act introduces
-            new community engagement verification requirements. States face financial penalties for SNAP payment
-            error rates above 6%.</p>
-          <p>The tools states have today were not built for this moment. Quarterly wage databases are months behind.
-            Commercial verification services charge per query with prices that go up every year. When the data is
-            wrong or incomplete, caseworkers absorb the cost in follow-up calls, manual
-            processing, and an ever-growing backlog. Meanwhile, applicants face longer waits and higher burdens.</p>
-          <p>Real-time payroll data is part of the answer, but raw data is not verification. A payroll connection
-            can pull income records from an employer's system. It cannot tell you whether those records contain what
-            a caseworker needs to make an eligibility determination. Without a layer that validates, contextualizes,
-            and delivers that data in a usable format, states trade one set of problems for another.
-          </p>
-          <p>VMI addresses all of these pressures: real-time income data that reduces payment errors, a validation
-            layer that ensures caseworkers receive only eligibility-grade reports, and a streamlined process that
-            removes the verification bottleneck.</p>
-        </div>
+      <div class="body-text reveal d1">
+        <p>H.R. 1 expands work requirements for SNAP and Medicaid. The Workforce for the Community Act introduces
+          new community engagement verification requirements. States face financial penalties for SNAP payment
+          error rates above 6%.</p>
+        <p>The tools states have today were not built for this moment. Quarterly wage databases are months behind.
+          Commercial verification services charge per query with prices that go up every year. When the data is
+          wrong or incomplete, caseworkers absorb the cost in follow-up calls, manual
+          processing, and an ever-growing backlog. Meanwhile, applicants face longer waits and higher burdens.</p>
+        <p>Real-time payroll data is part of the answer, but raw data is not verification. A payroll connection
+          can pull income records from an employer's system. It cannot tell you whether those records contain what
+          a caseworker needs to make an eligibility determination. Without a layer that validates, contextualizes,
+          and delivers that data in a usable format, states trade one set of problems for another.
+        </p>
+        <p>VMI addresses all of these pressures: real-time income data that reduces payment errors, a validation
+          layer that ensures caseworkers receive only eligibility-grade reports, and a streamlined process that
+          removes the verification bottleneck.</p>
       </div>
-      <div class="pull-quote reveal d2">
+      <div class="pullquote reveal d2">
         <p class="pq-text">Real-time payroll data is part of the answer, but <em>raw data is not verification.</em>
         </p>
       </div>
@@ -910,7 +834,8 @@
   <section class="how" id="how-vmi-works">
     <div class="how-inner">
       <h2 class="section-h reveal">How VMI works</h2>
-      <p class="section-intro reveal d1">VMI handles the entire data journey from the applicant's payroll provider, through
+      <p class="body-p reveal d1">VMI handles the entire data journey from the applicant's payroll provider,
+        through
         a consent-driven workflow, to a caseworker-ready report. States get a complete service, not just a data feed.
       </p>
 
@@ -967,7 +892,8 @@
   <section class="stories">
     <div class="stories-inner">
       <h2 class="section-h reveal">We do not just deliver data.<br> We fix the process.</h2>
-      <p class="section-intro reveal d1">Most verification vendors hand off data and walk away. DPW embeds with your team to find
+      <p class="body-p reveal d1">Most verification vendors hand off data and walk away. DPW embeds with your
+        team to find
         and fix the problems no data feed can solve.</p>
 
       <div class="content-card-grid">
@@ -1032,7 +958,7 @@
         </div>
       </div>
 
-      <p class="stories-outro reveal d4">Every state engagement includes a discovery sprint with interviews of policy
+      <p class="inline-note reveal d4">Every state engagement includes a discovery sprint with interviews of policy
         experts, caseworkers, quality control workers, community organizations, and applicants. These are not one-time
         exercises. DPW conducts ongoing case reviews, feedback analysis, and service design improvements throughout the
         partnership.</p>
@@ -1044,7 +970,7 @@
     <!-- Left: content -->
     <div class="model-content">
       <h2 class="section-h reveal">A better model for income verification</h2>
-      <div class="model-body reveal d1">
+      <div class="body-text reveal d1">
         <p>Traditional verification vendors lock you into rising costs and proprietary systems. When you need to
           switch, you start from scratch.</p>
         <p>DPW is different. We are a registered 501(c)(3) nonprofit. We are legally prohibited from profiting on

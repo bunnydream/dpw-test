@@ -93,7 +93,8 @@ h1 {
   line-height: 1.04;
   letter-spacing: -0.022em;
   color: var(--forge);
-  margin-bottom: 36px;
+  margin-bottom: 32px;
+  max-width: 19ch;
 }
 
 h2 {
@@ -355,16 +356,7 @@ nav {
 
 /* Section heading (h2) — font props from shared h2 rule */
 .section-h {
-  margin-bottom: 100px;
-}
-
-/* Section intro paragraph */
-.section-intro {
-  font-size: var(--t-body);
-  line-height: 1.82;
-  color: var(--steel);
-  max-width: 68ch;
-  margin-bottom: 100px;
+  margin-bottom: 32px;
 }
 
 
@@ -551,7 +543,7 @@ table.ct tr:last-child td {
   font-size: var(--t-body);
   line-height: 1.82;
   color: var(--steel);
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .hero-tagline {
@@ -560,11 +552,12 @@ table.ct tr:last-child td {
   font-weight: 700;
   color: var(--steel);
   line-height: 1.35;
-  margin-bottom: 0;
+  margin-bottom: 0px;
 }
 
 .hero-heading-stack {
   max-width: 100%;
+  margin-bottom: 20px;
 }
 
 .hero-img img {
@@ -768,14 +761,7 @@ table.ct tr:last-child td {
   line-height: 1.75;
 }
 
-.integration-note {
-  font-size: var(--t-body);
-  line-height: 1.82;
-  color: var(--steel);
-  border-left: 3px solid var(--light-al);
-  padding: 16px 24px;
-  margin-top: 8px;
-}
+/* ─── .inline-note is the canonical shared class — see INLINE NOTE section above ─── */
 
 
 /* ─── VOICES CAROUSEL ─────────────────────────────────────── */
@@ -812,11 +798,12 @@ table.ct tr:last-child td {
 
 .voice-mark {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 36px;
+  font-size: 80px;
   font-weight: 700;
   color: var(--copper);
   line-height: 1;
-  opacity: 0.65;
+  margin-bottom: -24px;
+  /* opacity: 0.65; */
 }
 
 .voice-text {
@@ -862,7 +849,7 @@ table.ct tr:last-child td {
 }
 
 .c-dot--active {
-  background: var(--forge);
+  background: var(--copper);
 }
 
 .carousel-arrows {
@@ -874,7 +861,7 @@ table.ct tr:last-child td {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--white);
+  background: var(--cool-white);
   border: none;
   cursor: pointer;
   display: flex;
@@ -925,7 +912,7 @@ table.ct tr:last-child td {
   font-size: var(--t-body);
   line-height: 1.82;
   color: var(--steel);
-  margin-bottom: 100px;
+  margin-bottom: 40px;
   max-width: 52ch;
 }
 
@@ -1085,6 +1072,184 @@ table.ct tr:last-child td {
 }
 
 
+/* ─── BODY TEXT ─────────────────────────────────────────── */
+/* Wrapper for a block of body paragraphs (2 or more).
+   Non-last paragraphs get a smaller gap so they read as a group;
+   the last paragraph gets a larger gap to separate from the next component. */
+.body-text p {
+  font-size: var(--t-body);
+  line-height: 1.82;
+  color: var(--steel);
+  max-width: 62ch;
+  margin-bottom: 16px;
+}
+
+.body-text p:last-child {
+  margin-bottom: 32px;
+}
+
+/* Standalone body paragraph (not in a group) */
+.body-p {
+  font-size: var(--t-body);
+  line-height: 1.82;
+  color: var(--steel);
+  margin-bottom: 40px;
+  max-width: 62ch;
+}
+
+
+/* ─── PULLQUOTE ──────────────────────────────────────────── */
+.pullquote {
+  border-top: 2px solid var(--forge);
+  padding: 24px 0;
+  margin-bottom: 12px;
+  display: flex;
+  align-self: flex-start;
+  max-width: 62ch;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.pq-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--t-subhead);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--forge);
+  margin: 0;
+}
+
+.pq-text em {
+  color: var(--copper);
+  font-style: normal;
+}
+
+
+/* ─── INLINE NOTE ────────────────────────────────────────── */
+/* Left-bordered note paragraph. Default accent: light-al.
+   Override border-color via a modifier class (e.g. .inline-note--rose). */
+.inline-note {
+  font-size: var(--t-body);
+  line-height: 1.82;
+  color: var(--steel);
+  border-left: 3px solid var(--rose-gold);
+  padding: 16px 24px;
+  margin-top: 8px;
+  max-width: max-content;
+}
+
+
+/* ─── SECTION HEADER ROW ─────────────────────────────────── */
+/* Flex row: heading left, optional CTA link right */
+.ct-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+
+/* ─── COMPARISON CARD (manual vs VMI two-column) ─────────── */
+.comp-card {
+  background: var(--white);
+  border: 1px solid var(--light-al);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 36px;
+}
+
+.comp-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.comp-col-head {
+  padding: 16px 22px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--t-label);
+  font-weight: 700;
+  color: var(--forge);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comp-col-head--manual {
+  border-right: 1px solid var(--light-al);
+}
+
+.comp-col-head--vmi {
+  background: var(--pale-verdigris);
+}
+
+.comp-col-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.comp-col-dot--al {
+  background: var(--aluminum);
+}
+
+.comp-col-dot--vg {
+  background: var(--verdigris);
+}
+
+.comp-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--light-al);
+}
+
+.comp-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 22px;
+}
+
+.comp-cell--manual {
+  border-right: 1px solid var(--light-al);
+}
+
+.comp-cell--vmi {
+  background: var(--pale-verdigris);
+  border-top: 1px solid var(--pale-verdigris-rule);
+}
+
+.comp-row:first-of-type .comp-cell--vmi {
+  border-top: none;
+}
+
+.comp-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.comp-dot--al {
+  background: var(--aluminum);
+}
+
+.comp-dot--vg {
+  background: var(--verdigris);
+}
+
+.comp-cell p {
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--steel);
+  margin: 0;
+}
+
+
 /* ─── CALLOUT STAT ───────────────────────────────────────── */
 .callout-stat {
   display: flex;
@@ -1113,6 +1278,46 @@ table.ct tr:last-child td {
   color: var(--steel);
   line-height: 1.5;
   padding-top: 4px;
+}
+
+
+/* ─── STAT ROW ───────────────────────────────────────────── */
+/* Shared structure and animation. Pages override: grid-template-columns,
+   padding, background on .stat-row; padding on .stat-cell; margin-bottom
+   on ::before; font-size/line-height/letter-spacing/margin-bottom on .stat-num;
+   font-size/letter-spacing on .stat-label. */
+.stat-row {
+  display: grid;
+  width: 100%;
+  gap: 0;
+}
+
+.stat-cell::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 6px;
+  background: var(--copper);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+
+.stat-cell.vis::before {
+  transform: scaleX(1);
+}
+
+.stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--forge);
+  display: block;
+}
+
+.stat-label {
+  color: var(--steel);
+  line-height: 1.45;
+  text-transform: lowercase;
 }
 
 
