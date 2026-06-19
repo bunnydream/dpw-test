@@ -343,15 +343,42 @@ nav {
 
 
 /* ─── SECTION INFRASTRUCTURE ─────────────────────────────── */
+/*
+  THREE MARGIN PATTERNS — use these shorthand names when working with Claude:
+
+  1. "standard margin"
+     Markup: section-pad > section-inner
+     Content max-width: 1200px, centered with gutter.
+     Left padding: clamp(20px, 5vw, 64px) at narrow viewports;
+                   (100vw - 1200px) / 2 at wide viewports.
+
+  2. "wide margin"
+     Markup: section-pad > section-inner.section-inner--wide
+     Content max-width: 1400px, centered with gutter.
+     Left padding: clamp(20px, 5vw, 64px) at narrow viewports;
+                   (100vw - 1400px) / 2 at wide viewports.
+
+  3. "full-bleed, wide margin"
+     Markup: full-viewport grid (no section-inner), photo bleeds to viewport edge.
+     Text column left padding: max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2))
+     This aligns text content with pattern 2, while the photo column goes edge-to-edge.
+     Different from pattern 2: no element is capped at 1400px — the visual fills the viewport.
+*/
+
 /* Generic padding shell used by most content sections */
 .section-pad {
   padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
 }
 
-/* Max-width centering container */
+/* Max-width centering container — default 1200px (standard margin) */
 .section-inner {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Wide variant — 1400px (wide margin) */
+.section-inner--wide {
+  max-width: 1400px;
 }
 
 /* Section heading (h2) — font props from shared h2 rule */

@@ -1,5 +1,5 @@
 # DPW Website — Session Summary
-*Last updated: 2026-06-19*
+*Last updated: 2026-06-19 (Session 3)*
 
 ## Project Overview
 Standalone HTML/CSS website for Digital Public Works (DPW), a 501(c)(3) nonprofit. No build step. Single shared stylesheet (`shared.css`) plus page-specific `<style>` blocks in each HTML file.
@@ -69,6 +69,43 @@ All reusable components live in shared.css. When creating new components, always
 
 ### product-FINAL.html
 - **Talk CTA banner** after "The path to a pilot" section: uses `.talk-cta` component from shared.css, deep-copper bg, decorative diagonal SVG lines in upper-left and lower-right corners, heading "Bring *VMI* to your state →", subtext "Learn about piloting with Digital Public Works"
+- **Accessibility section** (`#accessibility`): "Accessible by design, not as an afterthought" — changed to 50/50 full-bleed two-column grid (`grid-template-columns: 1fr 1fr; overflow: hidden`). Left col (`.access-left`) uses `padding-left: max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2))` to align with section-inner left edge. Right col (`.access-photo`) is a full-bleed image. Contains a `.callout-stat` ("65%") inside `.access-left`.
+
+### about-FINAL.html
+- **Funders section**: All `<span class="funder-role">` orange text removed — logos only in funder cards
+- **Funder cards** CSS: `min-height: 120px`, flex-centered, `.funder-logo-img { max-height: 72px; max-width: 80%; object-fit: contain }`
+- **DRK Foundation**: card uses `../public/partner-logos/drk-foundation.jpg`
+- **All funder cards** are `<a>` tags linking to partner sites (Samvid, Vanguard Charitable, Next Ladder, Kellogg, Google.org, DRK)
+- **Organization Status section**: independent section, white bg, placed **below** "Backed by" and above footer
+
+### careers-FINAL.html
+- **Fully remade** as short, clean page
+- **Hero**: two-column grid (`9fr 7fr`), `min-height: 72vh`; left = text, right = Unsplash image
+  - Image: `https://plus.unsplash.com/premium_photo-1752242734548-5d397f72ae39?auto=format&fit=crop&w=1600&q=80`
+  - `object-position: 75% 60%` (shows right/center of photo — hikers at dusk)
+- **Hero left col** (`.hero-left`): `padding-left: max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2))`
+- **h1**: "Join Digital Public Works"
+- **Subtitle**: "Join a team shipping products into government systems." — `.hero-tagline` class (Space Grotesk, `--t-subhead`, weight 700, `--steel`)
+- **Intro section** (cool-white): team/mission paragraph
+- **Open Positions section** (white): no current openings copy
+
+---
+
+## ⚠️ PENDING TASK
+
+### product-FINAL.html — Accessibility section left margin
+**User:** "I want this section to have same left margin as 4 stats components"
+
+**Status:** Unresolved — could not identify which section "4 stats components" refers to on the product page.
+
+**Current `.access-left` padding-left:** `max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2))` — this mathematically equals `section-inner` left edge, so it *should* already match any `section-pad + section-inner` section.
+
+**Candidates for "4 stats components":**
+- `#the-problem` — 4 accordion items (`.ps-acc-item`) — most likely
+- `#path-to-pilot` — 4 numbered steps (01–04)
+- The impact page has a `.stat-row` with `repeat(4, 1fr)` stat cells — but that's a different page
+
+**Next step:** Ask user which section they mean. If it's one of the `section-pad + section-inner` sections, the padding formula may already be correct and the visual issue could be something else (e.g., the right padding on `.access-left` is `clamp(32px, 4vw, 72px)` which constrains text width differently than section-inner).
 
 ---
 
