@@ -537,6 +537,83 @@ table.ct tr:last-child td {
 }
 
 
+/* ─── STEP SCROLL (photo-card variant of steps timeline) ─── */
+/* Wrap: provides position:relative for the line + progress bar */
+.how-steps-wrap {
+  position: relative;
+}
+
+/* Copper fill bar — driven by scroll JS on each page */
+.how-steps-progress {
+  position: absolute;
+  left: 35px;        /* aligns with .steps-line */
+  top: 56px;         /* matches .steps-line top */
+  width: 2px;
+  height: 0;
+  background: var(--copper);
+  border-radius: 2px;
+  z-index: 0;        /* behind step badges */
+  pointer-events: none;
+  transition: height 0.25s linear;
+}
+
+/* Each row: step badge + photo card side by side */
+.how-step-row {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: clamp(16px, 2vw, 24px);
+  align-items: flex-start;
+}
+
+.how-step-row:last-child {
+  min-height: auto;
+}
+
+/* Badge sits above the progress bar */
+.how-step-row .step-badge {
+  position: relative;
+  z-index: 1;
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+/* Card */
+.how-step-card {
+  overflow: hidden;
+}
+
+/* Photo area — height set per-page */
+.how-step-img {
+  width: 100%;
+  overflow: hidden;
+}
+
+.how-step-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.how-step-card:hover .how-step-img img {
+  transform: scale(1.03);
+}
+
+/* Text area — padding set per-page */
+.how-step-body h3 {
+  margin-bottom: 10px;
+}
+
+.how-step-body p {
+  font-size: var(--t-body);
+  color: var(--steel);
+  line-height: 1.72;
+  margin: 0;
+}
+
+
 /* ─── HERO SHARED BASE ───────────────────────────────────── */
 /* Base styles shared by product + impact hero; home overrides fully */
 .hero-sub {

@@ -189,20 +189,41 @@
 
     .how-cols {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 5fr 4fr;
       gap: clamp(48px, 6vw, 80px);
       align-items: flex-start;
     }
 
+    /* Scroll spacing — one step fills most of the viewport, next peeks */
+    .how-step-row {
+      min-height: 65vh;
+    }
+
+    /* Photo height for this page */
+    .how-step-img {
+      height: clamp(220px, 22vw, 320px);
+    }
+
+    /* Text padding for this page */
+    .how-step-body {
+      padding: 28px 0 0 0;
+    }
+
+    /* RIGHT column — sticky, top-aligned with step 1, image pushed right */
     .how-right {
+      position: sticky;
+      top: 90px;
       display: flex;
       align-items: flex-start;
-      justify-content: center;
+      justify-content: flex-end;
     }
 
     .how-right img {
-      width: 75%;
+      width: 80%;
+      max-height: calc(100vh - 120px);
       height: auto;
+      object-fit: contain;
+      object-position: top center;
       display: block;
     }
 
@@ -838,57 +859,86 @@
   <!-- HOW IT WORKS -->
   <section class="how" id="how-vmi-works">
     <div class="how-inner">
+      <!-- Header above the grid so right image top-aligns with step 1 -->
       <h2 class="section-h reveal">How VMI works</h2>
       <p class="body-p reveal d1">VMI handles the entire data journey from the applicant's payroll provider,
-        through
-        a consent-driven workflow, to a caseworker-ready report. States get a complete service, not just a data feed.
-      </p>
+        through a consent-driven workflow, to a caseworker-ready report. States get a complete service, not just a
+        data feed.</p>
 
       <div class="how-cols">
-        <div class="steps">
-          <div class="steps-line" aria-hidden="true"></div>
 
-          <div class="step reveal d1">
-            <div class="step-badge" aria-hidden="true">
-              <span class="step-n">01</span>
-              <span class="step-lbl">Step</span>
-            </div>
-            <div class="step-content">
-              <h3>Applicant receives a secure link</h3>
-              <p>During or after applying for benefits, the applicant is sent a link to verify their earned income. No
-                paper. No office visit required.</p>
-            </div>
-          </div>
+        <!-- LEFT: step cards -->
+        <div class="how-left">
+          <div class="how-steps-wrap">
+            <div class="steps-line" aria-hidden="true"></div>
+            <div class="how-steps-progress" aria-hidden="true"></div>
 
-          <div class="step reveal d2">
-            <div class="step-badge" aria-hidden="true">
-              <span class="step-n">02</span>
-              <span class="step-lbl">Step</span>
+            <div class="how-step-row reveal">
+              <div class="step-badge" aria-hidden="true">
+                <span class="step-n">01</span>
+                <span class="step-lbl">Step</span>
+              </div>
+              <div class="how-step-card">
+                <div class="how-step-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=800&q=80"
+                    alt="Applicant receiving a secure link on their phone" loading="lazy">
+                </div>
+                <div class="how-step-body">
+                  <h3>Applicant receives a secure link</h3>
+                  <p>During or after applying for benefits, the applicant is sent a link to verify their earned income.
+                    No paper. No office visit required.</p>
+                </div>
+              </div>
             </div>
-            <div class="step-content">
-              <h3>Applicant consents and connects their payroll</h3>
-              <p>The applicant reviews a plain-language consent screen, then connects to their payroll provider. No pay
-                stubs to find. No documents to upload.</p>
-            </div>
-          </div>
 
-          <div class="step reveal d3">
-            <div class="step-badge" aria-hidden="true">
-              <span class="step-n">03</span>
-              <span class="step-lbl">Step</span>
+            <div class="how-step-row reveal d1">
+              <div class="step-badge" aria-hidden="true">
+                <span class="step-n">02</span>
+                <span class="step-lbl">Step</span>
+              </div>
+              <div class="how-step-card">
+                <div class="how-step-img">
+                  <img
+                    src="https://plus.unsplash.com/premium_photo-1702910931715-3aa09793ffae?auto=format&fit=crop&w=800&q=80"
+                    alt="Applicant consenting and connecting their payroll on their phone" loading="lazy">
+                </div>
+                <div class="how-step-body">
+                  <h3>Applicant consents and connects their payroll</h3>
+                  <p>The applicant reviews a plain-language consent screen, then connects to their payroll provider. No
+                    pay stubs to find. No documents to upload.</p>
+                </div>
+              </div>
             </div>
-            <div class="step-content">
-              <h3>Verified income data is delivered to the caseworker</h3>
-              <p>A standardized income report, verified directly from the payroll source, is delivered to the state
-                benefit system. Every report passes through programmatic validation before delivery — caseworkers only
-                receive eligibility-grade data and can act immediately.</p>
+
+            <div class="how-step-row reveal d2">
+              <div class="step-badge" aria-hidden="true">
+                <span class="step-n">03</span>
+                <span class="step-lbl">Step</span>
+              </div>
+              <div class="how-step-card">
+                <div class="how-step-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1669651994851-8f366f8a0f53?auto=format&fit=crop&w=800&q=80"
+                    alt="Caseworker receiving verified income data at their desk" loading="lazy">
+                </div>
+                <div class="how-step-body">
+                  <h3>Verified income data is delivered to the caseworker</h3>
+                  <p>A standardized income report, verified directly from the payroll source, is delivered to the state
+                    benefit system. Every report passes through programmatic validation before delivery — caseworkers
+                    only receive eligibility-grade data and can act immediately.</p>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
 
+        <!-- RIGHT: sticky diagram -->
         <div class="how-right reveal d2">
           <img src="../public/images/howVMI-home.png" alt="How VMI works diagram" loading="lazy">
         </div>
+
       </div>
     </div>
   </section>
@@ -1147,6 +1197,28 @@
       });
     }, { threshold: 0.5 });
     document.querySelectorAll('[data-count]').forEach(el => cObs.observe(el));
+
+    /* ── HOW VMI STEPS PROGRESS BAR ─────────────────── */
+    (function () {
+      const wrap = document.querySelector('.how-steps-wrap');
+      const bar = document.querySelector('.how-steps-progress');
+      if (!wrap || !bar) return;
+
+      function update() {
+        const rect = wrap.getBoundingClientRect();
+        // Start filling when step 1 enters the viewport (rect.top < viewH),
+        // finish when the section is fully scrolled through.
+        const viewH = window.innerHeight;
+        const scrolled = Math.max(0, viewH * 0.5 - rect.top);
+        const total = Math.max(1, wrap.offsetHeight - 90);
+        const pct = Math.min(1, scrolled / total);
+        const lineMax = Math.max(0, wrap.offsetHeight - 112);
+        bar.style.height = (pct * lineMax) + 'px';
+      }
+
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
   </script>
 </body>
 
