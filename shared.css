@@ -546,13 +546,16 @@ table.ct tr:last-child td {
 /* Copper fill bar — driven by scroll JS on each page */
 .how-steps-progress {
   position: absolute;
-  left: 35px;        /* aligns with .steps-line */
-  top: 56px;         /* matches .steps-line top */
+  left: 35px;
+  /* aligns with .steps-line */
+  top: 56px;
+  /* matches .steps-line top */
   width: 2px;
   height: 0;
   background: var(--copper);
   border-radius: 2px;
-  z-index: 0;        /* behind step badges */
+  z-index: 0;
+  /* behind step badges */
   pointer-events: none;
   transition: height 0.25s linear;
 }
@@ -594,11 +597,6 @@ table.ct tr:last-child td {
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform 0.4s ease;
-}
-
-.how-step-card:hover .how-step-img img {
-  transform: scale(1.03);
 }
 
 /* Text area — padding set per-page */
@@ -897,7 +895,7 @@ table.ct tr:last-child td {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--aluminum);
+  color: var(--steel);
 }
 
 .carousel-footer {
@@ -1398,6 +1396,51 @@ table.ct tr:last-child td {
 }
 
 
+/* ─── TALK CTA BANNER ────────────────────────────────────── */
+.talk-cta {
+  position: relative;
+  background: var(--deep-copper);
+  overflow: hidden;
+  padding: clamp(40px, 5vw, 60px) clamp(20px, 5vw, 64px);
+}
+
+.talk-cta-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.talk-cta-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.talk-cta-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 700;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  transition: opacity 0.15s;
+}
+
+.talk-cta-heading:hover { opacity: 0.85; }
+
+.talk-cta-sub {
+  font-size: var(--t-body);
+  color: var(--white);
+  margin: 0;
+}
+
 /* ─── FOOTER ─────────────────────────────────────────────── */
 footer {
   background: var(--forge);
@@ -1426,7 +1469,7 @@ footer {
 }
 
 .footer-logo svg {
-  height: 32px;
+  height: 40px;
   width: auto;
   display: block;
 }
@@ -1436,7 +1479,11 @@ footer {
 .cta-section-block {
   max-width: 640px;
   display: grid;
-  gap: 6px;
+  gap: 0;
+}
+
+.cta-section-block .footer-sub {
+  color: var(--white);
 }
 
 .footer-hero {
@@ -1463,7 +1510,7 @@ footer {
   margin-top: 4px;
   padding: 0;
   background: transparent;
-  color: var(--rose-gold);
+  color: var(--verdigris);
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--t-button);
   font-weight: 700;
@@ -1474,7 +1521,7 @@ footer {
 }
 
 .footer-demo:hover {
-  color: var(--verdigris);
+  color: var(--white);
   background: transparent;
 }
 

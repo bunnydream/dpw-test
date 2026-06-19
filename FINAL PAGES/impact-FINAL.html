@@ -54,35 +54,39 @@
 
     /* ─── STAT ROW — structure/animation in shared.css; impact overrides below ─── */
     .stat-row {
-      grid-template-columns: repeat(5, 1fr);
-      padding: 0 clamp(20px, 5vw, 64px) clamp(16px, 2vw, 24px);
-      background: var(--white);
+      grid-template-columns: repeat(4, 1fr);
+      padding: 0 clamp(20px, 5vw, 64px) clamp(32px, 4vw, 48px);
+      background: var(--cool-white);
     }
 
     .stat-cell {
-      padding: clamp(48px, 6vw, 80px) clamp(14px, 1.8vw, 22px) clamp(40px, 5vw, 64px);
+      padding: clamp(72px, 9vw, 108px) clamp(16px, 2.5vw, 28px) clamp(60px, 8vw, 96px);
     }
 
     .stat-cell::before {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .stat-num {
-      font-size: clamp(18px, 2vw, 28px);
-      line-height: 1.0;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
-      white-space: nowrap;
+      font-size: clamp(36px, 4.2vw, 56px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
     }
 
     .stat-label {
-      font-size: var(--t-small);
-      letter-spacing: 0.08em;
+      font-size: var(--t-body);
+      letter-spacing: 0.12em;
     }
 
 
     /* ─── FAMILIES ─── */
     .families {
+      background: var(--white);
+    }
+
+    /* comp-card on white bg → cool-white card */
+    .comp-card {
       background: var(--cool-white);
     }
 
@@ -120,14 +124,33 @@
     /* ─── COMPARISON CARD — see shared.css (.comp-card, .comp-*) ─── */
 
 
-    /* ─── VOICES CAROUSEL — see shared.css ─── */
+    /* ─── VOICES CAROUSEL — cool-white section, white cards/buttons ─── */
+    .voices {
+      background: var(--cool-white);
+    }
 
-    /* ─── CASE STUDIES — see shared.css for .field, .case-* ─── */
-
-
-    /* ─── YEAR IN REVIEW ─── */
-    .annual {
+    .voice-card {
       background: var(--white);
+    }
+
+    .carousel-btn {
+      background: var(--white);
+    }
+
+    /* ─── CASE STUDIES — white section, cool-white cards ─── */
+    .field {
+      background: var(--white);
+    }
+
+    .case-card {
+      background: var(--cool-white);
+    }
+
+
+
+    /* ─── YEAR IN REVIEW — cool-white section, white book ─── */
+    .annual {
+      background: var(--cool-white);
     }
 
     .annual-inner {
@@ -151,7 +174,7 @@
       aspect-ratio: 8.5 / 11;
       border-radius: 3px;
       box-shadow: 8px 16px 40px rgba(0, 0, 0, 0.12), 2px 4px 8px rgba(0, 0, 0, 0.06);
-      background: var(--cool-white);
+      background: var(--white);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -167,12 +190,14 @@
     }
 
 
-    /* ─── FUNDING MODEL ─── */
+    /* ─── FUNDING MODEL — white section, cool-white cards ─── */
     .funding {
-      background: var(--cool-white);
+      background: var(--white);
     }
 
-    /* ─── FUNDING CARDS — see .content-card-* in shared.css ─── */
+    .content-card {
+      background: var(--cool-white);
+    }
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1024px) {
@@ -326,7 +351,7 @@
   <section class="hero">
     <div class="hero-left">
       <div class="hero-heading-stack reveal">
-        <h1>Our impact</h1>
+        <h1>Our Impact</h1>
         <p class="hero-tagline">Measurable results for families and state systems</p>
       </div>
       <p class="hero-sub reveal d1">Verify My Income makes income verification faster, more accurate, and less
@@ -361,11 +386,6 @@
     <div class="stat-cell reveal d4" role="listitem">
       <span class="stat-num">Under 5 min</span>
       <span class="stat-label">Median verification time, vs. 45 minutes for manual document submission</span>
-    </div>
-
-    <div class="stat-cell reveal d4" role="listitem">
-      <span class="stat-num">6 weeks</span>
-      <span class="stat-label">From contract start to go-live in Pennsylvania</span>
     </div>
 
   </div>
@@ -555,6 +575,8 @@
         </a>
 
       </div>
+
+
     </div>
   </section>
 
@@ -657,8 +679,9 @@
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-cta-block">
-          <h2 class="footer-hero">Ready to pilot <i>Verify My Income</i> in your jurisdiction? Let's talk.</h2>
-          <a href="/contact" class="footer-demo">Request a Demo <span class="arrow" aria-hidden="true">→</span></a>
+          <p class="footer-sub">Ready to pilot?</p>
+          <a href="/contact" class="footer-demo">Request a demo today <span class="arrow"
+              aria-hidden="true">→</span></a>
         </div>
         <a href="/" class="footer-logo">
           <svg aria-label="Digital Public Works" role="img" width="500" height="43" viewBox="0 0 500 43" fill="none"
@@ -713,7 +736,7 @@
               fill="#C77234" />
             <path
               d="M10.7485 34.2976C8.83138 34.2976 7.05567 33.8297 5.4214 32.8939C3.78712 31.9582 2.46713 30.6169 1.46142 28.8701C0.48714 27.0922 0 24.9555 0 22.4601V21.7583C0 19.2941 0.48714 17.173 1.46142 15.395C2.4357 13.6171 3.73998 12.2602 5.37425 11.3245C7.00853 10.3887 8.79995 9.9208 10.7485 9.9208C12.2571 9.9208 13.5142 10.108 14.5199 10.4823C15.5571 10.8566 16.4056 11.34 17.0656 11.9327C17.7256 12.4942 18.2285 13.0868 18.5742 13.7107H19.3285V0.890625H24.1841V33.6425H19.4227V30.3674H18.6685C18.0713 31.3655 17.1599 32.2701 15.9342 33.0811C14.7399 33.8921 13.0114 34.2976 10.7485 34.2976ZM12.1156 30.0866C14.2213 30.0866 15.9499 29.416 17.3013 28.0747C18.6842 26.7335 19.3756 24.8151 19.3756 22.3197V21.8986C19.3756 19.4345 18.6999 17.5317 17.3485 16.1905C15.9971 14.8492 14.2528 14.1785 12.1156 14.1785C10.0414 14.1785 8.31281 14.8492 6.92996 16.1905C5.57854 17.5317 4.90283 19.4345 4.90283 21.8986V22.3197C4.90283 24.8151 5.57854 26.7335 6.92996 28.0747C8.31281 29.416 10.0414 30.0866 12.1156 30.0866Z"
-              fill="white" />
+              fill="#C77234" />
           </svg>
         </a>
       </div>
