@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact — Digital Public Works</title>
+  <title>Insights — Digital Public Works</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -12,80 +12,231 @@
     rel="stylesheet">
   <link rel="stylesheet" href="../shared.css">
   <style>
-    /* ─── CONTACT-SPECIFIC STYLES ──────────────────── */
+    /* ─── INSIGHTS-SPECIFIC STYLES ──────────────────── */
 
-    /* ─── PAGE HEADER ──────────────────────────────── */
-    .page-header {
+    /* ─── HERO ──────────────────────────────────────── */
+    .insights-hero {
       background: var(--white);
-      padding: clamp(64px, 9vw, 112px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px);
+      padding-top: clamp(72px, 9vw, 112px);
+      padding-bottom: clamp(56px, 7vw, 80px);
+      border-bottom: 1px solid var(--light-al);
     }
 
-    .page-header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
+    .insights-hero h1 {
+      font-size: clamp(44px, 6vw, 80px);
+      margin-bottom: 20px;
     }
 
-    .page-eyebrow {
+    .insights-subtitle {
+      font-size: clamp(16px, 1.4vw, 19px);
+      color: var(--steel);
+      max-width: 54ch;
+      line-height: 1.72;
+    }
+
+    /* ─── POSTS ──────────────────────────────────────── */
+    .posts {
+      background: var(--cool-white);
+    }
+
+    /* ─── CATEGORY FILTER ────────────────────────────── */
+    .cat-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: clamp(40px, 5vw, 56px);
+    }
+
+    .cat-btn {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: var(--t-label);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 9px 18px;
+      border-radius: 100px;
+      border: 1.5px solid var(--light-al);
+      background: transparent;
+      color: var(--steel);
+      cursor: pointer;
+      transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+      line-height: 1;
+    }
+
+    .cat-btn:hover {
+      border-color: var(--aluminum);
+      color: var(--forge);
+    }
+
+    .cat-btn.active {
+      background: var(--forge);
+      border-color: var(--forge);
+      color: var(--white);
+    }
+
+    /* ─── POST GRID ──────────────────────────────────── */
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(20px, 2.5vw, 32px);
+    }
+
+    /* ─── POST CARD ──────────────────────────────────── */
+    .post-card {
+      background: var(--white);
+      border-radius: 3px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .post-card:hover {
+      box-shadow: 0 6px 28px rgba(30, 39, 46, 0.09);
+      transform: translateY(-2px);
+    }
+
+    .post-card-body {
+      padding: clamp(24px, 2.5vw, 32px);
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .post-cat-tag {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--copper);
+      margin-bottom: 14px;
       display: block;
-      margin-bottom: 18px;
     }
 
-    .page-header h1 {
-      max-width: 20ch;
+    .post-card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(16px, 1.5vw, 19px);
+      font-weight: 700;
+      color: var(--forge);
+      line-height: 1.35;
+      margin-bottom: 14px;
     }
 
-    .page-header-sub {
+    .post-card-excerpt {
       font-size: var(--t-body);
-      line-height: 1.82;
       color: var(--steel);
-      max-width: 54ch;
-      margin-top: 20px;
+      line-height: 1.75;
+      margin-bottom: 28px;
+      flex: 1;
     }
 
-    /* ─── SECTION DIVIDER ──────────────────────────── */
-    .section-divider {
-      display: block;
-      width: 48px;
-      height: 3px;
-      background: var(--copper);
-      margin-bottom: clamp(36px, 4vw, 52px);
-    }
-
-    /* ─── ADDRESS BLOCK ────────────────────────────── */
-    .address-block {
-      margin-top: 40px;
-      padding-top: 32px;
+    .post-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 16px;
       border-top: 1px solid var(--light-al);
     }
 
-    .address-block address {
-      font-style: normal;
-      font-size: var(--t-body);
-      line-height: 2;
-      color: var(--steel);
+    .post-card-date {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      color: var(--aluminum);
     }
 
-    .address-block a {
-      color: var(--copper);
+    .post-card-link {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--deep-copper);
       text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.18s ease;
+      white-space: nowrap;
     }
 
-    .address-block a:hover {
-      text-decoration: underline;
+    .post-card-link:hover {
+      color: var(--copper);
     }
 
-    @media (max-width: 768px) {
-      .page-header h1 {
-        max-width: none;
+    .post-card-link.coming-soon {
+      color: var(--aluminum);
+      pointer-events: none;
+    }
+
+    /* ─── SUBSCRIBE ──────────────────────────────────── */
+    .subscribe {
+      background: var(--white);
+    }
+
+    .subscribe-inner {
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+    }
+
+    .subscribe-h {
+      font-size: clamp(26px, 3vw, 38px);
+      margin-bottom: 14px;
+    }
+
+    .subscribe-sub {
+      font-size: var(--t-body);
+      color: var(--steel);
+      line-height: 1.7;
+    }
+
+    .subscribe-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .subscribe-input {
+      font-family: 'Atkinson Hyperlegible', sans-serif;
+      font-size: var(--t-body);
+      color: var(--forge);
+      background: var(--cool-white);
+      border: 1.5px solid var(--light-al);
+      border-radius: 3px;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .subscribe-input:focus {
+      border-color: var(--steel);
+    }
+
+    .subscribe-input::placeholder {
+      color: var(--aluminum);
+    }
+
+    .subscribe-note {
+      font-size: 12px;
+      color: var(--aluminum);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .post-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
-      .form-row-2 {
+      .subscribe-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .post-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -100,10 +251,10 @@
     <a href="/">Home</a>
     <a href="/product">Product</a>
     <a href="/impact">Impact</a>
-    <a href="/insights">Insights</a>
+    <a href="/insights" class="current-page">Insights</a>
     <a href="/about">About</a>
     <a href="/careers">Careers</a>
-    <a href="/contact" class="current-page">Contact</a>
+    <a href="/contact">Contact</a>
     <a href="/contact" class="btn btn-copper" style="margin-top:8px">Request a demo</a>
   </div>
 
@@ -124,7 +275,7 @@
           d="M192.133 88.005V26.0243H205.091V88.005H192.133ZM198.675 17.601C196.159 17.601 194.02 16.8048 192.258 15.2123C190.581 13.536 189.742 11.3987 189.742 8.8005C189.742 6.20226 190.581 4.1069 192.258 2.51443C194.02 0.838145 196.159 0 198.675 0C201.275 0 203.414 0.838145 205.091 2.51443C206.769 4.1069 207.607 6.20226 207.607 8.8005C207.607 11.3987 206.769 13.536 205.091 15.2123C203.414 16.8048 201.275 17.601 198.675 17.601Z"
           fill="#C77234" />
         <path
-          d="M110.021 57.3289V55.4431C110.021 48.9056 111.321 43.3319 113.921 38.7221C116.605 34.1123 120.127 30.5502 124.489 28.0358C128.85 25.5214 133.631 24.2642 138.831 24.2642C144.87 24.2642 149.483 25.3957 152.671 27.6586C155.942 29.9216 158.332 32.3522 159.842 34.9505H161.855V26.0243H174.436V100.703C174.436 104.474 173.304 107.492 171.039 109.755C168.858 112.018 165.839 113.149 161.981 113.149H120.211V101.834H157.955C160.387 101.834 161.603 100.577 161.603 98.0627V78.3244H159.59C158.668 79.833 157.368 81.3836 155.69 82.9761C154.013 84.5686 151.79 85.8677 149.022 86.8734C146.338 87.8792 142.941 88.3821 138.831 88.3821C133.631 88.3821 128.808 87.1668 124.363 84.7362C120.002 82.2218 116.521 78.6596 113.921 74.0499C111.321 69.3563 110.021 63.7826 110.021 57.3289ZM142.354 77.0672C147.974 77.0672 152.587 75.3071 156.193 71.7869C159.884 68.1829 161.729 63.2378 161.729 56.9517V55.8202C161.729 49.3665 159.926 44.4215 156.319 40.9851C152.713 37.4649 148.058 35.7048 142.354 35.7048C136.818 35.7048 132.205 37.4649 128.515 40.9851C124.908 44.3215 123.105 49.3665 123.105 55.8202V56.9517C123.105 63.2378 124.908 68.1829 128.515 71.7869C132.205 75.3071 136.818 77.0672 142.354 77.0672Z"
+          d="M110.021 57.3289V55.4431C110.021 48.9056 111.321 43.3319 113.921 38.7221C116.605 34.1123 120.127 30.5502 124.489 28.0358C128.85 25.5214 133.631 24.2642 138.831 24.2642C144.87 24.2642 149.483 25.3957 152.671 27.6586C155.942 29.9216 158.332 32.3522 159.842 34.9505H161.855V26.0243H174.436V100.703C174.436 104.474 173.304 107.492 171.039 109.755C168.858 112.018 165.839 113.149 161.981 113.149H120.211V101.834H157.955C160.387 101.834 161.603 100.577 161.603 98.0627V78.3244H159.59C158.668 79.833 157.368 81.3836 155.69 82.9761C154.013 84.5686 151.79 85.8677 149.022 86.8734C146.338 87.8792 142.941 88.3821 138.831 88.3821C133.631 88.3821 128.808 87.1668 124.363 84.7362C120.002 82.2218 116.521 78.6596 113.921 74.0499C111.321 69.3563 110.021 63.7826 110.021 57.3289ZM142.354 77.0672C147.974 77.0672 152.587 75.3071 156.193 71.7869C159.884 68.1829 161.729 63.2378 161.729 56.9517V55.8202C161.729 49.3665 159.926 44.4215 156.319 40.9851C152.713 37.4649 148.058 35.7048 142.354 35.7048C136.818 35.7048 132.205 37.4649 128.515 40.9851C124.908 44.4215 123.105 49.3665 123.105 55.8202V56.9517C123.105 63.2378 124.908 68.1829 128.515 71.7869C132.205 75.3071 136.818 77.0672 142.354 77.0672Z"
           fill="#C77234" />
         <path
           d="M82.2332 88.005V26.0243H95.1918V88.005H82.2332ZM88.7754 17.601C86.2592 17.601 84.1204 16.8048 82.359 15.2123C80.6815 13.536 79.8428 11.3987 79.8428 8.8005C79.8428 6.20226 80.6815 4.1069 82.359 2.51443C84.1204 0.838145 86.2592 0 88.7754 0C91.3755 0 93.5143 0.838145 95.1918 2.51443C96.8693 4.1069 97.708 6.20226 97.708 8.8005C97.708 11.3987 96.8693 13.536 95.1918 15.2123C93.5143 16.8048 91.3755 17.601 88.7754 17.601Z"
@@ -169,10 +320,10 @@
       <a href="/">Home</a>
       <a href="/product">Product</a>
       <a href="/impact">Impact</a>
-      <a href="/insights">Insights</a>
+      <a href="/insights" class="current-page">Insights</a>
       <a href="/about">About</a>
       <a href="/careers">Careers</a>
-      <a href="/contact" class="current-page">Contact</a>
+      <a href="/contact">Contact</a>
       <a href="/contact" class="nav-cta">Request a demo</a>
     </div>
     <button class="hamburger" id="hamburger" aria-label="Open menu">
@@ -180,236 +331,96 @@
     </button>
   </nav>
 
-  <!-- PAGE HEADER -->
-  <section class="page-header">
-    <div class="page-header-inner">
-      <h1 class="reveal d1">Get in touch</h1>
-      <p class="page-header-sub reveal d2">Whether you are a state agency, a funder, a community organization, or a
-        fellow practitioner, we would love to hear from you.</p>
+  <!-- HERO -->
+  <section class="insights-hero section-pad">
+    <div class="section-inner">
+      <h1 class="reveal">Insights</h1>
+      <p class="insights-subtitle reveal d1">Field notes, service design research, and policy analysis from Digital
+        Public Works</p>
     </div>
   </section>
 
-  <!-- FOR STATE PARTNERS -->
-  <section class="section-pad" style="background: var(--cool-white);">
+  <!-- POSTS -->
+  <section class="posts section-pad">
     <div class="section-inner">
-      <div class="contact-pair">
-        <div class="contact-desc reveal">
-          <span class="contact-label">For State Partners</span>
-          <span class="section-divider"></span>
-          <h2 style="font-size: var(--t-headline); margin-bottom: 20px;">Request a demo of <i>Verify My Income</i></h2>
-          <div class="body-text">
-            <p>We work with state health and human services agencies to pilot and implement real-time income
-              verification for Medicaid, SNAP, and other benefit programs. If you're interested in exploring a
-              partnership, we'd love to connect.</p>
+
+      <!-- Category filter -->
+      <div class="cat-filter" role="group" aria-label="Filter by category">
+        <button class="cat-btn active" data-cat="all">All</button>
+        <button class="cat-btn" data-cat="product">Product</button>
+        <button class="cat-btn" data-cat="policy">Policy</button>
+        <button class="cat-btn" data-cat="service-design">Service Design</button>
+        <button class="cat-btn" data-cat="accessibility">Accessibility</button>
+        <button class="cat-btn" data-cat="field-notes">Field Notes</button>
+      </div>
+
+      <!-- Post grid -->
+      <div class="post-grid" id="postGrid">
+
+        <!-- Post 1: Policy -->
+        <article class="post-card reveal" data-cat="policy">
+          <div class="post-card-body">
+            <span class="post-cat-tag">Policy</span>
+            <h3 class="post-card-title">How H.R. 1 Changes the Stakes for Income Verification</h3>
+            <p class="post-card-excerpt">Expanded work requirements and tighter error-rate penalties are landing on
+              states that already struggle with aging verification tools. Here is what the legislative moment means for
+              agencies on the ground.</p>
+            <div class="post-card-meta">
+              <span class="post-card-date">Coming soon</span>
+              <span class="post-card-link coming-soon">Coming soon</span>
+            </div>
           </div>
-        </div>
-        <div class="reveal d1">
-          <div class="contact-form-card">
-            <form name="state-partner-contact" method="POST" novalidate>
-              <div class="form-stack">
-                <div class="form-row-2">
-                  <div class="form-group">
-                    <label class="form-label" for="sp-first">First name</label>
-                    <input class="form-input" type="text" id="sp-first" name="first_name" placeholder="Jane"
-                      autocomplete="given-name">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="sp-last">Last name</label>
-                    <input class="form-input" type="text" id="sp-last" name="last_name" placeholder="Smith"
-                      autocomplete="family-name">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="sp-email">Work email</label>
-                  <input class="form-input" type="email" id="sp-email" name="email" placeholder="jane.smith@agency.gov"
-                    autocomplete="email">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="sp-org">Agency / organization</label>
-                  <input class="form-input" type="text" id="sp-org" name="organization"
-                    placeholder="State Dept. of Health and Human Services">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="sp-state">State</label>
-                  <select class="form-select" id="sp-state" name="state">
-                    <option value="" disabled selected>Select a state</option>
-                    <option>Alabama</option>
-                    <option>Alaska</option>
-                    <option>Arizona</option>
-                    <option>Arkansas</option>
-                    <option>California</option>
-                    <option>Colorado</option>
-                    <option>Connecticut</option>
-                    <option>Delaware</option>
-                    <option>Florida</option>
-                    <option>Georgia</option>
-                    <option>Hawaii</option>
-                    <option>Idaho</option>
-                    <option>Illinois</option>
-                    <option>Indiana</option>
-                    <option>Iowa</option>
-                    <option>Kansas</option>
-                    <option>Kentucky</option>
-                    <option>Louisiana</option>
-                    <option>Maine</option>
-                    <option>Maryland</option>
-                    <option>Massachusetts</option>
-                    <option>Michigan</option>
-                    <option>Minnesota</option>
-                    <option>Mississippi</option>
-                    <option>Missouri</option>
-                    <option>Montana</option>
-                    <option>Nebraska</option>
-                    <option>Nevada</option>
-                    <option>New Hampshire</option>
-                    <option>New Jersey</option>
-                    <option>New Mexico</option>
-                    <option>New York</option>
-                    <option>North Carolina</option>
-                    <option>North Dakota</option>
-                    <option>Ohio</option>
-                    <option>Oklahoma</option>
-                    <option>Oregon</option>
-                    <option>Pennsylvania</option>
-                    <option>Rhode Island</option>
-                    <option>South Carolina</option>
-                    <option>South Dakota</option>
-                    <option>Tennessee</option>
-                    <option>Texas</option>
-                    <option>Utah</option>
-                    <option>Vermont</option>
-                    <option>Virginia</option>
-                    <option>Washington</option>
-                    <option>West Virginia</option>
-                    <option>Wisconsin</option>
-                    <option>Wyoming</option>
-                    <option>Washington D.C.</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="sp-message">Tell us about your program</label>
-                  <textarea class="form-textarea" id="sp-message" name="message"
-                    placeholder="Which benefit programs are you administering? What income verification challenges are you facing?"></textarea>
-                </div>
-                <button type="submit" class="btn btn-forge" style="align-self: flex-start; margin-top: 4px;">Request a
-                  demo</button>
-              </div>
-            </form>
+        </article>
+
+        <!-- Post 2: Service Design -->
+        <article class="post-card reveal d1" data-cat="service-design">
+          <div class="post-card-body">
+            <span class="post-cat-tag">Service Design</span>
+            <h3 class="post-card-title">The 40% Problem: When the Process Fails Before the Technology Does</h3>
+            <p class="post-card-excerpt">In one state, nearly 40% of SNAP renewal applicants were not submitting
+              required income documents — not because the upload failed, but because they did not know they had a next
+              step.</p>
+            <div class="post-card-meta">
+              <span class="post-card-date">Coming soon</span>
+              <span class="post-card-link coming-soon">Coming soon</span>
+            </div>
           </div>
-        </div>
+        </article>
+
+        <!-- Post 3: Accessibility -->
+        <article class="post-card reveal d2" data-cat="accessibility">
+          <div class="post-card-body">
+            <span class="post-cat-tag">Accessibility</span>
+            <h3 class="post-card-title">Accessible by Design: What Our Research on VMI Is Revealing</h3>
+            <p class="post-card-excerpt">65% of our users access <i>Verify My Income</i> on a smartphone. We are
+              conducting original research into how income verification can be made usable for older adults, people with
+              disabilities, and those with limited English proficiency.</p>
+            <div class="post-card-meta">
+              <span class="post-card-date">Coming soon</span>
+              <span class="post-card-link coming-soon">Coming soon</span>
+            </div>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
 
-  <!-- FOR FUNDERS -->
-  <section class="section-pad" style="background: var(--cool-white);">
+  <!-- SUBSCRIBE -->
+  <section class="subscribe section-pad">
     <div class="section-inner">
-      <div class="contact-pair">
-        <div class="contact-desc reveal">
-          <span class="contact-label">For Funders</span>
-          <span class="section-divider"></span>
-          <h2 style="font-size: var(--t-headline); margin-bottom: 20px;">Support our work</h2>
-          <div class="body-text">
-            <p>Digital Public Works is an independent 501(c)(3) nonprofit. Philanthropic support enables us to keep our
-              fees at cost for state agencies and to invest in research, accessibility, and the communities our work
-              serves.</p>
-          </div>
+      <div class="subscribe-inner">
+        <div class="reveal">
+          <h2 class="subscribe-h">Stay in the loop</h2>
+          <p class="subscribe-sub">Get notified when we publish new insights.</p>
         </div>
         <div class="reveal d1">
-          <div class="contact-form-card">
-            <form name="funder-contact" method="POST" novalidate>
-              <div class="form-stack">
-                <div class="form-row-2">
-                  <div class="form-group">
-                    <label class="form-label" for="fn-first">First name</label>
-                    <input class="form-input" type="text" id="fn-first" name="first_name" placeholder="Jane"
-                      autocomplete="given-name">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="fn-last">Last name</label>
-                    <input class="form-input" type="text" id="fn-last" name="last_name" placeholder="Smith"
-                      autocomplete="family-name">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="fn-email">Work email</label>
-                  <input class="form-input" type="email" id="fn-email" name="email" placeholder="jane@foundation.org"
-                    autocomplete="email">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="fn-org">Foundation / organization</label>
-                  <input class="form-input" type="text" id="fn-org" name="organization"
-                    placeholder="Example Foundation">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="fn-message">How can we help?</label>
-                  <textarea class="form-textarea" id="fn-message" name="message"
-                    placeholder="Tell us about your foundation's priorities and what drew you to DPW's work."></textarea>
-                </div>
-                <button type="submit" class="btn btn-forge" style="align-self: flex-start; margin-top: 4px;">Get in
-                  touch</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOR COMMUNITY + ADDRESS -->
-  <section class="section-pad" style="background: var(--cool-white);">
-    <div class="section-inner">
-      <div class="contact-pair">
-        <div class="contact-desc reveal">
-          <span class="contact-label">For Community</span>
-          <span class="section-divider"></span>
-          <h2 style="font-size: var(--t-headline); margin-bottom: 20px;">Everything else</h2>
-          <div class="body-text">
-            <p>Press inquiries, partnership ideas, and general questions are all welcome. We read everything.</p>
-          </div>
-          <div class="address-block reveal d1">
-            <address>
-              <strong>Digital Public Works</strong><br>
-              2261 Market Street, Suite 32572<br>
-              San Francisco, CA 94114<br><br>
-              <a href="mailto:info@digitalpublicworks.org">info@digitalpublicworks.org</a>
-            </address>
-          </div>
-        </div>
-        <div class="reveal d1">
-          <div class="contact-form-card">
-            <form name="general-contact" method="POST" novalidate>
-              <div class="form-stack">
-                <div class="form-row-2">
-                  <div class="form-group">
-                    <label class="form-label" for="gc-first">First name</label>
-                    <input class="form-input" type="text" id="gc-first" name="first_name" placeholder="Jane"
-                      autocomplete="given-name">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="gc-last">Last name</label>
-                    <input class="form-input" type="text" id="gc-last" name="last_name" placeholder="Smith"
-                      autocomplete="family-name">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="gc-email">Email</label>
-                  <input class="form-input" type="email" id="gc-email" name="email" placeholder="jane@example.com"
-                    autocomplete="email">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="gc-subject">Subject</label>
-                  <input class="form-input" type="text" id="gc-subject" name="subject" placeholder="What's this about?">
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="gc-message">Message</label>
-                  <textarea class="form-textarea" id="gc-message" name="message"
-                    placeholder="Your message here…"></textarea>
-                </div>
-                <button type="submit" class="btn btn-forge" style="align-self: flex-start; margin-top: 4px;">Get in touch</button>
-              </div>
-            </form>
-          </div>
+          <form class="subscribe-form" onsubmit="return false;">
+            <input class="subscribe-input" type="email" placeholder="Your email address" aria-label="Email address"
+              autocomplete="email">
+            <button type="submit" class="btn btn-forge">Subscribe</button>
+            <p class="subscribe-note">No spam. Unsubscribe at any time.</p>
+          </form>
         </div>
       </div>
     </div>
@@ -421,7 +432,8 @@
       <div class="footer-top">
         <div class="cta-section-block">
           <p class="footer-sub">Ready to pilot?</p>
-          <a href="/contact" class="footer-demo">Request a demo today <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="/contact" class="footer-demo">Request a demo today <span class="arrow"
+              aria-hidden="true">→</span></a>
         </div>
         <a href="/" class="footer-logo">
           <svg aria-label="Digital Public Works" role="img" width="500" height="43" viewBox="0 0 500 43" fill="none"
@@ -501,6 +513,25 @@
     });
     document.getElementById('mobileClose').addEventListener('click', () => {
       document.getElementById('mobileMenu').classList.remove('open');
+    });
+
+    /* ── CATEGORY FILTER ─────────────────────────── */
+    const catBtns = document.querySelectorAll('.cat-btn');
+    const postCards = document.querySelectorAll('.post-card');
+
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cat = btn.dataset.cat;
+        postCards.forEach(card => {
+          if (cat === 'all' || card.dataset.cat === cat) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
     });
 
     /* ── SCROLL REVEAL ──────────────────────────── */

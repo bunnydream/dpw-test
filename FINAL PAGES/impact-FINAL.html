@@ -83,39 +83,35 @@
     /* ─── FAMILIES ─── */
     .families {
       background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .families-img {
+      position: relative;
+      min-height: 480px;
+    }
+
+    .families-img img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .families-right {
+      padding: clamp(48px, 6vw, 72px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2)) clamp(48px, 6vw, 72px) clamp(48px, 6vw, 80px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
     }
 
     /* comp-card on white bg → cool-white card */
     .comp-card {
       background: var(--cool-white);
-    }
-
-    .families-inner {
-      display: grid;
-      grid-template-columns: 5fr 7fr;
-      gap: clamp(48px, 6vw, 96px);
-      align-items: start;
-    }
-
-    .families-photo {
-      aspect-ratio: 4 / 5;
-      position: sticky;
-      top: 96px;
-      overflow: hidden;
-      border-radius: 2px;
-      background: var(--light-al);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .families-photo span {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--aluminum);
     }
 
     /* ─── BODY TEXT — see shared.css (.body-text, .body-p) ─── */
@@ -220,13 +216,16 @@
         min-height: 280px;
       }
 
-      .families-inner {
+      .families {
         grid-template-columns: 1fr;
       }
 
-      .families-photo {
-        aspect-ratio: 16/7;
-        position: static;
+      .families-img {
+        min-height: 360px;
+      }
+
+      .families-right {
+        padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
       }
 
       .annual-inner {
@@ -254,6 +253,39 @@
       .stat-row {
         grid-template-columns: 1fr;
       }
+    }
+
+    /* ─── INSIGHTS CTA ───────────────────────────── */
+    .cta-section {
+      position: relative;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+      background-image: url('https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    .cta-inner {
+      max-width: 640px;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-h {
+      margin-bottom: 32px;
+      color: var(--white);
     }
   </style>
 </head>
@@ -392,89 +424,88 @@
 
 
   <!-- ─── 3. FAMILIES + COMPARISON ─── -->
-  <section class="families section-pad">
-    <div class="section-inner families-inner">
+  <section class="families">
 
-      <div class="families-photo reveal">
-        <img src="https://images.unsplash.com/photo-1654944991373-5032b93c0c2d?auto=format&fit=crop&w=800&q=80"
-          alt="A woman looking at her phone" loading="lazy"
-          style="width:100%;height:100%;object-fit:cover;display:block;">
-      </div>
-
-      <div>
-        <h2 class="section-h reveal">From hours of paperwork to five minutes — without leaving home</h2>
-
-        <div class="body-text reveal d1">
-          <p>Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting an
-            office, and waiting. If something was missing, the process started over. For someone navigating a job
-            change, caring for children, or managing a health crisis, this time tax could mean weeks without benefits.
-          </p>
-          <p>With Verify My Income, an applicant receives a secure link from their agency. They consent to share their
-            payroll data and connect to their employer's payroll system. In under five minutes, a verified income report
-            is delivered directly to their caseworker. No documents to find. No follow-up calls. No delays.</p>
-        </div>
-
-        <!-- COMPARISON CARD: Manual left, VMI right -->
-        <div class="comp-card reveal d2">
-          <div class="comp-header">
-            <div class="comp-col-head comp-col-head--manual">
-              <div class="comp-col-dot comp-col-dot--al"></div>
-              Manual process
-            </div>
-            <div class="comp-col-head comp-col-head--vmi">
-              <div class="comp-col-dot comp-col-dot--vg"></div>
-              With Verify My Income
-            </div>
-          </div>
-
-          <div class="comp-row">
-            <div class="comp-cell comp-cell--manual">
-              <div class="comp-dot comp-dot--al"></div>
-              <p>Find old pay stubs, print forms, and visit a benefits office in person</p>
-            </div>
-            <div class="comp-cell comp-cell--vmi">
-              <div class="comp-dot comp-dot--vg"></div>
-              <p>Receive a secure link and connect payroll in minutes, from any device</p>
-            </div>
-          </div>
-
-          <div class="comp-row">
-            <div class="comp-cell comp-cell--manual">
-              <div class="comp-dot comp-dot--al"></div>
-              <p>Wait days or weeks for a caseworker to manually review documents</p>
-            </div>
-            <div class="comp-cell comp-cell--vmi">
-              <div class="comp-dot comp-dot--vg"></div>
-              <p>Verified income report delivered to caseworker in under 5 minutes</p>
-            </div>
-          </div>
-
-          <div class="comp-row">
-            <div class="comp-cell comp-cell--manual">
-              <div class="comp-dot comp-dot--al"></div>
-              <p>Restart the process from scratch if anything is missing or wrong</p>
-            </div>
-            <div class="comp-cell comp-cell--vmi">
-              <div class="comp-dot comp-dot--vg"></div>
-              <p>No documents to find, no follow-up calls, no delays</p>
-            </div>
-          </div>
-
-          <div class="comp-row">
-            <div class="comp-cell comp-cell--manual">
-              <div class="comp-dot comp-dot--al"></div>
-              <p>Stale quarterly wage data or documents that may be rejected</p>
-            </div>
-            <div class="comp-cell comp-cell--vmi">
-              <div class="comp-dot comp-dot--vg"></div>
-              <p>Real-time payroll data, programmatically validated before delivery</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
+    <!-- Left: full-bleed image -->
+    <div class="families-img">
+      <img src="https://images.unsplash.com/photo-1654944991373-5032b93c0c2d?auto=format&fit=crop&w=800&q=80"
+        alt="A woman looking at her phone" loading="lazy">
     </div>
+
+    <!-- Right: content -->
+    <div class="families-right">
+      <h2 class="section-h reveal">From hours of paperwork to five minutes — without leaving home</h2>
+
+      <div class="body-text reveal d1">
+        <p>Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting an
+          office, and waiting. If something was missing, the process started over. For someone navigating a job
+          change, caring for children, or managing a health crisis, this time tax could mean weeks without benefits.
+        </p>
+        <p>With Verify My Income, an applicant receives a secure link from their agency. They consent to share their
+          payroll data and connect to their employer's payroll system. In under five minutes, a verified income report
+          is delivered directly to their caseworker. No documents to find. No follow-up calls. No delays.</p>
+      </div>
+
+      <!-- COMPARISON CARD: Manual left, VMI right -->
+      <div class="comp-card reveal d2">
+        <div class="comp-header">
+          <div class="comp-col-head comp-col-head--manual">
+            <div class="comp-col-dot comp-col-dot--al"></div>
+            Manual process
+          </div>
+          <div class="comp-col-head comp-col-head--vmi">
+            <div class="comp-col-dot comp-col-dot--vg"></div>
+            With Verify My Income
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-cell--manual">
+            <div class="comp-dot comp-dot--al"></div>
+            <p>Find old pay stubs, print forms, and visit a benefits office in person</p>
+          </div>
+          <div class="comp-cell comp-cell--vmi">
+            <div class="comp-dot comp-dot--vg"></div>
+            <p>Receive a secure link and connect payroll in minutes, from any device</p>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-cell--manual">
+            <div class="comp-dot comp-dot--al"></div>
+            <p>Wait days or weeks for a caseworker to manually review documents</p>
+          </div>
+          <div class="comp-cell comp-cell--vmi">
+            <div class="comp-dot comp-dot--vg"></div>
+            <p>Verified income report delivered to caseworker in under 5 minutes</p>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-cell--manual">
+            <div class="comp-dot comp-dot--al"></div>
+            <p>Restart the process from scratch if anything is missing or wrong</p>
+          </div>
+          <div class="comp-cell comp-cell--vmi">
+            <div class="comp-dot comp-dot--vg"></div>
+            <p>No documents to find, no follow-up calls, no delays</p>
+          </div>
+        </div>
+
+        <div class="comp-row">
+          <div class="comp-cell comp-cell--manual">
+            <div class="comp-dot comp-dot--al"></div>
+            <p>Stale quarterly wage data or documents that may be rejected</p>
+          </div>
+          <div class="comp-cell comp-cell--vmi">
+            <div class="comp-dot comp-dot--vg"></div>
+            <p>Real-time payroll data, programmatically validated before delivery</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </section>
 
 
@@ -673,6 +704,14 @@
     </div>
   </section>
 
+
+  <!-- INSIGHTS CTA -->
+  <div class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-h reveal">Read our research on accessibility</h2>
+      <a href="/insights" class="btn btn-white reveal d1">Read our insights</a>
+    </div>
+  </div>
 
   <!-- ─── FOOTER ─── -->
   <footer>

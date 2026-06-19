@@ -211,6 +211,39 @@
         max-width: 100%
       }
     }
+
+    /* ─── IMPACT CTA ─────────────────────────────── */
+    .cta-section {
+      position: relative;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+      background-image: url('https://images.unsplash.com/photo-1578053251472-e890ca7f2511?auto=format&fit=crop&w=1600&q=80');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    .cta-inner {
+      max-width: 640px;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-h {
+      margin-bottom: 32px;
+      color: var(--white);
+    }
   </style>
 </head>
 
@@ -521,6 +554,22 @@
     </div>
   </section>
 
+  <!-- TALK TO US CTA BANNER -->
+  <div class="talk-cta">
+    <svg class="talk-cta-lines" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 1440 160" fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <!-- upper left: stacked diagonal lines -->
+      <line x1="0" y1="0" x2="120" y2="160" stroke="rgba(255,255,255,0.18)" stroke-width="3.5" />
+      <line x1="40" y1="0" x2="160" y2="160" stroke="rgba(255,255,255,0.10)" stroke-width="3.5" />
+      <!-- bottom right: stacked diagonal lines (mirror) -->
+      <line x1="1320" y1="0" x2="1440" y2="160" stroke="rgba(255,255,255,0.18)" stroke-width="3.5" />
+      <line x1="1280" y1="0" x2="1400" y2="160" stroke="rgba(255,255,255,0.10)" stroke-width="3.5" />
+    </svg>
+    <div class="talk-cta-inner">
+      <a href="/contact" class="talk-cta-heading">Bring <i>VMI</i> to your state →</a>
+      <p class="talk-cta-sub">Learn about piloting with Digital Public Works</p>
+    </div>
+  </div>
 
   <!-- COMPARISON TABLE -->
   <section class="compare-full section-pad" id="comparison">
@@ -819,24 +868,6 @@
         launch in as little as four weeks; broader engagements typically take 8 to 12.</p>
     </div>
   </section>
-
-
-  <!-- TALK TO US CTA BANNER -->
-  <div class="talk-cta">
-    <svg class="talk-cta-lines" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 1440 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- upper left: stacked diagonal lines -->
-      <line x1="0" y1="0" x2="120" y2="160" stroke="rgba(255,255,255,0.18)" stroke-width="3.5"/>
-      <line x1="40" y1="0" x2="160" y2="160" stroke="rgba(255,255,255,0.10)" stroke-width="3.5"/>
-      <!-- bottom right: stacked diagonal lines (mirror) -->
-      <line x1="1320" y1="0" x2="1440" y2="160" stroke="rgba(255,255,255,0.18)" stroke-width="3.5"/>
-      <line x1="1280" y1="0" x2="1400" y2="160" stroke="rgba(255,255,255,0.10)" stroke-width="3.5"/>
-    </svg>
-    <div class="talk-cta-inner">
-      <a href="/contact" class="talk-cta-heading">Bring <i>VMI</i> to your state →</a>
-      <p class="talk-cta-sub">Learn about piloting with Digital Public Works</p>
-    </div>
-  </div>
-
   <!-- IN THE FIELD -->
   <section class="field section-pad" id="in-the-field">
     <div class="section-inner">
@@ -873,13 +904,22 @@
   </section>
 
 
+  <!-- IMPACT CTA -->
+  <div class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-h reveal">See the difference <i>Verify My Income</i> makes for families and state systems</h2>
+      <a href="/impact" class="btn btn-white reveal d1">See our impact</a>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
       <div class="footer-top">
         <div class="footer-cta-block">
           <p class="footer-sub">Ready to pilot?</p>
-          <a href="/contact" class="footer-demo">Request a demo today <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="/contact" class="footer-demo">Request a demo today <span class="arrow"
+              aria-hidden="true">→</span></a>
         </div>
         <a href="/" class="footer-logo">
           <svg aria-label="Digital Public Works" role="img" width="500" height="43" viewBox="0 0 500 43" fill="none"
