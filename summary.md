@@ -167,10 +167,11 @@ Pages override: `grid-template-columns`, padding, background — home: 4 cols, i
 ## Per-Page Notes
 
 ### home-FINAL.html
-- Hero h1: uses shared (max-width: 19ch, mb: 100px)
+- Hero h1 **page-specific size override** (in `<style>` block): `.hero h1 { font-size: clamp(42px, 5.2vw, 64px) }` — intentionally smaller than the shared `--t-display` (68px max). Do not remove.
 - Stat row: 4 columns, cool-white background
 - Inline note: `inline-note inline-note--rose`
 - `.hero-sub { max-width: 54ch }`
+- "How VMI works" section (`.how` / `#how-vmi-works`): currently uses the standard `.steps` / `.steps-line` / `.step-badge` pattern from shared.css. Planned redesign: sticky-left + scrolling-right layout with one 100vh panel per step, copper progress bar, and step photos. Not yet implemented.
 
 ### product-FINAL.html
 - Hero h1 override: `white-space: nowrap` ("Verify My Income" stays 1 line)
