@@ -1,4 +1,5 @@
 # DPW Website — Session Summary
+*Last updated: 2026-06-18*
 
 ## Project Overview
 Standalone HTML pages for Digital Public Works (DPW), a nonprofit. No build step. One shared stylesheet. Pages link to `../shared.css`.
@@ -218,6 +219,22 @@ Each page has the IntersectionObserver in its `<script>` block.
 | 38ch | `.hero-tagline` — impact |
 | 34ch | `.footer-tagline` |
 | 80ch | `.vq-a` — vendor Q&A answer (intentionally wide) |
+
+---
+
+## Git / Deployment Notes
+- Repo: `https://github.com/bunnydream/dpw-test.git`, branch `main`
+- **`DPW Brand Guide 2026.pdf` and `Fonts/` are in `.gitignore`** — not tracked in git
+- Git push fix applied: `git config http.postBuffer 524288000` (large binary images caused HTTP 400)
+- Current HEAD: `4c5fd5f` — "chore: stop tracking large binary assets"
+- Deployment target: Vercel + Supabase (Claude Code implementation stage, not yet live)
+
+## Contact Form Handoff
+- Spec at `/Users/bellabesuud/Desktop/dpw-test/contact-form-handoff.md`
+- Three forms: `state-partner-contact`, `funder-contact`, `general-contact`
+- All submissions → email to `info@digitalpublicworks.org` via Resend
+- Stack: `POST /api/contact` Vercel serverless → Supabase `contact_submissions` table → Resend email
+- Env vars needed: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`
 
 ---
 
