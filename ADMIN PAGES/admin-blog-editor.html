@@ -96,6 +96,14 @@
           Back to all posts
         </a>
         <div class="admin-topbar-actions">
+          <span style="display:flex; gap:4px;">
+            <button class="a-icon-btn" id="undo-btn" onclick="undoEdit()" title="Undo" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h10a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H9"/><polyline points="7 6 3 10 7 14"/></svg>
+            </button>
+            <button class="a-icon-btn" id="redo-btn" onclick="redoEdit()" title="Redo" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10H11a5 5 0 0 0-5 5v0a5 5 0 0 0 5 5h4"/><polyline points="17 6 21 10 17 14"/></svg>
+            </button>
+          </span>
           <span class="a-save-status" id="save-status">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             Draft saved
@@ -450,7 +458,56 @@
         list.insertBefore(li.nextElementSibling, li);
       }
       showToast('Block order updated');
+      pushBlockHistory();
     }
+
+    // ─── undo / redo (covers add, delete, and reorder of content blocks) ───
+    let blockHistory = [];
+    let blockHistoryIndex = -1;
+    let restoringBlockHistory = false;
+
+    function resetBlockHistory() {
+      blockHistory = [document.getElementById('block-list').innerHTML];
+      blockHistoryIndex = 0;
+      updateBlockUndoRedoButtons();
+    }
+    function pushBlockHistory() {
+      if (restoringBlockHistory) return;
+      const html = document.getElementById('block-list').innerHTML;
+      blockHistory = blockHistory.slice(0, blockHistoryIndex + 1);
+      blockHistory.push(html);
+      blockHistoryIndex = blockHistory.length - 1;
+      updateBlockUndoRedoButtons();
+    }
+    function restoreBlockHistory() {
+      restoringBlockHistory = true;
+      document.getElementById('block-list').innerHTML = blockHistory[blockHistoryIndex];
+      restoringBlockHistory = false;
+      updateBlockUndoRedoButtons();
+    }
+    function undoEdit() {
+      if (blockHistoryIndex <= 0) return;
+      blockHistoryIndex--;
+      restoreBlockHistory();
+      showToast('Change undone');
+    }
+    function redoEdit() {
+      if (blockHistoryIndex >= blockHistory.length - 1) return;
+      blockHistoryIndex++;
+      restoreBlockHistory();
+      showToast('Change redone');
+    }
+    function updateBlockUndoRedoButtons() {
+      document.getElementById('undo-btn').disabled = blockHistoryIndex <= 0;
+      document.getElementById('redo-btn').disabled = blockHistoryIndex >= blockHistory.length - 1;
+    }
+    document.addEventListener('keydown', (e) => {
+      const meta = e.metaKey || e.ctrlKey;
+      if (!meta || e.key.toLowerCase() !== 'z') return;
+      e.preventDefault();
+      if (e.shiftKey) redoEdit(); else undoEdit();
+    });
+    resetBlockHistory();
 
     // ─── add block modal ───
     function openAddBlockModal() { document.getElementById('add-block-modal').classList.add('is-open'); }
@@ -509,6 +566,7 @@
       list.appendChild(li);
       closeAddBlockModal();
       showToast(type + ' block added');
+      pushBlockHistory();
     }
 
     // ─── delete block flow ───
@@ -525,6 +583,7 @@
       if (pendingDeleteBlock) pendingDeleteBlock.remove();
       closeDeleteBlockModal();
       showToast('Block deleted');
+      pushBlockHistory();
     }
 
     // ─── image upload (photo blocks that already have a photo) ───

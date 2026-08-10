@@ -135,12 +135,23 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             All changes saved
           </span>
+          <span style="display:flex; gap:4px;">
+            <button class="a-icon-btn" id="undo-btn" onclick="undoEdit()" title="Undo" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h10a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H9"/><polyline points="7 6 3 10 7 14"/></svg>
+            </button>
+            <button class="a-icon-btn" id="redo-btn" onclick="redoEdit()" title="Redo" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10H11a5 5 0 0 0-5 5v0a5 5 0 0 0 5 5h4"/><polyline points="17 6 21 10 17 14"/></svg>
+            </button>
+          </span>
         </div>
         <div class="admin-topbar-actions">
           <a id="view-live" href="../FINAL PAGES/home-FINAL.html" target="_blank" class="a-btn a-btn-ghost">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             View live site
           </a>
+          <button class="a-icon-btn a-topbar-delete-page" onclick="confirmDeletePage()" title="Delete this page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
           <button class="a-btn a-btn-outline" onclick="saveDraft()">
             Save draft
           </button>
@@ -195,6 +206,11 @@
       <p class="a-modal-desc">Choose a layout below. It'll be added to the bottom of the page — you can move it afterward. These match every card and section style used across your site.</p>
 
       <div class="a-block-grid">
+        <button class="a-block-option" onclick="addSection('hero', 'Hero', 'New page headline')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="12" rx="1"/><line x1="6" y1="19" x2="14" y2="19"/></svg>
+          <strong>Hero</strong>
+          <span>The large banner at the top of a page, like on the Impact page.</span>
+        </button>
         <button class="a-block-option" onclick="addSection('text', 'Text block', 'New heading goes here')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="16" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
           <strong>Text block</strong>
@@ -275,6 +291,21 @@
       <div class="a-modal-actions">
         <button class="a-btn a-btn-outline" onclick="closeDeleteModal()">Cancel</button>
         <button class="a-btn a-btn-danger" style="background:#B91C1C; border-color:#B91C1C; color:var(--white);" onclick="deleteSection()">Delete section</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DELETE PAGE CONFIRM MODAL ═══ -->
+  <div class="a-modal-overlay" id="delete-page-modal">
+    <div class="a-modal a-modal-sm">
+      <div class="a-warning-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h2 style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; margin-bottom:8px;">Delete this page?</h2>
+      <p class="a-modal-desc" style="margin-bottom:4px;">This page will move to Deleted pages on your dashboard, where it's kept for 30 days before it's removed for good.</p>
+      <div class="a-modal-actions">
+        <button class="a-btn a-btn-outline" onclick="closeDeletePageModal()">Cancel</button>
+        <button class="a-btn a-btn-danger" style="background:#B91C1C; border-color:#B91C1C; color:var(--white);" onclick="deletePage()">Delete page</button>
       </div>
     </div>
   </div>
@@ -753,16 +784,80 @@
     document.getElementById('preview-iframe').src = pageFiles[initialPage];
     document.getElementById('view-live').href = pageFiles[initialPage];
     renderPage(initialPage);
+    resetSectionHistory();
 
     picker.addEventListener('change', () => {
       const val = picker.value;
       document.getElementById('preview-iframe').src = pageFiles[val];
       document.getElementById('view-live').href = pageFiles[val];
       renderPage(val);
+      resetSectionHistory();
       const el = document.getElementById('save-status');
       el.classList.remove('is-saving');
       el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> All changes saved`;
     });
+
+    // ─── undo / redo (covers add, delete, reorder, and toggle actions
+    // across sections, partners, quote cards, and cards — anywhere
+    // markUnsaved() is called) ───
+    let sectionHistory = [];
+    let sectionHistoryIndex = -1;
+    let restoringHistory = false;
+
+    function resetSectionHistory() {
+      sectionHistory = [document.getElementById('section-list').innerHTML];
+      sectionHistoryIndex = 0;
+      updateUndoRedoButtons();
+    }
+    function pushSectionHistory() {
+      if (restoringHistory) return;
+      const html = document.getElementById('section-list').innerHTML;
+      sectionHistory = sectionHistory.slice(0, sectionHistoryIndex + 1);
+      sectionHistory.push(html);
+      sectionHistoryIndex = sectionHistory.length - 1;
+      updateUndoRedoButtons();
+    }
+    function restoreSectionHistory() {
+      restoringHistory = true;
+      document.getElementById('section-list').innerHTML = sectionHistory[sectionHistoryIndex];
+      restoringHistory = false;
+      updateUndoRedoButtons();
+    }
+    function undoEdit() {
+      if (sectionHistoryIndex <= 0) return;
+      sectionHistoryIndex--;
+      restoreSectionHistory();
+      showToast('Change undone');
+    }
+    function redoEdit() {
+      if (sectionHistoryIndex >= sectionHistory.length - 1) return;
+      sectionHistoryIndex++;
+      restoreSectionHistory();
+      showToast('Change redone');
+    }
+    function updateUndoRedoButtons() {
+      document.getElementById('undo-btn').disabled = sectionHistoryIndex <= 0;
+      document.getElementById('redo-btn').disabled = sectionHistoryIndex >= sectionHistory.length - 1;
+    }
+    document.addEventListener('keydown', (e) => {
+      const meta = e.metaKey || e.ctrlKey;
+      if (!meta || e.key.toLowerCase() !== 'z') return;
+      e.preventDefault();
+      if (e.shiftKey) redoEdit(); else undoEdit();
+    });
+
+    // ─── delete this page (soft delete — mirrors dashboard's Deleted pages flow) ───
+    function confirmDeletePage() {
+      document.getElementById('delete-page-modal').classList.add('is-open');
+    }
+    function closeDeletePageModal() {
+      document.getElementById('delete-page-modal').classList.remove('is-open');
+    }
+    function deletePage() {
+      closeDeletePageModal();
+      showToast('Page deleted — kept for 30 days');
+      setTimeout(() => { window.location.href = 'admin-dashboard.html'; }, 900);
+    }
 
     // ─── live preview scaling ───
     // The iframe's page content has a fixed 1400px logical width. Scale it so
@@ -985,6 +1080,12 @@
           </div>`;
 
       switch (type) {
+        case 'hero':
+          return `
+          <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="${name}"></div>
+          <div class="a-field"><label>Intro paragraph</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
+          ${photoField}`;
+
         case 'text':
           return `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
@@ -1137,6 +1238,7 @@
       const el = document.getElementById('save-status');
       el.classList.add('is-saving');
       el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg> Unsaved changes`;
+      pushSectionHistory();
     }
     function saveDraft() {
       const el = document.getElementById('save-status');
