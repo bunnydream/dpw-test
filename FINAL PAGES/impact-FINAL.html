@@ -19,7 +19,7 @@
     /* ─── HERO (matches product page) ─── */
     .hero {
       background: var(--white);
-      height: calc(100dvh - 74px);
+      min-height: calc(100dvh - 74px);
       display: grid;
       grid-template-columns: 9fr 7fr;
       overflow: hidden;
@@ -200,6 +200,7 @@
       .hero {
         grid-template-columns: 1fr;
         height: auto;
+        min-height: auto;
       }
 
       .hero-left {
@@ -214,6 +215,7 @@
       .hero-img {
         aspect-ratio: 16/7;
         min-height: 280px;
+        order: -1;
       }
 
       .families {
@@ -262,7 +264,7 @@
       display: flex;
       align-items: center;
       padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
-      background-image: url('https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1600&q=80');
+      background-image: url('../public/images/impact/christin-hume-Hcfwew744z4-unsplash.jpg');
       background-size: cover;
       background-position: center;
       overflow: hidden;
@@ -390,7 +392,7 @@
         burdensome — for everyone in the process.</p>
     </div>
     <div class="hero-img reveal d2">
-      <img src="https://images.unsplash.com/photo-1745335126374-0daeefe4428f?auto=format&fit=crop&w=1200&q=80"
+      <img src="../public/images/impact/abdul-raheem-kannath-TBwW2tHnX9w-unsplash.jpg"
         alt="A family plays and spends time together" loading="eager" width="1200" height="1600">
     </div>
   </section>
@@ -428,7 +430,7 @@
 
     <!-- Left: full-bleed image -->
     <div class="families-img">
-      <img src="https://images.unsplash.com/photo-1654944991373-5032b93c0c2d?auto=format&fit=crop&w=800&q=80"
+      <img src="../public/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg"
         alt="A woman looking at her phone" loading="lazy">
     </div>
 
@@ -588,7 +590,7 @@
             <p class="case-detail">Case study forthcoming — pending draft and approval from PA DHS.</p>
           </div>
           <div class="case-photo">
-            <img src="https://images.unsplash.com/photo-1576082176859-e557bdc7b1b4?auto=format&fit=crop&w=800&q=80"
+            <img src="../public/images/impact/katherine-mcadoo-HLKNH1-ITr0-unsplash.jpg"
               alt="Pennsylvania State Capitol building" loading="lazy">
           </div>
         </a>
@@ -600,7 +602,7 @@
             <p class="case-detail">Case study forthcoming — pending draft and approval from AZ DES.</p>
           </div>
           <div class="case-photo">
-            <img src="https://images.unsplash.com/photo-1729041473171-b4d8b85c4d7b?auto=format&fit=crop&w=800&q=80"
+            <img src="../public/images/impact/nils-huenerfuerst-yPGXOJNofgA-unsplash.jpg"
               alt="Arizona State Capitol building" loading="lazy">
           </div>
         </a>

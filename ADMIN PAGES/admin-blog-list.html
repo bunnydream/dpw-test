@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insights / Blog — DPW Site Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body class="admin">
+
+  <div class="admin-shell">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-logo">
+        <img src="../Logo/Stacked Logo/SVG/Dark/Mono.svg" alt="Digital Public Works">
+      </div>
+
+      <ul class="admin-nav">
+        <li><a href="admin-dashboard.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+            Dashboard
+          </a></li>
+
+        <li class="admin-nav-label">Website pages</li>
+        <li><a href="admin-page-editor.html?page=home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a></li>
+        <li><a href="admin-page-editor.html?page=about">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            About
+          </a></li>
+        <li><a href="admin-page-editor.html?page=product">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+            Product
+          </a></li>
+        <li><a href="admin-page-editor.html?page=impact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-6 3 3 4-7"/></svg>
+            Impact
+          </a></li>
+        <li><a href="admin-page-editor.html?page=careers">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Careers
+          </a></li>
+        <li><a href="admin-page-editor.html?page=contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+            Contact
+          </a></li>
+
+        <li class="admin-nav-label">Content</li>
+        <li><a href="admin-blog-list.html" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Insights / Blog
+          </a></li>
+        <li><a href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            Media library
+          </a></li>
+
+        <li class="admin-nav-label">Account</li>
+        <li><a href="admin-settings.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </a></li>
+      </ul>
+
+      <div class="admin-sidebar-footer">
+        <div class="admin-user-chip">
+          <div class="admin-avatar">MJ</div>
+          <div class="admin-user-meta">
+            <div class="admin-user-name">Michael</div>
+            <div class="admin-user-role">Editor</div>
+          </div>
+        </div>
+        <a href="admin-login.html" class="admin-logout">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log out
+        </a>
+      </div>
+    </aside>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div>
+          <h1>Insights / Blog</h1>
+          <div class="admin-topbar-sub">Manage the articles shown on your Insights page.</div>
+        </div>
+        <div class="admin-topbar-actions">
+          <a href="../FINAL PAGES/insights-FINAL.html" target="_blank" class="a-btn a-btn-outline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            View Insights page
+          </a>
+          <a href="admin-blog-editor.html" class="a-btn a-btn-copper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New post
+          </a>
+        </div>
+      </header>
+
+      <div class="admin-content" style="max-width: none;">
+
+        <div class="a-toolbar">
+          <div class="a-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="post-search" placeholder="Search posts...">
+          </div>
+          <div class="a-filter-pills">
+            <button class="a-pill is-active" data-category="All">All (5)</button>
+            <button class="a-pill" data-category="Policy">Policy</button>
+            <button class="a-pill" data-category="Service Design">Service Design</button>
+            <button class="a-pill" data-category="Accessibility">Accessibility</button>
+          </div>
+        </div>
+        <p id="no-results" style="display:none; font-size:13.5px; color:var(--steel); padding:24px; text-align:center;">No posts match your search or filter.</p>
+
+        <table class="a-table">
+          <thead>
+            <tr>
+              <th style="width:42%;">Post</th>
+              <th>Category</th>
+              <th>Author</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="a-post-row" data-category="Policy" onclick="goToEditor(event)">
+              <td>
+                <div class="a-post-cell">
+                  <img class="a-post-thumb" src="../public/images/impact/christin-hume-Hcfwew744z4-unsplash.jpg" alt="">
+                  <div class="a-post-title">How H.R. 1 Changes the Stakes for Income Verification</div>
+                </div>
+              </td>
+              <td><span class="a-badge a-badge-policy">Policy</span></td>
+              <td>Michael Ramos</td>
+              <td><span class="a-status a-status-published">Published</span></td>
+              <td>Aug 4, 2026</td>
+              <td>
+                <div class="a-row-actions" onclick="event.stopPropagation()">
+                  <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </a>
+                  <button class="a-icon-btn" title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="a-post-row" data-category="Service Design" onclick="goToEditor(event)">
+              <td>
+                <div class="a-post-cell">
+                  <img class="a-post-thumb" src="../public/images/about/paulina-herpel-yxqVPJFAYHg-unsplash.jpg" alt="">
+                  <div class="a-post-title">The 40% Problem: When the Process Fails Before the Technology Does</div>
+                </div>
+              </td>
+              <td><span class="a-badge a-badge-service">Service Design</span></td>
+              <td>Anna Banchik</td>
+              <td><span class="a-status a-status-published">Published</span></td>
+              <td>Jul 22, 2026</td>
+              <td>
+                <div class="a-row-actions" onclick="event.stopPropagation()">
+                  <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </a>
+                  <button class="a-icon-btn" title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="a-post-row" data-category="Accessibility" onclick="goToEditor(event)">
+              <td>
+                <div class="a-post-cell">
+                  <img class="a-post-thumb" src="../public/images/product/product-verify.png" alt="">
+                  <div class="a-post-title">Accessible by Design: What Our Research on VMI Is Revealing</div>
+                </div>
+              </td>
+              <td><span class="a-badge a-badge-access">Accessibility</span></td>
+              <td>Michael Ramos</td>
+              <td><span class="a-status a-status-draft">Draft</span></td>
+              <td>Aug 8, 2026</td>
+              <td>
+                <div class="a-row-actions" onclick="event.stopPropagation()">
+                  <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </a>
+                  <button class="a-icon-btn" title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="a-post-row" data-category="Service Design" onclick="goToEditor(event)">
+              <td>
+                <div class="a-post-cell">
+                  <img class="a-post-thumb" src="../public/images/home/andrej-lisakov-iIJJGpkp0As-unsplash.jpg" alt="">
+                  <div class="a-post-title">Inside a State Pilot: Three Months with Verify My Income</div>
+                </div>
+              </td>
+              <td><span class="a-badge a-badge-service">Service Design</span></td>
+              <td>Anna Banchik</td>
+              <td><span class="a-status a-status-published">Published</span></td>
+              <td>Jun 30, 2026</td>
+              <td>
+                <div class="a-row-actions" onclick="event.stopPropagation()">
+                  <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </a>
+                  <button class="a-icon-btn" title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr class="a-post-row" data-category="Policy" onclick="goToEditor(event)">
+              <td>
+                <div class="a-post-cell">
+                  <img class="a-post-thumb" src="../public/images/careers/johannes-kopf-h0pHxbb6a78-unsplash.jpg" alt="">
+                  <div class="a-post-title">What H.R. 1 Means for State Verification Staff</div>
+                </div>
+              </td>
+              <td><span class="a-badge a-badge-policy">Policy</span></td>
+              <td>Michael Ramos</td>
+              <td><span class="a-status a-status-draft">Draft</span></td>
+              <td>Jun 18, 2026</td>
+              <td>
+                <div class="a-row-actions" onclick="event.stopPropagation()">
+                  <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </a>
+                  <button class="a-icon-btn" title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─── click anywhere in a post row to edit it ───
+    function goToEditor(e) {
+      window.location.href = 'admin-blog-editor.html';
+    }
+
+    // ─── category pills + search actually filter the table ───
+    let activeCategory = 'All';
+    const searchInput = document.getElementById('post-search');
+    const rows = Array.from(document.querySelectorAll('.a-post-row'));
+    const noResults = document.getElementById('no-results');
+
+    function applyFilters() {
+      const q = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+      rows.forEach(row => {
+        const title = row.querySelector('.a-post-title').textContent.toLowerCase();
+        const matchesSearch = !q || title.includes(q);
+        const matchesCategory = activeCategory === 'All' || row.dataset.category === activeCategory;
+        const show = matchesSearch && matchesCategory;
+        row.style.display = show ? '' : 'none';
+        if (show) visibleCount++;
+      });
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    document.querySelectorAll('.a-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.a-pill').forEach(p => p.classList.remove('is-active'));
+        pill.classList.add('is-active');
+        activeCategory = pill.dataset.category;
+        applyFilters();
+      });
+    });
+
+    searchInput.addEventListener('input', applyFilters);
+  </script>
+
+</body>
+</html>

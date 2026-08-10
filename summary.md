@@ -1,16 +1,17 @@
 # DPW Website — Session Summary
-Last updated: 2026-06-19 (Session 5)
+Last updated: 2026-06-19 (Session 6)
 
 ## Project Overview
-Standalone HTML/CSS website for Digital Public Works (DPW), a 501(c)(3) nonprofit. No build step. Single shared stylesheet (`shared.css`) plus page-specific `<style>` blocks in each HTML file.
+Standalone HTML/CSS website for Digital Public Works (DPW), a 501(c)(3) nonprofit. No build step. Single shared stylesheet (`shared.css`) plus page-specific `<style>` blocks in each HTML file. Deploying on Vercel + Supabase.
 
 ## Files
-* `/FINAL PAGES/home-FINAL.html` — canonical home page
+* `/FINAL PAGES/home-FINAL.html`
 * `/FINAL PAGES/about-FINAL.html`
 * `/FINAL PAGES/careers-FINAL.html`
 * `/FINAL PAGES/contact-FINAL.html`
 * `/FINAL PAGES/impact-FINAL.html`
 * `/FINAL PAGES/product-FINAL.html`
+* `/FINAL PAGES/insights-FINAL.html` — **created Session 6**
 * `/shared.css` — universal styles, design tokens, all reusable components
 
 ## Design Tokens (shared.css `:root`)
@@ -63,71 +64,136 @@ All reusable components live in shared.css. When creating new components, always
 * Content cards — `.content-card-grid`, `.content-card`, `.content-card-accent`, `.content-card-body`, `.content-card-icon`, `.content-card-label`
 * Pullquote — `.pullquote`, `.pq-text`, `.pq-text em`
 * Talk CTA banner — `.talk-cta`, `.talk-cta-lines`, `.talk-cta-inner`, `.talk-cta-heading`, `.talk-cta-sub`
-* Funder grid — `.funders`, `.funders-header`, `.funders-h`, `.funders-rule`, `.funder-grid`, `.funder-card`, `.funder-logo-img`, `.funder-logo-area`, `.funder-name`, `.funder-role`, `.funder-pending` (added Session 5)
+* Funder grid — `.funders`, `.funders-header`, `.funders-h`, `.funders-rule`, `.funder-grid`, `.funder-card`, `.funder-logo-img`, `.funder-logo-area`, `.funder-name`, `.funder-role`, `.funder-pending`
 * Footer — `.footer-inner`, `.footer-top`, `.cta-section-block`, `.footer-sub`, `.footer-demo`, `.footer-logo`, `.footer-bottom`, `.footer-tagline`, `.footer-contact`, `.footer-links`
+
+## Image Convention (Session 6)
+All Unsplash CDN URLs replaced with local files. Images live in `/public/images/{page}/` subfolders. Zero remote Unsplash URLs remain in any page.
+
+Example paths:
+* `../public/images/home/oosman-exptal-2_lHgY_ZvQo-unsplash.jpg`
+* `../public/images/product/product-hero.png`
+* `../public/images/about/paulina-herpel-yxqVPJFAYHg-unsplash.jpg`
+
+Renamed/special files:
+* `../public/images/home/home-howVMIworks.png` — How Verify My Income Works diagram
+* `../public/images/product/product-hero.png` — product hero screenshot
+* `../public/images/product/product-verify.png` — verification problem section
+
+## Hero Convention (Session 6)
+All heroes use `min-height: calc(100vh - 74px)` (or `100dvh` for product/impact), **not** `height`. This fills the viewport while allowing content to grow on small screens.
+
+**Product hero exception**: also has `max-height: calc(100dvh - 74px)` — required because CSS grid `1fr` rows need a definite container height; without `max-height`, the product screenshot (with `object-fit: contain`) expands to its natural dimensions.
+
+**Mobile hero stacking**: hero images stack ABOVE text column via `order: -1` on `.hero-img`. Applied to: home, impact. (Product kept at `order: 2`.)
+
+**Impact mobile**: `@media (max-width: 1024px)` block sets both `height: auto` AND `min-height: auto` on `.hero` — both are needed or the desktop `min-height` still applies and creates a large gap.
 
 ## Page-Specific Notes
 
 ### home-FINAL.html
-* How VMI Works section (`.how`): 5fr/4fr grid, sticky right image (`.how-right`), scroll progress bar JS (fills copper bar as user scrolls through steps), `min-height: 65vh` per step row for "one step at a time" feel
+* How VMI Works section (`.how`): 5fr/4fr grid, sticky right image (`.how-right`), scroll progress bar JS, `min-height: 65vh` per step row
 * Voices carousel: cool-white section bg, white cards, white arrow buttons (page-level overrides)
-* **"Backed by" funder grid** placed after voices carousel (`.voices`), before pilot CTA. White section bg, cool-white cards (page-level overrides in `<style>` block: `.funders { background: var(--white); }` / `.funder-card { background: var(--cool-white); }`). 9 funder cards: 4 confirmed (Samvid, Vanguard Charitable, Next Ladder, Kellogg), 5 pending with `.funder-pending` class.
+* **"Backed by" funder grid**: after voices carousel, before pilot CTA. White bg, cool-white cards. 9 funder cards: 4 confirmed (Samvid, Vanguard Charitable, Next Ladder, Kellogg), 5 pending with `.funder-pending`.
+  * ⚠️ PENDING: Remove Google, Vanguard, Next Ladder, Kellogg; keep only AARP Foundation, Pritzker Children's Initiative, Families and Workers Fund, DRK Foundation. Same change needed on about page.
 * DRK Foundation logo: `../public/partner-logos/drk-foundation.png`
-* Hero image: `photo-1651790118309-5ecc129a562d` (person holding a baby)
-* CTA section (`.cta-section`): full-bleed background image from Unsplash+ (two-women silhouette against orange sky — `plus.unsplash.com/premium_photo-1774243156987-92ea26745765`), 50% black overlay via `::before`, left-aligned content, `min-height: 75vh`
 * Pullquote in `.model` section: "No vendor lock-in. No black boxes. No surprise overages."
-* "At a glance" heading: `font-size: clamp(28px, 3vw, 36px)` inline override
 * All instances of "Verify My Income" wrapped in `<i>` tags
-* **"The pressure is real"** (`.pressure`): full-bleed, wide margin. Photo left col, text right col. Grid: `1fr 1fr`. `.pressure-right` right padding uses `max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2))`, left padding `clamp(48px, 6vw, 80px)` (internal gap from photo).
-* **"A better model for income verification"** (`.model`): full-bleed, wide margin. Text left col, photo right col. Grid: `1fr 1fr`. `.model-content` left padding: `max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2))`.
+* **"The pressure is real"** (`.pressure`): full-bleed wide margin, 1fr/1fr grid. Photo left, text right.
+* **"A better model"** (`.model`): full-bleed wide margin, 1fr/1fr grid. Text left, photo right.
+* CTA section bg: `../public/images/home/evelyn-verdin-bNLBhRzhvrc-unsplash.jpg`
+
+⚠️ **PENDING (Michael's feedback)**:
+* Remove "the conversation" from hero note → "No procurement required to begin. We start with a free, philanthropically funded pilot."
+* "See the full comparison" link — needs destination or remove button
+* Remove dead stat counter JS (lines ~1218–1240)
+* Hero note inline `style="font-size: 15px;"` → `var(--t-small)`
+* Pullquote — add bottom border (top + bottom ruled-block treatment)
+* Backed by: remove non-approved logos (see above)
 
 ### impact-FINAL.html
-* Stat row: 4 stats (was 5 — "6 weeks to go-live" removed), homepage-sized numbers (`clamp(36px, 4.2vw, 56px)`), cool-white bg, aluminum bottom border
-* Alternating section backgrounds (all page-level exceptions, shared.css untouched):
+* Stat row: 4 stats, homepage-sized numbers (`clamp(36px, 4.2vw, 56px)`), cool-white bg
+* Alternating section backgrounds (all page-level):
   * Hero: white → Stats: cool-white → Families: white → Voices: cool-white → Deployed: white → Annual: cool-white → Funding: white
-  * Card components flip opposite to their section bg: voice-cards white, case-cards cool-white, content-cards cool-white, comp-card cool-white, report-book white
-* **"From hours of paperwork"** (`.families`): full-bleed, wide margin 50/50 layout (Session 5). Left col = image bleeds to viewport edge (`position: absolute; inset: 0; object-fit: cover`). Right col (`.families-right`) text. Container is `display: grid; grid-template-columns: 1fr 1fr` directly on `.families` (no section-inner). Img container (`.families-img`) is `position: relative; min-height: 480px`.
-* **Insights CTA**: final section before footer (Session 5). Background image: `images.unsplash.com/photo-1515378791036-0648a3ef77b2` (person using laptop). 50% black overlay `::before`. Heading: "Read our research on accessibility—and the results behind it." Button: "Read our insights" → `/insights`.
+* **"From hours of paperwork"** (`.families`): full-bleed wide margin 50/50. Left col image bleeds to edge (`position: absolute; inset: 0`). Right col text.
+* **Insights CTA**: final section before footer. Background image: `../public/images/impact/christin-hume-Hcfwew744z4-unsplash.jpg`.
+
+⚠️ **PENDING (Michael's feedback)**:
+* Remove line break after "earned" in hero
+* Move "How philanthropic investment creates public value" section to immediately after the chart
+* Comparison card `border-radius: 6px` → `2px`
 
 ### product-FINAL.html
-* **Talk CTA banner** (`.talk-cta`): placed after "The verification problem" section, before comparison table (moved from after "In the field" in Session 5). Deep-copper bg, diagonal SVG lines decoration. Heading: "Bring VMI to your state →". Sub: "Learn about piloting with Digital Public Works".
-* **Accessibility section** (`#accessibility`): "Accessible by design, not as an afterthought" — full-bleed, wide margin. Grid: `1fr 1fr; overflow: hidden`. Text left col (`.access-left`), photo right col (`.access-photo`). `.access-left` left padding: `max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2))`. Contains a `.callout-stat` ("65%") inside `.access-left`.
-* **Impact CTA**: final section before footer (Session 5). Background image: `images.unsplash.com/photo-1578053251472-e890ca7f2511` (shore). 50% black overlay `::before`. Heading: "See the difference *Verify My Income* makes for real families." Button: "See our impact" → `/impact`.
+* Hero: `min-height` + `max-height: calc(100dvh - 74px)` (grid constraint fix)
+* **Talk CTA banner**: after "The verification problem" section, before comparison table
+* **Accessibility section** (`#accessibility`): full-bleed wide margin, 1fr/1fr grid. Text left, photo right. Contains `.callout-stat` ("65%").
+* **Impact CTA**: final section before footer. Background image: `../public/images/product/harald-wolff-msHKfPyFH7g-unsplash.jpg`.
+
+⚠️ **PENDING (Michael's feedback)**:
+* Talk CTA "Bring VMI to your state →" — needs a proper `<button>` element, not just arrow text
 
 ### about-FINAL.html
-* Hero: `height: calc(100vh - 74px)` (fills viewport exactly, accounting for sticky nav — Session 5). Image `object-position: 70% center` (shows more right side of photo — Session 5).
-* Funders section: All `<span class="funder-role">` orange text removed — logos only in funder cards. Default shared.css bg applies (cool-white).
-* Funder cards CSS: `min-height: 120px`, flex-centered, `.funder-logo-img { max-height: 72px; max-width: 80%; object-fit: contain }`
-* DRK Foundation: `../public/partner-logos/drk-foundation.png` (was `.jpg` — updated Session 5)
-* All funder cards are `<a>` tags linking to partner sites (Samvid, Vanguard Charitable, Next Ladder, Kellogg, Google.org, DRK)
-* Organization Status section: independent section, white bg, placed below "Backed by" and above footer
-* Page `<style>` block contains only `.funders-org` (body text in org status section): `font-size: var(--t-body); line-height: 1.82; color: var(--steel); margin-bottom: 40px; max-width: 62ch`
+* Hero image: `../public/images/about/paulina-herpel-yxqVPJFAYHg-unsplash.jpg`, `object-position: 70% center`
+* Founding story image: `../public/images/about/mapbox-ZT5v0puBjZI-unsplash.jpg`
+* Funders section: logos only, no `.funder-role` orange text. Default cool-white bg.
+* Organization Status section: white bg, below "Backed by"
+
+⚠️ **PENDING (Michael's feedback)**:
+* Section heading inline `margin-bottom` style → move to page CSS
+* Backed by — remove non-approved logos (same list as home)
 
 ### careers-FINAL.html
-* Hero: `height: calc(100vh - 74px)` (fills viewport exactly — Session 5). Image `object-position: 85% 60%` (shifted right — Session 5).
-* Fully remade as short, clean page
-* Two-column hero grid (`9fr 7fr`); left = text, right = Unsplash+ image
-  * Image: `https://plus.unsplash.com/premium_photo-1752242734548-5d397f72ae39?auto=format&fit=crop&w=1600&q=80`
-* Hero left col (`.hero-left`): `padding-left: max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2))`
+* Hero image: `../public/images/careers/johannes-kopf-h0pHxbb6a78-unsplash.jpg`
 * h1: "Join Digital Public Works"
-* Subtitle: "Join a team shipping products into government systems." — `.hero-tagline` class (Space Grotesk, `--t-subhead`, weight 700, `--steel`)
-* Intro section (cool-white): team/mission paragraph
-* Open Positions section (white): no current openings copy
+* Subtitle: "Join a team shipping products into government systems."
+
+⚠️ **PENDING (Michael's feedback)**:
+* Subtitle → "Join us in making government digital services better for everyone (and doing it at cost)."
+* Inline style in intro paragraph → use body-text class, only override max-width
 
 ### contact-FINAL.html
-* Hero: no orange eyebrow (removed Session 5). h1: "Get in touch" (no period — Session 5).
-* Funders contact form section: `background: var(--cool-white)` (Session 5).
-* All form submit buttons: `btn-forge` class (Session 5) — applies to State Partners, Funders, and Community forms.
-* Community form button text: "Get in touch" (was "Send message" — Session 5).
+* Hero: h1 "Get in touch" (no period), no orange eyebrow
+* Funders contact form: `background: var(--cool-white)`
+* All form submit buttons: `btn-forge` class
+* Community button text: "Get in touch"
+* 3 separate forms: State Partners, Funders, Community — each targets `info@digitalpublicworks.org`
 
-## Universal Footer (all 6 pages)
-Same HTML across all pages. Content:
-* "Ready to pilot?" (`footer-sub`, white via `.cta-section-block .footer-sub` rule in shared.css)
-* "Request a demo today →" (`.footer-demo`, verdigris color, hover → white)
-* DPW inline SVG logo (white text + copper mark, height 48px)
-* Tagline, email, address, privacy/accessibility links
+⚠️ **PENDING**:
+* Wire up Formspree (recommended for launch). Integration: change `<form>` to `<form action="https://formspree.io/f/YOUR_ID" method="POST">`. Each form gets its own endpoint OR share one with a hidden `name="_form_source"` field. Add `<input type="hidden" name="_subject" value="New contact from DPW website">` for email subject.
+* Remove `novalidate` attribute from all forms
 
-Footer CSS is universal in shared.css. `cta-section-block` gap is `0`.
+### insights-FINAL.html *(new — Session 6)*
+* Hero: white bg, `section-pad`, text-only. h1: "Insights". Subtitle from docx.
+* Posts section: cool-white bg, category filter pills + 3 placeholder cards:
+  1. Policy — "How H.R. 1 Changes the Stakes for Income Verification"
+  2. Service Design — "The 40% Problem: When the Process Fails Before the Technology Does"
+  3. Accessibility — "Accessible by Design: What Our Research on VMI Is Revealing"
+* Filter JS: `data-cat` attributes + `display: none/''` toggle on pill click
+* Subscribe section: white bg, "Stay in the loop" email form
+
+⚠️ **PENDING (Michael's feedback)**:
+* Hero needs a visual/image
+* Font sizes use raw px values — `10px`, `11px`, `12px` should use type scale variables
+* Post cards + subscribe input `border-radius: 3px` → `2px`
+
+## Universal Changes (All Pages) — PENDING
+* Stat labels: remove `text-transform: lowercase`, write labels in sentence case, reduce letter-spacing
+* Image compression needed: 19MB meeting photo, 3MB+ headshots. Rename files with spaces (e.g., `Anna Banchik.png`).
+
+## Contact Form — Formspree Integration
+Formspree is the recommended approach for launch (vs. Vercel serverless + Resend, which is better long-term).
+
+Steps:
+1. Sign up at formspree.io, create a form → get endpoint `https://formspree.io/f/xyzabc`
+2. `<form action="https://formspree.io/f/xyzabc" method="POST">`
+3. Remove any `onsubmit="return false;"`
+4. Formspree reads `name` attributes to label fields in the email
+5. Use `name="email"` on email field so Formspree sets reply-to correctly
+6. Optional: `<input type="hidden" name="_subject" value="New contact from DPW website">`
+7. Optional: `<input type="hidden" name="_next" value="https://yourdomain.com/thanks">` for custom redirect
+
+## Pending Flag for Client
+* "Draper Richards Kaplan" mentioned in Michael's email but code has "DRK Foundation" — confirm they are the same org before any logo/copy changes.
 
 ## Key CSS Conventions
 * Page-specific overrides go in the page's `<style>` block, never in shared.css
@@ -137,8 +203,7 @@ Footer CSS is universal in shared.css. `cta-section-block` gap is `0`.
 * Fluid sizing: `clamp(min, vw, max)` throughout
 * Scroll reveal: `.reveal` + IntersectionObserver → `.vis` class added on entry
 * Delay utilities: `.d1`, `.d2`, `.d3`, `.d4`
-* Unsplash images: must use numeric timestamp IDs from the page's `og:image` meta tag — short slug URLs do not work. Unsplash+ photos use `plus.unsplash.com`; free photos use `images.unsplash.com`
-* Logo files: navbar and footer logos are inline SVGs (not `<img>` tags); footer logo height controlled via `.footer-logo svg { height: 48px; }`
-* Hero viewport fill: nav is `position: sticky` at `height: 74px` (in flow), so `height: calc(100vh - 74px)` fills the remaining viewport exactly
+* Logo files: navbar and footer logos are inline SVGs; footer logo height via `.footer-logo svg { height: 48px; }`
+* Hero viewport fill: nav is `position: sticky` at `height: 74px` (in flow), so `min-height: calc(100vh - 74px)` fills the remaining viewport
 * CTA section pattern: `position: relative`, `min-height: 80vh`, background-image, `::before` overlay `rgba(0,0,0,0.5)`, `.cta-inner` with `z-index: 1`
-* Full-bleed image filling content height: use `position: relative` on container + `position: absolute; inset: 0` on img — image fills parent without driving layout height
+* Full-bleed image filling content height: `position: relative` on container + `position: absolute; inset: 0` on img

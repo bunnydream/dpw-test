@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in — DPW Site Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body class="admin">
+
+  <div class="a-login-wrap">
+    <div class="a-login-card">
+      <div class="a-login-logo">
+        <img src="../Logo/Stacked Logo/SVG/Light/Mono.svg" alt="Digital Public Works">
+      </div>
+
+      <h1>Welcome back</h1>
+
+      <form onsubmit="return false;">
+        <div class="a-field">
+          <label for="email">Email address</label>
+          <input class="a-input" type="email" id="email" name="email" placeholder="you@digitalpublicworks.org"
+            autocomplete="username">
+        </div>
+
+        <div class="a-field">
+          <label for="password">Password</label>
+          <input class="a-input" type="password" id="password" name="password" placeholder="Enter your password"
+            autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="a-btn a-btn-primary a-login-submit"
+          onclick="window.location.href='admin-dashboard.html'">
+          Log in
+        </button>
+      </form>
+
+      <div class="a-login-links">
+        <a href="#">Forgot your password?</a>
+      </div>
+    </div>
+  </div>
+
+  <p class="a-login-footnote" style="color: var(--light-al); margin-top: -8px;">
+    Trouble logging in? Contact your site administrator.
+  </p>
+
+</body>
+
+</html>
