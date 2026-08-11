@@ -188,7 +188,8 @@ a { color: inherit; }
   font-weight: 700;
   font-size: 13.5px;
   letter-spacing: 0.02em;
-  padding: 10px 18px;
+  height: 40px;
+  padding: 0 18px;
   border-radius: 6px;
   border: 1.5px solid transparent;
   cursor: pointer;
@@ -220,24 +221,27 @@ a { color: inherit; }
 .a-btn-danger { background: transparent; color: #B91C1C; border-color: #B91C1C; }
 .a-btn-danger:hover { background: #B91C1C; color: var(--white); border-color: #B91C1C; }
 
-.a-btn-sm { padding: 7px 12px; font-size: 12.5px; }
+.a-btn-sm { height: 32px; padding: 0 12px; font-size: 12.5px; }
 
 .a-back-btn { padding: 12px 22px 12px 16px; font-size: 14px; }
 .a-back-btn svg { width: 18px; height: 18px; }
 
 .a-btn[disabled] { opacity: .5; cursor: not-allowed; }
 
+/* Sized to match .a-btn exactly (same 40px height) so icon-only buttons
+   always align with regular text buttons wherever they sit in the same row. */
 .a-icon-btn {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  border: 1px solid var(--light-al);
+  border: 1.5px solid var(--light-al);
   background: var(--white);
   color: var(--steel);
   cursor: pointer;
+  flex-shrink: 0;
 }
 .a-icon-btn svg { width: 16px; height: 16px; }
 .a-icon-btn:hover { border-color: var(--forge); color: var(--forge); }
@@ -563,7 +567,12 @@ a { color: inherit; }
   display: none;
   padding: 4px 16px 18px;
   border-top: 1px solid var(--light-al);
+  background: var(--cool-white);
 }
+
+.a-add-pullquote-btn { margin-top: 8px; }
+.a-pullquote-block .a-icon-btn-xs { color: var(--steel); }
+.a-pullquote-block .a-icon-btn-xs:hover { border-color: #B91C1C; color: #B91C1C; }
 
 .a-section-item.is-open .a-section-panel { display: block; }
 
@@ -582,7 +591,7 @@ a { color: inherit; }
   font-weight: 700;
   font-size: 13.5px;
   cursor: pointer;
-  margin-top: 4px;
+  margin-top: 10px;
 }
 
 .a-add-section-btn:hover { border-color: var(--copper); color: var(--deep-copper); background: var(--cool-white); }

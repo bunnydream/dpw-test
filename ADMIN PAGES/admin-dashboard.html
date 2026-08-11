@@ -85,6 +85,14 @@
             </svg>
             Contact
           </a></li>
+        <li><a href="admin-deleted-pages.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+            Deleted pages
+          </a></li>
 
         <li class="admin-nav-label">Content</li>
         <li><a href="admin-blog-list.html">
@@ -166,7 +174,7 @@
 
         <div class="a-page-grid" style="margin-bottom: 40px;">
 
-          <div class="a-page-card">
+          <div class="a-page-card" data-slug="home">
             <div class="a-page-thumb">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -188,7 +196,7 @@
             </div>
           </div>
 
-          <div class="a-page-card">
+          <div class="a-page-card" data-slug="about">
             <div class="a-page-thumb">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <circle cx="12" cy="8" r="4" />
@@ -211,7 +219,7 @@
             </div>
           </div>
 
-          <div class="a-page-card">
+          <div class="a-page-card" data-slug="product">
             <div class="a-page-thumb">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <rect x="3" y="4" width="18" height="14" rx="2" />
@@ -236,7 +244,7 @@
             </div>
           </div>
 
-          <div class="a-page-card">
+          <div class="a-page-card" data-slug="impact">
             <div class="a-page-thumb">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <path d="M3 3v18h18" />
@@ -260,7 +268,7 @@
             </div>
           </div>
 
-          <div class="a-page-card">
+          <div class="a-page-card" data-slug="careers">
             <div class="a-page-thumb">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <rect x="2" y="7" width="20" height="14" rx="2" />
@@ -285,7 +293,7 @@
             </div>
           </div>
 
-          <div class="a-page-card">
+          <div class="a-page-card" data-slug="contact">
             <div class="a-page-thumb">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -318,17 +326,6 @@
             Add a new page
           </button>
 
-        </div>
-
-        <!-- Deleted pages -->
-        <div class="a-section-heading">
-          <h2>Deleted pages</h2>
-          <span class="a-link-sm" style="color: var(--steel); font-weight: 400;">Kept for 30 days, then removed for good</span>
-        </div>
-
-        <div class="a-card" id="deleted-pages-card" style="margin-bottom: 40px; padding: 0;">
-          <ul class="a-deleted-list" id="deleted-pages-list"></ul>
-          <p id="deleted-pages-empty" style="padding: 20px; margin: 0; font-size: 13.5px; color: var(--aluminum);">No deleted pages.</p>
         </div>
 
         <!-- Recent blog posts -->
@@ -426,8 +423,7 @@
       </div>
       <h2 style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; margin-bottom:8px;">Delete
         <span id="delete-page-name">this page</span>?</h2>
-      <p class="a-modal-desc" style="margin-bottom:4px;">This will remove it from your site once you publish. You can't
-        undo this after publishing.</p>
+      <p class="a-modal-desc" style="margin-bottom:4px;">This page will move to Deleted pages in the sidebar, where it's kept for 30 days before it's removed for good.</p>
       <div class="a-modal-actions">
         <button class="a-btn a-btn-outline" onclick="closeDeletePageModal()">Cancel</button>
         <button class="a-btn a-btn-danger" style="background:#B91C1C; border-color:#B91C1C; color:var(--white);"
@@ -444,10 +440,65 @@
   </div>
 
   <script>
+    // ─── shared storage helpers (dpwCustomPages / dpwDeletedPages live in
+    // localStorage so "Deleted pages" — now its own sidebar destination —
+    // can show the same data after navigating away and back) ───
+    function loadJSON(key) {
+      try { return JSON.parse(localStorage.getItem(key)) || []; }
+      catch (e) { return []; }
+    }
+    function saveJSON(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+    function purgeExpiredDeletedPages() {
+      const deleted = loadJSON('dpwDeletedPages');
+      const now = new Date();
+      const kept = deleted.filter(p => new Date(p.purgeAt) > now);
+      if (kept.length !== deleted.length) saveJSON('dpwDeletedPages', kept);
+      return kept;
+    }
+
     // ─── page count ───
     function updatePageCount() {
       const count = document.querySelectorAll('.a-page-card').length;
       document.getElementById('page-count').textContent = count + (count === 1 ? ' page' : ' pages');
+    }
+
+    // ─── build a page card element from a {slug,name,editHref,viewHref,thumbHtml} record ───
+    function buildPageCard(rec) {
+      const card = document.createElement('div');
+      card.className = 'a-page-card';
+      card.dataset.slug = rec.slug;
+      card.innerHTML = `
+        <div class="a-page-thumb">${rec.thumbHtml}</div>
+        <div class="a-page-body">
+          <h3>${rec.name}</h3>
+          <div class="a-page-meta">Edited ${rec.editedDate || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+          <div class="a-page-actions">
+            <a class="a-btn a-btn-primary a-btn-sm" href="${rec.editHref}">Edit</a>
+            <a class="a-btn a-btn-outline a-btn-sm" href="${rec.viewHref}" ${rec.viewHref !== '#' ? 'target="_blank"' : 'onclick="return false;"'}>View</a>
+            <button class="a-icon-btn a-page-delete" title="Delete page" onclick="confirmDeletePage(this)">${trashIcon}</button>
+          </div>
+        </div>`;
+      return card;
+    }
+
+    // ─── on load: hide built-in cards that are currently deleted, and
+    // render any custom-created pages that aren't ───
+    function renderPageGrid() {
+      const deletedSlugs = purgeExpiredDeletedPages().map(p => p.slug);
+
+      document.querySelectorAll('.a-page-card[data-slug]').forEach(card => {
+        if (deletedSlugs.includes(card.dataset.slug)) card.remove();
+      });
+
+      const custom = loadJSON('dpwCustomPages');
+      custom.forEach(rec => {
+        if (!deletedSlugs.includes(rec.slug)) {
+          document.getElementById('page-add-card').insertAdjacentElement('beforebegin', buildPageCard(rec));
+        }
+      });
+
+      updatePageCount();
     }
 
     // ─── add page ───
@@ -465,23 +516,19 @@
       const name = nameInput.value.trim();
       if (!name) { nameInput.focus(); return; }
       const slug = name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const rec = {
+        slug, name,
+        editHref: `admin-page-editor.html?page=${slug}`,
+        viewHref: '#',
+        thumbHtml: pageIcon,
+        editedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
 
-      const card = document.createElement('div');
-      card.className = 'a-page-card';
-      card.innerHTML = `
-        <div class="a-page-thumb">${pageIcon}</div>
-        <div class="a-page-body">
-          <h3>${name}</h3>
-          <div class="a-page-meta">Edited ${today}</div>
-          <div class="a-page-actions">
-            <a class="a-btn a-btn-primary a-btn-sm" href="admin-page-editor.html?page=${slug}">Edit</a>
-            <a class="a-btn a-btn-outline a-btn-sm" href="#" onclick="return false;">View</a>
-            <button class="a-icon-btn a-page-delete" title="Delete page" onclick="confirmDeletePage(this, '${name.replace(/'/g, "\\'")}')">${trashIcon}</button>
-          </div>
-        </div>`;
+      const custom = loadJSON('dpwCustomPages');
+      custom.push(rec);
+      saveJSON('dpwCustomPages', custom);
 
-      document.getElementById('page-add-card').insertAdjacentElement('beforebegin', card);
+      document.getElementById('page-add-card').insertAdjacentElement('beforebegin', buildPageCard(rec));
       updatePageCount();
       closeAddPageModal();
       showToast('Page created');
@@ -489,9 +536,10 @@
 
     // ─── delete page (soft delete — kept for 30 days, then purged) ───
     let pendingDeletePage = null;
-    function confirmDeletePage(btn, name) {
-      pendingDeletePage = btn.closest('.a-page-card');
-      document.getElementById('delete-page-name').textContent = name;
+    function confirmDeletePage(btn) {
+      const card = btn.closest('.a-page-card');
+      pendingDeletePage = card;
+      document.getElementById('delete-page-name').textContent = card.querySelector('h3').textContent;
       document.getElementById('delete-page-modal').classList.add('is-open');
     }
     function closeDeletePageModal() {
@@ -501,6 +549,7 @@
     function deletePage() {
       if (pendingDeletePage) {
         const card = pendingDeletePage;
+        const slug = card.dataset.slug;
         const name = card.querySelector('h3').textContent;
         const editHref = card.querySelector('.a-btn-primary').getAttribute('href');
         const viewHref = card.querySelector('.a-btn-outline').getAttribute('href');
@@ -508,70 +557,21 @@
 
         const purgeDate = new Date();
         purgeDate.setDate(purgeDate.getDate() + 30);
-        const purgeText = purgeDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-        const row = document.createElement('li');
-        row.className = 'a-deleted-row';
-        row.dataset.purge = purgeDate.toISOString();
-        row.dataset.editHref = editHref;
-        row.dataset.viewHref = viewHref;
-        row.innerHTML = `
-          <div class="a-deleted-thumb">${thumbHtml}</div>
-          <div class="a-deleted-info">
-            <div class="a-deleted-name">${name}</div>
-            <div class="a-deleted-meta">Permanently deletes on ${purgeText}</div>
-          </div>
-          <button class="a-btn a-btn-outline a-btn-sm" onclick="restorePage(this)">Restore</button>`;
+        const deleted = loadJSON('dpwDeletedPages');
+        deleted.push({ slug, name, editHref, viewHref, thumbHtml, purgeAt: purgeDate.toISOString() });
+        saveJSON('dpwDeletedPages', deleted);
 
-        document.getElementById('deleted-pages-list').appendChild(row);
+        // if it was a custom page, drop it from the custom list too so it
+        // doesn't reappear until restored
+        const custom = loadJSON('dpwCustomPages').filter(p => p.slug !== slug);
+        saveJSON('dpwCustomPages', custom);
+
         card.remove();
         updatePageCount();
-        updateDeletedPagesEmptyState();
       }
       closeDeletePageModal();
       showToast('Page deleted — kept for 30 days');
-    }
-
-    // ─── restore page ───
-    function restorePage(btn) {
-      const row = btn.closest('.a-deleted-row');
-      const name = row.querySelector('.a-deleted-name').textContent;
-      const thumbHtml = row.querySelector('.a-deleted-thumb').innerHTML;
-      const editHref = row.dataset.editHref;
-      const viewHref = row.dataset.viewHref;
-      const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-
-      const card = document.createElement('div');
-      card.className = 'a-page-card';
-      card.innerHTML = `
-        <div class="a-page-thumb">${thumbHtml}</div>
-        <div class="a-page-body">
-          <h3>${name}</h3>
-          <div class="a-page-meta">Restored ${today}</div>
-          <div class="a-page-actions">
-            <a class="a-btn a-btn-primary a-btn-sm" href="${editHref}">Edit</a>
-            <a class="a-btn a-btn-outline a-btn-sm" href="${viewHref}" target="_blank">View</a>
-            <button class="a-icon-btn a-page-delete" title="Delete page" onclick="confirmDeletePage(this, '${name.replace(/'/g, "\\'")}')">${trashIcon}</button>
-          </div>
-        </div>`;
-
-      document.getElementById('page-add-card').insertAdjacentElement('beforebegin', card);
-      row.remove();
-      updatePageCount();
-      updateDeletedPagesEmptyState();
-      showToast('Page restored');
-    }
-
-    // ─── purge deleted pages older than 30 days, and toggle empty state ───
-    function updateDeletedPagesEmptyState() {
-      const list = document.getElementById('deleted-pages-list');
-      const now = new Date();
-      list.querySelectorAll('.a-deleted-row').forEach(row => {
-        if (new Date(row.dataset.purge) <= now) row.remove();
-      });
-      const hasItems = list.children.length > 0;
-      list.style.display = hasItems ? '' : 'none';
-      document.getElementById('deleted-pages-empty').style.display = hasItems ? 'none' : 'block';
     }
 
     // ─── toast ───
@@ -584,8 +584,7 @@
       toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2400);
     }
 
-    updatePageCount();
-    updateDeletedPagesEmptyState();
+    renderPageGrid();
   </script>
 
 </body>

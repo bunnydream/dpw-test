@@ -1,8 +1,10 @@
 # DPW Website — Session Summary
-Last updated: 2026-06-19 (Session 6)
+Last updated: 2026-08-11 (Session 7 — Admin CMS build)
 
 ## Project Overview
 Standalone HTML/CSS website for Digital Public Works (DPW), a 501(c)(3) nonprofit. No build step. Single shared stylesheet (`shared.css`) plus page-specific `<style>` blocks in each HTML file. Deploying on Vercel + Supabase.
+
+A parallel admin CMS mockup (`/ADMIN PAGES/`) was built in Session 7 — see the dedicated section near the bottom of this file. It's a static HTML/CSS/vanilla-JS prototype only; no backend is wired up yet. That's the next major phase of work (Claude Code + Supabase).
 
 ## Files
 * `/FINAL PAGES/home-FINAL.html`
@@ -207,3 +209,59 @@ Steps:
 * Hero viewport fill: nav is `position: sticky` at `height: 74px` (in flow), so `min-height: calc(100vh - 74px)` fills the remaining viewport
 * CTA section pattern: `position: relative`, `min-height: 80vh`, background-image, `::before` overlay `rgba(0,0,0,0.5)`, `.cta-inner` with `z-index: 1`
 * Full-bleed image filling content height: `position: relative` on container + `position: absolute; inset: 0` on img
+
+---
+
+# Admin CMS Mockup (Session 7)
+
+## Purpose
+Static prototype of the DPW site-manager admin panel — login, dashboard, page editor, blog editor, settings. Built as a mockup for stakeholder review; **no real backend**. Next step is handing this to Claude Code to wire up real persistence via Supabase (auth, Postgres tables for pages/sections/blog posts, Storage for media) and deploy on Vercel. Contact-form submissions should go to `info@digitalpublicworks.org` via a Vercel serverless function + Resend (or Formspree for a faster launch path, same tradeoff as the public site's contact form — see above).
+
+## Files (`/ADMIN PAGES/`)
+* `admin-login.html` — login screen, Stacked logo (Light/Mono.svg) on white card, no JS
+* `admin-dashboard.html` — page grid + recent blog posts list
+* `admin-page-editor.html` — the core editor: 50/50 live-preview/edit split, block-based section editing
+* `admin-blog-list.html` — post table with working search + category filter pills
+* `admin-blog-editor.html` — block-based post content editor
+* `admin-settings.html` — email + password management
+* `admin-deleted-pages.html` — soft-deleted pages list with 30-day countdown + restore
+* `admin.css` — shared stylesheet for all admin pages (loaded after `../shared.css`)
+
+## Brand color rule
+`admin.css` uses **only** the hex-backed tokens already defined in `shared.css` `:root` — no invented color variants. One deliberate exception: `#B91C1C` for destructive actions (delete buttons, warning icons), since the DPW palette has no red. Documented inline in `admin.css` with the contrast math (~6.5:1, passes WCAG AA in both directions). Logo in the sidebar/login is the **Stacked** logo, not Extended (`Logo/Stacked Logo/SVG/{Dark,Light}/Mono.svg` — "Dark" folder = white fill for dark backgrounds, "Light" folder = forge-color fill for light backgrounds).
+
+## Page editor architecture (`admin-page-editor.html`)
+* Data-driven: a `PAGES` object keyed by slug (home/about/product/impact/careers/contact), each an array of `{type, label, name, inner}` block descriptors with **real content** pulled from the actual `/FINAL PAGES/*.html` files (not placeholder copy).
+* `buildSectionLi()` generates each block's markup; `renderPage(key)` rebuilds `#section-list` from `PAGES[key]` — this runs on load and whenever the page picker changes, so switching pages correctly swaps block content (this was a bug fixed earlier in the session — the list used to stay stuck on Home's content).
+* Language: blocks are called **"blocks"** in all UI copy (not "sections") — headers, modals, toasts, tooltips, footer counts. Internal CSS classes/JS identifiers still use `section` naming (e.g. `.a-section-item`, `renderPage`) — that's fine, it's not user-facing.
+* Block types available in the "Add a block" modal: Hero, Heading, Text block, Photo + text, Step timeline, Stat row (always exactly 4 stats), Pullquote, Quote carousel, Comparison card, Case study grid, Content card grid, Partners, CTA banner.
+* **Photo + text blocks**: pullquote is an optional sub-block, added via a "+ Add pullquote" button, always rendered directly below the body-paragraph field, removable. Implemented via `pullquoteSlot()` / `addPullquoteToBlock()` / `removePullquoteFromBlock()`.
+* Every block has: left/right photo-side toggle (photo+text only), a show/hide-on-published-page eye icon, move up/down, delete (WCAG red confirm modal), and accordion-exclusive open/close (only one block expanded at a time). Open block's panel has a subtle background fill (`--cool-white`) contained within its border.
+* Topbar (left to right): page picker → **"+" add-block button** (inserts new block directly after whichever block is open, or at the bottom if none is open — via `pendingInsertMode`) → Undo/Redo (history stack of `#section-list` innerHTML snapshots, `Cmd/Ctrl+Z` and `Shift+Cmd/Ctrl+Z` also work) → save-status pill → View live site (ghost/text-only button) → delete-this-page icon → Save draft (secondary) → Publish changes (primary).
+* **Icon-button sizing**: `.a-icon-btn` is 40×40px, matching `.a-btn`'s explicit 40px height exactly, so icon-only buttons always align with adjacent text buttons. `.a-btn-sm` (used on dashboard page cards) is 32px; its icon-button counterpart matches via `aspect-ratio: 1` + flex-stretch.
+* Live preview: iframe loads the real `../FINAL PAGES/{page}-FINAL.html` file and is scaled via JS (`scalePreview()`) to exactly fill the pane's width — no fixed-size card, no gray backdrop.
+* "Replace photo" always offers a dropdown: **Upload from computer** or **Choose from media library** (shared modal, real project images).
+* "Button links to" field is a dropdown of real site pages (not a raw text input), with a "Custom link..." escape hatch. Label wording was never finalized beyond "Button links to" — revisit if it comes up again.
+
+## Blog editor (`admin-blog-editor.html`)
+* Featured photo and Title are separate, **always-visible, non-collapsible** cards above "Post content" (photo first, then title) — not part of the collapsible block list.
+* Post content itself (paragraphs, headings, quotes, photos) uses the same block-list UI/interaction pattern as the page editor, including its own Undo/Redo history and back-of-list photo-upload modal.
+* Category is a single-select dropdown (existing options or "+ Create new category...") — one category per post, one badge color style everywhere (`.a-badge-policy/service/access` all render the same neutral style).
+* Clicking anywhere in a blog-list table row (not just the Edit button) navigates to the editor. Search box + category pills on `admin-blog-list.html` actually filter the list.
+* Back button is a full outline button with arrow icon + "Back to all posts" text (not just a small icon).
+* **Gap**: no individual blog-post detail page exists yet on the public site — only the Insights index/card grid. Posts written in the admin have nowhere to render live until that's built.
+
+## Deleted pages / soft delete
+* Deleting a page (from the dashboard's page-card trash icon, or from inside the page editor's topbar) doesn't remove it immediately — it moves to a **"Deleted pages"** view, reachable via its own sidebar nav item (added to every admin page), with a 30-day countdown and a Restore button.
+* This is the one place in the mockup that uses **`localStorage`** (keys `dpwDeletedPages`, `dpwCustomPages`) rather than being purely self-contained per page — necessary because "deleted pages" only makes sense if the list survives navigating away and back. Built-in default pages (home/about/product/impact/careers/contact) are static HTML cards that just get hidden/shown based on whether their slug is in the deleted list; custom pages created via "Add a new page" are fully persisted through localStorage.
+* **Caveat for the real build**: the 30-day auto-purge is UI-only — it recalculates on each page load but has no server-side cron. Supabase will need a scheduled job to actually enforce permanent deletion after 30 days.
+
+## Verification approach used throughout
+For every edit: (1) a Python regex tag-balance check across common tags (`div`, `ul`, `li`, `table`, `button`, `select`, etc.), and (2) a Node.js runtime check — extracting the `<script>` body and executing it against a stubbed `document`/`window`/`localStorage` to catch both syntax errors and **temporal-dead-zone / ordering bugs** (one such bug — `resetSectionHistory()` called before its `let` declarations — silently broke every button on the page editor for a few turns; now fixed and caught by this harness going forward).
+
+## Known follow-ups / open items
+* Wire real backend: Supabase Auth (single admin login), Postgres tables (`pages`, `sections`, `blog_posts`, `blog_blocks`, `media`, `settings`), Storage bucket for uploads — see build-order notes discussed in chat (not yet written to a file).
+* Contact form → email: use a Vercel serverless API route + Resend (verify DPW's sending domain), targeting `info@digitalpublicworks.org`; log submissions to a Supabase table as backup. (Formspree is the faster/lower-effort alternative if launch speed matters more than owning the pipeline.)
+* `public/images/people-meeting-laptops.png` was confirmed unused anywhere in the codebase (grep across HTML/CSS came up empty) and flagged as a likely-safe duplicate to delete — not yet deleted, pending user confirmation.
+* Custom pages created in the admin have a disabled "View" link (`#`) since there's no real public page to link to yet — expected until Supabase-backed pages exist.
+* "Button links to" label wording open question (see above) — never resolved, low priority.
