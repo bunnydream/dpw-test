@@ -2,7 +2,19 @@
   "permissions": {
     "allow": [
       "Bash(npm run *)",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(npm ls *)",
+      "Bash(command -v node)",
+      "Bash(command -v magick convert cwebp)",
+      "Bash(command -v sips)",
+      "Bash(mkdir -p /Users/bellabesuud/Desktop/dpw-website-ORIGINALS-backup)",
+      "Bash(mv \"public/images/ORIGINALS\" /Users/bellabesuud/Desktop/dpw-website-ORIGINALS-backup/)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(node *)",
+      "Bash(git checkout *)",
+      "Bash(node scripts/compress-images.mjs)",
+      "Bash(git rm *)"
     ]
   }
 }

@@ -1,0 +1,277 @@
+/* ══════════════════════════════════════════════
+   IMPACT PAGE — page-specific styles
+══════════════════════════════════════════════ */
+
+/* ─── HERO (matches product page) ─── */
+.hero {
+  background: var(--white);
+  min-height: calc(100dvh - 74px);
+  display: grid;
+  grid-template-columns: 9fr 7fr;
+  overflow: hidden;
+}
+
+.hero-left {
+  padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+/* h1 font + margin-bottom: 36px from shared.css */
+
+.hero-tagline {
+  white-space: normal;
+  max-width: 38ch;
+}
+
+.hero-img {
+  overflow: hidden;
+  padding: 0;
+}
+
+.hero-img img {
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+
+/* ─── STAT ROW — structure/animation in shared.css; impact overrides below ─── */
+.stat-row {
+  grid-template-columns: repeat(4, 1fr);
+  padding: 0 clamp(20px, 5vw, 64px) clamp(32px, 4vw, 48px);
+  background: var(--cool-white);
+}
+
+.stat-cell {
+  padding: clamp(72px, 9vw, 108px) clamp(16px, 2.5vw, 28px) clamp(60px, 8vw, 96px);
+}
+
+.stat-cell::before {
+  margin-bottom: 18px;
+}
+
+.stat-num {
+  font-size: clamp(36px, 4.2vw, 56px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.stat-label {
+  font-size: var(--t-body);
+  letter-spacing: 0.12em;
+}
+
+
+/* ─── FAMILIES ─── */
+.families {
+  background: var(--white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.families-img {
+  position: relative;
+  min-height: 480px;
+}
+
+.families-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.families-right {
+  padding: clamp(48px, 6vw, 72px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2)) clamp(48px, 6vw, 72px) clamp(48px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* comp-card on white bg → cool-white card */
+.comp-card {
+  background: var(--cool-white);
+}
+
+/* ─── BODY TEXT — see shared.css (.body-text, .body-p) ─── */
+
+
+/* ─── COMPARISON CARD — see shared.css (.comp-card, .comp-*) ─── */
+
+
+/* ─── VOICES CAROUSEL — cool-white section, white cards/buttons ─── */
+.voices {
+  background: var(--cool-white);
+}
+
+.voice-card {
+  background: var(--white);
+}
+
+.carousel-btn {
+  background: var(--white);
+}
+
+/* ─── CASE STUDIES — white section, cool-white cards ─── */
+.field {
+  background: var(--white);
+}
+
+.case-card {
+  background: var(--cool-white);
+}
+
+
+
+/* ─── YEAR IN REVIEW — cool-white section, white book ─── */
+.annual {
+  background: var(--cool-white);
+}
+
+.annual-inner {
+  display: grid;
+  grid-template-columns: 7fr 4fr;
+  gap: clamp(48px, 6vw, 96px);
+  align-items: center;
+}
+
+/* ─── ANNUAL BODY TEXT — see shared.css (.body-p) ─── */
+/* btn-annual → replaced by shared .btn .btn-forge classes in HTML */
+
+.annual-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.report-book {
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 8.5 / 11;
+  border-radius: 3px;
+  box-shadow: 8px 16px 40px rgba(0, 0, 0, 0.12), 2px 4px 8px rgba(0, 0, 0, 0.06);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.report-book span {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--aluminum);
+}
+
+
+/* ─── FUNDING MODEL — white section, cool-white cards ─── */
+.funding {
+  background: var(--white);
+}
+
+.content-card {
+  background: var(--cool-white);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: auto;
+  }
+
+  .hero-left {
+    padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px);
+  }
+
+  .hero-tagline {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .hero-img {
+    aspect-ratio: 16/7;
+    min-height: 280px;
+    order: -1;
+  }
+
+  .families {
+    grid-template-columns: 1fr;
+  }
+
+  .families-img {
+    min-height: 360px;
+  }
+
+  .families-right {
+    padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
+  }
+
+  .annual-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .annual-visual {
+    display: none;
+  }
+
+  .stat-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stat-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+}
+
+@media (max-width: 500px) {
+  .stat-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── INSIGHTS CTA ───────────────────────────── */
+.cta-section {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  background-image: url('/images/impact/christin-hume-Hcfwew744z4-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.cta-inner {
+  max-width: 640px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-h {
+  margin-bottom: 32px;
+  color: var(--white);
+}

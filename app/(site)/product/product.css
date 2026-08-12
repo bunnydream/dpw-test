@@ -1,0 +1,233 @@
+/* ─── PRODUCT-SPECIFIC STYLES ────────────────── */
+
+/* ─── HERO ─── */
+.hero {
+  background: var(--white);
+  min-height: calc(100dvh - 74px);
+  max-height: calc(100dvh - 74px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* 50/50 — text left half, image right half */
+  grid-template-rows: 1fr;
+  overflow: hidden;
+}
+
+.hero-left {
+  /* left padding matches section content edge; right padding creates clear column separation */
+  padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  align-self: center;
+  min-width: 0;
+}
+
+h1 {
+  white-space: nowrap;
+  /* "Verify My Income" must stay on one line */
+}
+
+.hero-tagline {
+  /* Constrain tagline to h1 width: excluded from container's max-content calc,
+     then expands back to the container width (which is set by h1's nowrap width) */
+  max-width: 1px;
+  min-width: 100%;
+}
+
+.hero-img {
+  overflow: hidden;
+  /* top and left: breathing room; right: flush to viewport edge; bottom: 0 = flush */
+  padding: clamp(40px, 5vw, 64px) 0 0 clamp(32px, 4vw, 48px);
+  align-self: stretch;
+}
+
+.hero-img img {
+  object-fit: contain;
+  object-position: bottom center;
+  /* white space above, image flush to bottom */
+}
+
+/* ═══════════════════════════════════════════════
+   INTEGRATION — V3 TALL CARDS
+   ═══════════════════════════════════════════════ */
+/* ─── IO CARDS — see shared.css ─── */
+.integration {
+  background: var(--cool-white);
+}
+
+/* ═══════════════════════════════════════════════
+   THE VERIFICATION PROBLEM — V4 ACCORDION
+   ═══════════════════════════════════════════════ */
+/* ─── PS-SECTION / PS-ACC — see shared.css ─── */
+
+/* ─── COMPARISON TABLE (product-specific wrapper) ─── */
+.compare-full {
+  background: var(--cool-white);
+}
+
+/* ─── VENDOR QUESTIONS — see shared.css ─── */
+.vendor-q {
+  background: var(--white);
+}
+
+/* ─── ACCESSIBILITY ─── */
+.access-section {
+  background: var(--cool-white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.access-left {
+  padding: clamp(72px, 10vw, 112px) clamp(32px, 4vw, 72px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2));
+}
+
+/* ─── BODY TEXT — see shared.css; max-width override for access section ─── */
+.access-left .body-text p {
+  max-width: 56ch;
+}
+
+/* ─── CALLOUT STAT — see .callout-stat-* in shared.css ─── */
+
+.access-photo {
+  overflow: hidden;
+}
+
+.access-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ═══════════════════════════════════════════════
+   PILOT — V2 VERTICAL STEPS (centered)
+   ═══════════════════════════════════════════════ */
+.pilot {
+  background: var(--white);
+}
+
+.pilot .section-h {
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+/* steps — product overrides: centered with max-width */
+.steps {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.step-content {
+  padding: clamp(16px, 2.2vw, 24px);
+}
+
+/* pilot-note: font/color/line-height from shared .body-p; layout overrides here */
+.pilot-note {
+  margin-top: 36px;
+  max-width: 785px;
+  /* 820px - 35px: right edge stays flush with .steps */
+  margin-left: max(35px, calc(50% - 375px));
+  /* left border aligns with steps-line at left: 35px */
+  margin-right: auto;
+  margin-bottom: 0;
+}
+
+/* ─── IN THE FIELD — see shared.css for .field, .case-* ─── */
+
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    height: auto;
+  }
+
+  .hero-left {
+    padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px);
+  }
+
+  h1 {
+    white-space: normal;
+  }
+
+  .hero-heading-stack {
+    width: auto;
+  }
+
+  .hero-tagline {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .hero-img {
+    order: 2;
+    overflow: hidden;
+    width: 100%;
+    height: 400px;
+    padding: 0;
+  }
+
+  .hero-img img {
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+
+  .access-section {
+    grid-template-columns: 1fr;
+  }
+
+  .access-left {
+    padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
+    order: 1;
+  }
+
+  .access-photo {
+    aspect-ratio: 4/3;
+    max-height: 420px;
+    order: 2;
+  }
+
+  .steps {
+    max-width: 100%
+  }
+}
+
+/* ─── IMPACT CTA ─────────────────────────────── */
+.cta-section {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  background-image: url('/images/product/harald-wolff-msHKfPyFH7g-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.cta-inner {
+  max-width: 640px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-h {
+  margin-bottom: 32px;
+  color: var(--white);
+}

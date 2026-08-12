@@ -1,0 +1,508 @@
+/* ─── HOME-SPECIFIC STYLES ───────────────────── */
+
+/* ─── HOME HERO H1 SIZE OVERRIDE ────────────────── */
+.hero h1 {
+  font-size: clamp(42px, 5.2vw, 64px);
+}
+
+/* ─── HERO ────────────────────────────────────── */
+.hero {
+  background: var(--white);
+  min-height: calc(100dvh - 74px);
+  display: grid;
+  grid-template-columns: 1fr min(650px, 42vw);
+  overflow: hidden;
+}
+
+.hero-left {
+  padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Body tier: hero sub-copy */
+.hero-sub {
+  font-size: var(--t-body);
+  line-height: 1.82;
+  color: var(--steel);
+  max-width: 54ch;
+  margin-bottom: 32px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 32px
+}
+
+/* Label tier: hero footnote */
+.hero-note {
+  font-size: var(--t-label);
+  color: var(--steel);
+  line-height: 1.65;
+  padding-left: 12px;
+  border-left: 2px solid var(--copper);
+  max-width: 44ch;
+}
+
+/* hero image — fills full right column */
+.hero-img {
+  overflow: hidden;
+}
+
+.hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 37% center;
+  display: block;
+}
+
+
+/* ─── STAT ROW ────────────────────────────────── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  margin: 0;
+  padding: 0 clamp(20px, 5vw, 64px) clamp(32px, 4vw, 48px);
+  gap: 0;
+  position: relative;
+  background: var(--cool-white);
+}
+
+.stat-cell {
+  padding: clamp(72px, 9vw, 108px) clamp(16px, 2.5vw, 28px) clamp(60px, 8vw, 96px);
+  position: relative;
+}
+
+.stat-cell::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 6px;
+  background: var(--copper);
+  margin-bottom: 18px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+
+.stat-cell.vis::before {
+  transform: scaleX(1);
+}
+
+/* Headline tier: stat numbers (same scale as section headings — they carry equal visual weight) */
+.stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(36px, 4.2vw, 56px);
+  font-weight: 700;
+  color: var(--forge);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* Label tier: stat descriptor */
+.stat-label {
+  font-size: var(--t-body);
+  color: var(--steel);
+  line-height: 1.45;
+  text-transform: lowercase;
+  letter-spacing: 0.12em;
+}
+
+/* ─── COMPARE TEASER ──────────────────────────── */
+.compare-teaser {
+  background: var(--white);
+  border-top: 0;
+  padding: clamp(56px, 7vw, 80px) clamp(20px, 5vw, 64px);
+}
+
+.compare-teaser-inner {
+  max-width: 1200px;
+  margin: 0 auto
+}
+
+/* .ct-header — see shared.css */
+
+/* ─── PRESSURE ────────────────────────────────── */
+.pressure {
+  background: var(--cool-white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.pressure-right {
+  padding: clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2)) clamp(72px, 10vw, 112px) clamp(48px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
+.pressure-img {
+  overflow: hidden;
+}
+
+.pressure-img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* ─── PULLQUOTE — see shared.css ─── */
+
+/* ─── HOW IT WORKS ────────────────────────────── */
+.how {
+  background: var(--white);
+  padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
+}
+
+.how-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.how-cols {
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: clamp(48px, 6vw, 80px);
+  align-items: flex-start;
+}
+
+/* Scroll spacing — one step fills most of the viewport, next peeks */
+.how-step-row {
+  min-height: 65vh;
+}
+
+/* Photo height for this page */
+.how-step-img {
+  height: clamp(220px, 22vw, 320px);
+}
+
+/* Text padding for this page */
+.how-step-body {
+  padding: 28px 0 0 0;
+}
+
+/* RIGHT column — sticky, top-aligned with step 1, image pushed right */
+.how-right {
+  position: sticky;
+  top: 90px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.how-right img {
+  width: 80%;
+  max-height: calc(100vh - 120px);
+  height: auto;
+  object-fit: contain;
+  object-position: top center;
+  display: block;
+}
+
+
+/* ─── STORIES/FINDINGS ─────────────────────────────────── */
+.stories {
+  background: var(--cool-white);
+  padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
+}
+
+.stories-inner {
+  max-width: 1200px;
+  margin: 0 auto
+}
+
+
+/* Stories section: card grid needs bottom margin before inline-note */
+.content-card-grid {
+  margin-bottom: 36px;
+}
+
+/* ─── INLINE NOTE (stories outro) — see shared.css + .inline-note--rose above ─── */
+
+/* ─── MODEL ───────────────────────────────────── */
+.model {
+  background: var(--white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.model-content {
+  padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+/* ─── MODEL BODY TEXT — see shared.css (.body-text) + home .body-text p max-width override ─── */
+
+/* Photo — fills full right column */
+.model-photo {
+  overflow: hidden;
+  position: relative;
+}
+
+.model-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+}
+
+
+/* ─── CTA — copper ─────────────────────── */
+.cta-section {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  background-image: url('/images/home/group-talking.jpg');
+  background-size: cover;
+  background-position: center 25%;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.cta-inner {
+  max-width: 640px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-h {
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+/* Body tier: CTA section sub-copy */
+.cta-sub {
+  font-size: var(--t-body);
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 32px;
+  line-height: 1.65;
+}
+
+/* ─── VOICES CAROUSEL — home overrides ──────── */
+.voices {
+  background: var(--cool-white);
+}
+
+.voice-card {
+  background: var(--white);
+}
+
+.carousel-btn {
+  background: var(--white);
+}
+
+/* ─── LOGOS SECTION ──────────────────────────── */
+.logos-section {
+  background: var(--white);
+  padding: clamp(48px, 6vw, 72px) clamp(20px, 5vw, 64px);
+  border-top: 1px solid var(--light-al);
+  border-bottom: 1px solid var(--light-al);
+}
+
+.logos-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.logos-row {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logos-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--light-al);
+}
+
+.logos-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--t-label);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--aluminum);
+}
+
+.logos-strip {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+  flex-wrap: wrap;
+}
+
+/* Text-based logo fallback (for orgs without image yet) */
+.logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: var(--t-label);
+  font-weight: 700;
+  color: var(--steel);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0.6;
+  transition: opacity .2s;
+  border: 1.5px solid var(--light-al);
+  padding: 10px 18px;
+  border-radius: 2px;
+}
+
+.logo-text:hover {
+  opacity: 1;
+}
+
+/* Placeholder box for pending logos */
+.logo-placeholder {
+  height: 44px;
+  min-width: 120px;
+  border: 1.5px dashed var(--light-al);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.logo-placeholder span {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--aluminum);
+}
+
+@media (max-width: 768px) {
+  .logos-strip {
+    gap: 20px;
+  }
+}
+
+/* ─── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .hero-left {
+    padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px);
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 380px;
+    order: -1;
+  }
+
+  .pressure {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .pressure-img {
+    width: 100%;
+    height: 360px;
+    order: 2;
+  }
+
+  .pressure-right {
+    padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
+    order: 1;
+  }
+
+  .how-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .how-right {
+    order: 2;
+  }
+
+  .model {
+    grid-template-columns: 1fr;
+  }
+
+  .model-photo {
+    width: 100%;
+    height: 400px;
+  }
+
+  .model-content {
+    padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
+  }
+
+}
+
+@media (max-width: 768px) {
+  .stat-row {
+    grid-template-columns: 1fr 1fr
+  }
+
+  .stat-cell:nth-child(2) {
+    border-right: none
+  }
+
+  .stat-cell:nth-child(3) {
+    border-right: 1px solid var(--light-al)
+  }
+
+
+
+}
+
+@media (max-width: 480px) {
+  .stat-row {
+    grid-template-columns: 1fr
+  }
+
+  .stat-cell {
+    border-right: none;
+    border-bottom: 1px solid var(--light-al)
+  }
+
+  .stat-cell:last-child {
+    border-bottom: none
+  }
+}
+
+/* ─── FUNDERS — home overrides ───────────────── */
+.funders {
+  background: var(--white);
+}
+
+.funder-card {
+  background: var(--cool-white);
+}
