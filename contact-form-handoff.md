@@ -1,5 +1,7 @@
 # Contact Form Handoff — Digital Public Works
 
+> **Status: NOT being used for launch.** On 2026-08-12, decided to use **Formspree** instead — simpler, no backend code to build or maintain. See `summary.md`'s "Contact Form — Formspree Integration" section for the plan actually being implemented. This document is kept as a reference in case DPW wants to upgrade later to owning their own submission data instead of relying on a third party.
+
 ## Overview
 
 The contact page has three independent forms. All submissions should be emailed to **info@digitalpublicworks.org** and saved to Supabase for recordkeeping.
