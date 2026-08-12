@@ -260,9 +260,6 @@ a { color: inherit; }
 }
 .a-save-status svg { width: 15px; height: 15px; }
 .a-save-status.is-saving { color: var(--steel); }
-.a-save-status .dot {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--park-green);
-}
 
 /* ─── CARDS ──────────────────────────────────────────────── */
 .a-card {
@@ -271,54 +268,6 @@ a { color: inherit; }
   border-radius: 10px;
   padding: 20px;
 }
-
-/* ─── QUICK ACTIONS (dashboard) ─────────────────────────── */
-.a-quick-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 36px;
-}
-
-.a-quick-card {
-  background: var(--white);
-  border: 1px solid var(--light-al);
-  border-radius: 10px;
-  padding: 22px;
-  text-decoration: none;
-  color: var(--forge);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: border-color .15s, transform .15s;
-}
-
-.a-quick-card:hover { border-color: var(--copper); transform: translateY(-2px); }
-
-.a-quick-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 8px;
-  background: var(--pale-verdigris);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--park-green);
-}
-
-.a-quick-icon.copper { background: var(--rose-gold); color: var(--deep-copper); }
-.a-quick-icon.steel { background: var(--light-al); color: var(--steel); }
-.a-quick-icon svg { width: 22px; height: 22px; }
-
-.a-quick-card h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  max-width: none;
-  margin: 0;
-}
-
-.a-quick-card p { font-size: 13.5px; color: var(--steel); line-height: 1.5; margin: 0; }
 
 /* ─── SECTION HEADINGS (admin content) ──────────────────── */
 .a-section-heading {
@@ -504,23 +453,6 @@ a { color: inherit; }
 .a-section-item.is-section-hidden .a-section-row { opacity: .5; }
 .a-section-item.is-section-hidden .a-section-name { text-decoration: line-through; text-decoration-color: var(--aluminum); }
 
-.a-hidden-tag {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--steel);
-  border: 1px solid var(--light-al);
-  background: var(--cool-white);
-  padding: 2px 7px;
-  border-radius: 20px;
-  margin-left: 8px;
-  white-space: nowrap;
-}
-
-.a-visibility-btn.is-hidden-state { color: var(--deep-copper); border-color: var(--rose-gold); background: var(--rose-gold); }
-
 .a-section-row {
   display: flex;
   align-items: center;
@@ -570,9 +502,29 @@ a { color: inherit; }
   background: var(--cool-white);
 }
 
-.a-add-pullquote-btn { margin-top: 8px; }
+.a-add-pullquote-btn { margin-top: 16px; }
 .a-pullquote-block .a-icon-btn-xs { color: var(--steel); }
 .a-pullquote-block .a-icon-btn-xs:hover { border-color: #B91C1C; color: #B91C1C; }
+/* When a pullquote is already added, its .a-field is the first (and only)
+   child of .a-pullquote-slot — which unintentionally matches the general
+   .a-field:first-child rule (4px, meant for a field that opens a whole
+   panel) instead of the normal 16px rhythm. Override it back to 16px here,
+   scoped to this wrapper only. */
+.a-pullquote-slot .a-field:first-child { margin-top: 16px; }
+
+/* ─── OPTIONAL BUTTON FIELDS (Hero, Photo + text) ───
+   Same top-margin-only rhythm as .a-field (16px) and .a-add-pullquote-btn
+   above, so "Hero photo" → "Add primary button" and "Add pullquote" →
+   "Add primary button" → "Add secondary button" all read as equal gaps. */
+.a-add-button-btn { margin-top: 16px; }
+.a-button-block .a-icon-btn-xs { color: var(--steel); }
+.a-button-block .a-icon-btn-xs:hover { border-color: #B91C1C; color: #B91C1C; }
+/* Same first-child collision as the pullquote above: once a button is
+   added, its .a-field-row is the first child of .a-button-slot and
+   incorrectly picks up .a-field-row:first-child's 4px instead of the
+   normal 16px field rhythm — this is the "still cramped" bug reported
+   after the round-3 fix. Override scoped to this wrapper only. */
+.a-button-slot .a-field-row:first-child { margin-top: 16px; }
 
 .a-section-item.is-open .a-section-panel { display: block; }
 
@@ -609,21 +561,6 @@ a { color: inherit; }
   font-weight: 700;
   color: var(--forge);
   margin-bottom: 6px;
-}
-
-.a-help-icon {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: var(--light-al);
-  color: var(--white);
-  font-size: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  cursor: help;
-  position: relative;
 }
 
 .a-field-hint {
@@ -699,12 +636,6 @@ a { color: inherit; }
 
 .a-upload input[type="file"] {
   position: absolute; inset: 0; opacity: 0; cursor: pointer;
-}
-
-.a-upload-replace {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
 }
 
 /* ─── IMAGE UPLOAD: REPLACE PHOTO (computer or media library) ─ */
@@ -833,7 +764,46 @@ a { color: inherit; }
   max-height: 85vh;
   overflow-y: auto;
   padding: 28px;
+  /* The browser's native scrollbar track is a hard-edged rectangle that
+     ignores border-radius, so it squares off the top-right/bottom-right
+     corners whenever a modal's content overflows. Thinning it and giving
+     it a transparent inset track keeps all four corners visually rounded. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--light-al) transparent;
 }
+.a-modal::-webkit-scrollbar { width: 8px; }
+.a-modal::-webkit-scrollbar-track { background: transparent; margin: 12px 0; }
+.a-modal::-webkit-scrollbar-thumb { background: var(--light-al); border-radius: 8px; }
+.a-modal::-webkit-scrollbar-thumb:hover { background: var(--aluminum); }
+
+/* Modals whose body content can grow tall (Add a block, media library):
+   the title/description stay pinned at the top and only the content below
+   them scrolls. Splitting the scroll region out of the modal itself (instead
+   of relying on `.a-modal`'s own overflow-y) also fixes the corner-radius
+   bug more robustly than scrollbar styling alone — `overflow: hidden` here
+   clips the scrolling child to the modal's rounded corners no matter how
+   the browser renders its scrollbar. */
+.a-modal--scroll {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+.a-modal-sticky {
+  flex-shrink: 0;
+  padding: 28px 28px 20px;
+}
+.a-modal-sticky .a-modal-desc { margin-bottom: 0; }
+.a-modal-scroll-body {
+  overflow-y: auto;
+  padding: 4px 28px 28px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--light-al) transparent;
+}
+.a-modal-scroll-body::-webkit-scrollbar { width: 8px; }
+.a-modal-scroll-body::-webkit-scrollbar-track { background: transparent; margin: 0 0 20px; }
+.a-modal-scroll-body::-webkit-scrollbar-thumb { background: var(--light-al); border-radius: 8px; }
+.a-modal-scroll-body::-webkit-scrollbar-thumb:hover { background: var(--aluminum); }
 
 .a-modal-sm { max-width: 420px; }
 
@@ -962,14 +932,6 @@ a { color: inherit; }
   text-align: center;
   max-width: none;
   margin: 0 0 6px;
-}
-
-.a-login-sub {
-  text-align: center;
-  font-size: 13.5px;
-  color: var(--steel);
-  margin-bottom: 26px;
-  line-height: 1.5;
 }
 
 .a-login-card .a-field label { font-size: 13px; }
@@ -1127,59 +1089,6 @@ a { color: inherit; }
   align-items: start;
 }
 
-.a-title-input {
-  width: 100%;
-  border: none;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--forge);
-  padding: 4px 0;
-  background: transparent;
-}
-.a-title-input:focus { outline: none; }
-.a-title-input::placeholder { color: var(--aluminum); }
-
-.a-toolbar-rte {
-  display: flex;
-  gap: 2px;
-  border: 1.5px solid var(--light-al);
-  border-bottom: none;
-  border-radius: 6px 6px 0 0;
-  padding: 6px;
-  background: var(--cool-white);
-  flex-wrap: wrap;
-}
-
-.a-toolbar-rte button {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  border-radius: 5px;
-  cursor: pointer;
-  color: var(--steel);
-}
-.a-toolbar-rte button:hover { background: var(--white); color: var(--forge); }
-.a-toolbar-rte button svg { width: 16px; height: 16px; }
-.a-toolbar-rte .a-rte-divider { width: 1px; background: var(--light-al); margin: 4px 4px; }
-
-.a-rte-body {
-  border: 1.5px solid var(--light-al);
-  border-radius: 0 0 6px 6px;
-  padding: 20px;
-  min-height: 420px;
-  font-size: 15.5px;
-  line-height: 1.7;
-  color: var(--forge);
-}
-.a-rte-body:focus { outline: none; border-color: var(--copper); }
-.a-rte-body p { margin-bottom: 1em; }
-.a-rte-body h3 { font-family: 'Space Grotesk', sans-serif; font-size: 19px; margin: 1.2em 0 .5em; max-width: none; }
-
 .a-sidebar-stack { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 88px; }
 
 .a-card-title {
@@ -1191,14 +1100,6 @@ a { color: inherit; }
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.a-toggle-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13.5px;
-  margin-bottom: 4px;
 }
 
 .a-toggle {
@@ -1221,29 +1122,6 @@ a { color: inherit; }
   transition: left .15s;
 }
 .a-toggle.is-on .a-toggle-knob { left: 20px; }
-
-.a-tag-input {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  border: 1.5px solid var(--light-al);
-  border-radius: 6px;
-  padding: 8px;
-}
-
-.a-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: var(--rose-gold);
-  color: var(--deep-copper);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 20px;
-}
-.a-tag button { border: none; background: none; cursor: pointer; color: inherit; display: flex; }
-.a-tag button svg { width: 11px; height: 11px; }
 
 .a-editor-actions { display: flex; flex-direction: column; gap: 8px; }
 .a-editor-actions .a-btn { justify-content: center; }
@@ -1400,5 +1278,4 @@ a { color: inherit; }
 @media (max-width: 860px) {
   .admin-shell { grid-template-columns: 1fr; }
   .admin-sidebar { display: none; }
-  .a-quick-grid { grid-template-columns: 1fr; }
 }

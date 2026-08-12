@@ -14,24 +14,43 @@
   <style>
     /* ─── INSIGHTS-SPECIFIC STYLES ──────────────────── */
 
-    /* ─── HERO ──────────────────────────────────────── */
-    .insights-hero {
+    /* ─── HERO (structurally matches about-FINAL.html's hero) ── */
+    .hero {
       background: var(--white);
-      padding-top: clamp(72px, 9vw, 112px);
-      padding-bottom: clamp(56px, 7vw, 80px);
-      border-bottom: 1px solid var(--light-al);
+      min-height: calc(100vh - 74px);
+      display: grid;
+      grid-template-columns: 9fr 7fr;
+      overflow: hidden;
     }
 
-    .insights-hero h1 {
-      font-size: clamp(44px, 6vw, 80px);
-      margin-bottom: 20px;
+    .hero-left {
+      padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .insights-subtitle {
-      font-size: clamp(16px, 1.4vw, 19px);
-      color: var(--steel);
-      max-width: 54ch;
-      line-height: 1.72;
+    .hero-eyebrow {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: var(--t-label);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--copper);
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    .hero-img {
+      overflow: hidden;
+    }
+
+    .hero-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 55% center;
+      display: block;
     }
 
     /* ─── POSTS ──────────────────────────────────────── */
@@ -49,7 +68,7 @@
 
     .cat-btn {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 11px;
+      font-size: var(--t-label);
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -74,96 +93,15 @@
       color: var(--white);
     }
 
-    /* ─── POST GRID ──────────────────────────────────── */
-    .post-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: clamp(20px, 2.5vw, 32px);
-    }
-
     /* ─── POST CARD ──────────────────────────────────── */
-    .post-card {
-      background: var(--white);
-      border-radius: 3px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: box-shadow 0.25s ease, transform 0.25s ease;
-    }
-
-    .post-card:hover {
-      box-shadow: 0 6px 28px rgba(30, 39, 46, 0.09);
-      transform: translateY(-2px);
-    }
-
-    .post-card-body {
-      padding: clamp(24px, 2.5vw, 32px);
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .post-cat-tag {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--copper);
-      margin-bottom: 14px;
-      display: block;
-    }
-
-    .post-card-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(16px, 1.5vw, 19px);
-      font-weight: 700;
-      color: var(--forge);
-      line-height: 1.35;
-      margin-bottom: 14px;
-    }
-
-    .post-card-excerpt {
-      font-size: var(--t-body);
-      color: var(--steel);
-      line-height: 1.75;
-      margin-bottom: 28px;
-      flex: 1;
-    }
-
-    .post-card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding-top: 16px;
-      border-top: 1px solid var(--light-al);
-    }
-
-    .post-card-date {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
-      color: var(--aluminum);
-    }
-
-    .post-card-link {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--deep-copper);
-      text-decoration: none;
-      letter-spacing: 0.04em;
-      transition: color 0.18s ease;
-      white-space: nowrap;
-    }
-
-    .post-card-link:hover {
-      color: var(--copper);
-    }
-
-    .post-card-link.coming-soon {
-      color: var(--aluminum);
-      pointer-events: none;
+    /* Cards reuse shared.css .io-grid (3-col layout) for the container, but the
+       .case-card/.case-text/.case-state/.case-detail/.case-photo component (same
+       one impact-FINAL.html's "Deployed and delivering results" cards use) for the
+       card itself — including its built-in hover animation (copper top-bar reveal).
+       .case-state now holds the category tag instead of a state name. No article
+       images exist yet, so .case-photo gets a flat placeholder fill below. */
+    .post-photo-placeholder {
+      background: var(--light-al);
     }
 
     /* ─── SUBSCRIBE ──────────────────────────────────── */
@@ -201,7 +139,7 @@
       color: var(--forge);
       background: var(--cool-white);
       border: 1.5px solid var(--light-al);
-      border-radius: 3px;
+      border-radius: 2px;
       padding: 14px 18px;
       outline: none;
       transition: border-color 0.2s ease;
@@ -217,26 +155,19 @@
       color: var(--aluminum);
     }
 
-    .subscribe-note {
-      font-size: 12px;
-      color: var(--aluminum);
-      line-height: 1.6;
-      margin: 0;
-    }
-
     /* ─── RESPONSIVE ─────────────────────────────────── */
     @media (max-width: 1024px) {
-      .post-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-img {
+        height: 400px;
+        order: -1;
       }
 
       .subscribe-inner {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .post-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -332,11 +263,15 @@
   </nav>
 
   <!-- HERO -->
-  <section class="insights-hero section-pad">
-    <div class="section-inner">
-      <h1 class="reveal">Insights</h1>
-      <p class="insights-subtitle reveal d1">Field notes, service design research, and policy analysis from Digital
-        Public Works</p>
+  <section class="hero">
+    <div class="hero-left reveal">
+      <h1>Insights</h1>
+      <div class="hero-heading-stack" style="margin-bottom: 28px;">
+        <p class="hero-tagline">Field notes, service design research, and policy analysis from Digital Public Works</p>
+      </div>
+    </div>
+    <div class="hero-img reveal d2">
+      <img src="../public/images/insights/writing.jpg" alt="Open notebook and pen on a desk" loading="eager">
     </div>
   </section>
 
@@ -354,53 +289,45 @@
         <button class="cat-btn" data-cat="field-notes">Field Notes</button>
       </div>
 
-      <!-- Post grid -->
-      <div class="post-grid" id="postGrid">
+      <!-- Post grid — .io-grid (shared 3-col layout) containing .case-card items
+           (same card component as impact-FINAL.html's "Deployed and delivering results") -->
+      <div class="io-grid" id="postGrid">
 
         <!-- Post 1: Policy -->
-        <article class="post-card reveal" data-cat="policy">
-          <div class="post-card-body">
-            <span class="post-cat-tag">Policy</span>
-            <h3 class="post-card-title">How H.R. 1 Changes the Stakes for Income Verification</h3>
-            <p class="post-card-excerpt">Expanded work requirements and tighter error-rate penalties are landing on
+        <a href="#" class="case-card reveal" data-cat="policy">
+          <div class="case-text">
+            <span class="case-state">Policy</span>
+            <h3>How H.R. 1 Changes the Stakes for Income Verification</h3>
+            <p class="case-detail">Expanded work requirements and tighter error-rate penalties are landing on
               states that already struggle with aging verification tools. Here is what the legislative moment means for
               agencies on the ground.</p>
-            <div class="post-card-meta">
-              <span class="post-card-date">Coming soon</span>
-              <span class="post-card-link coming-soon">Coming soon</span>
-            </div>
           </div>
-        </article>
+          <div class="case-photo post-photo-placeholder"></div>
+        </a>
 
         <!-- Post 2: Service Design -->
-        <article class="post-card reveal d1" data-cat="service-design">
-          <div class="post-card-body">
-            <span class="post-cat-tag">Service Design</span>
-            <h3 class="post-card-title">The 40% Problem: When the Process Fails Before the Technology Does</h3>
-            <p class="post-card-excerpt">In one state, nearly 40% of SNAP renewal applicants were not submitting
+        <a href="#" class="case-card reveal d1" data-cat="service-design">
+          <div class="case-text">
+            <span class="case-state">Service Design</span>
+            <h3>The 40% Problem: When the Process Fails Before the Technology Does</h3>
+            <p class="case-detail">In one state, nearly 40% of SNAP renewal applicants were not submitting
               required income documents — not because the upload failed, but because they did not know they had a next
               step.</p>
-            <div class="post-card-meta">
-              <span class="post-card-date">Coming soon</span>
-              <span class="post-card-link coming-soon">Coming soon</span>
-            </div>
           </div>
-        </article>
+          <div class="case-photo post-photo-placeholder"></div>
+        </a>
 
         <!-- Post 3: Accessibility -->
-        <article class="post-card reveal d2" data-cat="accessibility">
-          <div class="post-card-body">
-            <span class="post-cat-tag">Accessibility</span>
-            <h3 class="post-card-title">Accessible by Design: What Our Research on VMI Is Revealing</h3>
-            <p class="post-card-excerpt">65% of our users access <i>Verify My Income</i> on a smartphone. We are
+        <a href="#" class="case-card reveal d2" data-cat="accessibility">
+          <div class="case-text">
+            <span class="case-state">Accessibility</span>
+            <h3>Accessible by Design: What Our Research on VMI Is Revealing</h3>
+            <p class="case-detail">65% of our users access <i>Verify My Income</i> on a smartphone. We are
               conducting original research into how income verification can be made usable for older adults, people with
               disabilities, and those with limited English proficiency.</p>
-            <div class="post-card-meta">
-              <span class="post-card-date">Coming soon</span>
-              <span class="post-card-link coming-soon">Coming soon</span>
-            </div>
           </div>
-        </article>
+          <div class="case-photo post-photo-placeholder"></div>
+        </a>
 
       </div>
     </div>
@@ -419,7 +346,6 @@
             <input class="subscribe-input" type="email" placeholder="Your email address" aria-label="Email address"
               autocomplete="email">
             <button type="submit" class="btn btn-forge">Subscribe</button>
-            <p class="subscribe-note">No spam. Unsubscribe at any time.</p>
           </form>
         </div>
       </div>
@@ -506,18 +432,11 @@
     </div>
   </footer>
 
+  <script src="../shared.js"></script>
   <script>
-    /* ── MOBILE NAV ─────────────────────────────── */
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.add('open');
-    });
-    document.getElementById('mobileClose').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.remove('open');
-    });
-
     /* ── CATEGORY FILTER ─────────────────────────── */
     const catBtns = document.querySelectorAll('.cat-btn');
-    const postCards = document.querySelectorAll('.post-card');
+    const postCards = document.querySelectorAll('.case-card');
 
     catBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -533,14 +452,6 @@
         });
       });
     });
-
-    /* ── SCROLL REVEAL ──────────────────────────── */
-    const revObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
   </script>
 
 </body>

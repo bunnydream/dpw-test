@@ -291,19 +291,22 @@
 
   <!-- ═══ ADD SECTION MODAL ═══ -->
   <div class="a-modal-overlay" id="add-section-modal">
-    <div class="a-modal">
-      <div class="a-modal-header">
-        <h2>Add a block</h2>
-        <button class="a-modal-close" onclick="closeAddSectionModal()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+    <div class="a-modal a-modal--scroll">
+      <div class="a-modal-sticky">
+        <div class="a-modal-header">
+          <h2>Add a block</h2>
+          <button class="a-modal-close" onclick="closeAddSectionModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <p class="a-modal-desc">Choose a layout below — you can move it afterward. These match every card and block style
+          used across your site.</p>
       </div>
-      <p class="a-modal-desc">Choose a layout below — you can move it afterward. These match every card and block style
-        used across your site.</p>
 
+      <div class="a-modal-scroll-body">
       <div class="a-block-grid">
 
         <button class="a-block-option" onclick="addSection('heading', 'Heading', 'New heading')">
@@ -313,14 +316,14 @@
           <strong>Heading</strong>
           <span>A standalone heading to break up the page.</span>
         </button>
-        <button class="a-block-option" onclick="addSection('text', 'Text block', 'New heading goes here')">
+        <button class="a-block-option" onclick="addSection('text', 'Text block', 'New text block')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <line x1="4" y1="6" x2="20" y2="6" />
             <line x1="4" y1="12" x2="16" y2="12" />
             <line x1="4" y1="18" x2="20" y2="18" />
           </svg>
           <strong>Text block</strong>
-          <span>A heading with a paragraph of body text.</span>
+          <span>A paragraph of body text to break up the page.</span>
         </button>
         <button class="a-block-option" onclick="addSection('hero', 'Hero', 'New page headline')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -339,6 +342,14 @@
           </svg>
           <strong>Photo + text</strong>
           <span>An image beside a heading and paragraph. Choose which side the photo sits on.</span>
+        </button>
+
+        <button class="a-block-option" onclick="addSection('button', 'Button', 'New button')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="8" width="18" height="8" rx="4" />
+          </svg>
+          <strong>Button</strong>
+          <span>A single standalone button with custom text and a link.</span>
         </button>
 
         <button class="a-block-option" onclick="addSection('steps', 'Step timeline', 'How it works')">
@@ -380,35 +391,45 @@
           <span>A scrolling set of testimonial cards, like "Trusted by real people."</span>
         </button>
 
-        <button class="a-block-option" onclick="addSection('comparison', 'Comparison card', 'How we compare')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <rect x="3" y="4" width="18" height="16" rx="1" />
-            <line x1="12" y1="4" x2="12" y2="20" />
-            <path d="m7 10 2 2-2 2M17 10l-2 2 2 2" />
-          </svg>
-          <strong>Comparison card</strong>
-          <span>A two-column table comparing options side by side.</span>
-        </button>
-
-        <button class="a-block-option" onclick="addSection('case-study', 'Case study grid', 'Case studies')">
+        <button class="a-block-option" onclick="addSection('case-study', 'Linked card grid (clickable)', 'Case studies')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <rect x="3" y="3" width="8" height="8" rx="1" />
             <rect x="13" y="3" width="8" height="8" rx="1" />
             <rect x="3" y="13" width="8" height="8" rx="1" />
             <rect x="13" y="13" width="8" height="8" rx="1" />
+            <path d="M9 7h2M9 17h2" stroke-width="1.8" />
           </svg>
-          <strong>Case study grid</strong>
-          <span>A grid of photo cards linking to state or partner stories.</span>
+          <strong>Linked card grid (clickable)</strong>
+          <span>A grid of photo cards that link out to state or partner stories.</span>
         </button>
 
-        <button class="a-block-option" onclick="addSection('content-cards', 'Content card grid', 'New card group')">
+        <button class="a-block-option" onclick="addSection('content-cards', 'Card grid (not clickable)', 'New card group')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
             <rect x="3" y="4" width="6" height="7" />
             <rect x="9.5" y="4" width="6" height="7" />
             <rect x="16" y="4" width="5" height="7" />
           </svg>
-          <strong>Content card grid</strong>
-          <span>A row of small labeled cards, like feature highlights.</span>
+          <strong>Card grid (not clickable)</strong>
+          <span>A row of small labeled cards for display only, like feature highlights.</span>
+        </button>
+
+        <button class="a-block-option" onclick="addSection('team-member', 'Team member grid', 'Our team')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
+          </svg>
+          <strong>Team member grid</strong>
+          <span>A grid of team member cards with a name, title, bio, and photo, like About &gt; Our team.</span>
+        </button>
+
+        <button class="a-block-option" onclick="addSection('accordion', 'Accordion', 'Common questions')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="4" width="18" height="5" rx="1" />
+            <rect x="3" y="11" width="18" height="9" rx="1" />
+            <line x1="7" y1="16" x2="17" y2="16" />
+          </svg>
+          <strong>Accordion</strong>
+          <span>Expandable questions and answers, like "Questions to Ask Any Income Verification Vendor."</span>
         </button>
 
         <button class="a-block-option" onclick="addSection('partners', 'Partners', 'Backed by')">
@@ -428,6 +449,7 @@
           <strong>Call-to-action banner</strong>
           <span>A full-width photo banner with a heading and button.</span>
         </button>
+      </div>
       </div>
     </div>
   </div>
@@ -478,17 +500,20 @@
 
   <!-- ═══ MEDIA LIBRARY MODAL ═══ -->
   <div class="a-modal-overlay" id="media-library-modal">
-    <div class="a-modal">
-      <div class="a-modal-header">
-        <h2>Choose from media library</h2>
-        <button class="a-modal-close" onclick="closeMediaLibrary()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+    <div class="a-modal a-modal--scroll">
+      <div class="a-modal-sticky">
+        <div class="a-modal-header">
+          <h2>Choose from media library</h2>
+          <button class="a-modal-close" onclick="closeMediaLibrary()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <p class="a-modal-desc">Click a photo already uploaded to your site to use it here.</p>
       </div>
-      <p class="a-modal-desc">Click a photo already uploaded to your site to use it here.</p>
+      <div class="a-modal-scroll-body">
       <div class="a-media-grid">
         <button class="a-media-item"
           onclick="selectMediaImage('../public/images/home/oosman-exptal-2_lHgY_ZvQo-unsplash.jpg')">
@@ -573,6 +598,7 @@
           <span>Careers hero photo</span>
         </button>
       </div>
+      </div>
     </div>
   </div>
 
@@ -598,7 +624,7 @@
     const uploadIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
     const libraryIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
 
-    // Reusable "replace photo" upload block
+    // Reusable "replace photo" upload block — used once a photo already exists.
     function uploadBlock(src, alt) {
       return `
         <div class="a-upload-block">
@@ -611,6 +637,20 @@
             </div>
           </div>
           <input type="file" accept="image/*" style="display:none" onchange="previewImage(this)">
+        </div>`;
+    }
+
+    // Reusable "add a photo" field — used when a block/card doesn't have a
+    // photo yet. previewImage() upgrades this into the uploadBlock() layout
+    // (with a real preview + Replace photo menu) the first time a file is
+    // chosen, so both states share the same working upload/preview logic.
+    function emptyPhotoField(labelText) {
+      return `
+        <div class="a-field"><label>${labelText || 'Photo'}</label>
+          <div class="a-upload">
+            <div class="a-upload-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span><strong>Click to upload</strong> a photo</span></div>
+            <input type="file" accept="image/*" onchange="previewImage(this)">
+          </div>
         </div>`;
     }
 
@@ -664,13 +704,38 @@
       markUnsaved();
     }
 
-    function linkPicker(selectedPath) {
+    // Background color override — every block can opt into one of the brand
+    // colors defined in shared.css :root instead of the page's default
+    // background. "Default" (empty value) means no override.
+    function backgroundColorField(selectedColor) {
+      const colors = [
+        ['', 'Default (page background)'],
+        ['var(--white)', 'White'],
+        ['var(--cool-white)', 'Cool white'],
+        ['var(--pale-verdigris)', 'Pale verdigris'],
+        ['var(--forge)', 'Forge (dark)'],
+        ['var(--copper)', 'Copper'],
+        ['var(--deep-copper)', 'Deep copper'],
+        ['var(--steel)', 'Steel'],
+        ['var(--aluminum)', 'Aluminum'],
+        ['var(--light-al)', 'Light aluminum'],
+        ['var(--verdigris)', 'Verdigris'],
+      ];
+      const opts = colors.map(([val, label]) => `<option value="${val}" ${val === (selectedColor || '') ? 'selected' : ''}>${label}</option>`).join('');
+      return `
+        <div class="a-field a-bg-color-field">
+          <label>Background color</label>
+          <select class="a-select" onchange="markUnsaved()">${opts}</select>
+        </div>`;
+    }
+
+    function linkPicker(selectedPath, labelText) {
       const pages = [['/', 'Home'], ['/about', 'About'], ['/product', 'Product'], ['/impact', 'Impact'], ['/careers', 'Careers'], ['/contact', 'Contact'], ['/insights', 'Insights / Blog']];
       const isCustom = !pages.some(p => p[0] === selectedPath) && selectedPath;
       const opts = pages.map(([val, label]) => `<option value="${val}" ${val === selectedPath ? 'selected' : ''}>${label}</option>`).join('');
       return `
         <div class="a-field">
-          <label>Button links to</label>
+          <label>${labelText || 'Button links to'}</label>
           <select class="a-select" onchange="handleLinkSelect(this)">
             ${!selectedPath ? '<option value="" selected disabled>Choose a page...</option>' : ''}
             ${opts}
@@ -678,6 +743,59 @@
           </select>
           <input class="a-input" type="text" placeholder="https://..." value="${isCustom ? selectedPath : ''}" style="display:${isCustom ? 'block' : 'none'}; margin-top:8px;" data-custom-link>
         </div>`;
+    }
+
+    // Reusable primary/secondary button field pair — used by Hero and Photo + text.
+    // A single optional button field (primary or secondary). Starts collapsed
+    // to just an "+ Add ... button" toggle unless real text/link is passed in,
+    // matching the pullquoteSlot() add/remove pattern above.
+    function buttonSlot(kind, existingText, existingLink) {
+      const kindLabel = kind === 'primary' ? 'Primary' : 'Secondary';
+      const examplePlaceholder = kind === 'primary' ? 'e.g. Request a demo' : 'e.g. See how it works';
+      if (existingText) {
+        return `
+          <div class="a-button-slot" data-kind="${kind}">
+            <div class="a-field-row a-button-block">
+              <div class="a-field"><label>${kindLabel} button text</label><input class="a-input" type="text" value="${existingText}" oninput="markUnsaved()"></div>
+              ${linkPicker(existingLink || '', kindLabel + ' button links to')}
+            </div>
+            <button type="button" class="a-icon-btn-xs" style="margin-top:6px;" onclick="removeButtonFromBlock(this)" title="Remove ${kindLabel.toLowerCase()} button">${trashIcon}</button>
+          </div>
+          <button type="button" class="a-btn a-btn-outline a-btn-sm a-add-button-btn" onclick="addButtonToBlock(this, '${kind}')" style="display:none;">${plusIcon} Add ${kindLabel.toLowerCase()} button</button>`;
+      }
+      return `
+        <div class="a-button-slot" data-kind="${kind}"></div>
+        <button type="button" class="a-btn a-btn-outline a-btn-sm a-add-button-btn" onclick="addButtonToBlock(this, '${kind}')">${plusIcon} Add ${kindLabel.toLowerCase()} button</button>`;
+    }
+    function addButtonToBlock(btn, kind) {
+      const kindLabel = kind === 'primary' ? 'Primary' : 'Secondary';
+      const examplePlaceholder = kind === 'primary' ? 'e.g. Request a demo' : 'e.g. See how it works';
+      const slot = btn.previousElementSibling;
+      slot.innerHTML = `
+        <div class="a-field-row a-button-block">
+          <div class="a-field"><label>${kindLabel} button text</label><input class="a-input" type="text" placeholder="${examplePlaceholder}" oninput="markUnsaved()"></div>
+          ${linkPicker('', kindLabel + ' button links to')}
+        </div>
+        <button type="button" class="a-icon-btn-xs" style="margin-top:6px;" onclick="removeButtonFromBlock(this)" title="Remove ${kindLabel.toLowerCase()} button">${trashIcon}</button>`;
+      btn.style.display = 'none';
+      showToast(kindLabel + ' button added');
+      markUnsaved();
+    }
+    function removeButtonFromBlock(btn) {
+      const slot = btn.closest('.a-button-slot');
+      const addBtn = slot.nextElementSibling;
+      const kind = slot.dataset.kind;
+      const kindLabel = kind === 'primary' ? 'Primary' : 'Secondary';
+      slot.innerHTML = '';
+      if (addBtn && addBtn.classList.contains('a-add-button-btn')) addBtn.style.display = '';
+      showToast(kindLabel + ' button removed');
+      markUnsaved();
+    }
+
+    // Reusable primary/secondary button field pair — used by Hero and Photo + text.
+    // Both buttons are optional; pass real text/link to render one already added.
+    function buttonPairFields(primaryText, primaryLink, secondaryText, secondaryLink) {
+      return buttonSlot('primary', primaryText, primaryLink) + buttonSlot('secondary', secondaryText, secondaryLink);
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -689,17 +807,12 @@
         {
           type: 'hero', label: 'Hero', name: 'What if income verification worked for families and states instead of vendors?', inner: `
           <div class="a-field"><label>Headline</label><textarea class="a-textarea" rows="2">What if income verification worked for families and states instead of vendors?</textarea></div>
-          <div class="a-field"><label>Intro paragraph</label><textarea class="a-textarea" rows="4">Digital Public Works is the nonprofit alternative. We built Verify My Income because families deserve a better experience — and states deserve a partner that isn't charging per query while the backlog grows. Open source. At cost. No lock-in.</textarea></div>
+          <div class="a-field"><label>Subtitle</label><input class="a-input" type="text" placeholder="A short line under the headline"></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4">Digital Public Works is the nonprofit alternative. We built Verify My Income because families deserve a better experience — and states deserve a partner that isn't charging per query while the backlog grows. Open source. At cost. No lock-in.</textarea></div>
           <div class="a-field"><label>Footnote text</label><textarea class="a-textarea" rows="2">No procurement required to begin the conversation. We start with a free, philanthropically funded pilot.</textarea></div>
-          <div class="a-field-row">
-            <div class="a-field"><label>Button 1 text</label><input class="a-input" type="text" value="Request a demo"></div>
-            ${linkPicker('/contact')}
-          </div>
-          <div class="a-field-row">
-            <div class="a-field"><label>Button 2 text</label><input class="a-input" type="text" value="See how it works"></div>
-            ${linkPicker('#how-vmi-works')}
-          </div>
-          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/home/oosman-exptal-2_lHgY_ZvQo-unsplash.jpg', 'Current hero photo')}</div>`
+          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/home/oosman-exptal-2_lHgY_ZvQo-unsplash.jpg', 'Current hero photo')}</div>
+          ${buttonPairFields('Request a demo', '/contact', 'See how it works', '#how-vmi-works')}
+          ${backgroundColorField('')}`
         },
 
         {
@@ -708,31 +821,54 @@
           <div class="a-field-row"><div class="a-field"><label>Stat 1 number</label><input class="a-input" type="text" value="Under 5 min"></div><div class="a-field"><label>Stat 1 label</label><input class="a-input" type="text" value="Average time to verify income"></div></div>
           <div class="a-field-row"><div class="a-field"><label>Stat 2 number</label><input class="a-input" type="text" value="85%"></div><div class="a-field"><label>Stat 2 label</label><input class="a-input" type="text" value="of applicants complete verification without help"></div></div>
           <div class="a-field-row"><div class="a-field"><label>Stat 3 number</label><input class="a-input" type="text" value="93%"></div><div class="a-field"><label>Stat 3 label</label><input class="a-input" type="text" value="verification accuracy rate"></div></div>
-          <div class="a-field-row"><div class="a-field"><label>Stat 4 number</label><input class="a-input" type="text" value="7.5×"></div><div class="a-field"><label>Stat 4 label</label><input class="a-input" type="text" value="faster than manual review"></div></div>` },
+          <div class="a-field-row"><div class="a-field"><label>Stat 4 number</label><input class="a-input" type="text" value="7.5×"></div><div class="a-field"><label>Stat 4 label</label><input class="a-input" type="text" value="faster than manual review"></div></div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'photo-text', label: 'Photo + text', name: 'The pressure is real', inner: `
           ${sideToggle('left')}
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="The pressure is real"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4">State agencies are being asked to do more with less, while the people they serve wait longer for answers.</textarea></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4">State agencies are being asked to do more with less, while the people they serve wait longer for answers.</textarea></div>
           ${pullquoteSlot('')}
-          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/home/maxime-FV9uOiGYr74-unsplash.jpg', 'Current photo')}</div>`
+          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/home/maxime-FV9uOiGYr74-unsplash.jpg', 'Current photo')}</div>
+          ${backgroundColorField('')}`
         },
 
         {
           type: 'photo-text', label: 'Photo + text', name: 'A better model', inner: `
           ${sideToggle('right')}
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="A better model"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Write your text here..."></textarea></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Write your text here..."></textarea></div>
           ${pullquoteSlot('No vendor lock-in. No black boxes. No surprise overages.')}
-          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/home/karthik-balakrishnan-Y4zNMW3pQAs-unsplash.jpg', 'Current photo')}</div>`
+          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/home/karthik-balakrishnan-Y4zNMW3pQAs-unsplash.jpg', 'Current photo')}</div>
+          ${backgroundColorField('')}`
         },
 
         {
           type: 'steps', label: 'Step timeline', name: 'How Verify My Income works', inner: `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="How Verify My Income works"></div>
-          <div class="a-field-hint" style="margin-bottom:8px;">Steps are managed as a group. To edit an individual step's text, open Step 1, 2, 3... below.</div>
-          <button class="a-btn a-btn-outline a-btn-sm" onclick="showToast('Step added'); markUnsaved();">${plusIcon} Add a step</button>`
+          <div class="a-field-hint" style="margin-bottom:8px;">Each step has its own heading, description, and optional photo.</div>
+          <div class="a-mini-card-list">
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Step 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button></div>
+              <div class="a-field"><label>Step heading</label><input class="a-input" type="text" value="Applicant receives a secure link"></div>
+              <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2">During or after applying for benefits, the applicant is sent a link to verify their earned income. No paper. No office visit required.</textarea></div>
+              <div class="a-field"><label>Step photo (optional)</label>${uploadBlock('../public/images/home/freestocks-mw6Onwg4frY-unsplash.jpg', 'Applicant receiving a secure link on their phone')}</div>
+            </div>
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Step 2</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button></div>
+              <div class="a-field"><label>Step heading</label><input class="a-input" type="text" value="Applicant consents and connects their payroll"></div>
+              <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2">The applicant reviews a plain-language consent screen, then connects to their payroll provider. No pay stubs to find. No documents to upload.</textarea></div>
+              <div class="a-field"><label>Step photo (optional)</label>${uploadBlock('../public/images/home/andrej-lisakov-iIJJGpkp0As-unsplash.jpg', 'Applicant consenting and connecting their payroll on their phone')}</div>
+            </div>
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Step 3</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button></div>
+              <div class="a-field"><label>Step heading</label><input class="a-input" type="text" value="Verified income data is delivered to the caseworker"></div>
+              <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2">A standardized income report, verified directly from the payroll source, is delivered to the state benefit system. Every report passes through programmatic validation before delivery — caseworkers only receive eligibility-grade data and can act immediately.</textarea></div>
+              <div class="a-field"><label>Step photo (optional)</label>${uploadBlock('../public/images/home/maxime-FV9uOiGYr74-unsplash.jpg', 'Caseworker receiving verified income data at their desk')}</div>
+            </div>
+          </div>
+          <button class="a-add-mini-card-btn" onclick="addStepCard(this)">${plusIcon} Add a step</button>
+          ${backgroundColorField('')}`
         },
 
         {
@@ -753,7 +889,8 @@
               </div>
             </div>
             <button class="a-add-mini-card-btn" onclick="addVoiceCard()">${plusIcon} Add a quote card</button>
-          </div>` },
+          </div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'partners', label: 'Partners', name: 'Backed by', inner: `
@@ -768,14 +905,16 @@
               <div class="a-partner-row"><img class="a-partner-logo" src="../public/partner-logos/drk-foundation.png" alt="" onerror="this.style.opacity=0.3"><div class="a-partner-body"><input class="a-partner-name-input" type="text" value="DRK Foundation"></div><div class="a-partner-actions"><span class="a-partner-visible-label">Visible</span><span class="a-toggle is-on" onclick="togglePartnerVisible(this)"><span class="a-toggle-knob"></span></span><button class="a-icon-btn-xs" onclick="this.closest('.a-partner-row').remove(); markUnsaved(); showToast('Partner removed');" title="Delete partner">${trashIcon}</button></div></div>
             </div>
             <button class="a-add-mini-card-btn" onclick="addPartner()">${plusIcon} Add a partner</button>
-          </div>` },
+          </div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'cta', label: 'CTA banner', name: 'Ready to pilot Verify My Income?', inner: `
           <div class="a-field"><label>Heading</label><textarea class="a-textarea" rows="2">Ready to pilot Verify My Income in your jurisdiction?</textarea></div>
           <div class="a-field"><label>Button text</label><input class="a-input" type="text" value="Let's talk"></div>
           ${linkPicker('/contact')}
-          <div class="a-field"><label>Background photo</label>${uploadBlock('../public/images/home/group-talking.jpg', 'Current background photo')}<div class="a-field-hint">This photo fills the background of the banner with a dark overlay behind the text.</div></div>`
+          <div class="a-field"><label>Background photo</label>${uploadBlock('../public/images/home/group-talking.jpg', 'Current background photo')}<div class="a-field-hint">This photo fills the background of the banner with a dark overlay behind the text.</div></div>
+          ${backgroundColorField('')}`
         },
       ],
 
@@ -783,32 +922,41 @@
         {
           type: 'hero', label: 'Hero', name: 'About Us', inner: `
           <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="About Us"></div>
-          <div class="a-field"><label>Intro paragraph</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
-          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/about/paulina-herpel-yxqVPJFAYHg-unsplash.jpg', 'Current hero photo')}</div>`
+          <div class="a-field"><label>Subtitle</label><input class="a-input" type="text" placeholder="A short line under the headline"></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
+          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/about/paulina-herpel-yxqVPJFAYHg-unsplash.jpg', 'Current hero photo')}</div>
+          ${buttonPairFields()}
+          ${backgroundColorField('')}`
         },
 
         {
           type: 'photo-text', label: 'Photo + text', name: 'How Digital Public Works started', inner: `
           ${sideToggle('left')}
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="How Digital Public Works started"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Tell the founding story..."></textarea></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Tell the founding story..."></textarea></div>
           ${pullquoteSlot('')}
-          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/about/mapbox-ZT5v0puBjZI-unsplash.jpg', 'Current photo')}</div>`
+          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/about/mapbox-ZT5v0puBjZI-unsplash.jpg', 'Current photo')}</div>
+          ${backgroundColorField('')}`
         },
 
         {
-          type: 'content-cards', label: 'Content card grid', name: 'Our team', inner: `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Our team"></div>
+          type: 'team-member', label: 'Team member grid', name: 'Our team', inner: `
           <div class="a-field">
             <label>Team members</label>
             <div class="a-mini-card-list">
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Team member</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Michael Burstein"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short bio or role..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Team member</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Patricia Perozo"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short bio or role..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Team member</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Kali Lewis"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short bio or role..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Team member</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Cle Diggins"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short bio or role..."></textarea></div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Michael Burstein</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Michael Burstein"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Co-Founder, Executive Director"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Michael Burstein is a civic technologist, strategist, and attorney with deep experience in navigating bureaucracies to deliver digital products that serve the American public. Prior to launching Digital Public Works, Michael served at the United States Digital Service. During his time at USDS, he was Director of the Facing Financial Shock portfolio and the Chief of Staff for the USDS-CDC team during the COVID response. Michael has been the executive in charge of legal and finance functions for a digital design and software development firm that was named one of the 1,000 fastest growing companies in the U.S. in 2020 and 2021 by Inc.com.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/Michael.png', 'Michael Burstein photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Patricia Perozo</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Patricia Perozo"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Co-Founder, Head of Delivery"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Patricia Perozo is a civic technologist, backend software engineer, and part-time product manager with experience across the federal government, Silicon Valley tech companies, and startups. Prior to co-founding Digital Public Works, she served as a Digital Service Expert at the United States Digital Service, where she led the Income Verification as a Service (IVaaS) team, contributed to COVID response efforts, and supported the implementation of several Inflation Reduction Act programs. Outside of work, she enjoys salsa dancing, practicing yoga, and watching Formula 1.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/PatriciaHeadshot-BW.png', 'Patricia Perozo photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Kali Lewis</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Kali Lewis"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Interim Director of Design &amp; Research"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Kali Lewis is a service designer with a background in ethnographic research. She anchors teams in the nuanced realities of end users, makes abstract concepts tangible, and draws out the collective wisdom of interdisciplinary teams. She specializes in crafting research plans, conducting interviews, and synthesizing insights into actionable outcomes. Most recently at USDS, she focused on Customer Experience projects with the Small Business Administration and the inter-agency life experience project Facing a Financial Shock.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/Kali.png', 'Kali Lewis photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Cle Diggins</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Cle Diggins"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Director of Engineering"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Cle Diggins is a seasoned technology leader with nearly 20 years of experience leading cross-functional teams across public and private sectors. Prior to joining Digital Public Works, Cle was a member of the United States Digital Service leading government and contractor teams across numerous agencies including the CDC, DOT, HRSA, VA, and CMS with a focus on modernization and usability of these systems.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/Cle.png', 'Cle Diggins photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Jeff Catania</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Jeff Catania"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Senior Software Engineer"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Jeff Catania is a software engineer focused on the intersection of cloud architecture, data visualization, and user experience to build elegant solutions to complex problems. Prior to joining Digital Public Works, Jeff launched Medicaid and SNAP Income Verification tools at U.S. Digital Service, virtual AI tutors at Harvard Business School Online, a digital assortment platform at Levi Strauss and Company, and a Data+Design capability at Accenture Interactive.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/Jeff-BW.png', 'Jeff Catania photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Tatiana Smith</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Tatiana Smith"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Senior Product Designer"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Tatiana Smith is a product designer, full-spectrum doula, community activist, and mother based in Raleigh, North Carolina. Tatiana served as a UX Product Designer and Researcher at the United States Digital Service where she supported the launch of the Affordable Connectivity Program with the FCC, FAFSA impact analysis with the Department of Education, and Online Passport Renewals and Visa Modernization at the Department of State.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/Tatiana.png', 'Tatiana Smith photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Erika Tom</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Erika Tom"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Senior Product Manager"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Erika Tom is a product manager with a background in data analytics and customer success. Prior to joining Digital Public Works, she worked at the United States Digital Service unblocking bottlenecks in refugee admissions, reimagining disease surveillance data features at CDC, and supporting claims processing modernization at CMS. She also has past product experience in machine learning and marketing startups, as well as with a government contractor.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/ErikaTom_BW.jpg', 'Erika Tom photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Anna Banchik</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Anna Banchik"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Senior UX Researcher"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Anna Banchik is a UX researcher driven by understanding people's experiences, the barriers they face, and the creative ways they navigate complex challenges. Drawing on an ethnographic background, her research has spanned topics from self-employment experiences among day laborers and women entrepreneurs to how human rights researchers use social media. Before joining Digital Public Works, she worked at Meta and volunteered with U.S. Digital Response. She holds a Ph.D. in Sociology from the University of Texas at Austin.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/Anna%20Banchik.png', 'Anna Banchik photo')}</div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Runako Godfrey</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove">${trashIcon}</button></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" value="Runako Godfrey"></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Software Engineer"></div></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3">Runako Godfrey is a software engineer with expertise in shipping complex systems. His experience includes work building web and cloud applications in both the nonprofit and commercial sectors. He is passionate about using technology in empathetic ways to solve pressing problems for normal people. When not building, Runako enjoys reading fiction and spending time with his wife and daughters.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/headshots/Runako_bw.jpg', 'Runako Godfrey photo')}</div></div>
             </div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a team member</button>
-          </div>` },
+            <button class="a-add-mini-card-btn" onclick="addTeamCard(this)">${plusIcon} Add a team member</button>
+          </div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'partners', label: 'Partners', name: 'Backed by', inner: `
@@ -823,42 +971,48 @@
               <div class="a-partner-row"><img class="a-partner-logo" src="../public/partner-logos/drk-foundation.png" alt="" onerror="this.style.opacity=0.3"><div class="a-partner-body"><input class="a-partner-name-input" type="text" value="DRK Foundation"></div><div class="a-partner-actions"><span class="a-partner-visible-label">Visible</span><span class="a-toggle is-on" onclick="togglePartnerVisible(this)"><span class="a-toggle-knob"></span></span><button class="a-icon-btn-xs" onclick="this.closest('.a-partner-row').remove(); markUnsaved(); showToast('Partner removed');" title="Delete partner">${trashIcon}</button></div></div>
             </div>
             <button class="a-add-mini-card-btn" onclick="addPartner()">${plusIcon} Add a partner</button>
-          </div>` },
+          </div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'text', label: 'Text block', name: 'Organization Status', inner: `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Organization Status"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Describe DPW's nonprofit status..."></textarea></div>` },
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Describe DPW's nonprofit status..."></textarea></div>
+          ${backgroundColorField('')}` },
       ],
 
       product: [
         {
           type: 'hero', label: 'Hero', name: 'Verify My Income', inner: `
           <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="Verify My Income"></div>
-          <div class="a-field"><label>Intro paragraph</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
-          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/product/product-hero.png', 'Current hero photo')}</div>`
+          <div class="a-field"><label>Subtitle</label><input class="a-input" type="text" placeholder="A short line under the headline"></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
+          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/product/product-hero.png', 'Current hero photo')}</div>
+          ${buttonPairFields()}
+          ${backgroundColorField('')}`
         },
 
         {
-          type: 'content-cards', label: 'Content card grid', name: 'Built to fit your systems', inner: `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Built to fit your systems"></div>
+          type: 'content-cards', label: 'Card grid (not clickable)', name: 'Built to fit your systems', inner: `
           <div class="a-field">
             <label>Cards</label>
             <div class="a-mini-card-list">
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Card 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="API integration"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Card 2</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Standalone portal"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Card 3</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Embedded widget"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">API integration</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="API integration"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div>${emptyPhotoField('Photo')}</div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Standalone portal</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Standalone portal"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div>${emptyPhotoField('Photo')}</div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Embedded widget</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Embedded widget"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div>${emptyPhotoField('Photo')}</div>
             </div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a card</button>
-          </div>` },
+            <button class="a-add-mini-card-btn" onclick="addPhotoMiniCard(this, 'Card')">${plusIcon} Add a card</button>
+          </div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'photo-text', label: 'Photo + text', name: 'The verification problem', inner: `
           ${sideToggle('right')}
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="The verification problem"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Describe the problem VMI solves..."></textarea></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Describe the problem VMI solves..."></textarea></div>
           ${pullquoteSlot('')}
-          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/product/product-verify.png', 'Current photo')}</div>`
+          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/product/product-verify.png', 'Current photo')}</div>
+          ${backgroundColorField('')}`
         },
 
         {
@@ -868,61 +1022,94 @@
           <div class="a-field">
             <label>Rows</label>
             <div class="a-mini-card-list">
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Row 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Row removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Pricing"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Compare pricing between the two columns..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Row 2</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Row removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Data ownership"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Compare data ownership..."></textarea></div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Row 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Row removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Pricing"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Compare pricing between the two columns..."></textarea></div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Row 2</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Row removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Data ownership"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Compare data ownership..."></textarea></div></div>
             </div>
             <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a row</button>
-          </div>` },
+          </div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'text', label: 'Text block', name: 'Questions to Ask Any Income Verification Vendor', inner: `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Questions to Ask Any Income Verification Vendor"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="List the vendor-evaluation questions..."></textarea></div>` },
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="List the vendor-evaluation questions..."></textarea></div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'photo-text', label: 'Photo + text', name: 'Accessible by design, not as an afterthought', inner: `
           ${sideToggle('right')}
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Accessible by design, not as an afterthought"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Describe the accessibility approach..."></textarea></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Describe the accessibility approach..."></textarea></div>
           ${pullquoteSlot('')}
-          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg', 'Current photo')}</div>`
+          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg', 'Current photo')}</div>
+          ${backgroundColorField('')}`
         },
 
         {
           type: 'steps', label: 'Step timeline', name: 'The path to a pilot', inner: `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="The path to a pilot"></div>
-          <div class="a-field-hint" style="margin-bottom:8px;">Steps: Discovery, Configuration and integration, Pilot launch, Expansion. Open Step 1, 2, 3... to edit.</div>
-          <button class="a-btn a-btn-outline a-btn-sm" onclick="showToast('Step added'); markUnsaved();">${plusIcon} Add a step</button>`
+          <div class="a-field-hint" style="margin-bottom:8px;">Each step has its own heading, description, and optional photo.</div>
+          <div class="a-mini-card-list">
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Step 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button></div>
+              <div class="a-field"><label>Step heading</label><input class="a-input" type="text" value="Discovery (2–4 weeks)"></div>
+              <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2">Meetings with executive leadership. Discovery sprint with interviews of policy experts, caseworkers, QC workers, community-based organizations, and applicants. Vendor coordination and integration scoping.</textarea></div>
+              ${emptyPhotoField('Step photo (optional)')}
+            </div>
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Step 2</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button></div>
+              <div class="a-field"><label>Step heading</label><input class="a-input" type="text" value="Configuration and integration (4–6 weeks)"></div>
+              <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2">Technical integration setup (SFTP, S3, encrypted email, or webhooks API). State-specific configuration: branding, consent language, report format.</textarea></div>
+              ${emptyPhotoField('Step photo (optional)')}
+            </div>
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Step 3</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button></div>
+              <div class="a-field"><label>Step heading</label><input class="a-input" type="text" value="Pilot launch"></div>
+              <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2">Launch with a defined population. Data collection and analysis. Iterative improvements based on caseworker and applicant feedback.</textarea></div>
+              ${emptyPhotoField('Step photo (optional)')}
+            </div>
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Step 4</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button></div>
+              <div class="a-field"><label>Step heading</label><input class="a-input" type="text" value="Expansion"></div>
+              <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2">Scale to broader populations and additional programs based on pilot data.</textarea></div>
+              ${emptyPhotoField('Step photo (optional)')}
+            </div>
+          </div>
+          <button class="a-add-mini-card-btn" onclick="addStepCard(this)">${plusIcon} Add a step</button>
+          ${backgroundColorField('')}`
         },
 
         {
-          type: 'case-study', label: 'Case study grid', name: 'In the field', inner: `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="In the field"></div>
+          type: 'case-study', label: 'Linked card grid (clickable)', name: 'In the field', inner: `
           <div class="a-field">
             <label>Case study cards</label>
             <div class="a-mini-card-list">
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Case study 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Pennsylvania DHS"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short case study summary..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Case study 2</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Arizona DES"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short case study summary..."></textarea></div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Pennsylvania DHS</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Pennsylvania Department of Human Services"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2">Case study forthcoming — pending draft and approval from PA DHS.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/images/product/katherine-mcadoo-HLKNH1-ITr0-unsplash.jpg', 'Pennsylvania State Capitol building')}</div>${linkPicker('', 'Card links to')}</div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Arizona DES</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Arizona Department of Economic Security"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2">Case study forthcoming — pending draft and approval from AZ DES.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/images/product/nils-huenerfuerst-yPGXOJNofgA-unsplash.jpg', 'Arizona State Capitol building with flag')}</div>${linkPicker('', 'Card links to')}</div>
             </div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a case study</button>
-          </div>` },
+            <button class="a-add-mini-card-btn" onclick="addPhotoMiniCard(this, 'Linked card', true)">${plusIcon} Add a linked card</button>
+          </div>
+          ${backgroundColorField('')}` },
       ],
 
       impact: [
         {
           type: 'hero', label: 'Hero', name: 'Our Impact', inner: `
           <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="Our Impact"></div>
-          <div class="a-field"><label>Intro paragraph</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
-          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/impact/abdul-raheem-kannath-TBwW2tHnX9w-unsplash.jpg', 'Current hero photo')}</div>`
+          <div class="a-field"><label>Subtitle</label><input class="a-input" type="text" placeholder="A short line under the headline"></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
+          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/impact/abdul-raheem-kannath-TBwW2tHnX9w-unsplash.jpg', 'Current hero photo')}</div>
+          ${buttonPairFields()}
+          ${backgroundColorField('')}`
         },
 
         {
           type: 'photo-text', label: 'Photo + text', name: 'From hours of paperwork to five minutes — without leaving home', inner: `
           ${sideToggle('left')}
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="From hours of paperwork to five minutes — without leaving home"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Describe the applicant experience..."></textarea></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Describe the applicant experience..."></textarea></div>
           ${pullquoteSlot('')}
-          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg', 'Current photo')}</div>`
+          <div class="a-field"><label>Photo</label>${uploadBlock('../public/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg', 'Current photo')}</div>
+          ${backgroundColorField('')}`
         },
 
         {
@@ -934,19 +1121,20 @@
               <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Card 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Quote card removed');" title="Remove card">${trashIcon}</button></div><div class="a-field"><label>Quote</label><textarea class="a-textarea" rows="3" placeholder="Write the testimonial..."></textarea></div><div class="a-field-row"><div class="a-field"><label>Name</label><input class="a-input" type="text" placeholder="Full name"></div><div class="a-field"><label>Role / attribution</label><input class="a-input" type="text" placeholder="Title, organization"></div></div></div>
             </div>
             <button class="a-add-mini-card-btn" onclick="addVoiceCard()">${plusIcon} Add a quote card</button>
-          </div>` },
+          </div>
+          ${backgroundColorField('')}` },
 
         {
-          type: 'case-study', label: 'Case study grid', name: 'Deployed and delivering results', inner: `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Deployed and delivering results"></div>
+          type: 'case-study', label: 'Linked card grid (clickable)', name: 'Deployed and delivering results', inner: `
           <div class="a-field">
             <label>Case study cards</label>
             <div class="a-mini-card-list">
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Case study 1</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Pennsylvania DHS"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short case study summary..."></textarea></div></div>
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Case study 2</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" value="Arizona DES"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short case study summary..."></textarea></div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Pennsylvania DHS</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Pennsylvania Department of Human Services"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2">Case study forthcoming — pending draft and approval from PA DHS.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/images/impact/katherine-mcadoo-HLKNH1-ITr0-unsplash.jpg', 'Pennsylvania State Capitol building')}</div>${linkPicker('', 'Card links to')}</div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Arizona DES</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Arizona Department of Economic Security"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2">Case study forthcoming — pending draft and approval from AZ DES.</textarea></div><div class="a-field"><label>Photo</label>${uploadBlock('../public/images/impact/nils-huenerfuerst-yPGXOJNofgA-unsplash.jpg', 'Arizona State Capitol building')}</div>${linkPicker('', 'Card links to')}</div>
             </div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a case study</button>
-          </div>` },
+            <button class="a-add-mini-card-btn" onclick="addPhotoMiniCard(this, 'Linked card', true)">${plusIcon} Add a linked card</button>
+          </div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'stats', label: 'Stat row', name: 'Year in review', inner: `
@@ -955,12 +1143,14 @@
           <div class="a-field-row"><div class="a-field"><label>Stat 1 number</label><input class="a-input" type="text" placeholder="e.g. 4"></div><div class="a-field"><label>Stat 1 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
           <div class="a-field-row"><div class="a-field"><label>Stat 2 number</label><input class="a-input" type="text" placeholder="e.g. 12,000"></div><div class="a-field"><label>Stat 2 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
           <div class="a-field-row"><div class="a-field"><label>Stat 3 number</label><input class="a-input" type="text" placeholder="e.g. $2.1M"></div><div class="a-field"><label>Stat 3 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
-          <div class="a-field-row"><div class="a-field"><label>Stat 4 number</label><input class="a-input" type="text" placeholder="e.g. 98%"></div><div class="a-field"><label>Stat 4 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>` },
+          <div class="a-field-row"><div class="a-field"><label>Stat 4 number</label><input class="a-input" type="text" placeholder="e.g. 98%"></div><div class="a-field"><label>Stat 4 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'text', label: 'Text block', name: 'How philanthropic investment creates public value', inner: `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="How philanthropic investment creates public value"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Explain the funding model..."></textarea></div>` },
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Explain the funding model..."></textarea></div>
+          ${backgroundColorField('')}` },
       ],
 
       careers: [
@@ -968,45 +1158,53 @@
           type: 'hero', label: 'Hero', name: 'Join Digital Public Works', inner: `
           <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="Join Digital Public Works"></div>
           <div class="a-field"><label>Subtitle</label><textarea class="a-textarea" rows="2">Join us in making government digital services better for everyone (and doing it at cost).</textarea></div>
-          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/careers/johannes-kopf-h0pHxbb6a78-unsplash.jpg', 'Current hero photo')}</div>`
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
+          <div class="a-field"><label>Hero photo</label>${uploadBlock('../public/images/careers/johannes-kopf-h0pHxbb6a78-unsplash.jpg', 'Current hero photo')}</div>
+          ${buttonPairFields()}
+          ${backgroundColorField('')}`
         },
 
         {
           type: 'text', label: 'Text block', name: 'Intro copy', inner: `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" placeholder="This section has no heading on the live page"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="4" placeholder="Introductory copy about working at DPW..."></textarea></div>` },
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="4" placeholder="Introductory copy about working at DPW..."></textarea></div>
+          ${backgroundColorField('')}` },
 
         {
-          type: 'content-cards', label: 'Content card grid', name: 'Open Positions', inner: `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Open Positions"></div>
+          type: 'content-cards', label: 'Card grid (not clickable)', name: 'Open Positions', inner: `
           <div class="a-field">
             <label>Job postings</label>
             <div class="a-mini-card-list">
-              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Job posting</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Title</label><input class="a-input" type="text" placeholder="e.g. Product Designer"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Location, type, short summary..."></textarea></div></div>
+              <div class="a-mini-card"><div class="a-mini-card-head"><span class="a-mini-card-label">Job posting</span><button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove">${trashIcon}</button></div><div class="a-field"><label>Heading</label><input class="a-input" type="text" placeholder="e.g. Product Designer"></div><div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Location, type, short summary..."></textarea></div>${emptyPhotoField('Photo')}</div>
             </div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a job posting</button>
-          </div>` },
+            <button class="a-add-mini-card-btn" onclick="addPhotoMiniCard(this, 'Job posting')">${plusIcon} Add a job posting</button>
+          </div>
+          ${backgroundColorField('')}` },
       ],
 
       contact: [
         {
           type: 'text', label: 'Page header', name: 'Get in touch', inner: `
-          <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="Get in touch"></div>` },
+          <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="Get in touch"></div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'text', label: 'Text block', name: 'Request a demo of Verify My Income', inner: `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Request a demo of Verify My Income"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="3" placeholder="Intro copy for the State Partners form..."></textarea><div class="a-field-hint">Submissions from this form go to info@digitalpublicworks.org</div></div>` },
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Intro copy for the State Partners form..."></textarea><div class="a-field-hint">Submissions from this form go to info@digitalpublicworks.org</div></div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'text', label: 'Text block', name: 'Support our work', inner: `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Support our work"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="3" placeholder="Intro copy for the Funders form..."></textarea><div class="a-field-hint">Submissions from this form go to info@digitalpublicworks.org</div></div>` },
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Intro copy for the Funders form..."></textarea><div class="a-field-hint">Submissions from this form go to info@digitalpublicworks.org</div></div>
+          ${backgroundColorField('')}` },
 
         {
           type: 'text', label: 'Text block', name: 'Everything else', inner: `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="Everything else"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="3" placeholder="Intro copy for the Community form..."></textarea><div class="a-field-hint">Submissions from this form go to info@digitalpublicworks.org</div></div>` },
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Intro copy for the Community form..."></textarea><div class="a-field-hint">Submissions from this form go to info@digitalpublicworks.org</div></div>
+          ${backgroundColorField('')}` },
       ],
     };
 
@@ -1218,10 +1416,37 @@
     }
 
     // ─── image preview ───
+    // Handles two starting states: a field that already has a photo
+    // (uploadBlock() — has an <img> to update in place) and an empty
+    // "click to upload" field (emptyPhotoField() — no <img> yet, so the
+    // container is rebuilt into the uploadBlock() layout on first upload).
     function previewImage(input) {
       if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = e => { input.closest('.a-upload, .a-upload-block').querySelector('img').src = e.target.result; };
+        reader.onload = e => {
+          const container = input.closest('.a-upload, .a-upload-block');
+          let img = container.querySelector('img');
+          if (!img) {
+            container.className = 'a-upload-block';
+            container.innerHTML = `
+              <img alt="">
+              <div class="a-upload-actions">
+                <button type="button" class="a-btn a-btn-outline a-btn-sm" onclick="toggleUploadMenu(this)">Replace photo</button>
+                <div class="a-upload-menu">
+                  <button type="button" onclick="triggerFileInput(this)">${uploadIcon} Upload from computer</button>
+                  <button type="button" onclick="openMediaLibrary(this)">${libraryIcon} Choose from media library</button>
+                </div>
+              </div>`;
+            const newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.accept = 'image/*';
+            newInput.style.display = 'none';
+            newInput.setAttribute('onchange', 'previewImage(this)');
+            container.appendChild(newInput);
+            img = container.querySelector('img');
+          }
+          img.src = e.target.result;
+        };
         reader.readAsDataURL(input.files[0]);
         markUnsaved();
         showToast('Photo updated');
@@ -1341,7 +1566,7 @@
           <span class="a-mini-card-label">New card</span>
           <button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove card">${trashIcon}</button>
         </div>
-        <div class="a-field"><label>Title</label><input class="a-input" type="text" placeholder="Card title"></div>
+        <div class="a-field"><label>Heading</label><input class="a-input" type="text" placeholder="Card title"></div>
         <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div>`;
       list.appendChild(card);
       showToast('Card added');
@@ -1368,46 +1593,131 @@
       markUnsaved();
     }
 
+    // ─── step timeline: add a step (heading + description + optional photo) ───
+    function addStepCard(btn) {
+      const list = btn.previousElementSibling;
+      const n = list.children.length + 1;
+      const card = document.createElement('div');
+      card.className = 'a-mini-card';
+      card.innerHTML = `
+        <div class="a-mini-card-head">
+          <span class="a-mini-card-label">Step ${n}</span>
+          <button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Step removed');" title="Remove step">${trashIcon}</button>
+        </div>
+        <div class="a-field"><label>Step heading</label><input class="a-input" type="text" placeholder="e.g. Applicant receives a secure link"></div>
+        <div class="a-field"><label>Description</label><textarea class="a-textarea" rows="2" placeholder="Describe this step..."></textarea></div>
+        ${emptyPhotoField('Step photo (optional)')}`;
+      list.appendChild(card);
+      showToast('Step added');
+      markUnsaved();
+    }
+
+    // ─── case-study / content-card grids: add a card with title, text, and photo ───
+    function addPhotoMiniCard(btn, cardLabel, includeLink) {
+      const list = btn.previousElementSibling;
+      const card = document.createElement('div');
+      card.className = 'a-mini-card';
+      card.innerHTML = `
+        <div class="a-mini-card-head">
+          <span class="a-mini-card-label">${cardLabel || 'Card'}</span>
+          <button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Card removed');" title="Remove card">${trashIcon}</button>
+        </div>
+        <div class="a-field"><label>Heading</label><input class="a-input" type="text" placeholder="Card title"></div>
+        <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="2" placeholder="Short description..."></textarea></div>
+        ${emptyPhotoField('Photo')}
+        ${includeLink ? linkPicker('', 'Card links to') : ''}`;
+      list.appendChild(card);
+      showToast('Card added');
+      markUnsaved();
+    }
+
+    // ─── team member card: name, title, body text, photo ───
+    function addTeamCard(btn) {
+      const list = btn.previousElementSibling;
+      const card = document.createElement('div');
+      card.className = 'a-mini-card';
+      card.innerHTML = `
+        <div class="a-mini-card-head">
+          <span class="a-mini-card-label">Team member</span>
+          <button class="a-icon-btn-xs" onclick="this.closest('.a-mini-card').remove(); markUnsaved(); showToast('Team member removed');" title="Remove team member">${trashIcon}</button>
+        </div>
+        <div class="a-field-row">
+          <div class="a-field"><label>Name</label><input class="a-input" type="text" placeholder="Full name"></div>
+          <div class="a-field"><label>Title</label><input class="a-input" type="text" placeholder="Job title"></div>
+        </div>
+        <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Short bio..."></textarea></div>
+        ${emptyPhotoField('Photo')}`;
+      list.appendChild(card);
+      showToast('Team member added');
+      markUnsaved();
+    }
+
+    // ─── accordion: add / remove a question (minimum of 2 enforced) ───
+    function addAccordionTab(btn) {
+      const list = btn.previousElementSibling;
+      const n = list.children.length + 1;
+      const card = document.createElement('div');
+      card.className = 'a-mini-card';
+      card.innerHTML = `
+        <div class="a-mini-card-head">
+          <span class="a-mini-card-label">Item ${n}</span>
+          <button class="a-icon-btn-xs" onclick="removeAccordionTab(this)" title="Remove item">${trashIcon}</button>
+        </div>
+        <div class="a-field"><label>Heading</label><input class="a-input" type="text" placeholder="Write the question..."></div>
+        <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write the answer..."></textarea></div>`;
+      list.appendChild(card);
+      showToast('Item added');
+      markUnsaved();
+    }
+    function removeAccordionTab(btn) {
+      const list = btn.closest('.a-mini-card-list');
+      if (list.children.length <= 2) {
+        showToast('An accordion needs at least 2 items');
+        return;
+      }
+      btn.closest('.a-mini-card').remove();
+      showToast('Item removed');
+      markUnsaved();
+    }
+
     // ─── panel content per block type (used by "Add a new section") ───
     function panelBodyFor(type, name) {
-      const photoField = `
-          <div class="a-field">
-            <label>Photo</label>
-            <div class="a-upload">
-              <div class="a-upload-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span><strong>Click to upload</strong> a photo</span></div>
-              <input type="file" accept="image/*" onchange="previewImage(this)">
-            </div>
-          </div>`;
-
       switch (type) {
         case 'hero':
           return `
           <div class="a-field"><label>Headline</label><input class="a-input" type="text" value="${name}"></div>
-          <div class="a-field"><label>Intro paragraph</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
-          ${photoField}`;
+          <div class="a-field"><label>Subtitle</label><input class="a-input" type="text" placeholder="A short line under the headline"></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write a short introduction for this page"></textarea></div>
+          ${emptyPhotoField('Hero photo')}
+          ${buttonPairFields()}
+          ${backgroundColorField('')}`;
 
         case 'heading':
           return `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>`;
+          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
+          ${backgroundColorField('')}`;
 
         case 'text':
           return `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="3" placeholder="Write your text here..."></textarea></div>`;
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write your text here..."></textarea></div>
+          ${backgroundColorField('')}`;
 
         case 'photo-text':
           return `
           ${sideToggle('left')}
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="3" placeholder="Write your text here..."></textarea></div>
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write your text here..."></textarea></div>
           ${pullquoteSlot('')}
-          ${photoField}`;
+          ${buttonPairFields()}
+          ${emptyPhotoField('Photo')}
+          ${backgroundColorField('')}`;
 
         case 'steps':
           return `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
-          <div class="a-field-hint" style="margin-bottom:8px;">Each step has its own label and short description. Add as many as you need.</div>
-          <button class="a-btn a-btn-outline a-btn-sm" onclick="showToast('Step added'); markUnsaved();">${plusIcon} Add a step</button>`;
+          <div class="a-field-hint" style="margin-bottom:8px;">Each step has its own heading, description, and optional photo.</div>
+          <div class="a-mini-card-list"></div>
+          <button class="a-add-mini-card-btn" onclick="addStepCard(this)">${plusIcon} Add a step</button>
+          ${backgroundColorField('')}`;
 
         case 'stats':
           return `
@@ -1416,12 +1726,13 @@
           <div class="a-field-row"><div class="a-field"><label>Stat 1 number</label><input class="a-input" type="text" placeholder="e.g. 40%"></div><div class="a-field"><label>Stat 1 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
           <div class="a-field-row"><div class="a-field"><label>Stat 2 number</label><input class="a-input" type="text" placeholder="e.g. 3 min"></div><div class="a-field"><label>Stat 2 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
           <div class="a-field-row"><div class="a-field"><label>Stat 3 number</label><input class="a-input" type="text" placeholder="e.g. 12"></div><div class="a-field"><label>Stat 3 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
-          <div class="a-field-row"><div class="a-field"><label>Stat 4 number</label><input class="a-input" type="text" placeholder="e.g. $0"></div><div class="a-field"><label>Stat 4 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>`;
+          <div class="a-field-row"><div class="a-field"><label>Stat 4 number</label><input class="a-input" type="text" placeholder="e.g. $0"></div><div class="a-field"><label>Stat 4 label</label><input class="a-input" type="text" placeholder="What this measures"></div></div>
+          ${backgroundColorField('')}`;
 
         case 'quote':
           return `
-          <div class="a-field"><label>Pullquote</label><textarea class="a-textarea" rows="2" placeholder="Write the quote..."></textarea>
-          <div class="a-field-hint">This appears in large text with a rule above and below it.</div></div>`;
+          <div class="a-field"><label>Pullquote</label><textarea class="a-textarea" rows="2" placeholder="Write the quote..."></textarea></div>
+          ${backgroundColorField('')}`;
 
         case 'voices':
           return `
@@ -1430,35 +1741,53 @@
             <label>Quote cards</label>
             <div class="a-mini-card-list"></div>
             <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a quote card</button>
-          </div>`;
-
-        case 'comparison':
-          return `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
-          <div class="a-field-row"><div class="a-field"><label>Column A title</label><input class="a-input" type="text" placeholder="e.g. Legacy process"></div><div class="a-field"><label>Column B title</label><input class="a-input" type="text" placeholder="e.g. With Verify My Income"></div></div>
-          <div class="a-field">
-            <label>Rows</label>
-            <div class="a-mini-card-list"></div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a row</button>
-          </div>`;
+          </div>
+          ${backgroundColorField('')}`;
 
         case 'case-study':
           return `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
           <div class="a-field">
-            <label>Case study cards</label>
+            <label>Linked cards</label>
             <div class="a-mini-card-list"></div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a case study</button>
-          </div>`;
+            <button class="a-add-mini-card-btn" onclick="addPhotoMiniCard(this, 'Linked card', true)">${plusIcon} Add a linked card</button>
+          </div>
+          ${backgroundColorField('')}`;
 
         case 'content-cards':
           return `
-          <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
           <div class="a-field">
             <label>Cards</label>
             <div class="a-mini-card-list"></div>
-            <button class="a-add-mini-card-btn" onclick="addGenericMiniCard(this)">${plusIcon} Add a card</button>
-          </div>`;
+            <button class="a-add-mini-card-btn" onclick="addPhotoMiniCard(this, 'Card')">${plusIcon} Add a card</button>
+          </div>
+          ${backgroundColorField('')}`;
+
+        case 'team-member':
+          return `
+          <div class="a-field">
+            <label>Team members</label>
+            <div class="a-mini-card-list"></div>
+            <button class="a-add-mini-card-btn" onclick="addTeamCard(this)">${plusIcon} Add a team member</button>
+          </div>
+          ${backgroundColorField('')}`;
+
+        case 'accordion':
+          return `
+          <div class="a-field-hint" style="margin-bottom:8px;">An accordion needs at least 2 items.</div>
+          <div class="a-mini-card-list">
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Item 1</span><button class="a-icon-btn-xs" onclick="removeAccordionTab(this)" title="Remove item">${trashIcon}</button></div>
+              <div class="a-field"><label>Heading</label><input class="a-input" type="text" placeholder="e.g. What is the total cost of ownership?"></div>
+              <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write the answer..."></textarea></div>
+            </div>
+            <div class="a-mini-card">
+              <div class="a-mini-card-head"><span class="a-mini-card-label">Item 2</span><button class="a-icon-btn-xs" onclick="removeAccordionTab(this)" title="Remove item">${trashIcon}</button></div>
+              <div class="a-field"><label>Heading</label><input class="a-input" type="text" placeholder="e.g. Who is responsible for accessibility compliance?"></div>
+              <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3" placeholder="Write the answer..."></textarea></div>
+            </div>
+          </div>
+          <button class="a-add-mini-card-btn" onclick="addAccordionTab(this)">${plusIcon} Add an item</button>
+          ${backgroundColorField('')}`;
 
         case 'partners':
           return `
@@ -1468,19 +1797,34 @@
             <div class="a-field-hint" style="margin-bottom:8px;">Turn a partner off to hide their logo from the live site without losing their info.</div>
             <div style="display:flex; flex-direction:column; gap:8px;"></div>
             <button class="a-add-mini-card-btn" onclick="addGenericPartner(this)">${plusIcon} Add a partner</button>
-          </div>`;
+          </div>
+          ${backgroundColorField('')}`;
+
+        case 'button':
+          return `
+          <div class="a-field"><label>Button text</label><input class="a-input" type="text" value="${name}"></div>
+          ${linkPicker('')}
+          ${backgroundColorField('')}`;
 
         case 'cta':
           return `
           <div class="a-field"><label>Heading</label><textarea class="a-textarea" rows="2">${name}</textarea></div>
           <div class="a-field"><label>Button text</label><input class="a-input" type="text" placeholder="e.g. Let's talk"></div>
           ${linkPicker('')}
-          ${photoField}`;
+          <div class="a-field"><label>Background photo</label>
+            <div class="a-upload">
+              <div class="a-upload-cta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span><strong>Click to upload</strong> a photo</span></div>
+              <input type="file" accept="image/*" onchange="previewImage(this)">
+            </div>
+            <div class="a-field-hint">This photo appears as the background of the banner, behind a dark overlay.</div>
+          </div>
+          ${backgroundColorField('')}`;
 
         default:
           return `
           <div class="a-field"><label>Heading</label><input class="a-input" type="text" value="${name}"></div>
-          <div class="a-field"><label>Body text</label><textarea class="a-textarea" rows="3"></textarea></div>`;
+          <div class="a-field"><label>Text</label><textarea class="a-textarea" rows="3"></textarea></div>
+          ${backgroundColorField('')}`;
       }
     }
 

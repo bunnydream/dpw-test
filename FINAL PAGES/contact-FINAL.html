@@ -494,23 +494,7 @@
     </div>
   </footer>
 
-  <script>
-    /* ── MOBILE NAV ─────────────────────────────── */
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.add('open');
-    });
-    document.getElementById('mobileClose').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.remove('open');
-    });
-
-    /* ── SCROLL REVEAL ──────────────────────────── */
-    const revObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
-  </script>
+  <script src="../shared.js"></script>
 
 </body>
 

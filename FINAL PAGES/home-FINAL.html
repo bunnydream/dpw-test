@@ -1082,29 +1082,6 @@
             <img src="../public/partner-logos/logo-samvid-ventures.webp" alt="Samvid Ventures" class="funder-logo-img">
           </div>
         </a>
-        <a href="https://www.vanguardcharitable.org" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/images/funders/vanguard-charitable-logo.svg" alt="Vanguard Charitable"
-              class="funder-logo-img">
-          </div>
-        </a>
-        <a href="https://nextladder.com" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/partner-logos/nextladder.svg" alt="Next Ladder Ventures" class="funder-logo-img">
-          </div>
-        </a>
-        <a href="https://www.wkkf.org" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/partner-logos/W.K._Kellogg_Foundation_logo.png" alt="W.K. Kellogg Foundation"
-              class="funder-logo-img">
-          </div>
-        </a>
-        <a href="https://www.google.org" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/images/funders/googleorg-logo.svg" alt="Google.org" class="funder-logo-img">
-          </div>
-        </a>
-
       </div>
     </div>
   </section>
@@ -1198,23 +1175,8 @@
     </div>
   </footer>
 
+  <script src="../shared.js"></script>
   <script>
-    /* ── MOBILE NAV ─────────────────────────────── */
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.add('open');
-    });
-    document.getElementById('mobileClose').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.remove('open');
-    });
-
-    /* ── SCROLL REVEAL ──────────────────────────── */
-    const revObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target) }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
-
     /* ── STAT COUNTERS ──────────────────────────── */
     function animCount(el, target, pre, suf) {
       const dec = target % 1 !== 0;
@@ -1238,57 +1200,6 @@
       });
     }, { threshold: 0.5 });
     document.querySelectorAll('[data-count]').forEach(el => cObs.observe(el));
-
-    /* ── QUOTE CAROUSEL ── */
-    (function () {
-      const track = document.getElementById('carouselTrack');
-      const dotsEl = document.getElementById('carouselDots');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const cards = Array.from(track.querySelectorAll('.voice-card'));
-      const TOTAL = cards.length;
-      const GAP = 20;
-      let idx = 0;
-
-      const dots = cards.map((_, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'c-dot' + (i === 0 ? ' c-dot--active' : '');
-        btn.setAttribute('role', 'tab');
-        btn.setAttribute('aria-label', 'Quote ' + (i + 1));
-        btn.addEventListener('click', () => goTo(i));
-        dotsEl.appendChild(btn);
-        return btn;
-      });
-
-      function cardWidth() {
-        const outerEl = track.parentElement;
-        const pl = parseFloat(window.getComputedStyle(outerEl).paddingLeft) || 0;
-        const visW = outerEl.offsetWidth - pl;
-        return Math.max(200, Math.floor((visW - GAP) / 2.5));
-      }
-
-      function setWidths() {
-        const cw = cardWidth();
-        cards.forEach(c => { c.style.flexBasis = cw + 'px'; });
-      }
-
-      function goTo(i) {
-        idx = Math.max(0, Math.min(i, TOTAL - 1));
-        const cw = cardWidth();
-        const offset = idx * (cw + GAP);
-        track.style.transform = 'translateX(-' + offset + 'px)';
-        dots.forEach((d, j) => d.classList.toggle('c-dot--active', j === idx));
-        prevBtn.disabled = idx === 0;
-        nextBtn.disabled = idx >= TOTAL - 1;
-      }
-
-      prevBtn.addEventListener('click', () => goTo(idx - 1));
-      nextBtn.addEventListener('click', () => goTo(idx + 1));
-
-      setWidths();
-      goTo(0);
-      window.addEventListener('resize', () => { setWidths(); goTo(idx); });
-    }());
 
     /* ── HOW VMI STEPS PROGRESS BAR ─────────────────── */
     (function () {

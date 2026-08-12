@@ -6,7 +6,7 @@ Updated 2026-08-12. This is the one file to follow — it replaces the ordering/
 
 ## Where things stand today
 
-- **Designs** — ✅ Done and approved by DPW. `FINAL PAGES/` (7 pages) and `ADMIN PAGES/` (admin mockup) are final. Nothing here should be redesigned — only migrated into a real, working app.
+- **Designs** — ✅ Done and approved by DPW. `FINAL PAGES/` (7 pages) and `ADMIN PAGES/` (admin mockup) are final. Nothing here should be redesigned — only migrated into a real, working app. (2026-08-12: last-minute edits applied — removed 4 non-approved funder logos from home + about, reworked the Insights page's hero/cards/type-scale to match the rest of the site.)
 - **GitHub** — ✅ Done. Repo transferred to a GitHub account owned by DPW.
 - **Vercel** — Account created, nothing set up inside it yet.
 - **Supabase** — Account created, nothing set up inside it yet.
@@ -127,6 +127,8 @@ Build goals, roughly in this order:
 3. Replace every <img> tag with the next/image component for automatic lazy-loading, responsive sizing, and modern-format conversion.
 
 4. Public site: the 7 pages should render dynamically from a Supabase database (pages/sections tables, block-based, matching the block types already modeled in ADMIN PAGES/admin-page-editor.html and documented in summary.md's admin architecture notes) rather than staying hardcoded — this is what lets admin edits show up live. Build a blog-post detail page for Insights posts, which doesn't exist yet (currently only the index/card grid does).
+
+   Insights page category filter tags must be dynamic, not hardcoded: the filter pills shown on both the public Insights page and the admin should be driven by whatever tags actually exist on published posts. Right now there are zero published articles, so the filter should show no category pills at all. When an admin publishes a post tagged e.g. "Policy," a "Policy" filter pill should automatically appear on both the public page and in the admin — don't hardcode a fixed list of categories anywhere.
 
 5. Admin CMS: wire real Supabase Auth login, and connect the page/blog block editors in ADMIN PAGES/ to real create/update/publish actions against the database. "Publish" should update the live public page via on-demand revalidation, not a full redeploy. Media/photo uploads in the admin should go to Supabase Storage and render through next/image (configure remotePatterns for Supabase's storage domain).
 

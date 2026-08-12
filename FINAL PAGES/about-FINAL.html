@@ -111,7 +111,9 @@
       }
     }
 
-    @media (max-width: 480px) {
+    /* Full mobile view (matches the site's nav/hamburger breakpoint) always
+       stacks to 1 column — 2-column only applies to the tablet range above. */
+    @media (max-width: 768px) {
       .team-grid {
         grid-template-columns: 1fr;
       }
@@ -485,29 +487,6 @@
             <img src="../public/partner-logos/logo-samvid-ventures.webp" alt="Samvid Ventures" class="funder-logo-img">
           </div>
         </a>
-        <a href="https://www.vanguardcharitable.org" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/images/funders/vanguard-charitable-logo.svg" alt="Vanguard Charitable"
-              class="funder-logo-img">
-          </div>
-        </a>
-        <a href="https://nextladder.com" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/partner-logos/nextladder.svg" alt="Next Ladder Ventures" class="funder-logo-img">
-          </div>
-        </a>
-        <a href="https://www.wkkf.org" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/partner-logos/W.K._Kellogg_Foundation_logo.png" alt="W.K. Kellogg Foundation"
-              class="funder-logo-img">
-          </div>
-        </a>
-        <a href="https://www.google.org" class="funder-card funder-pending" target="_blank" rel="noopener">
-          <div class="funder-logo-area">
-            <img src="../public/images/funders/googleorg-logo.svg" alt="Google.org" class="funder-logo-img">
-          </div>
-        </a>
-
       </div>
     </div>
   </section>
@@ -603,23 +582,7 @@
     </div>
   </footer>
 
-  <script>
-    /* ── MOBILE NAV ─────────────────────────────── */
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.add('open');
-    });
-    document.getElementById('mobileClose').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.remove('open');
-    });
-
-    /* ── SCROLL REVEAL ──────────────────────────── */
-    const revObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
-  </script>
+  <script src="../shared.js"></script>
 
 </body>
 

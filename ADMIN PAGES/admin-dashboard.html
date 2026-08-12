@@ -334,7 +334,7 @@
           <a href="admin-blog-list.html">View all posts →</a>
         </div>
 
-        <div class="a-card" style="padding: 0;">
+        <div class="a-card" style="padding: 0; border-radius: 0;">
           <table class="a-table" style="border: none; border-radius: 0;">
             <thead>
               <tr>
@@ -346,7 +346,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr class="a-post-row" onclick="goToEditor()">
                 <td>
                   <div class="a-post-cell">
                     <div class="a-post-title">How H.R. 1 Changes the Stakes for Income Verification</div>
@@ -355,9 +355,15 @@
                 <td><span class="a-badge a-badge-policy">Policy</span></td>
                 <td><span class="a-status a-status-published">Published</span></td>
                 <td>Aug 4, 2026</td>
-                <td><a class="a-btn a-btn-ghost a-btn-sm" href="admin-blog-editor.html">Edit</a></td>
+                <td>
+                  <div class="a-row-actions" onclick="event.stopPropagation()">
+                    <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </a>
+                  </div>
+                </td>
               </tr>
-              <tr>
+              <tr class="a-post-row" onclick="goToEditor()">
                 <td>
                   <div class="a-post-cell">
                     <div class="a-post-title">The 40% Problem: When the Process Fails Before the Technology Does</div>
@@ -366,9 +372,15 @@
                 <td><span class="a-badge a-badge-service">Service Design</span></td>
                 <td><span class="a-status a-status-published">Published</span></td>
                 <td>Jul 22, 2026</td>
-                <td><a class="a-btn a-btn-ghost a-btn-sm" href="admin-blog-editor.html">Edit</a></td>
+                <td>
+                  <div class="a-row-actions" onclick="event.stopPropagation()">
+                    <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </a>
+                  </div>
+                </td>
               </tr>
-              <tr>
+              <tr class="a-post-row" onclick="goToEditor()">
                 <td>
                   <div class="a-post-cell">
                     <div class="a-post-title">Accessible by Design: What Our Research on VMI Is Revealing</div>
@@ -377,7 +389,13 @@
                 <td><span class="a-badge a-badge-access">Accessibility</span></td>
                 <td><span class="a-status a-status-draft">Draft</span></td>
                 <td>Aug 8, 2026</td>
-                <td><a class="a-btn a-btn-ghost a-btn-sm" href="admin-blog-editor.html">Edit</a></td>
+                <td>
+                  <div class="a-row-actions" onclick="event.stopPropagation()">
+                    <a class="a-icon-btn" href="admin-blog-editor.html" title="Edit">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </a>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -440,6 +458,12 @@
   </div>
 
   <script>
+    // ─── click anywhere in a "Recent blog posts" row to edit it (matches
+    // admin-blog-list.html's post table) ───
+    function goToEditor() {
+      window.location.href = 'admin-blog-editor.html';
+    }
+
     // ─── shared storage helpers (dpwCustomPages / dpwDeletedPages live in
     // localStorage so "Deleted pages" — now its own sidebar destination —
     // can show the same data after navigating away and back) ───

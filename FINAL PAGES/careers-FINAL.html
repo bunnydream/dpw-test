@@ -187,7 +187,8 @@
   <section class="hero">
     <div class="hero-left reveal">
       <h1>Join Digital Public Works</h1>
-      <p class="hero-tagline">Join a team shipping products into government systems.</p>
+      <p class="hero-tagline">Join us in making government digital services better for everyone (and doing it at cost).
+      </p>
     </div>
     <div class="hero-img reveal d2">
       <img src="../public/images/careers/johannes-kopf-h0pHxbb6a78-unsplash.jpg"
@@ -301,23 +302,7 @@
     </div>
   </footer>
 
-  <script>
-    /* ── MOBILE NAV ─────────────────────────────── */
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.add('open');
-    });
-    document.getElementById('mobileClose').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.remove('open');
-    });
-
-    /* ── SCROLL REVEAL ──────────────────────────── */
-    const revObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('vis'); revObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.08 });
-    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
-  </script>
+  <script src="../shared.js"></script>
 
 </body>
 
