@@ -3,7 +3,7 @@
 ══════════════════════════════════════════════ */
 
 /* ─── HERO (matches product page) ─── */
-.hero {
+.page-impact .hero {
   background: var(--white);
   min-height: calc(100dvh - 74px);
   display: grid;
@@ -11,7 +11,7 @@
   overflow: hidden;
 }
 
-.hero-left {
+.page-impact .hero-left {
   padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
   display: flex;
   flex-direction: column;
@@ -22,63 +22,63 @@
 
 /* h1 font + margin-bottom: 36px from shared.css */
 
-.hero-tagline {
+.page-impact .hero-tagline {
   white-space: normal;
   max-width: 38ch;
 }
 
-.hero-img {
+.page-impact .hero-img {
   overflow: hidden;
   padding: 0;
 }
 
-.hero-img img {
+.page-impact .hero-img img {
   object-fit: cover;
   object-position: center 25%;
 }
 
 
 /* ─── STAT ROW — structure/animation in shared.css; impact overrides below ─── */
-.stat-row {
+.page-impact .stat-row {
   grid-template-columns: repeat(4, 1fr);
   padding: 0 clamp(20px, 5vw, 64px) clamp(32px, 4vw, 48px);
   background: var(--cool-white);
 }
 
-.stat-cell {
+.page-impact .stat-cell {
   padding: clamp(72px, 9vw, 108px) clamp(16px, 2.5vw, 28px) clamp(60px, 8vw, 96px);
 }
 
-.stat-cell::before {
+.page-impact .stat-cell::before {
   margin-bottom: 18px;
 }
 
-.stat-num {
+.page-impact .stat-num {
   font-size: clamp(36px, 4.2vw, 56px);
   line-height: 0.95;
   letter-spacing: -0.03em;
   margin-bottom: 12px;
 }
 
-.stat-label {
+.page-impact .stat-label {
   font-size: var(--t-body);
   letter-spacing: 0.12em;
 }
 
 
 /* ─── FAMILIES ─── */
-.families {
+.page-impact .families {
   background: var(--white);
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.families-img {
+.page-impact .families-img {
   position: relative;
   min-height: 480px;
 }
 
-.families-img img {
+.page-impact .families-img img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -87,7 +87,7 @@
   display: block;
 }
 
-.families-right {
+.page-impact .families-right {
   padding: clamp(48px, 6vw, 72px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2)) clamp(48px, 6vw, 72px) clamp(48px, 6vw, 80px);
   display: flex;
   flex-direction: column;
@@ -96,7 +96,7 @@
 }
 
 /* comp-card on white bg → cool-white card */
-.comp-card {
+.page-impact .comp-card {
   background: var(--cool-white);
 }
 
@@ -107,35 +107,35 @@
 
 
 /* ─── VOICES CAROUSEL — cool-white section, white cards/buttons ─── */
-.voices {
+.page-impact .voices {
   background: var(--cool-white);
 }
 
-.voice-card {
+.page-impact .voice-card {
   background: var(--white);
 }
 
-.carousel-btn {
+.page-impact .carousel-btn {
   background: var(--white);
 }
 
 /* ─── CASE STUDIES — white section, cool-white cards ─── */
-.field {
+.page-impact .field {
   background: var(--white);
 }
 
-.case-card {
+.page-impact .case-card {
   background: var(--cool-white);
 }
 
 
 
 /* ─── YEAR IN REVIEW — cool-white section, white book ─── */
-.annual {
+.page-impact .annual {
   background: var(--cool-white);
 }
 
-.annual-inner {
+.page-impact .annual-inner {
   display: grid;
   grid-template-columns: 7fr 4fr;
   gap: clamp(48px, 6vw, 96px);
@@ -145,12 +145,12 @@
 /* ─── ANNUAL BODY TEXT — see shared.css (.body-p) ─── */
 /* btn-annual → replaced by shared .btn .btn-forge classes in HTML */
 
-.annual-visual {
+.page-impact .annual-visual {
   display: flex;
   justify-content: center;
 }
 
-.report-book {
+.page-impact .report-book {
   width: 100%;
   max-width: 200px;
   aspect-ratio: 8.5 / 11;
@@ -162,7 +162,7 @@
   justify-content: center;
 }
 
-.report-book span {
+.page-impact .report-book span {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 11px;
   font-weight: 700;
@@ -173,64 +173,64 @@
 
 
 /* ─── FUNDING MODEL — white section, cool-white cards ─── */
-.funding {
+.page-impact .funding {
   background: var(--white);
 }
 
-.content-card {
+.page-impact .content-card {
   background: var(--cool-white);
 }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1024px) {
-  .hero {
+  .page-impact .hero {
     grid-template-columns: 1fr;
     height: auto;
     min-height: auto;
   }
 
-  .hero-left {
+  .page-impact .hero-left {
     padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px);
   }
 
-  .hero-tagline {
+  .page-impact .hero-tagline {
     max-width: none;
     min-width: 0;
   }
 
-  .hero-img {
+  .page-impact .hero-img {
     aspect-ratio: 16/7;
     min-height: 280px;
     order: -1;
   }
 
-  .families {
+  .page-impact .families {
     grid-template-columns: 1fr;
   }
 
-  .families-img {
+  .page-impact .families-img {
     min-height: 360px;
   }
 
-  .families-right {
+  .page-impact .families-right {
     padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
   }
 
-  .annual-inner {
+  .page-impact .annual-inner {
     grid-template-columns: 1fr;
   }
 
-  .annual-visual {
+  .page-impact .annual-visual {
     display: none;
   }
 
-  .stat-row {
+  .page-impact .stat-row {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .stat-row {
+  .page-impact .stat-row {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -238,13 +238,13 @@
 }
 
 @media (max-width: 500px) {
-  .stat-row {
+  .page-impact .stat-row {
     grid-template-columns: 1fr;
   }
 }
 
 /* ─── INSIGHTS CTA ───────────────────────────── */
-.cta-section {
+.page-impact .cta-section {
   position: relative;
   min-height: 80vh;
   display: flex;
@@ -256,7 +256,7 @@
   overflow: hidden;
 }
 
-.cta-section::before {
+.page-impact .cta-section::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -264,14 +264,14 @@
   z-index: 0;
 }
 
-.cta-inner {
+.page-impact .cta-inner {
   max-width: 640px;
   margin: 0;
   position: relative;
   z-index: 1;
 }
 
-.cta-h {
+.page-impact .cta-h {
   margin-bottom: 32px;
   color: var(--white);
 }

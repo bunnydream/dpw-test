@@ -1,120 +1,115 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import ProductAccordion from "@/components/ProductAccordion";
+import { getPageSections, type Section } from "@/lib/sections";
+import Hero, { type HeroContent } from "@/components/blocks/Hero";
+import CaseStudy, { type CaseStudyContent } from "@/components/blocks/CaseStudy";
 import "./product.css";
 
 export const metadata: Metadata = {
   title: "Verify My Income — Digital Public Works",
 };
 
-export default function ProductPage() {
+type ContentCardsContent = {
+  heading: string;
+  text: string;
+  cards: {
+    heading: string;
+    text: string;
+    photo_url: string;
+    photo_alt?: string | null;
+  }[];
+};
+
+type ProblemPhotoTextContent = {
+  heading: string;
+  text: string;
+  photo_url: string;
+  photo_alt?: string | null;
+};
+
+type AccessPhotoTextContent = {
+  heading: string;
+  text: string[];
+  photo_url: string;
+  photo_alt?: string | null;
+};
+
+type PilotStepsContent = {
+  steps: {
+    heading: string;
+    description: string;
+  }[];
+};
+
+function byType(sections: Section[], type: Section["type"]) {
+  return sections.filter((s) => s.type === type);
+}
+
+export default async function ProductPage() {
+  const result = await getPageSections("product");
+  const sections = result?.sections ?? [];
+
+  const hero = byType(sections, "hero")[0];
+  const builtToFit = byType(sections, "content-cards")[0];
+  const photoTextSections = byType(sections, "photo-text");
+  const verificationProblem = photoTextSections[0];
+  const accessible = photoTextSections[1];
+  const pilotSteps = byType(sections, "steps")[0];
+  const inTheField = byType(sections, "case-study")[0];
+
+  const builtToFitContent = builtToFit?.content as ContentCardsContent | undefined;
+  const verificationProblemContent = verificationProblem?.content as ProblemPhotoTextContent | undefined;
+  const accessibleContent = accessible?.content as AccessPhotoTextContent | undefined;
+  const pilotStepsContent = pilotSteps?.content as PilotStepsContent | undefined;
+
   return (
-    <>
+    <div className="page-product">
       <ProductAccordion />
 
       {/* HERO */}
-      <section className="hero">
-        <div className="hero-left reveal">
-          <div className="hero-heading-stack">
-            <h1>Verify My Income</h1>
-            <p className="hero-tagline">The verification service layer between payroll data and state benefit systems</p>
-          </div>
-          <p className="hero-sub">
-            VMI is an end-to-end verification service that handles the entire journey income data takes, from the
-            applicant&apos;s payroll provider, through a consent-driven workflow, to a caseworker-ready report
-            delivered to the state&apos;s eligibility system. VMI is designed around enrollment outcomes, not just
-            data retrieval.
-          </p>
-          <Link href="/contact" className="btn btn-forge" style={{ marginTop: "8px" }}>
-            Request a Demo
-          </Link>
-        </div>
-        <div className="hero-img reveal d2">
-          <img
-            src="/images/product/product-hero.png"
-            alt="VMI product interface showing income verification on mobile"
-            loading="eager"
-          />
-        </div>
-      </section>
+      {hero ? (
+        <Hero
+          content={hero.content as HeroContent}
+          backgroundColor={hero.background_color}
+          subtitleLayout="stack"
+          primaryButtonStyle={{ marginTop: "8px" }}
+        />
+      ) : null}
 
       {/* ═══════════════════════════════════════════════
           BUILT TO FIT YOUR SYSTEMS
           Option labels: copper text only. No checkmarks.
           ═══════════════════════════════════════════════ */}
-      <section className="integration section-pad" id="integration">
-        <div className="section-inner">
-          <h2 className="section-h reveal">Built to fit your systems</h2>
-          <p className="body-p reveal d1">
-            VMI integrates with existing state benefit systems through multiple deployment options:
-          </p>
+      {builtToFitContent ? (
+        <section className="integration section-pad" id="integration">
+          <div className="section-inner">
+            <h2 className="section-h reveal">{builtToFitContent.heading}</h2>
+            <p className="body-p reveal d1">{builtToFitContent.text}</p>
 
-          <div className="io-grid">
-            {/* Card 1 */}
-            <div className="io-card reveal d1">
-              <div className="io-top">
-                <img
-                  src="/images/product/bee-oI9Q3fXF3_0-unsplash.jpg"
-                  alt="Classical government building with columns and dome"
-                  loading="lazy"
-                />
-              </div>
-              <div className="io-body">
-                <span className="io-pill">Option 1</span>
-                <h3>API integration with state eligibility systems</h3>
-                <p className="io-desc">
-                  Connect VMI directly to your existing eligibility infrastructure. Income reports are delivered in
-                  real time to your system of record via SFTP, S3, encrypted email, or webhooks API.
-                </p>
-              </div>
+            <div className="io-grid">
+              {builtToFitContent.cards.map((card, i) => (
+                <div className={`io-card reveal d${i + 1}`} key={i}>
+                  <div className="io-top">
+                    <img src={card.photo_url} alt={card.photo_alt ?? ""} loading="lazy" />
+                  </div>
+                  <div className="io-body">
+                    <span className="io-pill">Option {i + 1}</span>
+                    <h3>{card.heading}</h3>
+                    <p className="io-desc">{card.text}</p>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            {/* Card 2 */}
-            <div className="io-card reveal d2">
-              <div className="io-top">
-                <img
-                  src="/images/product/kelly-sikkema-FqqaJI9OxMI-unsplash.jpg"
-                  alt="Father carrying baby boy"
-                  loading="lazy"
-                />
-              </div>
-              <div className="io-body">
-                <span className="io-pill">Option 2</span>
-                <h3>Standalone portal accessible via unique link per household</h3>
-                <p className="io-desc">
-                  Launch fast with zero development resources. Each household receives a unique link to a fully
-                  hosted, state-branded VMI portal in English and Spanish.
-                </p>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="io-card reveal d3">
-              <div className="io-top">
-                <img
-                  src="/images/product/emile-perron-xrVDYZRGdw4-unsplash.jpg"
-                  alt="MacBook Pro showing programming language"
-                  loading="lazy"
-                />
-              </div>
-              <div className="io-body">
-                <span className="io-pill">Option 3</span>
-                <h3>Embedded widget in state application portals</h3>
-                <p className="io-desc">
-                  Incorporate VMI directly into your existing application flow. Applicants never leave your portal
-                  during the verification step.
-                </p>
-              </div>
-            </div>
+            <p className="inline-note reveal">
+              Each state deployment is white-labeled and configured to match the state&apos;s branding, communication
+              preferences, and data requirements. Income reports are delivered via SFTP, S3, encrypted email, or
+              webhooks API to fit existing state infrastructure.
+            </p>
           </div>
-
-          <p className="inline-note reveal">
-            Each state deployment is white-labeled and configured to match the state&apos;s branding, communication
-            preferences, and data requirements. Income reports are delivered via SFTP, S3, encrypted email, or
-            webhooks API to fit existing state infrastructure.
-          </p>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* THE VERIFICATION PROBLEM */}
       <section className="ps-section section-pad" id="the-problem">
@@ -122,17 +117,20 @@ export default function ProductPage() {
           <div className="ps-grid">
             <div className="ps-visual reveal">
               <img
-                src="/images/product/product-verify.png"
-                alt="VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
+                src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
+                alt={
+                  verificationProblemContent?.photo_alt ??
+                  "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
+                }
                 loading="lazy"
               />
             </div>
 
             <div className="ps-right reveal d1">
-              <h2 className="section-h">The verification problem</h2>
+              <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
               <p className="ps-right-intro">
-                States face four systemic problems with income verification. VMI is built to address all of them —
-                not as a data feed, but as a complete service.
+                {verificationProblemContent?.text ??
+                  "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
               </p>
 
               <div className="ps-acc-list">
@@ -618,19 +616,18 @@ export default function ProductPage() {
       {/* ACCESSIBLE BY DESIGN */}
       <section className="access-section" id="accessibility">
         <div className="access-left">
-          <h2 className="section-h reveal">Accessible by design, not as an afterthought</h2>
+          <h2 className="section-h reveal">
+            {accessibleContent?.heading ?? "Accessible by design, not as an afterthought"}
+          </h2>
           <div className="body-text reveal d1">
-            <p>
-              DPW is investing in accessibility research in partnership with the AARP Foundation, with independent
-              third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility
-              standards. The platform supports English and Spanish.
-            </p>
-            <p>
-              We do not treat accessibility as a compliance checkbox. We are conducting original research into how
-              income verification tools can be made usable for older adults, people with disabilities, and
-              individuals with limited English proficiency. Findings from this research will be published and shared
-              with the field.
-            </p>
+            {(
+              accessibleContent?.text ?? [
+                "DPW is investing in accessibility research in partnership with the AARP Foundation, with independent third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility standards. The platform supports English and Spanish.",
+                "We do not treat accessibility as a compliance checkbox. We are conducting original research into how income verification tools can be made usable for older adults, people with disabilities, and individuals with limited English proficiency. Findings from this research will be published and shared with the field.",
+              ]
+            ).map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
           </div>
           <div className="callout-stat reveal d2">
             <span className="callout-stat-num">65%</span>
@@ -639,8 +636,8 @@ export default function ProductPage() {
         </div>
         <div className="access-photo reveal d2">
           <img
-            src="/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg"
-            alt="An older adult using a cell phone to verify her income"
+            src={accessibleContent?.photo_url ?? "/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg"}
+            alt={accessibleContent?.photo_alt ?? "An older adult using a cell phone to verify her income"}
             loading="lazy"
           />
         </div>
@@ -649,114 +646,46 @@ export default function ProductPage() {
       {/* ═══════════════════════════════════════════════
           THE PATH TO A PILOT — racetrack path
           ═══════════════════════════════════════════════ */}
-      <section className="pilot section-pad" id="path-to-pilot">
-        <div className="section-inner">
-          <h2 className="section-h reveal">The path to a pilot</h2>
+      {pilotStepsContent ? (
+        <section className="pilot section-pad" id="path-to-pilot">
+          <div className="section-inner">
+            <h2 className="section-h reveal">The path to a pilot</h2>
 
-          <div className="steps reveal d1">
-            <div className="steps-line" aria-hidden="true"></div>
+            <div className="steps reveal d1">
+              <div className="steps-line" aria-hidden="true"></div>
 
-            <div className="step reveal d1">
-              <div className="step-badge" aria-hidden="true">
-                <span className="step-n">01</span>
-                <span className="step-lbl">Step</span>
-              </div>
-              <div className="step-content">
-                <h3>Discovery (2–4 weeks)</h3>
-                <p>
-                  Meetings with executive leadership. Discovery sprint with interviews of policy experts,
-                  caseworkers, QC workers, community-based organizations, and applicants. Vendor coordination and
-                  integration scoping.
-                </p>
-              </div>
+              {pilotStepsContent.steps.map((step, i) => (
+                <div className={`step reveal d${i + 1}`} key={i}>
+                  <div className="step-badge" aria-hidden="true">
+                    <span className="step-n">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="step-lbl">Step</span>
+                  </div>
+                  <div className="step-content">
+                    <h3>{step.heading}</h3>
+                    <p>{step.description}</p>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="step reveal d2">
-              <div className="step-badge" aria-hidden="true">
-                <span className="step-n">02</span>
-                <span className="step-lbl">Step</span>
-              </div>
-              <div className="step-content">
-                <h3>Configuration and integration (4–6 weeks)</h3>
-                <p>
-                  Technical integration setup (SFTP, S3, encrypted email, or webhooks API). State-specific
-                  configuration: branding, consent language, report format.
-                </p>
-              </div>
-            </div>
-
-            <div className="step reveal d3">
-              <div className="step-badge" aria-hidden="true">
-                <span className="step-n">03</span>
-                <span className="step-lbl">Step</span>
-              </div>
-              <div className="step-content">
-                <h3>Pilot launch</h3>
-                <p>
-                  Launch with a defined population. Data collection and analysis. Iterative improvements based on
-                  caseworker and applicant feedback.
-                </p>
-              </div>
-            </div>
-
-            <div className="step reveal d4">
-              <div className="step-badge" aria-hidden="true">
-                <span className="step-n">04</span>
-                <span className="step-lbl">Step</span>
-              </div>
-              <div className="step-content">
-                <h3>Expansion</h3>
-                <p>Scale to broader populations and additional programs based on pilot data.</p>
-              </div>
-            </div>
+            <p className="inline-note pilot-note reveal">
+              Pennsylvania launched in six weeks from kickoff to go-live and scaled to statewide availability eight
+              weeks later. DPW moves at the speed of the state&apos;s capacity. Tightly scoped integrations can launch
+              in as little as four weeks; broader engagements typically take 8 to 12.
+            </p>
           </div>
-
-          <p className="inline-note pilot-note reveal">
-            Pennsylvania launched in six weeks from kickoff to go-live and scaled to statewide availability eight
-            weeks later. DPW moves at the speed of the state&apos;s capacity. Tightly scoped integrations can launch
-            in as little as four weeks; broader engagements typically take 8 to 12.
-          </p>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* IN THE FIELD */}
-      <section className="field section-pad" id="in-the-field">
-        <div className="section-inner">
-          <h2 className="section-h reveal">In the field</h2>
-
-          <div className="case-grid">
-            <a href="#" className="case-card reveal d1">
-              <div className="case-text">
-                <span className="case-state">Pennsylvania</span>
-                <h3>Pennsylvania Department of Human Services</h3>
-                <p className="case-detail">Case study forthcoming — pending draft and approval from PA DHS.</p>
-              </div>
-              <div className="case-photo">
-                <img
-                  src="/images/product/katherine-mcadoo-HLKNH1-ITr0-unsplash.jpg"
-                  alt="Pennsylvania State Capitol building"
-                  loading="lazy"
-                />
-              </div>
-            </a>
-
-            <a href="#" className="case-card reveal d2">
-              <div className="case-text">
-                <span className="case-state">Arizona</span>
-                <h3>Arizona Department of Economic Security</h3>
-                <p className="case-detail">Case study forthcoming — pending draft and approval from AZ DES.</p>
-              </div>
-              <div className="case-photo">
-                <img
-                  src="/images/product/nils-huenerfuerst-yPGXOJNofgA-unsplash.jpg"
-                  alt="Arizona State Capitol building with flag"
-                  loading="lazy"
-                />
-              </div>
-            </a>
+      {inTheField ? (
+        <section className="field section-pad" id="in-the-field">
+          <div className="section-inner">
+            <h2 className="section-h reveal">In the field</h2>
+            <CaseStudy content={inTheField.content as CaseStudyContent} />
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {/* IMPACT CTA */}
       <div className="cta-section">
@@ -769,6 +698,6 @@ export default function ProductPage() {
           </Link>
         </div>
       </div>
-    </>
+    </div>
   );
 }

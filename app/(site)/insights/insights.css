@@ -1,7 +1,7 @@
 /* ─── INSIGHTS-SPECIFIC STYLES ──────────────────── */
 
 /* ─── HERO (structurally matches about-FINAL.html's hero) ── */
-.hero {
+.page-insights .hero {
   background: var(--white);
   min-height: calc(100vh - 74px);
   display: grid;
@@ -9,14 +9,14 @@
   overflow: hidden;
 }
 
-.hero-left {
+.page-insights .hero-left {
   padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.hero-eyebrow {
+.page-insights .hero-eyebrow {
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--t-label);
   font-weight: 700;
@@ -27,11 +27,11 @@
   margin-bottom: 18px;
 }
 
-.hero-img {
+.page-insights .hero-img {
   overflow: hidden;
 }
 
-.hero-img img {
+.page-insights .hero-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -40,19 +40,19 @@
 }
 
 /* ─── POSTS ──────────────────────────────────────── */
-.posts {
+.page-insights .posts {
   background: var(--cool-white);
 }
 
 /* ─── CATEGORY FILTER ────────────────────────────── */
-.cat-filter {
+.page-insights .cat-filter {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: clamp(40px, 5vw, 56px);
 }
 
-.cat-btn {
+.page-insights .cat-btn {
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--t-label);
   font-weight: 700;
@@ -68,12 +68,12 @@
   line-height: 1;
 }
 
-.cat-btn:hover {
+.page-insights .cat-btn:hover {
   border-color: var(--aluminum);
   color: var(--forge);
 }
 
-.cat-btn.active {
+.page-insights .cat-btn.active {
   background: var(--forge);
   border-color: var(--forge);
   color: var(--white);
@@ -86,40 +86,40 @@
    card itself — including its built-in hover animation (copper top-bar reveal).
    .case-state now holds the category tag instead of a state name. No article
    images exist yet, so .case-photo gets a flat placeholder fill below. */
-.post-photo-placeholder {
+.page-insights .post-photo-placeholder {
   background: var(--light-al);
 }
 
 /* ─── SUBSCRIBE ──────────────────────────────────── */
-.subscribe {
+.page-insights .subscribe {
   background: var(--white);
 }
 
-.subscribe-inner {
+.page-insights .subscribe-inner {
   display: grid;
   grid-template-columns: 5fr 4fr;
   gap: clamp(40px, 6vw, 80px);
   align-items: center;
 }
 
-.subscribe-h {
+.page-insights .subscribe-h {
   font-size: clamp(26px, 3vw, 38px);
   margin-bottom: 14px;
 }
 
-.subscribe-sub {
+.page-insights .subscribe-sub {
   font-size: var(--t-body);
   color: var(--steel);
   line-height: 1.7;
 }
 
-.subscribe-form {
+.page-insights .subscribe-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.subscribe-input {
+.page-insights .subscribe-input {
   font-family: 'Atkinson Hyperlegible', sans-serif;
   font-size: var(--t-body);
   color: var(--forge);
@@ -133,27 +133,27 @@
   box-sizing: border-box;
 }
 
-.subscribe-input:focus {
+.page-insights .subscribe-input:focus {
   border-color: var(--steel);
 }
 
-.subscribe-input::placeholder {
+.page-insights .subscribe-input::placeholder {
   color: var(--aluminum);
 }
 
 /* ─── RESPONSIVE ─────────────────────────────────── */
 @media (max-width: 1024px) {
-  .hero {
+  .page-insights .hero {
     grid-template-columns: 1fr;
     min-height: auto;
   }
 
-  .hero-img {
+  .page-insights .hero-img {
     height: 400px;
     order: -1;
   }
 
-  .subscribe-inner {
+  .page-insights .subscribe-inner {
     grid-template-columns: 1fr;
   }
 }

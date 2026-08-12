@@ -1,12 +1,12 @@
 /* ─── HOME-SPECIFIC STYLES ───────────────────── */
 
 /* ─── HOME HERO H1 SIZE OVERRIDE ────────────────── */
-.hero h1 {
+.page-home .hero h1 {
   font-size: clamp(42px, 5.2vw, 64px);
 }
 
 /* ─── HERO ────────────────────────────────────── */
-.hero {
+.page-home .hero {
   background: var(--white);
   min-height: calc(100dvh - 74px);
   display: grid;
@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-.hero-left {
+.page-home .hero-left {
   padding: clamp(48px, 6vw, 80px) clamp(20px, 5vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@
 }
 
 /* Body tier: hero sub-copy */
-.hero-sub {
+.page-home .hero-sub {
   font-size: var(--t-body);
   line-height: 1.82;
   color: var(--steel);
@@ -30,7 +30,7 @@
   margin-bottom: 32px;
 }
 
-.hero-actions {
+.page-home .hero-actions {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
@@ -38,7 +38,7 @@
 }
 
 /* Label tier: hero footnote */
-.hero-note {
+.page-home .hero-note {
   font-size: var(--t-label);
   color: var(--steel);
   line-height: 1.65;
@@ -48,11 +48,11 @@
 }
 
 /* hero image — fills full right column */
-.hero-img {
+.page-home .hero-img {
   overflow: hidden;
 }
 
-.hero-img img {
+.page-home .hero-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -62,7 +62,7 @@
 
 
 /* ─── STAT ROW ────────────────────────────────── */
-.stat-row {
+.page-home .stat-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 100%;
@@ -73,12 +73,12 @@
   background: var(--cool-white);
 }
 
-.stat-cell {
+.page-home .stat-cell {
   padding: clamp(72px, 9vw, 108px) clamp(16px, 2.5vw, 28px) clamp(60px, 8vw, 96px);
   position: relative;
 }
 
-.stat-cell::before {
+.page-home .stat-cell::before {
   content: '';
   display: block;
   width: 100%;
@@ -90,12 +90,12 @@
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
 }
 
-.stat-cell.vis::before {
+.page-home .stat-cell.vis::before {
   transform: scaleX(1);
 }
 
 /* Headline tier: stat numbers (same scale as section headings — they carry equal visual weight) */
-.stat-num {
+.page-home .stat-num {
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(36px, 4.2vw, 56px);
   font-weight: 700;
@@ -107,7 +107,7 @@
 }
 
 /* Label tier: stat descriptor */
-.stat-label {
+.page-home .stat-label {
   font-size: var(--t-body);
   color: var(--steel);
   line-height: 1.45;
@@ -116,13 +116,13 @@
 }
 
 /* ─── COMPARE TEASER ──────────────────────────── */
-.compare-teaser {
+.page-home .compare-teaser {
   background: var(--white);
   border-top: 0;
   padding: clamp(56px, 7vw, 80px) clamp(20px, 5vw, 64px);
 }
 
-.compare-teaser-inner {
+.page-home .compare-teaser-inner {
   max-width: 1200px;
   margin: 0 auto
 }
@@ -130,7 +130,7 @@
 /* .ct-header — see shared.css */
 
 /* ─── PRESSURE ────────────────────────────────── */
-.pressure {
+.page-home .pressure {
   background: var(--cool-white);
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -138,7 +138,7 @@
   min-height: 600px;
 }
 
-.pressure-right {
+.page-home .pressure-right {
   padding: clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2)) clamp(72px, 10vw, 112px) clamp(48px, 6vw, 80px);
   display: flex;
   flex-direction: column;
@@ -147,11 +147,11 @@
 }
 
 
-.pressure-img {
+.page-home .pressure-img {
   overflow: hidden;
 }
 
-.pressure-img img {
+.page-home .pressure-img img {
   width: 100%;
   height: 100%;
   display: block;
@@ -163,17 +163,17 @@
 /* ─── PULLQUOTE — see shared.css ─── */
 
 /* ─── HOW IT WORKS ────────────────────────────── */
-.how {
+.page-home .how {
   background: var(--white);
   padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
 }
 
-.how-inner {
+.page-home .how-inner {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.how-cols {
+.page-home .how-cols {
   display: grid;
   grid-template-columns: 5fr 4fr;
   gap: clamp(48px, 6vw, 80px);
@@ -181,22 +181,22 @@
 }
 
 /* Scroll spacing — one step fills most of the viewport, next peeks */
-.how-step-row {
+.page-home .how-step-row {
   min-height: 65vh;
 }
 
 /* Photo height for this page */
-.how-step-img {
+.page-home .how-step-img {
   height: clamp(220px, 22vw, 320px);
 }
 
 /* Text padding for this page */
-.how-step-body {
+.page-home .how-step-body {
   padding: 28px 0 0 0;
 }
 
 /* RIGHT column — sticky, top-aligned with step 1, image pushed right */
-.how-right {
+.page-home .how-right {
   position: sticky;
   top: 90px;
   display: flex;
@@ -204,7 +204,7 @@
   justify-content: flex-end;
 }
 
-.how-right img {
+.page-home .how-right img {
   width: 80%;
   max-height: calc(100vh - 120px);
   height: auto;
@@ -215,33 +215,33 @@
 
 
 /* ─── STORIES/FINDINGS ─────────────────────────────────── */
-.stories {
+.page-home .stories {
   background: var(--cool-white);
   padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px);
 }
 
-.stories-inner {
+.page-home .stories-inner {
   max-width: 1200px;
   margin: 0 auto
 }
 
 
 /* Stories section: card grid needs bottom margin before inline-note */
-.content-card-grid {
+.page-home .content-card-grid {
   margin-bottom: 36px;
 }
 
 /* ─── INLINE NOTE (stories outro) — see shared.css + .inline-note--rose above ─── */
 
 /* ─── MODEL ───────────────────────────────────── */
-.model {
+.page-home .model {
   background: var(--white);
   display: grid;
   grid-template-columns: 1fr 1fr;
   overflow: hidden;
 }
 
-.model-content {
+.page-home .model-content {
   padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 64px) clamp(72px, 10vw, 112px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2));
   display: flex;
   flex-direction: column;
@@ -252,12 +252,12 @@
 /* ─── MODEL BODY TEXT — see shared.css (.body-text) + home .body-text p max-width override ─── */
 
 /* Photo — fills full right column */
-.model-photo {
+.page-home .model-photo {
   overflow: hidden;
   position: relative;
 }
 
-.model-photo img {
+.page-home .model-photo img {
   width: 100%;
   height: 100%;
   display: block;
@@ -267,7 +267,7 @@
 
 
 /* ─── CTA — copper ─────────────────────── */
-.cta-section {
+.page-home .cta-section {
   position: relative;
   min-height: 80vh;
   display: flex;
@@ -279,7 +279,7 @@
   overflow: hidden;
 }
 
-.cta-section::before {
+.page-home .cta-section::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -287,20 +287,20 @@
   z-index: 0;
 }
 
-.cta-inner {
+.page-home .cta-inner {
   max-width: 640px;
   margin: 0;
   position: relative;
   z-index: 1;
 }
 
-.cta-h {
+.page-home .cta-h {
   margin-bottom: 12px;
   color: var(--white);
 }
 
 /* Body tier: CTA section sub-copy */
-.cta-sub {
+.page-home .cta-sub {
   font-size: var(--t-body);
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: 32px;
@@ -308,27 +308,27 @@
 }
 
 /* ─── VOICES CAROUSEL — home overrides ──────── */
-.voices {
+.page-home .voices {
   background: var(--cool-white);
 }
 
-.voice-card {
+.page-home .voice-card {
   background: var(--white);
 }
 
-.carousel-btn {
+.page-home .carousel-btn {
   background: var(--white);
 }
 
 /* ─── LOGOS SECTION ──────────────────────────── */
-.logos-section {
+.page-home .logos-section {
   background: var(--white);
   padding: clamp(48px, 6vw, 72px) clamp(20px, 5vw, 64px);
   border-top: 1px solid var(--light-al);
   border-bottom: 1px solid var(--light-al);
 }
 
-.logos-inner {
+.page-home .logos-inner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -336,19 +336,19 @@
   gap: 40px;
 }
 
-.logos-row {
+.page-home .logos-row {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.logos-divider {
+.page-home .logos-divider {
   width: 100%;
   height: 1px;
   background: var(--light-al);
 }
 
-.logos-label {
+.page-home .logos-label {
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--t-label);
   font-weight: 700;
@@ -357,7 +357,7 @@
   color: var(--aluminum);
 }
 
-.logos-strip {
+.page-home .logos-strip {
   display: flex;
   align-items: center;
   gap: clamp(24px, 4vw, 56px);
@@ -365,7 +365,7 @@
 }
 
 /* Text-based logo fallback (for orgs without image yet) */
-.logo-text {
+.page-home .logo-text {
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--t-label);
   font-weight: 700;
@@ -379,12 +379,12 @@
   border-radius: 2px;
 }
 
-.logo-text:hover {
+.page-home .logo-text:hover {
   opacity: 1;
 }
 
 /* Placeholder box for pending logos */
-.logo-placeholder {
+.page-home .logo-placeholder {
   height: 44px;
   min-width: 120px;
   border: 1.5px dashed var(--light-al);
@@ -395,7 +395,7 @@
   padding: 0 16px;
 }
 
-.logo-placeholder span {
+.page-home .logo-placeholder span {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 11px;
   font-weight: 700;
@@ -405,77 +405,77 @@
 }
 
 @media (max-width: 768px) {
-  .logos-strip {
+  .page-home .logos-strip {
     gap: 20px;
   }
 }
 
 /* ─── RESPONSIVE ──────────────────────────────── */
 @media (max-width: 1024px) {
-  .hero {
+  .page-home .hero {
     grid-template-columns: 1fr;
     min-height: auto;
   }
 
-  .hero-left {
+  .page-home .hero-left {
     padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px);
   }
 
-  .hero-img {
+  .page-home .hero-img {
     width: 100%;
     height: 380px;
     order: -1;
   }
 
-  .pressure {
+  .page-home .pressure {
     grid-template-columns: 1fr;
     min-height: auto;
   }
 
-  .pressure-img {
+  .page-home .pressure-img {
     width: 100%;
     height: 360px;
     order: 2;
   }
 
-  .pressure-right {
+  .page-home .pressure-right {
     padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
     order: 1;
   }
 
-  .how-cols {
+  .page-home .how-cols {
     grid-template-columns: 1fr;
   }
 
-  .how-right {
+  .page-home .how-right {
     order: 2;
   }
 
-  .model {
+  .page-home .model {
     grid-template-columns: 1fr;
   }
 
-  .model-photo {
+  .page-home .model-photo {
     width: 100%;
     height: 400px;
   }
 
-  .model-content {
+  .page-home .model-content {
     padding: clamp(48px, 7vw, 72px) clamp(20px, 5vw, 48px);
   }
 
 }
 
 @media (max-width: 768px) {
-  .stat-row {
+  .page-home .stat-row {
     grid-template-columns: 1fr 1fr
   }
 
-  .stat-cell:nth-child(2) {
+  .page-home .stat-cell:nth-child(2) {
     border-right: none
   }
 
-  .stat-cell:nth-child(3) {
+  .page-home .stat-cell:nth-child(3) {
     border-right: 1px solid var(--light-al)
   }
 
@@ -484,25 +484,25 @@
 }
 
 @media (max-width: 480px) {
-  .stat-row {
+  .page-home .stat-row {
     grid-template-columns: 1fr
   }
 
-  .stat-cell {
+  .page-home .stat-cell {
     border-right: none;
     border-bottom: 1px solid var(--light-al)
   }
 
-  .stat-cell:last-child {
+  .page-home .stat-cell:last-child {
     border-bottom: none
   }
 }
 
 /* ─── FUNDERS — home overrides ───────────────── */
-.funders {
+.page-home .funders {
   background: var(--white);
 }
 
-.funder-card {
+.page-home .funder-card {
   background: var(--cool-white);
 }

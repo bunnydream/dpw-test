@@ -6,7 +6,13 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ugonzxnotksihttdoufu.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
   },
 };
 

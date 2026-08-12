@@ -1,46 +1,61 @@
 import type { Metadata } from "next";
+import { getPageSections, type Section } from "@/lib/sections";
+import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import "./careers.css";
 
 export const metadata: Metadata = {
   title: "Careers — Digital Public Works",
 };
 
-export default function CareersPage() {
+function byType(sections: Section[], type: Section["type"]) {
+  return sections.filter((s) => s.type === type);
+}
+
+type TextContent = {
+  heading?: string | null;
+  text: string;
+};
+
+type ContentCard = {
+  heading: string;
+  text: string;
+  photo_url?: string | null;
+};
+
+type ContentCardsContent = {
+  cards: ContentCard[];
+};
+
+export default async function CareersPage() {
+  const result = await getPageSections("careers");
+  const sections = result?.sections ?? [];
+
+  const hero = byType(sections, "hero")[0];
+  const intro = byType(sections, "text")[0];
+  const openings = byType(sections, "content-cards")[0];
+
+  const introContent = intro?.content as TextContent | undefined;
+  const openingsContent = openings?.content as ContentCardsContent | undefined;
+  const cards = openingsContent?.cards ?? [];
+
   return (
-    <>
+    <div className="page-careers">
       {/* HERO */}
-      <section className="hero">
-        <div className="hero-left reveal">
-          <h1>Join Digital Public Works</h1>
-          <p className="hero-tagline">
-            Join us in making government digital services better for everyone (and doing it at cost).
-          </p>
-        </div>
-        <div className="hero-img reveal d2">
-          <img
-            src="/images/careers/johannes-kopf-h0pHxbb6a78-unsplash.jpg"
-            alt="Three hikers on a mountainous trail at dusk"
-            loading="eager"
-          />
-        </div>
-      </section>
+      {hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null}
 
       {/* INTRO */}
-      <section className="intro section-pad">
-        <div className="section-inner">
-          <p
-            className="body-text reveal"
-            style={{ fontSize: "var(--t-body)", lineHeight: 1.82, color: "var(--steel)", maxWidth: "72ch" }}
-          >
-            Digital Public Works is a small team doing work that matters. We build the tools and infrastructure that
-            states need to verify income for public benefits, and we are growing. Our team is mostly U.S. Digital
-            Service veterans and civic tech practitioners who have built and shipped technology at scale in
-            government. We put humans at the center of everything we do, we ship real products into real systems,
-            and we hold ourselves to a high standard while assuming the best in each other. If that sounds like your
-            kind of environment, we&apos;d love to hear from you.
-          </p>
-        </div>
-      </section>
+      {introContent ? (
+        <section className="intro section-pad">
+          <div className="section-inner">
+            <p
+              className="body-text reveal"
+              style={{ fontSize: "var(--t-body)", lineHeight: 1.82, color: "var(--steel)", maxWidth: "72ch" }}
+            >
+              {introContent.text}
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       {/* OPEN POSITIONS */}
       <section className="openings section-pad">
@@ -49,13 +64,26 @@ export default function CareersPage() {
             <h2 className="openings-h">Open Positions</h2>
             <div className="openings-rule"></div>
           </div>
-          <p className="openings-body reveal d1">
-            Thank you for your interest in joining our team. We do not have any current job openings and are not
-            accepting applications at this time. We encourage you to visit this page periodically for future
-            opportunities.
-          </p>
+          {cards.length === 0 ? (
+            <p className="openings-body reveal d1">
+              Thank you for your interest in joining our team. We do not have any current job openings and are not
+              accepting applications at this time. We encourage you to visit this page periodically for future
+              opportunities.
+            </p>
+          ) : (
+            <div className="content-card-grid">
+              {cards.map((card, i) => (
+                <div className="content-card reveal" key={i}>
+                  <div className="content-card-body">
+                    <h4>{card.heading}</h4>
+                    <p>{card.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
-    </>
+    </div>
   );
 }

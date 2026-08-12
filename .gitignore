@@ -2,3 +2,6 @@ node_modules/
 .next/
 *.pdf
 Fonts/
+.env
+.env.local
+.env.*.local

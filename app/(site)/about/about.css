@@ -1,7 +1,7 @@
 /* ─── ABOUT-SPECIFIC STYLES ────────────────────── */
 
 /* ─── HERO ─────────────────────────────────────── */
-.hero {
+.page-about .hero {
   background: var(--white);
   min-height: calc(100vh - 74px);
   display: grid;
@@ -9,14 +9,14 @@
   overflow: hidden;
 }
 
-.hero-left {
+.page-about .hero-left {
   padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.hero-eyebrow {
+.page-about .hero-eyebrow {
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--t-label);
   font-weight: 700;
@@ -27,11 +27,11 @@
   margin-bottom: 18px;
 }
 
-.hero-img {
+.page-about .hero-img {
   overflow: hidden;
 }
 
-.hero-img img {
+.page-about .hero-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -40,23 +40,23 @@
 }
 
 /* ─── STORY ─────────────────────────────────────── */
-.story {
+.page-about .story {
   background: var(--cool-white);
 }
 
-.story-grid {
+.page-about .story-grid {
   display: grid;
   grid-template-columns: 9fr 7fr;
   gap: clamp(40px, 6vw, 80px);
   align-items: stretch;
 }
 
-.story-photo {
+.page-about .story-photo {
   overflow: hidden;
   border-radius: 2px;
 }
 
-.story-photo img {
+.page-about .story-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -64,35 +64,35 @@
 }
 
 /* ─── TEAM OVERRIDES ─────────────────────────────── */
-.team-photo {
+.page-about .team-photo {
   aspect-ratio: 1 / 1;
 }
 
-.team-photo img {
+.page-about .team-photo img {
   transition: filter .35s ease;
 }
 
-.team-card:hover .team-photo img {
+.page-about .team-card:hover .team-photo img {
   transform: none;
 }
 
 /* ─── TEAM ──────────────────────────────────────── */
-.team {
+.page-about .team {
   background: var(--white);
 }
 
 /* 3-col grid, increased row gap, text flush with image */
-.team-grid {
+.page-about .team-grid {
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(36px, 4vw, 56px) clamp(28px, 3vw, 40px);
 }
 
-.team-info {
+.page-about .team-info {
   padding: clamp(16px, 2vw, 20px) 0 0 0;
 }
 
 @media (max-width: 1024px) {
-  .team-grid {
+  .page-about .team-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -100,18 +100,18 @@
 /* Full mobile view (matches the site's nav/hamburger breakpoint) always
    stacks to 1 column — 2-column only applies to the tablet range above. */
 @media (max-width: 768px) {
-  .team-grid {
+  .page-about .team-grid {
     grid-template-columns: 1fr;
   }
 }
 
 /* ─── ORG STATUS ────────────────────────────────── */
-.org-status {
+.page-about .org-status {
   background: var(--white);
 }
 
 /* ─── FUNDERS (page-specific) ───────────────────── */
-.funders-org {
+.page-about .funders-org {
   font-size: var(--t-body);
   line-height: 1.82;
   color: var(--steel);
@@ -121,28 +121,28 @@
 
 /* ─── RESPONSIVE ────────────────────────────────── */
 @media (max-width: 1024px) {
-  .hero {
+  .page-about .hero {
     grid-template-columns: 1fr;
     min-height: auto;
   }
 
-  .hero-img {
+  .page-about .hero-img {
     height: 400px;
     order: -1;
   }
 
-  .story-grid {
+  .page-about .story-grid {
     grid-template-columns: 1fr;
   }
 
-  .story-photo {
+  .page-about .story-photo {
     position: static;
     aspect-ratio: 16 / 9;
   }
 }
 
 @media (max-width: 768px) {
-  .hero-left h1 {
+  .page-about .hero-left h1 {
     max-width: none;
   }
 }

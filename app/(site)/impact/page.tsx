@@ -1,37 +1,42 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import VoicesCarousel from "@/components/VoicesCarousel";
+import { getPageSections, type Section } from "@/lib/sections";
+import Hero, { type HeroContent } from "@/components/blocks/Hero";
+import Voices, { type VoicesContent } from "@/components/blocks/Voices";
+import CaseStudy, { type CaseStudyContent } from "@/components/blocks/CaseStudy";
+import type { PhotoTextContent } from "@/components/blocks/PhotoText";
 import "./impact.css";
 
 export const metadata: Metadata = {
   title: "Impact — Digital Public Works",
 };
 
-export default function ImpactPage() {
+function byType(sections: Section[], type: Section["type"]) {
+  return sections.filter((s) => s.type === type);
+}
+
+export default async function ImpactPage() {
+  const result = await getPageSections("impact");
+  const sections = result?.sections ?? [];
+
+  const hero = byType(sections, "hero")[0];
+  const families = byType(sections, "photo-text")[0];
+  const familiesContent = families?.content as PhotoTextContent | undefined;
+  const voices = byType(sections, "voices")[0];
+  const deployed = byType(sections, "case-study")[0];
+
   return (
-    <>
+    <div className="page-impact">
       {/* ─── 1. HERO ─── */}
-      <section className="hero">
-        <div className="hero-left">
-          <div className="hero-heading-stack reveal">
-            <h1>Our Impact</h1>
-            <p className="hero-tagline">Measurable results for families and state systems</p>
-          </div>
-          <p className="hero-sub reveal d1">
-            Verify My Income makes income verification faster, more accurate, and less burdensome — for everyone in
-            the process.
-          </p>
-        </div>
-        <div className="hero-img reveal d2">
-          <img
-            src="/images/impact/abdul-raheem-kannath-TBwW2tHnX9w-unsplash.jpg"
-            alt="A family plays and spends time together"
-            loading="eager"
-            width={1200}
-            height={1600}
-          />
-        </div>
-      </section>
+      {hero ? (
+        <Hero
+          content={hero.content as HeroContent}
+          backgroundColor={hero.background_color}
+          subtitleLayout="stack-staggered"
+          imgWidth={1200}
+          imgHeight={1600}
+        />
+      ) : null}
 
       {/* ─── 2. METRICS ─── */}
       <div className="stat-row" role="list">
@@ -58,37 +63,40 @@ export default function ImpactPage() {
         </div>
       </div>
 
-      {/* ─── 3. FAMILIES + COMPARISON ─── */}
+      {/* ─── 3. FAMILIES + COMPARISON ───
+          Rendered inline rather than via the shared PhotoText component: this
+          section's classNames (families-img / families-right) differ from
+          home's pressure/model pattern that PhotoText.tsx implements, and it
+          has no pullquote but does have a fixed .comp-card widget that isn't
+          part of admin's photo-text field shape at all. */}
       <section className="families">
         {/* Left: full-bleed image */}
         <div className="families-img">
           <img
-            src="/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg"
-            alt="A woman looking at her phone"
+            src={familiesContent?.photo_url ?? "/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg"}
+            alt={familiesContent?.photo_alt ?? "A woman looking at her phone"}
             loading="lazy"
           />
         </div>
 
         {/* Right: content */}
         <div className="families-right">
-          <h2 className="section-h reveal">From hours of paperwork to five minutes — without leaving home</h2>
+          <h2 className="section-h reveal">
+            {familiesContent?.heading ?? "From hours of paperwork to five minutes — without leaving home"}
+          </h2>
 
           <div className="body-text reveal d1">
-            <p>
-              Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting
-              an office, and waiting. If something was missing, the process started over. For someone navigating a
-              job change, caring for children, or managing a health crisis, this time tax could mean weeks without
-              benefits.
-            </p>
-            <p>
-              With Verify My Income, an applicant receives a secure link from their agency. They consent to share
-              their payroll data and connect to their employer&apos;s payroll system. In under five minutes, a
-              verified income report is delivered directly to their caseworker. No documents to find. No follow-up
-              calls. No delays.
-            </p>
+            {(
+              familiesContent?.text ?? [
+                "Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting an office, and waiting. If something was missing, the process started over. For someone navigating a job change, caring for children, or managing a health crisis, this time tax could mean weeks without benefits.",
+                "With Verify My Income, an applicant receives a secure link from their agency. They consent to share their payroll data and connect to their employer's payroll system. In under five minutes, a verified income report is delivered directly to their caseworker. No documents to find. No follow-up calls. No delays.",
+              ]
+            ).map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
           </div>
 
-          {/* COMPARISON CARD: Manual left, VMI right */}
+          {/* COMPARISON CARD: Manual left, VMI right — fixed chrome, not part of admin's photo-text shape */}
           <div className="comp-card reveal d2">
             <div className="comp-header">
               <div className="comp-col-head comp-col-head--manual">
@@ -149,72 +157,13 @@ export default function ImpactPage() {
       </section>
 
       {/* ─── 4. VOICES CAROUSEL ─── */}
-      <section className="voices" id="voices">
-        <div className="voices-inner">
-          <h2 className="section-h reveal">Real people. Real experiences.</h2>
-        </div>
-
-        <VoicesCarousel
-          voices={[
-            {
-              text: "Easy process as I'm awful with technology & this was simple.",
-              attr: "Pennsylvania VMI user",
-            },
-            {
-              text: "It was simple to enter just my username and password from the payroll company. This is much less time-consuming than uploading my monthly pay stubs.",
-              attr: "Pennsylvania VMI user",
-            },
-            {
-              text: "Everything [was easy]. Sometimes it's hard getting paycheck stubs and dealing with sending them out or bringing them in [person]. This way is great.",
-              attr: "Arizona VMI user",
-            },
-            {
-              text: "All I had to do was login to my ADP account and that was it. No uploading pictures or scanning or faxing or going anywhere.",
-              attr: "Pennsylvania VMI user",
-            },
-            {
-              text: "Just super easy to navigate, and I expected to take hours away from my family and it took very little time, thank you.",
-              attr: "Arizona VMI user",
-            },
-          ]}
-        />
-      </section>
+      {voices ? <Voices content={voices.content as VoicesContent} backgroundColor={voices.background_color} /> : null}
 
       {/* ─── 5. DEPLOYED AND DELIVERING RESULTS ─── */}
       <section className="field section-pad" id="deployed">
         <div className="section-inner">
           <h2 className="section-h reveal">Deployed and delivering results</h2>
-          <div className="case-grid">
-            <a href="#" className="case-card reveal d1">
-              <div className="case-text">
-                <span className="case-state">Pennsylvania</span>
-                <h3>Pennsylvania Department of Human Services</h3>
-                <p className="case-detail">Case study forthcoming — pending draft and approval from PA DHS.</p>
-              </div>
-              <div className="case-photo">
-                <img
-                  src="/images/impact/katherine-mcadoo-HLKNH1-ITr0-unsplash.jpg"
-                  alt="Pennsylvania State Capitol building"
-                  loading="lazy"
-                />
-              </div>
-            </a>
-
-            <a href="#" className="case-card reveal d2">
-              <div className="case-text">
-                <span className="case-state">Arizona</span>
-                <h3>Arizona Department of Economic Security</h3>
-                <p className="case-detail">Case study forthcoming — pending draft and approval from AZ DES.</p>
-              </div>
-              <div className="case-photo">
-                <img
-                  src="/images/impact/nils-huenerfuerst-yPGXOJNofgA-unsplash.jpg"
-                  alt="Arizona State Capitol building"
-                  loading="lazy"
-                />
-              </div>
-            </a>
-          </div>
+          {deployed ? <CaseStudy content={deployed.content as CaseStudyContent} /> : null}
         </div>
       </section>
 
@@ -349,6 +298,6 @@ export default function ImpactPage() {
           </Link>
         </div>
       </div>
-    </>
+    </div>
   );
 }

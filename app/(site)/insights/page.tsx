@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function InsightsPage() {
   return (
-    <>
+    <div className="page-insights">
       {/* HERO */}
       <section className="hero">
         <div className="hero-left reveal">
@@ -97,6 +97,6 @@ export default function InsightsPage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
