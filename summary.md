@@ -1,8 +1,10 @@
 # DPW Website — Session Summary
-Last updated: 2026-08-11 (Session 7 — Admin CMS build)
+Last updated: 2026-08-12 (designs finalized — all outstanding client-feedback/polish items reviewed and dropped, see note below)
 
 ## Project Overview
 Standalone HTML/CSS website for Digital Public Works (DPW), a 501(c)(3) nonprofit. No build step. Single shared stylesheet (`shared.css`) plus page-specific `<style>` blocks in each HTML file. Deploying on Vercel + Supabase.
+
+**2026-08-12: Designs are final and client-approved.** All `⚠️ PENDING` copy/style tweak notes that used to appear throughout this doc (Michael's feedback items per page, the universal stat-label/image-compression note, and the DRK Foundation vs. Draper Richards Kaplan naming question) have been removed — they're no longer being tracked or planned. Treat `FINAL PAGES/` and `ADMIN PAGES/` exactly as they are now as the source of truth; do not reintroduce those changes. (Image compression is still happening, but as a technical performance task in the build itself — see `website-build-walkthrough.md` — not as a content-review item.)
 
 A parallel admin CMS mockup (`/ADMIN PAGES/`) was built in Session 7 — see the dedicated section near the bottom of this file. It's a static HTML/CSS/vanilla-JS prototype only; no backend is wired up yet. That's the next major phase of work (Claude Code + Supabase).
 
@@ -97,21 +99,12 @@ All heroes use `min-height: calc(100vh - 74px)` (or `100dvh` for product/impact)
 * How VMI Works section (`.how`): 5fr/4fr grid, sticky right image (`.how-right`), scroll progress bar JS, `min-height: 65vh` per step row
 * Voices carousel: cool-white section bg, white cards, white arrow buttons (page-level overrides)
 * **"Backed by" funder grid**: after voices carousel, before pilot CTA. White bg, cool-white cards. 9 funder cards: 4 confirmed (Samvid, Vanguard Charitable, Next Ladder, Kellogg), 5 pending with `.funder-pending`.
-  * ⚠️ PENDING: Remove Google, Vanguard, Next Ladder, Kellogg; keep only AARP Foundation, Pritzker Children's Initiative, Families and Workers Fund, DRK Foundation. Same change needed on about page.
 * DRK Foundation logo: `../public/partner-logos/drk-foundation.png`
 * Pullquote in `.model` section: "No vendor lock-in. No black boxes. No surprise overages."
 * All instances of "Verify My Income" wrapped in `<i>` tags
 * **"The pressure is real"** (`.pressure`): full-bleed wide margin, 1fr/1fr grid. Photo left, text right.
 * **"A better model"** (`.model`): full-bleed wide margin, 1fr/1fr grid. Text left, photo right.
 * CTA section bg: `../public/images/home/evelyn-verdin-bNLBhRzhvrc-unsplash.jpg`
-
-⚠️ **PENDING (Michael's feedback)**:
-* Remove "the conversation" from hero note → "No procurement required to begin. We start with a free, philanthropically funded pilot."
-* "See the full comparison" link — needs destination or remove button
-* Remove dead stat counter JS (lines ~1218–1240)
-* Hero note inline `style="font-size: 15px;"` → `var(--t-small)`
-* Pullquote — add bottom border (top + bottom ruled-block treatment)
-* Backed by: remove non-approved logos (see above)
 
 ### impact-FINAL.html
 * Stat row: 4 stats, homepage-sized numbers (`clamp(36px, 4.2vw, 56px)`), cool-white bg
@@ -120,19 +113,11 @@ All heroes use `min-height: calc(100vh - 74px)` (or `100dvh` for product/impact)
 * **"From hours of paperwork"** (`.families`): full-bleed wide margin 50/50. Left col image bleeds to edge (`position: absolute; inset: 0`). Right col text.
 * **Insights CTA**: final section before footer. Background image: `../public/images/impact/christin-hume-Hcfwew744z4-unsplash.jpg`.
 
-⚠️ **PENDING (Michael's feedback)**:
-* Remove line break after "earned" in hero
-* Move "How philanthropic investment creates public value" section to immediately after the chart
-* Comparison card `border-radius: 6px` → `2px`
-
 ### product-FINAL.html
 * Hero: `min-height` + `max-height: calc(100dvh - 74px)` (grid constraint fix)
 * **Talk CTA banner**: after "The verification problem" section, before comparison table
 * **Accessibility section** (`#accessibility`): full-bleed wide margin, 1fr/1fr grid. Text left, photo right. Contains `.callout-stat` ("65%").
 * **Impact CTA**: final section before footer. Background image: `../public/images/product/harald-wolff-msHKfPyFH7g-unsplash.jpg`.
-
-⚠️ **PENDING (Michael's feedback)**:
-* Talk CTA "Bring VMI to your state →" — needs a proper `<button>` element, not just arrow text
 
 ### about-FINAL.html
 * Hero image: `../public/images/about/paulina-herpel-yxqVPJFAYHg-unsplash.jpg`, `object-position: 70% center`
@@ -140,18 +125,10 @@ All heroes use `min-height: calc(100vh - 74px)` (or `100dvh` for product/impact)
 * Funders section: logos only, no `.funder-role` orange text. Default cool-white bg.
 * Organization Status section: white bg, below "Backed by"
 
-⚠️ **PENDING (Michael's feedback)**:
-* Section heading inline `margin-bottom` style → move to page CSS
-* Backed by — remove non-approved logos (same list as home)
-
 ### careers-FINAL.html
 * Hero image: `../public/images/careers/johannes-kopf-h0pHxbb6a78-unsplash.jpg`
 * h1: "Join Digital Public Works"
 * Subtitle: "Join a team shipping products into government systems."
-
-⚠️ **PENDING (Michael's feedback)**:
-* Subtitle → "Join us in making government digital services better for everyone (and doing it at cost)."
-* Inline style in intro paragraph → use body-text class, only override max-width
 
 ### contact-FINAL.html
 * Hero: h1 "Get in touch" (no period), no orange eyebrow
@@ -159,10 +136,6 @@ All heroes use `min-height: calc(100vh - 74px)` (or `100dvh` for product/impact)
 * All form submit buttons: `btn-forge` class
 * Community button text: "Get in touch"
 * 3 separate forms: State Partners, Funders, Community — each targets `info@digitalpublicworks.org`
-
-⚠️ **PENDING**:
-* Wire up Formspree (recommended for launch). Integration: change `<form>` to `<form action="https://formspree.io/f/YOUR_ID" method="POST">`. Each form gets its own endpoint OR share one with a hidden `name="_form_source"` field. Add `<input type="hidden" name="_subject" value="New contact from DPW website">` for email subject.
-* Remove `novalidate` attribute from all forms
 
 ### insights-FINAL.html *(new — Session 6)*
 * Hero: white bg, `section-pad`, text-only. h1: "Insights". Subtitle from docx.
@@ -172,15 +145,6 @@ All heroes use `min-height: calc(100vh - 74px)` (or `100dvh` for product/impact)
   3. Accessibility — "Accessible by Design: What Our Research on VMI Is Revealing"
 * Filter JS: `data-cat` attributes + `display: none/''` toggle on pill click
 * Subscribe section: white bg, "Stay in the loop" email form
-
-⚠️ **PENDING (Michael's feedback)**:
-* Hero needs a visual/image
-* Font sizes use raw px values — `10px`, `11px`, `12px` should use type scale variables
-* Post cards + subscribe input `border-radius: 3px` → `2px`
-
-## Universal Changes (All Pages) — PENDING
-* Stat labels: remove `text-transform: lowercase`, write labels in sentence case, reduce letter-spacing
-* Image compression needed: 19MB meeting photo, 3MB+ headshots. Rename files with spaces (e.g., `Anna Banchik.png`).
 
 ## Contact Form — Formspree Integration
 Formspree is the recommended approach for launch (vs. Vercel serverless + Resend, which is better long-term).
@@ -193,9 +157,6 @@ Steps:
 5. Use `name="email"` on email field so Formspree sets reply-to correctly
 6. Optional: `<input type="hidden" name="_subject" value="New contact from DPW website">`
 7. Optional: `<input type="hidden" name="_next" value="https://yourdomain.com/thanks">` for custom redirect
-
-## Pending Flag for Client
-* "Draper Richards Kaplan" mentioned in Michael's email but code has "DRK Foundation" — confirm they are the same org before any logo/copy changes.
 
 ## Key CSS Conventions
 * Page-specific overrides go in the page's `<style>` block, never in shared.css

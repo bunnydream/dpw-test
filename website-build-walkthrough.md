@@ -100,9 +100,9 @@ You don't need to do any of this by hand — it's step 1 of the kickoff prompt a
 
 ## Part 4 — Clean up the repo before building
 
-Once you're in a Claude Code session (Part 0), before pasting the kickoff prompt, it's worth asking it to:
-1. Review and commit (or discard) any leftover uncommitted changes (`git status` may still show some).
-2. Flag the `⚠️ PENDING` content/copy items in `summary.md` (Michael's feedback, the DRK Foundation naming question, etc.) so you can decide whether to fix them now or after the backend build. Easiest to fix while pages are still plain HTML.
+Once you're in a Claude Code session (Part 0), before pasting the kickoff prompt, it's worth asking it to review and commit (or discard) any leftover uncommitted changes (`git status` may still show some) so you're starting from a clean state.
+
+(Note: `summary.md` used to track a running list of client-feedback/polish `⚠️ PENDING` items per page. As of 2026-08-12 those have all been reviewed and dropped — the designs in `FINAL PAGES/` and `ADMIN PAGES/` are final as-is, nothing further to reconcile there.)
 
 ---
 
@@ -136,7 +136,7 @@ Build goals, roughly in this order:
 
 8. Settings: wire the admin email/password screen to Supabase Auth.
 
-Before writing any code, give me a short summary of your plan and build order, ask me for anything you need (Supabase project URL/keys, Formspree endpoints, etc.), and flag anything in summary.md's PENDING list you think should be resolved before or during this build.
+Before writing any code, give me a short summary of your plan and build order, and ask me for anything you need (Supabase project URL/keys, Formspree endpoints, etc.).
 ```
 
 ---
@@ -161,5 +161,4 @@ Claude Code will tell you the exact variable names it needs (`SUPABASE_URL`, `SU
 - Publish an edit in the admin and confirm it shows up on the live public page without a full redeploy.
 - Submit all three contact forms and confirm you get the email at `info@digitalpublicworks.org`, and each shows up in Formspree's dashboard.
 - Delete a test page and confirm it lands in "Deleted pages" instead of disappearing outright.
-- Do one more pass through `summary.md`'s `⚠️ PENDING` list.
 - Decide on a production domain (custom domain vs. the default `*.vercel.app` address) and point it at Vercel.
