@@ -1,12 +1,54 @@
 import type { Metadata } from "next";
 import InsightsFilter from "@/components/InsightsFilter";
+import { createClient } from "@/lib/supabase/server";
 import "./insights.css";
 
 export const metadata: Metadata = {
   title: "Insights — Digital Public Works",
 };
 
-export default function InsightsPage() {
+function excerptFrom(text: string | undefined, max = 160) {
+  if (!text) return "";
+  const trimmed = text.trim();
+  if (trimmed.length <= max) return trimmed;
+  return `${trimmed.slice(0, max).trim()}...`;
+}
+
+export default async function InsightsPage() {
+  const supabase = await createClient();
+
+  const { data: posts } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("status", "published")
+    .order("published_at", { ascending: false });
+
+  const publishedPosts = posts ?? [];
+  const postIds = publishedPosts.map((p) => p.id);
+
+  // Derive each card's excerpt from its first paragraph-type block. One
+  // batched query for all posts on the page, then keep only the
+  // lowest-position paragraph per post (the block list is ordered by
+  // position, so the first row seen for a given post_id is its earliest).
+  const excerptByPostId: Record<string, string> = {};
+  if (postIds.length > 0) {
+    const { data: blocks } = await supabase
+      .from("blog_blocks")
+      .select("post_id, content")
+      .in("post_id", postIds)
+      .eq("type", "paragraph")
+      .order("position", { ascending: true });
+
+    for (const block of blocks ?? []) {
+      if (excerptByPostId[block.post_id]) continue;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const text = (block.content as any)?.text as string | undefined;
+      if (text) excerptByPostId[block.post_id] = excerptFrom(text);
+    }
+  }
+
+  const categories = Array.from(new Set(publishedPosts.map((p) => p.category).filter(Boolean)));
+
   return (
     <div className="page-insights">
       {/* HERO */}
@@ -27,47 +69,32 @@ export default function InsightsPage() {
       {/* POSTS */}
       <section className="posts section-pad">
         <div className="section-inner">
-          <InsightsFilter>
-            {/* Post 1: Policy */}
-            <a href="#" className="case-card reveal" data-cat="policy">
-              <div className="case-text">
-                <span className="case-state">Policy</span>
-                <h3>How H.R. 1 Changes the Stakes for Income Verification</h3>
-                <p className="case-detail">
-                  Expanded work requirements and tighter error-rate penalties are landing on states that already
-                  struggle with aging verification tools. Here is what the legislative moment means for agencies on
-                  the ground.
-                </p>
-              </div>
-              <div className="case-photo post-photo-placeholder"></div>
-            </a>
-
-            {/* Post 2: Service Design */}
-            <a href="#" className="case-card reveal d1" data-cat="service-design">
-              <div className="case-text">
-                <span className="case-state">Service Design</span>
-                <h3>The 40% Problem: When the Process Fails Before the Technology Does</h3>
-                <p className="case-detail">
-                  In one state, nearly 40% of SNAP renewal applicants were not submitting required income documents —
-                  not because the upload failed, but because they did not know they had a next step.
-                </p>
-              </div>
-              <div className="case-photo post-photo-placeholder"></div>
-            </a>
-
-            {/* Post 3: Accessibility */}
-            <a href="#" className="case-card reveal d2" data-cat="accessibility">
-              <div className="case-text">
-                <span className="case-state">Accessibility</span>
-                <h3>Accessible by Design: What Our Research on VMI Is Revealing</h3>
-                <p className="case-detail">
-                  65% of our users access <i>Verify My Income</i> on a smartphone. We are conducting original
-                  research into how income verification can be made usable for older adults, people with
-                  disabilities, and those with limited English proficiency.
-                </p>
-              </div>
-              <div className="case-photo post-photo-placeholder"></div>
-            </a>
+          <InsightsFilter categories={categories}>
+            {publishedPosts.map((post, idx) => {
+              const excerpt = excerptByPostId[post.id];
+              const delayClass = idx % 3 === 1 ? " d1" : idx % 3 === 2 ? " d2" : "";
+              return (
+                <a
+                  key={post.id}
+                  href={`/insights/${post.slug}`}
+                  className={`case-card reveal${delayClass}`}
+                  data-cat={post.category}
+                >
+                  <div className="case-text">
+                    <span className="case-state">{post.category}</span>
+                    <h3>{post.title}</h3>
+                    {excerpt && <p className="case-detail">{excerpt}</p>}
+                  </div>
+                  {post.featured_image_url ? (
+                    <div className="case-photo">
+                      <img src={post.featured_image_url} alt={post.featured_image_alt ?? ""} />
+                    </div>
+                  ) : (
+                    <div className="case-photo post-photo-placeholder"></div>
+                  )}
+                </a>
+              );
+            })}
           </InsightsFilter>
         </div>
       </section>

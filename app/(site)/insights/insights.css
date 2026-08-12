@@ -141,6 +141,65 @@
   color: var(--aluminum);
 }
 
+/* ─── POST DETAIL ────────────────────────────────── */
+.page-insights .insight-article {
+  background: var(--white);
+}
+
+.page-insights .insight-featured-photo {
+  margin: 0 0 48px;
+}
+
+.page-insights .insight-featured-photo img {
+  width: 100%;
+  height: auto;
+  max-height: 560px;
+  object-fit: cover;
+  display: block;
+  border-radius: 2px;
+}
+
+.page-insights .insight-featured-photo figcaption {
+  font-size: var(--t-small);
+  color: var(--steel);
+  margin-top: 10px;
+}
+
+.page-insights .insight-header {
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+
+.page-insights .insight-category {
+  display: block;
+}
+
+.page-insights .insight-body {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.page-insights .insight-heading {
+  margin: 40px 0 16px;
+}
+
+.page-insights .insight-photo-block {
+  margin: 32px 0;
+}
+
+.page-insights .insight-photo-block img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 2px;
+}
+
+.page-insights .insight-photo-block figcaption {
+  font-size: var(--t-small);
+  color: var(--steel);
+  margin-top: 10px;
+}
+
 /* ─── RESPONSIVE ─────────────────────────────────── */
 @media (max-width: 1024px) {
   .page-insights .hero {
