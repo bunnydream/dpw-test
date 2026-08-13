@@ -114,3 +114,33 @@ export function RefreshIcon() {
     </svg>
   );
 }
+
+/** Rotate-counterclockwise — undo. */
+export function UndoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 14 4 9 9 4" />
+      <path d="M4 9h10.5a6.5 6.5 0 0 1 0 13H11" />
+    </svg>
+  );
+}
+
+/** Rotate-clockwise — redo. */
+export function RedoIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15 14 20 9 15 4" />
+      <path d="M20 9H9.5a6.5 6.5 0 0 0 0 13H13" />
+    </svg>
+  );
+}
+
+/** Pencil — used next to the page title field. */
+export function EditIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+    </svg>
+  );
+}

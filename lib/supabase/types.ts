@@ -189,6 +189,46 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["deleted_pages"]["Insert"]>;
         Relationships: [];
       };
+      deleted_blog_posts: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          snapshot: Record<string, any>;
+          deleted_at: string;
+          purge_at: string;
+          restored: boolean;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          snapshot: Record<string, any>;
+          deleted_at?: string;
+          purge_at?: string;
+          restored?: boolean;
+        };
+        Update: Partial<Database["public"]["Tables"]["deleted_blog_posts"]["Insert"]>;
+        Relationships: [];
+      };
+      site_settings: {
+        Row: {
+          key: string;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value: Record<string, any>;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value: Record<string, any>;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["site_settings"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

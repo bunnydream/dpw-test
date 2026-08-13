@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { deletePost } from "@/lib/admin/blog";
+import { softDeletePost } from "@/lib/admin/deleted-blog-posts";
 import type { Database } from "@/lib/supabase/types";
 
 type BlogPost = Database["public"]["Tables"]["blog_posts"]["Row"];
@@ -38,7 +38,7 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
     if (!pendingDelete) return;
     setIsDeleting(true);
     try {
-      await deletePost(pendingDelete.id);
+      await softDeletePost(pendingDelete.id, pendingDelete.slug, pendingDelete.title);
       setPendingDelete(null);
       router.refresh();
     } finally {
@@ -158,7 +158,9 @@ export default function BlogList({ posts }: { posts: BlogPost[] }) {
             Delete this post?
           </h2>
           <p className="a-modal-desc" style={{ marginBottom: "4px" }}>
-            {pendingDelete ? `"${pendingDelete.title}" will be permanently deleted, including all of its content blocks.` : ""}
+            {pendingDelete
+              ? `"${pendingDelete.title}" will move to Deleted blogs, where it's kept for 30 days before it's removed for good.`
+              : ""}
           </p>
           <div className="a-modal-actions">
             <button className="a-btn a-btn-outline" onClick={() => setPendingDelete(null)} disabled={isDeleting}>

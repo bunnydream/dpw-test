@@ -1307,6 +1307,58 @@ a { color: inherit; }
 .a-media-page-delete:hover { background: #B91C1C; border-color: #B91C1C; color: var(--white); }
 .a-media-page-delete:disabled { opacity: .5; cursor: not-allowed; }
 
+/* ─── NAVBAR EDITOR ──────────────────────────────────────── */
+.a-nav-editor-logo-current { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.a-nav-editor-logo-current img {
+  height: 40px;
+  width: auto;
+  max-width: 260px;
+  object-fit: contain;
+  background: var(--cool-white);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+.a-nav-editor-logo-actions { display: flex; gap: 8px; }
+
+.a-nav-editor-list { display: flex; flex-direction: column; gap: 10px; }
+.a-nav-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--light-al);
+  border-radius: 8px;
+  background: var(--white);
+}
+.a-nav-editor-row.is-hidden { opacity: .55; }
+.a-nav-editor-row-order { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.a-nav-editor-row-fields { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-width: 0; }
+.a-nav-editor-row-toggle { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* ─── FOOTER EDITOR ──────────────────────────────────────── */
+.a-footer-editor-logo-current { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.a-footer-editor-logo-current img {
+  height: 40px;
+  width: auto;
+  max-width: 260px;
+  object-fit: contain;
+  background: var(--cool-white);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+.a-footer-editor-logo-actions { display: flex; gap: 8px; }
+
+.a-footer-editor-links { display: flex; flex-direction: column; gap: 10px; }
+.a-footer-editor-link-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--light-al);
+  border-radius: 8px;
+  background: var(--white);
+}
+
 /* ─── RESPONSIVE (basic) ─────────────────────────────────── */
 @media (max-width: 1080px) {
   .a-editor-shell { grid-template-columns: 1fr; height: auto; }

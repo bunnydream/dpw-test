@@ -40,7 +40,7 @@ function slugify(title: string) {
     .slice(0, 80);
 }
 
-export async function createPost(title: string, category: string) {
+export async function createPost(title: string = "Untitled post", category: string = "Uncategorized") {
   const supabase = createAdminClient();
   const baseSlug = slugify(title) || "untitled-post";
   let slug = baseSlug;
@@ -86,14 +86,6 @@ export async function setPostStatus(id: string, status: PageStatus) {
     .from("blog_posts")
     .update({ status, published_at: status === "published" ? new Date().toISOString() : null })
     .eq("id", id);
-  if (error) throw new Error(error.message);
-  revalidateInsights(existing?.slug);
-}
-
-export async function deletePost(id: string) {
-  const supabase = createAdminClient();
-  const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
-  const { error } = await supabase.from("blog_posts").delete().eq("id", id);
   if (error) throw new Error(error.message);
   revalidateInsights(existing?.slug);
 }

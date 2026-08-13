@@ -6,15 +6,18 @@ import Steps, { type StepsContent } from "./Steps";
 import Voices, { type VoicesContent } from "./Voices";
 import Partners, { type PartnersContent } from "./Partners";
 import Cta, { type CtaContent } from "./Cta";
+import TeamMember, { type TeamMemberContent } from "./TeamMember";
+import CaseStudy, { type CaseStudyContent } from "./CaseStudy";
+import Text, { type TextContent } from "./Text";
+import ContentCards, { type ContentCardsContent } from "./ContentCards";
+import Comparison, { type ComparisonContent } from "./Comparison";
 
 /**
- * Renders a list of sections by switching on `section.type`. Only the 7
- * block types proven out on home are handled; any other type (or a type not
- * yet supported anywhere) renders nothing rather than crashing — sections
- * needing extra fixed chrome (buttons, diagrams, progress bars) around them
- * should NOT be rendered through this generic switch; pull them out by
- * type/position in the page component instead and render them directly with
- * the block components below.
+ * Renders a list of sections by switching on `section.type`, covering all 12
+ * section types the schema supports. Used by the custom (admin-created)
+ * page route, where every section is block-driven with no hardcoded chrome
+ * around it — unlike the 6 original pages, which interleave these same block
+ * components directly in JSX alongside fixed, unmodeled markup.
  */
 export default function SectionRenderer({ sections }: { sections: Section[] }) {
   return (
@@ -47,6 +50,16 @@ export function SectionBlock({ section }: { section: Section }) {
       return <Partners content={section.content as PartnersContent} backgroundColor={section.background_color} />;
     case "cta":
       return <Cta content={section.content as CtaContent} backgroundColor={section.background_color} />;
+    case "team-member":
+      return <TeamMember content={section.content as TeamMemberContent} />;
+    case "case-study":
+      return <CaseStudy content={section.content as CaseStudyContent} />;
+    case "text":
+      return <Text content={section.content as TextContent} />;
+    case "content-cards":
+      return <ContentCards content={section.content as ContentCardsContent} />;
+    case "comparison":
+      return <Comparison content={section.content as ComparisonContent} />;
     default:
       return null;
   }

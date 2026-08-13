@@ -3,19 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PageStatus, SectionType } from "@/lib/supabase/types";
-
-const SLUG_TO_PATH: Record<string, string> = {
-  home: "/",
-  about: "/about",
-  product: "/product",
-  impact: "/impact",
-  careers: "/careers",
-  contact: "/contact",
-};
+import { pageSlugToPath } from "@/lib/page-path";
+import { appendPageToNav } from "@/lib/admin/site-settings";
 
 function revalidateForSlug(slug: string) {
-  const path = SLUG_TO_PATH[slug];
-  if (path) revalidatePath(path);
+  revalidatePath(pageSlugToPath(slug));
 }
 
 export async function getPageWithSections(slug: string) {
@@ -84,10 +76,27 @@ export async function reorderSections(orderedIds: string[]) {
   );
 }
 
-/** Revalidates the public route for a page so its current DB content goes
- * live — this is what the editor's "Publish changes" button calls. */
+/** Marks the page published, revalidates its public route, and — for a page
+ * not yet in the navbar (i.e. a custom page's first publish) — appends it to
+ * the end of the nav items. This is what the editor's "Publish changes"
+ * button calls. Setting status:'published' here is a no-op for the 6
+ * built-in pages, which are already published. */
 export async function publishPage(slug: string) {
+  const supabase = createAdminClient();
+  const { data: page, error } = await supabase
+    .from("pages")
+    .update({ status: "published" })
+    .eq("slug", slug)
+    .select("title")
+    .single();
+  if (error) throw new Error(error.message);
+
   revalidateForSlug(slug);
+  revalidatePath("/admin");
+
+  if (page) {
+    await appendPageToNav(slug, page.title);
+  }
 }
 
 export async function setPageStatus(slug: string, status: PageStatus) {
@@ -103,4 +112,41 @@ export async function listPagesWithMeta() {
   const { data, error } = await supabase.from("pages").select("*").order("slug");
   if (error) throw new Error(error.message);
   return data ?? [];
+}
+
+function slugify(title: string) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 80);
+}
+
+/** Creates a new draft page with no sections yet. Slug is derived from the
+ * title with a numeric suffix on collision (checked against real page rows,
+ * so it can never collide with a built-in slug like "about"). */
+export async function createPage(title: string) {
+  const supabase = createAdminClient();
+  const baseSlug = slugify(title) || "untitled-page";
+  let slug = baseSlug;
+  let suffix = 1;
+  while (true) {
+    const { data: existing } = await supabase.from("pages").select("id").eq("slug", slug).maybeSingle();
+    if (!existing) break;
+    suffix += 1;
+    slug = `${baseSlug}-${suffix}`;
+  }
+
+  const { data, error } = await supabase.from("pages").insert({ title, slug, status: "draft" }).select().single();
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  return data;
+}
+
+export async function updatePageTitle(pageId: string, title: string) {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.from("pages").update({ title }).eq("id", pageId).select("slug").single();
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin");
+  if (data) revalidateForSlug(data.slug);
 }

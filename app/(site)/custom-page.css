@@ -1,0 +1,303 @@
+/* ─── CUSTOM PAGE BASELINE ─────────────────────────
+   Shared styling for admin-created (non-fixed) pages, rendered generically
+   by app/(site)/[slug]/page.tsx via SectionRenderer. Every rule here is
+   scoped under .page-custom so it never leaks onto the 6 fixed pages.
+
+   Most block classnames (.case-grid, .team-grid, .funders, .voices,
+   .ct/.ct-wrap, .stat-row base, .how-steps-wrap, .body-text, .pullquote,
+   .section-pad/.section-inner) are already fully styled globally in
+   shared.css and need no page-specific overrides here — this file only
+   adds the pieces shared.css explicitly leaves to each page (hero layout,
+   stat-row grid, photo-text layout, cta layout, steps sizing) plus the 3
+   new block types that don't exist on any fixed page. Sourced from the
+   cleanest / least page-specific version of each pattern (see AGENTS.md
+   task notes) and generalized where a fixed page's version was too
+   content-specific to reuse as-is (e.g. stat-row's column count). */
+
+
+/* ─── HERO ──────────────────────────────────────── */
+/* Base layout adapted from careers.css (cleanest hero — no page-specific
+   eyebrow/tagline quirks). hero-actions/hero-note adapted from home.css,
+   since no other page styles those. hero-sub/hero-tagline/hero-heading-stack/
+   hero-img img sizing already come from shared.css. */
+.page-custom .hero {
+  background: var(--white);
+  min-height: calc(100vh - 74px);
+  display: grid;
+  grid-template-columns: 9fr 7fr;
+  overflow: hidden;
+}
+
+.page-custom .hero-left {
+  padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.page-custom .hero-actions {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.page-custom .hero-note {
+  font-size: var(--t-label);
+  color: var(--steel);
+  line-height: 1.65;
+  padding-left: 12px;
+  border-left: 2px solid var(--copper);
+  max-width: 44ch;
+  margin-top: 24px;
+}
+
+.page-custom .hero-img {
+  overflow: hidden;
+}
+
+.page-custom .hero-img img {
+  object-position: center;
+}
+
+@media (max-width: 1024px) {
+  .page-custom .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .page-custom .hero-img {
+    height: 400px;
+    order: -1;
+  }
+}
+
+
+/* ─── STAT ROW ──────────────────────────────────── */
+/* Base structure (grid, ::before reveal bar, .stat-num/.stat-label color)
+   already lives in shared.css. This fills in the per-page pieces shared.css
+   leaves open. Uses auto-fit rather than a fixed column count (home.css's
+   source used repeat(4, 1fr), hardcoded to its exact stat count) so any
+   number of admin-added stats lays out sensibly. */
+.page-custom .stat-row {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  padding: 0 clamp(20px, 5vw, 64px) clamp(32px, 4vw, 48px);
+  background: var(--cool-white);
+}
+
+.page-custom .stat-cell {
+  padding: clamp(56px, 7vw, 88px) clamp(16px, 2.5vw, 28px) clamp(48px, 6vw, 72px);
+}
+
+.page-custom .stat-cell::before {
+  margin-bottom: 18px;
+}
+
+.page-custom .stat-num {
+  font-size: clamp(36px, 4.2vw, 56px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.page-custom .stat-label {
+  font-size: var(--t-body);
+  letter-spacing: 0.06em;
+}
+
+
+/* ─── PHOTO-TEXT (pressure / model layouts) ──────── */
+/* Only source: home.css's "pressure" (photo left) and "model" (photo right)
+   sections — the two DOM/class variants PhotoText.tsx can render. */
+.page-custom .pressure {
+  background: var(--cool-white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+.page-custom .pressure-right {
+  padding: clamp(56px, 8vw, 96px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2)) clamp(56px, 8vw, 96px) clamp(48px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.page-custom .pressure-img {
+  overflow: hidden;
+}
+
+.page-custom .pressure-img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.page-custom .model {
+  background: var(--white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.page-custom .model-content {
+  padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 64px) clamp(56px, 8vw, 96px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.page-custom .model-photo {
+  overflow: hidden;
+  position: relative;
+}
+
+.page-custom .model-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+}
+
+@media (max-width: 1024px) {
+  .page-custom .pressure,
+  .page-custom .model {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .page-custom .pressure-img,
+  .page-custom .model-photo {
+    height: 340px;
+  }
+}
+
+
+/* ─── STEPS (photo-card timeline) ────────────────── */
+/* .how-steps-wrap/.how-step-row/.how-step-card/.how-steps-progress already
+   fully styled in shared.css — it deliberately leaves image height and body
+   padding to each page. Values adapted from home.css. */
+.page-custom .how-step-img {
+  height: clamp(200px, 20vw, 300px);
+}
+
+.page-custom .how-step-body {
+  padding: 24px 0 0 0;
+}
+
+
+/* ─── CTA ───────────────────────────────────────── */
+/* Adapted from home.css's copper CTA — the darkening overlay + layout only;
+   the background photo itself is already set inline by Cta.tsx via
+   background_photo_url, so no background-image rule is duplicated here. */
+.page-custom .cta-section {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 64px) clamp(56px, 8vw, 96px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.page-custom .cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.page-custom .cta-inner {
+  max-width: 640px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.page-custom .cta-h {
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+.page-custom .cta-sub {
+  font-size: var(--t-body);
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 32px;
+  line-height: 1.65;
+}
+
+
+/* ─── BLOCK: TEXT ─────────────────────────────────── */
+.page-custom .block-text p {
+  font-size: var(--t-body);
+  line-height: 1.82;
+  color: var(--steel);
+  max-width: 68ch;
+}
+
+
+/* ─── BLOCK: CONTENT CARDS ────────────────────────── */
+.page-custom .block-content-cards-intro {
+  font-size: var(--t-body);
+  line-height: 1.82;
+  color: var(--steel);
+  max-width: 68ch;
+  margin-bottom: 40px;
+}
+
+.page-custom .block-content-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.page-custom .block-content-card {
+  background: var(--cool-white);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-custom .block-content-card-photo {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.page-custom .block-content-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.page-custom .block-content-card h3 {
+  margin: clamp(18px, 2.5vw, 28px) clamp(18px, 2.5vw, 28px) 10px;
+}
+
+.page-custom .block-content-card p {
+  font-size: var(--t-small);
+  line-height: 1.72;
+  color: var(--steel);
+  margin: 0 clamp(18px, 2.5vw, 28px) clamp(18px, 2.5vw, 28px);
+}
+
+@media (max-width: 1024px) {
+  .page-custom .block-content-card-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-custom .block-content-card-grid {
+    grid-template-columns: 1fr;
+  }
+}

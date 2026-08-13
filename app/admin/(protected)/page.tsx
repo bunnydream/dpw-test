@@ -1,18 +1,12 @@
 import Link from "next/link";
 import { listPagesWithMeta } from "@/lib/admin/pages";
 import { listPosts } from "@/lib/admin/blog";
+import { pageSlugToPath } from "@/lib/page-path";
 import DeletePageButton from "@/components/admin/DeletePageButton";
+import AddPageButton from "@/components/admin/AddPageButton";
+import ClickableRow from "@/components/admin/ClickableRow";
 
 const PAGE_ORDER = ["home", "about", "product", "impact", "careers", "contact"];
-
-const PAGE_VIEW_PATHS: Record<string, string> = {
-  home: "/",
-  about: "/about",
-  product: "/product",
-  impact: "/impact",
-  careers: "/careers",
-  contact: "/contact",
-};
 
 const PAGE_ICON_PATHS: Record<string, React.ReactNode> = {
   home: (
@@ -79,9 +73,16 @@ function categoryBadgeClass(category: string) {
 export default async function AdminDashboardPage() {
   const [pages, posts] = await Promise.all([listPagesWithMeta(), listPosts()]);
 
-  const sortedPages = [...pages].sort(
-    (a, b) => PAGE_ORDER.indexOf(a.slug) - PAGE_ORDER.indexOf(b.slug)
-  );
+  const sortedPages = [...pages].sort((a, b) => {
+    const ai = PAGE_ORDER.indexOf(a.slug);
+    const bi = PAGE_ORDER.indexOf(b.slug);
+    // Built-in pages keep their fixed order; custom pages (not in
+    // PAGE_ORDER) sort after all of them, alphabetically by title.
+    if (ai === -1 && bi === -1) return a.title.localeCompare(b.title);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
   const recentPosts = posts.slice(0, 5);
 
   return (
@@ -120,14 +121,17 @@ export default async function AdminDashboardPage() {
                 </svg>
               </div>
               <div className="a-page-body">
-                <h3>{page.title}</h3>
+                <h3>
+                  {page.title}
+                  {page.status === "draft" ? " (Draft)" : ""}
+                </h3>
                 <div className="a-page-meta">Edited {formatDate(page.updated_at)}</div>
                 <div className="a-page-actions">
                   <Link href={`/admin/pages/${page.slug}`} className="a-btn a-btn-primary a-btn-sm">
                     Edit
                   </Link>
                   <a
-                    href={PAGE_VIEW_PATHS[page.slug] ?? "/"}
+                    href={pageSlugToPath(page.slug)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="a-btn a-btn-outline a-btn-sm"
@@ -140,17 +144,7 @@ export default async function AdminDashboardPage() {
             </div>
           ))}
 
-          <div
-            className="a-page-add-card"
-            style={{ cursor: "default", opacity: 0.55 }}
-            title="Pages map to fixed site routes and can't be added from here — ask an engineer to add a new route first."
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Add a new page
-          </div>
+          <AddPageButton />
         </div>
 
         {/* Recent blog posts */}
@@ -179,7 +173,7 @@ export default async function AdminDashboardPage() {
                 </tr>
               ) : (
                 recentPosts.map((post) => (
-                  <tr className="a-post-row" key={post.id}>
+                  <ClickableRow className="a-post-row" href={`/admin/blog/${post.id}`} key={post.id}>
                     <td>
                       <div className="a-post-cell">
                         <div className="a-post-title">{post.title}</div>
@@ -204,7 +198,7 @@ export default async function AdminDashboardPage() {
                         </Link>
                       </div>
                     </td>
-                  </tr>
+                  </ClickableRow>
                 ))
               )}
             </tbody>

@@ -3,10 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/admin/auth";
+import type { Database } from "@/lib/supabase/types";
 
-const PAGE_LINKS = [
+type PageRow = Database["public"]["Tables"]["pages"]["Row"];
+
+const FIXED_PAGE_META: { slug: string; label: string; icon: React.ReactNode }[] = [
   {
-    href: "/admin/pages/home",
+    slug: "home",
     label: "Home",
     icon: (
       <>
@@ -16,7 +19,7 @@ const PAGE_LINKS = [
     ),
   },
   {
-    href: "/admin/pages/about",
+    slug: "about",
     label: "About",
     icon: (
       <>
@@ -26,7 +29,7 @@ const PAGE_LINKS = [
     ),
   },
   {
-    href: "/admin/pages/product",
+    slug: "product",
     label: "Product",
     icon: (
       <>
@@ -36,7 +39,7 @@ const PAGE_LINKS = [
     ),
   },
   {
-    href: "/admin/pages/impact",
+    slug: "impact",
     label: "Impact",
     icon: (
       <>
@@ -46,7 +49,7 @@ const PAGE_LINKS = [
     ),
   },
   {
-    href: "/admin/pages/careers",
+    slug: "careers",
     label: "Careers",
     icon: (
       <>
@@ -56,7 +59,7 @@ const PAGE_LINKS = [
     ),
   },
   {
-    href: "/admin/pages/contact",
+    slug: "contact",
     label: "Contact",
     icon: (
       <>
@@ -66,6 +69,19 @@ const PAGE_LINKS = [
     ),
   },
 ];
+
+const FIXED_PAGE_SLUGS = FIXED_PAGE_META.map((p) => p.slug);
+
+// Mirrors DEFAULT_PAGE_ICON in app/admin/(protected)/page.tsx — generic
+// document icon used for any custom (non-fixed) page row.
+const CUSTOM_PAGE_ICON = (
+  <>
+    <rect x="4" y="3" width="16" height="18" rx="1" />
+    <line x1="8" y1="8" x2="16" y2="8" />
+    <line x1="8" y1="12" x2="16" y2="12" />
+    <line x1="8" y1="16" x2="12" y2="16" />
+  </>
+);
 
 function DashboardIcon() {
   return (
@@ -115,6 +131,24 @@ function SettingsIcon() {
   );
 }
 
+function NavbarLinkIcon() {
+  return (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <line x1="3" y1="9" x2="21" y2="9" />
+    </>
+  );
+}
+
+function FooterLinkIcon() {
+  return (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <line x1="3" y1="15" x2="21" y2="15" />
+    </>
+  );
+}
+
 function NavIcon({ children }: { children: React.ReactNode }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -123,7 +157,7 @@ function NavIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function Sidebar({ email }: { email: string }) {
+export default function Sidebar({ email, pages = [] }: { email: string; pages?: PageRow[] }) {
   const pathname = usePathname();
   const initials = email.slice(0, 2).toUpperCase();
 
@@ -131,6 +165,11 @@ export default function Sidebar({ email }: { email: string }) {
     if (href === "/admin") return pathname === "/admin";
     return pathname.startsWith(href);
   }
+
+  // Custom (non-fixed) pages, sorted alphabetically after the 6 built-ins.
+  const customPages = pages
+    .filter((p) => !FIXED_PAGE_SLUGS.includes(p.slug))
+    .sort((a, b) => a.title.localeCompare(b.title));
 
   return (
     <aside className="admin-sidebar">
@@ -149,20 +188,52 @@ export default function Sidebar({ email }: { email: string }) {
         </li>
 
         <li className="admin-nav-label">Website pages</li>
-        {PAGE_LINKS.map((link) => (
-          <li key={link.href}>
-            <Link href={link.href} className={isActive(link.href) ? "active" : ""}>
-              <NavIcon>{link.icon}</NavIcon>
-              {link.label}
-            </Link>
-          </li>
-        ))}
+        {FIXED_PAGE_META.map((link) => {
+          const href = `/admin/pages/${link.slug}`;
+          return (
+            <li key={link.slug}>
+              <Link href={href} className={isActive(href) ? "active" : ""}>
+                <NavIcon>{link.icon}</NavIcon>
+                {link.label}
+              </Link>
+            </li>
+          );
+        })}
+        {customPages.map((page) => {
+          const href = `/admin/pages/${page.slug}`;
+          return (
+            <li key={page.slug}>
+              <Link href={href} className={isActive(href) ? "active" : ""}>
+                <NavIcon>{CUSTOM_PAGE_ICON}</NavIcon>
+                {page.status === "draft" ? `${page.title} (Draft)` : page.title}
+              </Link>
+            </li>
+          );
+        })}
         <li>
           <Link href="/admin/deleted-pages" className={isActive("/admin/deleted-pages") ? "active" : ""}>
             <NavIcon>
               <DeletedIcon />
             </NavIcon>
             Deleted pages
+          </Link>
+        </li>
+
+        <li className="admin-nav-label">Site</li>
+        <li>
+          <Link href="/admin/navbar" className={isActive("/admin/navbar") ? "active" : ""}>
+            <NavIcon>
+              <NavbarLinkIcon />
+            </NavIcon>
+            Navbar
+          </Link>
+        </li>
+        <li>
+          <Link href="/admin/footer" className={isActive("/admin/footer") ? "active" : ""}>
+            <NavIcon>
+              <FooterLinkIcon />
+            </NavIcon>
+            Footer
           </Link>
         </li>
 
@@ -173,6 +244,14 @@ export default function Sidebar({ email }: { email: string }) {
               <BlogIcon />
             </NavIcon>
             Insights / Blog
+          </Link>
+        </li>
+        <li>
+          <Link href="/admin/deleted-blog-posts" className={isActive("/admin/deleted-blog-posts") ? "active" : ""}>
+            <NavIcon>
+              <DeletedIcon />
+            </NavIcon>
+            Deleted blogs
           </Link>
         </li>
         <li>

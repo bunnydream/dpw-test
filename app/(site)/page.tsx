@@ -91,7 +91,7 @@ export default async function HomePage() {
             <h2 style={{ fontSize: "clamp(28px, 3vw, 36px)" }}>
               At a glance: how <i>Verify My Income</i> compares
             </h2>
-            <Link href="/compare" className="btn btn-outline">
+            <Link href="/product#comparison" className="btn btn-outline">
               See the full comparison
             </Link>
           </div>

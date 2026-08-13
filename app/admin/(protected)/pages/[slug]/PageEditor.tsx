@@ -2,8 +2,16 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createSection, deleteSection, publishPage, reorderSections, updateSectionContent } from "@/lib/admin/pages";
+import {
+  createSection,
+  deleteSection,
+  publishPage,
+  reorderSections,
+  updatePageTitle,
+  updateSectionContent,
+} from "@/lib/admin/pages";
 import type { Database, SectionType } from "@/lib/supabase/types";
+import { FIXED_PAGE_SLUGS, pageSlugToPath } from "@/lib/page-path";
 import { BLOCK_TYPES, SECTION_TYPE_LABEL, starterContent, starterName } from "./block-types";
 import { BackgroundColorField, SectionContentFields, sectionDisplayName } from "./section-fields";
 import {
@@ -11,11 +19,14 @@ import {
   ChevronIcon,
   CloseIcon,
   DownIcon,
+  EditIcon,
   ExternalLinkIcon,
   GripIcon,
   PlusIcon,
+  RedoIcon,
   RefreshIcon,
   TrashIcon,
+  UndoIcon,
   UpIcon,
   WarningIcon,
 } from "./icons";
@@ -23,32 +34,40 @@ import {
 type PageRow = Database["public"]["Tables"]["pages"]["Row"];
 type SectionRow = Database["public"]["Tables"]["sections"]["Row"];
 
-const SLUG_TO_LIVE_PATH: Record<string, string> = {
-  home: "/",
-  about: "/about",
-  product: "/product",
-  impact: "/impact",
-  careers: "/careers",
-  contact: "/contact",
+const FIXED_PAGE_LABELS: Record<string, string> = {
+  home: "Home page",
+  about: "About page",
+  product: "Product page",
+  impact: "Impact page",
+  careers: "Careers page",
+  contact: "Contact page",
 };
 
-const PAGE_OPTIONS: { slug: string; label: string }[] = [
-  { slug: "home", label: "Home page" },
-  { slug: "about", label: "About page" },
-  { slug: "product", label: "Product page" },
-  { slug: "impact", label: "Impact page" },
-  { slug: "careers", label: "Careers page" },
-  { slug: "contact", label: "Contact page" },
-];
+/** Builds the page-switcher dropdown: the 6 built-ins first (in their fixed
+ * order), then any custom pages sorted alphabetically. */
+function buildPageOptions(pages: PageRow[]): { slug: string; label: string }[] {
+  const fixed = FIXED_PAGE_SLUGS.map((s) => pages.find((p) => p.slug === s))
+    .filter((p): p is PageRow => !!p)
+    .map((p) => ({ slug: p.slug, label: FIXED_PAGE_LABELS[p.slug] ?? p.title }));
+
+  const custom = pages
+    .filter((p) => !FIXED_PAGE_SLUGS.includes(p.slug))
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((p) => ({ slug: p.slug, label: p.title }));
+
+  return [...fixed, ...custom];
+}
 
 export default function PageEditor({
   slug,
   page,
   initialSections,
+  pages,
 }: {
   slug: string;
   page: PageRow;
   initialSections: SectionRow[];
+  pages: PageRow[];
 }) {
   const router = useRouter();
   const [sections, setSections] = useState<SectionRow[]>(initialSections);
@@ -61,8 +80,73 @@ export default function PageEditor({
   const [previewKey, setPreviewKey] = useState(0);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const livePath = SLUG_TO_LIVE_PATH[slug] ?? "/";
+  // Linear undo/redo history over `sections`. A snapshot of the *current*
+  // sections is pushed onto `past` right before a structural mutation is
+  // applied (add/delete/move), and once inside persistDirty() right before
+  // a save request fires (so pending text-field edits get one checkpoint
+  // per save, not one per keystroke). Purely client-side editor state —
+  // Save/Publish operate on whatever `sections` state undo/redo leaves.
+  const [past, setPast] = useState<SectionRow[][]>([]);
+  const [future, setFuture] = useState<SectionRow[][]>([]);
+
+  const pageOptions = buildPageOptions(pages);
+
+  // Page title editing
+  const [titleValue, setTitleValue] = useState(page.title);
+  const [titleSaving, setTitleSaving] = useState(false);
+  const titleDirty = titleValue.trim() !== page.title && titleValue.trim().length > 0;
+
+  const livePath = pageSlugToPath(slug);
   const hasUnsaved = dirtyIds.size > 0;
+
+  function checkpoint() {
+    setPast((prev) => [...prev, sections]);
+    setFuture([]);
+  }
+
+  function handleUndo() {
+    setPast((prev) => {
+      if (prev.length === 0) return prev;
+      const next = prev.slice(0, -1);
+      const snapshot = prev[prev.length - 1];
+      setFuture((f) => [sections, ...f]);
+      setSections(snapshot);
+      return next;
+    });
+  }
+
+  function handleRedo() {
+    setFuture((prev) => {
+      if (prev.length === 0) return prev;
+      const [snapshot, ...rest] = prev;
+      setPast((p) => [...p, sections]);
+      setSections(snapshot);
+      return rest;
+    });
+  }
+
+  async function handleTitleSave() {
+    const trimmed = titleValue.trim();
+    if (!trimmed || trimmed === page.title) {
+      setTitleValue(page.title);
+      return;
+    }
+    setTitleSaving(true);
+    try {
+      await updatePageTitle(page.id, trimmed);
+      showToast("Page name updated");
+      // page.title (a server-fetched prop) won't reflect the new value until
+      // the route's server data is re-fetched — refresh so titleDirty (and
+      // the page-switcher dropdown / sidebar labels) settle immediately.
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to update page name");
+      setTitleValue(page.title);
+    } finally {
+      setTitleSaving(false);
+    }
+  }
 
   function showToast(message: string) {
     setToast(message);
@@ -91,6 +175,7 @@ export default function PageEditor({
   async function persistDirty(): Promise<boolean> {
     const ids = Array.from(dirtyIds);
     if (ids.length === 0) return true;
+    checkpoint();
     try {
       await Promise.all(
         ids.map((id) => {
@@ -133,6 +218,7 @@ export default function PageEditor({
 
   async function handleAddSection(type: SectionType) {
     setAddModalOpen(false);
+    checkpoint();
     try {
       const created = await createSection(page.id, type, starterName(type), starterContent(type), sections.length);
       setSections((prev) => [...prev, created]);
@@ -148,6 +234,7 @@ export default function PageEditor({
     const id = deleteTargetId;
     if (!id) return;
     setDeleteTargetId(null);
+    checkpoint();
     try {
       await deleteSection(id);
       setSections((prev) => prev.filter((s) => s.id !== id));
@@ -167,6 +254,7 @@ export default function PageEditor({
     const idx = sections.findIndex((s) => s.id === id);
     const targetIdx = idx + direction;
     if (idx < 0 || targetIdx < 0 || targetIdx >= sections.length) return;
+    checkpoint();
     const next = [...sections];
     [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
     setSections(next);
@@ -181,19 +269,55 @@ export default function PageEditor({
   return (
     <>
       <header className="admin-topbar">
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
           <select
             className="a-select"
-            style={{ width: 200, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
+            style={{ width: 180, fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
             value={slug}
             onChange={(e) => router.push(`/admin/pages/${e.target.value}`)}
           >
-            {PAGE_OPTIONS.map((p) => (
+            {pageOptions.map((p) => (
               <option key={p.slug} value={p.slug}>
                 {p.label}
               </option>
             ))}
           </select>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <EditIcon />
+            <input
+              type="text"
+              className="a-input"
+              style={{ width: 200 }}
+              value={titleValue}
+              onChange={(e) => setTitleValue(e.target.value)}
+              onBlur={handleTitleSave}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+              }}
+              disabled={titleSaving}
+              title="Page name"
+              aria-label="Page name"
+            />
+            {titleDirty ? (
+              <button
+                type="button"
+                className="a-icon-btn"
+                title="Save page name"
+                onClick={handleTitleSave}
+                disabled={titleSaving}
+              >
+                <CheckIcon />
+              </button>
+            ) : null}
+          </div>
+
+          <button className="a-icon-btn" onClick={handleUndo} disabled={past.length === 0} title="Undo">
+            <UndoIcon />
+          </button>
+          <button className="a-icon-btn" onClick={handleRedo} disabled={future.length === 0} title="Redo">
+            <RedoIcon />
+          </button>
           <button className="a-icon-btn" onClick={() => setPreviewKey((k) => k + 1)} title="Refresh preview">
             <RefreshIcon />
           </button>

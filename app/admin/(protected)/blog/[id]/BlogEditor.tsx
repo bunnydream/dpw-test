@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import {
   createBlock,
   deleteBlock,
-  deletePost,
   reorderBlocks,
   setPostStatus,
   updateBlock,
   updatePostMeta,
 } from "@/lib/admin/blog";
+import { softDeletePost } from "@/lib/admin/deleted-blog-posts";
 import { uploadMedia } from "@/lib/admin/media";
 import type { BlogBlockType, Database, PageStatus } from "@/lib/supabase/types";
 
@@ -250,7 +250,7 @@ export default function BlogEditor({
   async function handleDeletePost() {
     setIsDeletingPost(true);
     try {
-      await deletePost(post.id);
+      await softDeletePost(post.id, post.slug, title);
       router.push("/admin/blog");
     } catch (err) {
       showToast(err instanceof Error ? err.message : "Something went wrong");
@@ -375,6 +375,8 @@ export default function BlogEditor({
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  autoFocus
+                  onFocus={(e) => e.target.select()}
                   style={{ fontSize: "17px", fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif" }}
                 />
                 <div className="a-field-hint">This is the large headline on the post and on its card.</div>
@@ -714,7 +716,7 @@ export default function BlogEditor({
             Delete this post?
           </h2>
           <p className="a-modal-desc" style={{ marginBottom: "4px" }}>
-            &ldquo;{title}&rdquo; and all of its content blocks will be permanently deleted. This can&apos;t be undone.
+            &ldquo;{title}&rdquo; will move to Deleted blogs, where it&apos;s kept for 30 days before it&apos;s removed for good.
           </p>
           <div className="a-modal-actions">
             <button className="a-btn a-btn-outline" onClick={() => setShowDeletePostModal(false)} disabled={isDeletingPost}>
