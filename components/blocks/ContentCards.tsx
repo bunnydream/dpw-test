@@ -11,6 +11,9 @@ export type ContentCard = {
 export type ContentCardsContent = {
   heading?: string | null;
   text?: string | null;
+  /** Background color applied to each card (independent of the section's
+   * own background_color). */
+  card_background_color?: string | null;
   cards: ContentCard[];
 };
 
@@ -30,7 +33,7 @@ export default function ContentCards({
   content: ContentCardsContent;
   backgroundColor?: string | null;
 }) {
-  const { heading, text, cards } = content;
+  const { heading, text, cards, card_background_color } = content;
 
   return (
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
@@ -39,7 +42,11 @@ export default function ContentCards({
         {text ? <p className="body-p reveal d1">{text}</p> : null}
         <div className="io-grid io-grid--auto">
           {cards.map((card, i) => (
-            <div className="io-card reveal" key={i}>
+            <div
+              className="io-card reveal"
+              key={i}
+              style={card_background_color ? { background: card_background_color } : undefined}
+            >
               {card.photo_url ? (
                 <div className="io-top">
                   <img src={card.photo_url} alt={card.photo_alt ?? ""} loading="lazy" />

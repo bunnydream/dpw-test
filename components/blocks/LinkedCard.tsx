@@ -18,6 +18,7 @@ export default function LinkedCard({
   href,
   dataCat,
   className,
+  backgroundColor,
 }: {
   /** Small uppercase copper label above the heading — a state name on
    * Product/Impact, a category on Insights. */
@@ -30,9 +31,15 @@ export default function LinkedCard({
   /** Insights' category filter reads this off the card element. */
   dataCat?: string;
   className?: string;
+  backgroundColor?: string | null;
 }) {
   return (
-    <a href={href} className={`case-card${className ? ` ${className}` : ""}`} data-cat={dataCat}>
+    <a
+      href={href}
+      className={`case-card${className ? ` ${className}` : ""}`}
+      data-cat={dataCat}
+      style={backgroundColor ? { background: backgroundColor } : undefined}
+    >
       <div className="case-text">
         <span className="case-state">{label}</span>
         <h3>{heading}</h3>

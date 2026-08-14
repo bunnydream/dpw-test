@@ -12,6 +12,9 @@ export type CaseStudyGenericCard = {
 };
 
 export type CaseStudyGenericContent = {
+  /** Background color applied to each card (independent of the section's
+   * own background_color). */
+  card_background_color?: string | null;
   cards: CaseStudyGenericCard[];
 };
 
@@ -32,7 +35,7 @@ export default function CaseStudyGeneric({
   content: CaseStudyGenericContent;
   backgroundColor?: string | null;
 }) {
-  const { cards } = content;
+  const { cards, card_background_color } = content;
 
   return (
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
@@ -48,6 +51,7 @@ export default function CaseStudyGeneric({
               photoUrl={card.photo_url}
               photoAlt={card.photo_alt}
               className="reveal"
+              backgroundColor={card_background_color}
             />
           ))}
         </div>

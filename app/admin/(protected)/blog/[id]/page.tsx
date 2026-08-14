@@ -14,6 +14,7 @@ export default async function BlogEditorPage({ params }: { params: Promise<{ id:
 
   const existingCategories = Array.from(new Set(posts.map((p) => p.category).filter(Boolean)));
   const categories = Array.from(new Set([...existingCategories, ...DEFAULT_CATEGORIES])).sort();
+  const authors = Array.from(new Set(posts.map((p) => p.author).filter((a): a is string => !!a))).sort();
 
-  return <BlogEditor post={result.post} initialBlocks={result.blocks} categories={categories} />;
+  return <BlogEditor post={result.post} initialBlocks={result.blocks} categories={categories} authors={authors} />;
 }

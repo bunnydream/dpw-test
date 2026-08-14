@@ -66,6 +66,8 @@ export async function updatePostMeta(
   id: string,
   fields: Partial<{
     title: string;
+    subtitle: string | null;
+    author: string | null;
     category: string;
     featured_image_url: string | null;
     featured_image_alt: string | null;

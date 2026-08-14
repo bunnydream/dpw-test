@@ -8,6 +8,9 @@ export type Quote = {
 
 export type VoicesContent = {
   heading: string;
+  /** Background color applied to each quote card (independent of the
+   * section's own background_color). */
+  card_background_color?: string | null;
   quotes: Quote[];
 };
 
@@ -18,7 +21,7 @@ export default function Voices({
   content: VoicesContent;
   backgroundColor?: string | null;
 }) {
-  const { heading, quotes } = content;
+  const { heading, quotes, card_background_color } = content;
 
   return (
     <section className="voices" id="voices" style={backgroundColor ? { background: backgroundColor } : undefined}>
@@ -31,6 +34,7 @@ export default function Voices({
           text: q.quote,
           attr: q.role ? `${q.name}, ${q.role}` : q.name,
         }))}
+        cardBackgroundColor={card_background_color}
       />
     </section>
   );

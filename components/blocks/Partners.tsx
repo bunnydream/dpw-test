@@ -1,5 +1,6 @@
 export type Partner = {
-  name: string;
+  /** No longer editable in the admin — kept optional for pre-existing data. */
+  name?: string;
   logo_url: string;
   link: string;
   visible?: boolean;

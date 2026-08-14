@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { listMedia, uploadMedia } from "@/lib/admin/media";
-import type { Database, SectionType } from "@/lib/supabase/types";
-import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CloseIcon, LibraryIcon, TrashIcon, PlusIcon, UploadIcon } from "./icons";
-
-type MediaRow = Database["public"]["Tables"]["media"]["Row"];
+import { useRef, useState } from "react";
+import { uploadMedia } from "@/lib/admin/media";
+import MediaLibraryModal from "@/components/admin/MediaLibraryModal";
+import type { SectionType } from "@/lib/supabase/types";
+import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, LibraryIcon, TrashIcon, PlusIcon, UploadIcon } from "./icons";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Content = Record<string, any>;
@@ -131,9 +130,11 @@ export { LinkPicker };
 export function BackgroundColorField({
   value,
   onChange,
+  label = "Background color",
 }: {
   value: string | null;
   onChange: (v: string | null) => void;
+  label?: string;
 }) {
   const colors: [string, string][] = [
     ["", "Default (page background)"],
@@ -150,7 +151,7 @@ export function BackgroundColorField({
   ];
   return (
     <div className="a-field a-bg-color-field">
-      <label>Background color</label>
+      <label>{label}</label>
       <select
         className="a-select"
         value={value ?? ""}
@@ -166,58 +167,6 @@ export function BackgroundColorField({
   );
 }
 
-/** Picks an existing upload from the media library instead of uploading a
- * new file. Reuses the same grid styling as the full media library page. */
-function MediaLibraryModal({ onSelect, onClose }: { onSelect: (url: string) => void; onClose: () => void }) {
-  const [media, setMedia] = useState<MediaRow[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    listMedia()
-      .then(setMedia)
-      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load media library"));
-  }, []);
-
-  return (
-    <div className="a-modal-overlay is-open" onClick={onClose}>
-      <div className="a-modal a-modal--scroll" onClick={(e) => e.stopPropagation()}>
-        <div className="a-modal-sticky">
-          <div className="a-modal-header">
-            <h2>Choose from media library</h2>
-            <button type="button" className="a-modal-close" onClick={onClose}>
-              <CloseIcon />
-            </button>
-          </div>
-        </div>
-        <div className="a-modal-scroll-body">
-          {error ? (
-            <p className="a-field-hint" style={{ color: "#B91C1C" }}>
-              {error}
-            </p>
-          ) : !media ? (
-            <p className="a-field-hint">Loading...</p>
-          ) : media.length === 0 ? (
-            <p className="a-field-hint">No photos uploaded yet. Upload one first.</p>
-          ) : (
-            <div className="a-media-page-grid">
-              {media.map((m) => (
-                <button
-                  type="button"
-                  key={m.id}
-                  className="a-media-page-item a-media-picker-item"
-                  onClick={() => onSelect(m.url)}
-                  title="Use this photo"
-                >
-                  <img src={m.url} alt="" />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /** Shared "replace photo" / "click to upload" field — uploads a new file
  * via uploadMedia(), or lets the user pick an already-uploaded one from the
@@ -716,7 +665,7 @@ function VoicesFields({ content, onChange }: FieldsProps) {
 }
 
 function PartnersFields({ content, onChange }: FieldsProps) {
-  const partners: { name: string; logo_url: string; link: string; visible?: boolean }[] = content.partners ?? [];
+  const partners: { logo_url: string; link: string; visible?: boolean }[] = content.partners ?? [];
   return (
     <>
       <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
@@ -726,15 +675,6 @@ function PartnersFields({ content, onChange }: FieldsProps) {
           {partners.map((p, i) => (
             <div className="a-partner-row" key={i}>
               <CompactPhotoField url={p.logo_url} onChange={(v) => onChange({ ...content, partners: updateAt(partners, i, { logo_url: v }) })} />
-              <div className="a-partner-body">
-                <input
-                  className="a-partner-name-input"
-                  type="text"
-                  placeholder="Partner name"
-                  value={p.name}
-                  onChange={(e) => onChange({ ...content, partners: updateAt(partners, i, { name: e.target.value }) })}
-                />
-              </div>
               <div className="a-partner-actions">
                 <span className="a-partner-visible-label">{p.visible === false ? "Hidden" : "Visible"}</span>
                 <span
@@ -757,12 +697,12 @@ function PartnersFields({ content, onChange }: FieldsProps) {
         </div>
         <AddMiniCardButton
           label="Add partner"
-          onClick={() => onChange({ ...content, partners: [...partners, { name: "", logo_url: "", link: "", visible: true }] })}
+          onClick={() => onChange({ ...content, partners: [...partners, { logo_url: "", link: "", visible: true }] })}
         />
       </div>
       {partners.map((p, i) => (
         <div className="a-field" key={`link-${i}`}>
-          <label>{p.name || `Partner ${i + 1}`} website link</label>
+          <label>Partner {i + 1} website link</label>
           <input
             className="a-input"
             type="text"

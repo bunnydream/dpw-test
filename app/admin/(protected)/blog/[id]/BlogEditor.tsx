@@ -12,6 +12,7 @@ import {
 } from "@/lib/admin/blog";
 import { softDeletePost } from "@/lib/admin/deleted-blog-posts";
 import { uploadMedia } from "@/lib/admin/media";
+import MediaLibraryModal from "@/components/admin/MediaLibraryModal";
 import type { BlogBlockType, Database, PageStatus } from "@/lib/supabase/types";
 
 type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
@@ -25,6 +26,7 @@ type EditorBlock = {
 };
 
 const NEW_CATEGORY_VALUE = "__new__";
+const NEW_AUTHOR_VALUE = "__new__";
 
 const BLOCK_LABELS: Record<BlogBlockType, string> = {
   heading: "Heading",
@@ -55,22 +57,31 @@ export default function BlogEditor({
   post,
   initialBlocks,
   categories,
+  authors,
 }: {
   post: BlogPostRow;
   initialBlocks: BlogBlockRow[];
   categories: string[];
+  authors: string[];
 }) {
   const router = useRouter();
 
   const [title, setTitle] = useState(post.title);
+  const [subtitle, setSubtitle] = useState(post.subtitle ?? "");
   const [category, setCategory] = useState(post.category);
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [newCategory, setNewCategory] = useState("");
+
+  const [author, setAuthor] = useState(post.author ?? "");
+  const [showNewAuthor, setShowNewAuthor] = useState(() => !!post.author && !authors.includes(post.author));
+  const [newAuthor, setNewAuthor] = useState(() => (post.author && !authors.includes(post.author) ? post.author : ""));
 
   const [featuredUrl, setFeaturedUrl] = useState(post.featured_image_url ?? "");
   const [featuredAlt, setFeaturedAlt] = useState(post.featured_image_alt ?? "");
   const [featuredCaption, setFeaturedCaption] = useState(post.featured_image_caption ?? "");
   const [uploadingFeatured, setUploadingFeatured] = useState(false);
+  const [featuredPickerOpen, setFeaturedPickerOpen] = useState(false);
+  const [blockPickerOpenId, setBlockPickerOpenId] = useState<string | null>(null);
 
   const [status, setStatus] = useState<PageStatus>(post.status);
   const [publishedAt, setPublishedAt] = useState(post.published_at);
@@ -107,6 +118,15 @@ export default function BlogEditor({
     }
   }
 
+  function handleAuthorSelect(value: string) {
+    if (value === NEW_AUTHOR_VALUE) {
+      setShowNewAuthor(true);
+    } else {
+      setShowNewAuthor(false);
+      setAuthor(value);
+    }
+  }
+
   async function handleFeaturedFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -125,6 +145,12 @@ export default function BlogEditor({
       setUploadingFeatured(false);
       e.target.value = "";
     }
+  }
+
+  function handleFeaturedPicked(url: string) {
+    setFeaturedPickerOpen(false);
+    setFeaturedUrl(url);
+    showToast("Photo updated");
   }
 
   async function handleBlockFile(blockId: string, e: React.ChangeEvent<HTMLInputElement>) {
@@ -151,6 +177,12 @@ export default function BlogEditor({
 
   function updateBlockContent(blockId: string, patch: Record<string, unknown>) {
     setBlocks((prev) => prev.map((b) => (b.id === blockId ? { ...b, content: { ...b.content, ...patch } } : b)));
+  }
+
+  function handleBlockPicked(blockId: string, url: string) {
+    setBlockPickerOpenId(null);
+    updateBlockContent(blockId, { url });
+    showToast("Photo updated");
   }
 
   function toggleBlockOpen(id: string) {
@@ -195,9 +227,12 @@ export default function BlogEditor({
     setIsSaving(true);
     try {
       const finalCategory = (showNewCategory ? newCategory.trim() : category) || post.category;
+      const finalAuthor = showNewAuthor ? newAuthor.trim() : author;
 
       await updatePostMeta(post.id, {
         title: title.trim() || "Untitled post",
+        subtitle: subtitle.trim() || null,
+        author: finalAuthor || null,
         category: finalCategory,
         featured_image_url: featuredUrl || null,
         featured_image_alt: featuredAlt || null,
@@ -208,6 +243,12 @@ export default function BlogEditor({
         setCategory(finalCategory);
         setShowNewCategory(false);
         setNewCategory("");
+      }
+
+      if (showNewAuthor && finalAuthor) {
+        setAuthor(finalAuthor);
+        setShowNewAuthor(false);
+        setNewAuthor("");
       }
 
       const updatedBlocks: EditorBlock[] = [];
@@ -312,6 +353,38 @@ export default function BlogEditor({
               <div className="a-field-hint">Each post has one category. It&apos;s shown as a tag on the post card.</div>
             </div>
 
+            <div className="a-field">
+              <label>Author</label>
+              <select
+                className="a-select"
+                value={showNewAuthor ? NEW_AUTHOR_VALUE : author}
+                onChange={(e) => handleAuthorSelect(e.target.value)}
+                style={{ maxWidth: "320px" }}
+              >
+                {!author && !showNewAuthor ? (
+                  <option value="" disabled>
+                    Select an author...
+                  </option>
+                ) : null}
+                {authors.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+                <option value={NEW_AUTHOR_VALUE}>+ Add new author...</option>
+              </select>
+              {showNewAuthor && (
+                <input
+                  className="a-input"
+                  type="text"
+                  placeholder="Type the author's name"
+                  value={newAuthor}
+                  onChange={(e) => setNewAuthor(e.target.value)}
+                  style={{ marginTop: "8px", maxWidth: "320px" }}
+                />
+              )}
+            </div>
+
             {/* Featured photo */}
             <div className="a-card" style={{ marginTop: "20px" }}>
               <div className="a-card-title">Featured photo</div>
@@ -340,6 +413,24 @@ export default function BlogEditor({
                         disabled={uploadingFeatured}
                       />
                     </label>
+                    <button
+                      type="button"
+                      className="a-btn a-btn-outline a-btn-sm"
+                      onClick={() => setFeaturedPickerOpen(true)}
+                      disabled={uploadingFeatured}
+                    >
+                      Media library
+                    </button>
+                    {featuredUrl ? (
+                      <button
+                        type="button"
+                        className="a-btn a-btn-outline a-btn-sm"
+                        onClick={() => setFeaturedUrl("")}
+                        disabled={uploadingFeatured}
+                      >
+                        Remove photo
+                      </button>
+                    ) : null}
                   </div>
                 </div>
                 <div className="a-field-hint">Used at the top of the post and as the thumbnail on the Insights page.</div>
@@ -364,6 +455,9 @@ export default function BlogEditor({
                   onChange={(e) => setFeaturedCaption(e.target.value)}
                 />
               </div>
+              {featuredPickerOpen ? (
+                <MediaLibraryModal onSelect={handleFeaturedPicked} onClose={() => setFeaturedPickerOpen(false)} />
+              ) : null}
             </div>
 
             {/* Title */}
@@ -380,6 +474,16 @@ export default function BlogEditor({
                   style={{ fontSize: "17px", fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif" }}
                 />
                 <div className="a-field-hint">This is the large headline on the post and on its card.</div>
+              </div>
+              <div className="a-field">
+                <label>Subtitle (optional)</label>
+                <input
+                  className="a-input"
+                  type="text"
+                  value={subtitle}
+                  onChange={(e) => setSubtitle(e.target.value)}
+                  placeholder="A short line shown below the title"
+                />
               </div>
             </div>
 
@@ -489,29 +593,61 @@ export default function BlogEditor({
                                     disabled={uploadingBlockId === block.id}
                                   />
                                 </label>
+                                <button
+                                  type="button"
+                                  className="a-btn a-btn-outline a-btn-sm"
+                                  onClick={() => setBlockPickerOpenId(block.id)}
+                                  disabled={uploadingBlockId === block.id}
+                                >
+                                  Media library
+                                </button>
+                                <button
+                                  type="button"
+                                  className="a-btn a-btn-outline a-btn-sm"
+                                  onClick={() => updateBlockContent(block.id, { url: "" })}
+                                  disabled={uploadingBlockId === block.id}
+                                >
+                                  Remove photo
+                                </button>
                               </div>
                             </div>
                           ) : (
-                            <div className="a-upload">
-                              <div className="a-upload-cta">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                                  <circle cx="8.5" cy="8.5" r="1.5" />
-                                  <path d="m21 15-5-5L5 21" />
-                                </svg>
-                                <span>
-                                  <strong>{uploadingBlockId === block.id ? "Uploading..." : "Click to upload"}</strong>{" "}
-                                  {uploadingBlockId === block.id ? "" : "a photo"}
-                                </span>
+                            <div className="a-upload-empty">
+                              <div className="a-upload">
+                                <div className="a-upload-cta">
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <path d="m21 15-5-5L5 21" />
+                                  </svg>
+                                  <span>
+                                    <strong>{uploadingBlockId === block.id ? "Uploading..." : "Click to upload"}</strong>{" "}
+                                    {uploadingBlockId === block.id ? "" : "a photo"}
+                                  </span>
+                                </div>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleBlockFile(block.id, e)}
+                                  disabled={uploadingBlockId === block.id}
+                                />
                               </div>
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleBlockFile(block.id, e)}
+                              <button
+                                type="button"
+                                className="a-btn a-btn-outline a-btn-sm"
+                                onClick={() => setBlockPickerOpenId(block.id)}
                                 disabled={uploadingBlockId === block.id}
-                              />
+                              >
+                                Media library
+                              </button>
                             </div>
                           )}
+                          {blockPickerOpenId === block.id ? (
+                            <MediaLibraryModal
+                              onSelect={(url) => handleBlockPicked(block.id, url)}
+                              onClose={() => setBlockPickerOpenId(null)}
+                            />
+                          ) : null}
                         </div>
                         <div className="a-field">
                           <label>Alt text</label>

@@ -10,7 +10,13 @@ export type Voice = {
 
 const GAP = 20;
 
-export default function VoicesCarousel({ voices }: { voices: Voice[] }) {
+export default function VoicesCarousel({
+  voices,
+  cardBackgroundColor,
+}: {
+  voices: Voice[];
+  cardBackgroundColor?: string | null;
+}) {
   const outerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -63,6 +69,7 @@ export default function VoicesCarousel({ voices }: { voices: Voice[] }) {
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
+              style={cardBackgroundColor ? { background: cardBackgroundColor } : undefined}
             >
               <div className="voice-mark">&ldquo;</div>
               <p className="voice-text">{voice.text}</p>

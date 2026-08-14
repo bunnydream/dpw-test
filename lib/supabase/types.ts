@@ -84,6 +84,8 @@ export interface Database {
           id: string;
           slug: string;
           title: string;
+          subtitle: string | null;
+          author: string | null;
           category: string;
           featured_image_url: string | null;
           featured_image_alt: string | null;
@@ -97,6 +99,8 @@ export interface Database {
           id?: string;
           slug: string;
           title: string;
+          subtitle?: string | null;
+          author?: string | null;
           category: string;
           featured_image_url?: string | null;
           featured_image_alt?: string | null;

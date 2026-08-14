@@ -19,16 +19,20 @@
   font-family: 'Atkinson Hyperlegible', sans-serif;
   background: var(--cool-white);
   color: var(--forge);
-  min-height: 100vh;
 }
 
 a { color: inherit; }
 
 /* ─── APP SHELL ──────────────────────────────────────────── */
+/* Deliberately no min-height: 100vh here — that (plus the sidebar's old
+   fixed height: 100vh) forced every page's row to be at least a full
+   viewport tall, leaving a dead-space gap below short pages' actual
+   content. The sidebar's own nav list is long enough to size the row
+   properly on its own; short main content no longer gets padded out to
+   match an artificial minimum. */
 .admin-shell {
   display: grid;
   grid-template-columns: 248px 1fr;
-  min-height: 100vh;
 }
 
 /* ─── SIDEBAR ────────────────────────────────────────────── */
@@ -40,7 +44,8 @@ a { color: inherit; }
   flex-direction: column;
   position: sticky;
   top: 0;
-  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .admin-sidebar-logo {

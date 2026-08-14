@@ -62,6 +62,7 @@ export default async function InsightPostPage({
           <div className="insight-header reveal d1">
             <span className="case-state insight-category">{post.category}</span>
             <h1>{post.title}</h1>
+            {post.subtitle ? <p className="insight-subtitle">{post.subtitle}</p> : null}
           </div>
 
           <div className="insight-body reveal d2">

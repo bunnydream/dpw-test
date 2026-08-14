@@ -5,6 +5,9 @@ export type StepGeneric = {
 
 export type StepsGenericContent = {
   heading?: string | null;
+  /** Background color applied to each step's content card (independent of
+   * the section's own background_color). */
+  card_background_color?: string | null;
   steps: StepGeneric[];
 };
 
@@ -23,7 +26,7 @@ export default function StepsGeneric({
   content: StepsGenericContent;
   backgroundColor?: string | null;
 }) {
-  const { heading, steps } = content;
+  const { heading, steps, card_background_color } = content;
 
   return (
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
@@ -38,7 +41,10 @@ export default function StepsGeneric({
                 <span className="step-n">{String(i + 1).padStart(2, "0")}</span>
                 <span className="step-lbl">Step</span>
               </div>
-              <div className="step-generic-content">
+              <div
+                className="step-generic-content"
+                style={card_background_color ? { background: card_background_color } : undefined}
+              >
                 <h3>{step.heading}</h3>
                 <p>{step.description}</p>
               </div>
