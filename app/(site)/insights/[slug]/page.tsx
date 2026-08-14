@@ -48,24 +48,49 @@ export default async function InsightPostPage({
     .eq("post_id", post.id)
     .order("position", { ascending: true });
 
+  const postedDate = new Date(post.published_at ?? post.created_at).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <div className="page-insights">
-      <article className="insight-article section-pad">
-        <div className="section-inner">
-          {post.featured_image_url && (
-            <figure className="insight-featured-photo reveal">
-              <img src={post.featured_image_url} alt={post.featured_image_alt ?? ""} />
-              {post.featured_image_caption && <figcaption>{post.featured_image_caption}</figcaption>}
-            </figure>
-          )}
-
-          <div className="insight-header reveal d1">
-            <span className="case-state insight-category">{post.category}</span>
+      <section className="insight-hero">
+        <div className="section-inner insight-hero-inner">
+          <div className="insight-hero-title-col reveal">
             <h1>{post.title}</h1>
             {post.subtitle ? <p className="insight-subtitle">{post.subtitle}</p> : null}
           </div>
+          <div className="insight-hero-meta-col reveal d1">
+            {post.author ? (
+              <div className="insight-meta-row">
+                <span className="insight-meta-label">Written By</span>
+                <span className="insight-meta-value">{post.author}</span>
+              </div>
+            ) : null}
+            <div className="insight-meta-row">
+              <span className="insight-meta-label">Posted</span>
+              <span className="insight-meta-value">{postedDate}</span>
+            </div>
+            <div className="insight-meta-row">
+              <span className="insight-meta-label">Category</span>
+              <span className="insight-meta-value">{post.category}</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <div className="insight-body reveal d2">
+      {post.featured_image_url && (
+        <figure className="insight-featured-photo reveal d2">
+          <img src={post.featured_image_url} alt={post.featured_image_alt ?? ""} />
+          {post.featured_image_caption && <figcaption>{post.featured_image_caption}</figcaption>}
+        </figure>
+      )}
+
+      <article className="insight-article section-pad">
+        <div className="section-inner">
+          <div className="insight-body reveal d3">
             {(blocks ?? []).map((block) => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const content = block.content as any;

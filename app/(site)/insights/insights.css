@@ -146,41 +146,92 @@
   background: var(--white);
 }
 
+/* Header: title+subtitle (left) / Written By-Posted-Category (right),
+   constrained to the normal content width. Full-bleed photo sits below,
+   outside this section entirely. */
+.page-insights .insight-hero {
+  background: var(--cool-white);
+  padding: clamp(48px, 7vw, 80px) clamp(20px, 5vw, 64px) clamp(40px, 5vw, 56px);
+}
+
+.page-insights .insight-hero-inner {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: end;
+}
+
+.page-insights .insight-subtitle {
+  font-size: var(--t-body);
+  color: var(--steel);
+  line-height: 1.7;
+  max-width: 60ch;
+  margin-top: 16px;
+}
+
+.page-insights .insight-hero-meta-col {
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+.page-insights .insight-meta-row {
+  border-top: 1px solid var(--light-al);
+  padding-top: 10px;
+  margin-top: 20px;
+  text-align: right;
+}
+
+.page-insights .insight-meta-row:first-child {
+  margin-top: 0;
+}
+
+.page-insights .insight-meta-label {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: var(--t-body);
+  color: var(--forge);
+}
+
+.page-insights .insight-meta-value {
+  display: block;
+  font-size: var(--t-small);
+  color: var(--steel);
+  margin-top: 2px;
+}
+
 .page-insights .insight-featured-photo {
-  margin: 0 0 48px;
+  margin: 0;
 }
 
 .page-insights .insight-featured-photo img {
   width: 100%;
-  height: auto;
-  max-height: 560px;
+  height: clamp(360px, 45vw, 620px);
   object-fit: cover;
   display: block;
-  border-radius: 2px;
 }
 
 .page-insights .insight-featured-photo figcaption {
   font-size: var(--t-small);
   color: var(--steel);
-  margin-top: 10px;
+  padding: 10px clamp(20px, 5vw, 64px) 0;
 }
 
-.page-insights .insight-header {
-  max-width: 720px;
-  margin: 0 auto 40px;
-}
+@media (max-width: 900px) {
+  .page-insights .insight-hero-inner {
+    grid-template-columns: 1fr;
+  }
 
-.page-insights .insight-category {
-  display: block;
-}
+  .page-insights .insight-hero-meta-col {
+    margin-left: 0;
+    max-width: none;
+  }
 
-.page-insights .insight-subtitle {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: var(--t-subhead);
-  font-weight: 700;
-  color: var(--steel);
-  line-height: 1.35;
-  margin-top: 12px;
+  .page-insights .insight-meta-row {
+    text-align: left;
+  }
 }
 
 .page-insights .insight-body {

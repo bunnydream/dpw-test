@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { uploadMedia } from "@/lib/admin/media";
 import MediaLibraryModal from "@/components/admin/MediaLibraryModal";
 import type { SectionType } from "@/lib/supabase/types";
-import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, LibraryIcon, TrashIcon, PlusIcon, UploadIcon } from "./icons";
+import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, TrashIcon, PlusIcon, UploadIcon } from "./icons";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Content = Record<string, any>;
@@ -334,6 +334,7 @@ export function PhotoPositionField({
 export function CompactPhotoField({ url, onChange }: { url?: string | null; onChange: (url: string) => void }) {
   const [uploading, setUploading] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -354,34 +355,36 @@ export function CompactPhotoField({ url, onChange }: { url?: string | null; onCh
 
   return (
     <div className="a-compact-photo-field">
-      <div className="a-upload" style={{ width: 44, height: 44, padding: 0, flexShrink: 0 }} title="Click to upload">
-        {url ? (
-          <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: 6 }} />
-        ) : (
-          <div className="a-upload-cta" style={{ padding: 0, height: 44, justifyContent: "center" }}>
-            <UploadIcon />
-          </div>
-        )}
-        <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
-      </div>
-      <button
-        type="button"
-        className="a-compact-photo-remove"
-        title="Choose from media library"
-        onClick={() => setPickerOpen(true)}
-      >
-        <LibraryIcon />
-      </button>
-      {url ? (
+      <div className="a-compact-photo-preview">{url ? <img src={url} alt="" /> : <UploadIcon />}</div>
+      <div className="a-compact-photo-buttons">
         <button
           type="button"
-          className="a-compact-photo-remove"
-          title="Remove photo"
-          onClick={() => onChange("")}
+          className="a-btn a-btn-outline a-btn-sm"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
         >
-          <TrashIcon />
+          {uploading ? "Uploading..." : "Upload photo"}
         </button>
-      ) : null}
+        <input ref={inputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} disabled={uploading} />
+        <button
+          type="button"
+          className="a-btn a-btn-outline a-btn-sm"
+          onClick={() => setPickerOpen(true)}
+          disabled={uploading}
+        >
+          Media library
+        </button>
+        {url ? (
+          <button
+            type="button"
+            className="a-btn a-btn-outline a-btn-sm"
+            onClick={() => onChange("")}
+            disabled={uploading}
+          >
+            Remove photo
+          </button>
+        ) : null}
+      </div>
       {pickerOpen ? <MediaLibraryModal onSelect={handlePicked} onClose={() => setPickerOpen(false)} /> : null}
     </div>
   );
