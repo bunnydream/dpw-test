@@ -25,11 +25,17 @@ export type CaseStudyGenericContent = {
  * on a fixed page. Product/Impact's real sections use the original
  * CaseStudy.tsx directly and must keep doing so.
  */
-export default function CaseStudyGeneric({ content }: { content: CaseStudyGenericContent }) {
+export default function CaseStudyGeneric({
+  content,
+  backgroundColor,
+}: {
+  content: CaseStudyGenericContent;
+  backgroundColor?: string | null;
+}) {
   const { cards } = content;
 
   return (
-    <div className="section-pad">
+    <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         <div className="io-grid io-grid--auto">
           {cards.map((card, i) => (

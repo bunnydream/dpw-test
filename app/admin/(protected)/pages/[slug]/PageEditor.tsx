@@ -79,13 +79,15 @@ export default function PageEditor({
   const [toast, setToast] = useState<string | null>(null);
   const [previewKey, setPreviewKey] = useState(0);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
 
   // Scroll the newly-opened section into view so it's visible without the
   // user having to hunt for it, e.g. after adding a block at the bottom of
   // a long list.
   useEffect(() => {
     if (!openId) return;
-    document.getElementById(`section-${openId}`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    document.getElementById(`section-${openId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [openId]);
 
   // Linear undo/redo history over `sections`. A snapshot of the *current*
@@ -269,6 +271,48 @@ export default function PageEditor({
     }
   }
 
+  function handleDragStart(e: React.DragEvent, id: string) {
+    setDraggingId(id);
+    e.dataTransfer.effectAllowed = "move";
+    // Firefox requires setData to be called for the drag to initiate at all.
+    e.dataTransfer.setData("text/plain", id);
+  }
+
+  function handleDragEnd() {
+    setDraggingId(null);
+    setDragOverId(null);
+  }
+
+  function handleDragOver(e: React.DragEvent, id: string) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (id !== draggingId) setDragOverId(id);
+  }
+
+  async function handleDrop(e: React.DragEvent, targetId: string) {
+    e.preventDefault();
+    const sourceId = draggingId;
+    setDraggingId(null);
+    setDragOverId(null);
+    if (!sourceId || sourceId === targetId) return;
+
+    const sourceIdx = sections.findIndex((s) => s.id === sourceId);
+    const targetIdx = sections.findIndex((s) => s.id === targetId);
+    if (sourceIdx < 0 || targetIdx < 0) return;
+
+    checkpoint();
+    const next = [...sections];
+    const [moved] = next.splice(sourceIdx, 1);
+    next.splice(targetIdx, 0, moved);
+    setSections(next);
+    try {
+      await reorderSections(next.map((s) => s.id));
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to reorder blocks");
+    }
+  }
+
   return (
     <>
       <header className="admin-topbar">
@@ -372,9 +416,25 @@ export default function PageEditor({
             {sections.map((section, i) => {
               const isOpen = openId === section.id;
               return (
-                <li className={`a-section-item${isOpen ? " is-open" : ""}`} key={section.id} id={`section-${section.id}`}>
+                <li
+                  className={`a-section-item${isOpen ? " is-open" : ""}${draggingId === section.id ? " is-dragging" : ""}${
+                    dragOverId === section.id ? " is-drag-over" : ""
+                  }`}
+                  key={section.id}
+                  id={`section-${section.id}`}
+                  onDragOver={(e) => handleDragOver(e, section.id)}
+                  onDragLeave={() => setDragOverId((prev) => (prev === section.id ? null : prev))}
+                  onDrop={(e) => handleDrop(e, section.id)}
+                >
                   <div className="a-section-row" onClick={() => toggleOpen(section.id)}>
-                    <span className="a-section-grip">
+                    <span
+                      className="a-section-grip"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, section.id)}
+                      onDragEnd={handleDragEnd}
+                      onClick={(e) => e.stopPropagation()}
+                      title="Drag to reorder"
+                    >
                       <GripIcon />
                     </span>
                     <div className="a-section-info">
@@ -403,10 +463,12 @@ export default function PageEditor({
                         content={section.content}
                         onChange={(c) => updateSectionLocal(section.id, { content: c })}
                       />
-                      <BackgroundColorField
-                        value={section.background_color}
-                        onChange={(v) => updateSectionLocal(section.id, { background_color: v })}
-                      />
+                      {section.type !== "cta" ? (
+                        <BackgroundColorField
+                          value={section.background_color}
+                          onChange={(v) => updateSectionLocal(section.id, { background_color: v })}
+                        />
+                      ) : null}
                       <div className="a-panel-footer">
                         <button className="a-btn a-btn-danger a-btn-sm" onClick={() => setDeleteTargetId(section.id)}>
                           <TrashIcon />

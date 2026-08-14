@@ -437,6 +437,13 @@ table.ct th:first-child {
 table.ct.ct--split th:first-child,
 table.ct.ct--split td:first-child {
   width: 50%;
+}
+
+table.ct.ct--split th:first-child {
+  color: var(--rose-gold);
+}
+
+table.ct.ct--split td:first-child {
   color: inherit;
 }
 

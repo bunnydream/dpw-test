@@ -16,11 +16,17 @@ export type StepsGenericContent = {
  * Income works" section uses the original Steps.tsx (photo cards + scroll
  * progress bar) and must keep doing so; do not swap it for this component.
  */
-export default function StepsGeneric({ content }: { content: StepsGenericContent }) {
+export default function StepsGeneric({
+  content,
+  backgroundColor,
+}: {
+  content: StepsGenericContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, steps } = content;
 
   return (
-    <div className="section-pad">
+    <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
         <div className="steps-generic reveal">

@@ -89,6 +89,7 @@ export default function VoicesCarousel({ voices }: { voices: Voice[] }) {
             className="carousel-btn"
             aria-label="Previous quote"
             disabled={idx === 0}
+            suppressHydrationWarning
             onClick={() => goTo(idx - 1)}
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -99,6 +100,7 @@ export default function VoicesCarousel({ voices }: { voices: Voice[] }) {
             className="carousel-btn"
             aria-label="Next quote"
             disabled={idx >= total - 1}
+            suppressHydrationWarning
             onClick={() => goTo(idx + 1)}
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">

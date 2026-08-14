@@ -68,14 +68,6 @@
   aspect-ratio: 1 / 1;
 }
 
-.page-about .team-photo img {
-  transition: filter .35s ease;
-}
-
-.page-about .team-card:hover .team-photo img {
-  transform: none;
-}
-
 /* ─── TEAM ──────────────────────────────────────── */
 .page-about .team {
   background: var(--white);

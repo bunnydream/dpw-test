@@ -23,11 +23,17 @@ export type ContentCardsContent = {
  * real "Built to fit your systems" section keeps its own hardcoded JSX with
  * the fixed 3-column .io-grid, untouched by this file.
  */
-export default function ContentCards({ content }: { content: ContentCardsContent }) {
+export default function ContentCards({
+  content,
+  backgroundColor,
+}: {
+  content: ContentCardsContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, text, cards } = content;
 
   return (
-    <div className="section-pad">
+    <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
         {text ? <p className="body-p reveal d1">{text}</p> : null}

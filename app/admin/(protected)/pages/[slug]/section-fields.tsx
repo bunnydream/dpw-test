@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { listMedia, uploadMedia } from "@/lib/admin/media";
 import type { Database, SectionType } from "@/lib/supabase/types";
-import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CloseIcon, TrashIcon, PlusIcon, UploadIcon } from "./icons";
+import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CloseIcon, LibraryIcon, TrashIcon, PlusIcon, UploadIcon } from "./icons";
 
 type MediaRow = Database["public"]["Tables"]["media"]["Row"];
 
@@ -278,7 +278,7 @@ export function PhotoField({
               onClick={() => inputRef.current?.click()}
               disabled={uploading}
             >
-              {uploading ? "Uploading..." : "Replace photo"}
+              {uploading ? "Uploading..." : "Upload photo"}
             </button>
             <button type="button" className="a-btn a-btn-outline a-btn-sm" onClick={() => setPickerOpen(true)} disabled={uploading}>
               Media library
@@ -384,6 +384,7 @@ export function PhotoPositionField({
  * mockup rather than the full-width uploadBlock() layout. */
 export function CompactPhotoField({ url, onChange }: { url?: string | null; onChange: (url: string) => void }) {
   const [uploading, setUploading] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -397,9 +398,14 @@ export function CompactPhotoField({ url, onChange }: { url?: string | null; onCh
     e.target.value = "";
   }
 
+  function handlePicked(pickedUrl: string) {
+    setPickerOpen(false);
+    onChange(pickedUrl);
+  }
+
   return (
     <div className="a-compact-photo-field">
-      <div className="a-upload" style={{ width: 44, height: 44, padding: 0, flexShrink: 0 }} title="Click to replace logo">
+      <div className="a-upload" style={{ width: 44, height: 44, padding: 0, flexShrink: 0 }} title="Click to upload">
         {url ? (
           <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: 6 }} />
         ) : (
@@ -409,6 +415,14 @@ export function CompactPhotoField({ url, onChange }: { url?: string | null; onCh
         )}
         <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
       </div>
+      <button
+        type="button"
+        className="a-compact-photo-remove"
+        title="Choose from media library"
+        onClick={() => setPickerOpen(true)}
+      >
+        <LibraryIcon />
+      </button>
       {url ? (
         <button
           type="button"
@@ -419,6 +433,7 @@ export function CompactPhotoField({ url, onChange }: { url?: string | null; onCh
           <TrashIcon />
         </button>
       ) : null}
+      {pickerOpen ? <MediaLibraryModal onSelect={handlePicked} onClose={() => setPickerOpen(false)} /> : null}
     </div>
   );
 }

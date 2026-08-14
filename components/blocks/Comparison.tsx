@@ -13,11 +13,17 @@ export type ComparisonContent = {
 /** Reuses the same table.ct styling as the product page's "Traditional
  * Approaches vs. VMI" comparison (shared.css) — each row's heading fills the
  * first column, text fills the second. */
-export default function Comparison({ content }: { content: ComparisonContent }) {
+export default function Comparison({
+  content,
+  backgroundColor,
+}: {
+  content: ComparisonContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, column_a_title, column_b_title, rows } = content;
 
   return (
-    <div className="section-pad">
+    <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
         <div className="ct-wrap reveal">

@@ -331,7 +331,7 @@ export default function BlogEditor({
                   )}
                   <div className="a-upload-actions">
                     <label className="a-btn a-btn-outline a-btn-sm" style={{ cursor: "pointer" }}>
-                      {uploadingFeatured ? "Uploading..." : featuredUrl ? "Replace photo" : "Upload photo"}
+                      {uploadingFeatured ? "Uploading..." : "Upload photo"}
                       <input
                         type="file"
                         accept="image/*"
@@ -480,7 +480,7 @@ export default function BlogEditor({
                               <img src={block.content.url} alt={block.content.alt || ""} />
                               <div className="a-upload-actions">
                                 <label className="a-btn a-btn-outline a-btn-sm" style={{ cursor: "pointer" }}>
-                                  {uploadingBlockId === block.id ? "Uploading..." : "Replace photo"}
+                                  {uploadingBlockId === block.id ? "Uploading..." : "Upload photo"}
                                   <input
                                     type="file"
                                     accept="image/*"

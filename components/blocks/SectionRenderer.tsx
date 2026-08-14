@@ -46,7 +46,7 @@ export function SectionBlock({ section }: { section: Section }) {
       // Custom pages only — Home's real "How Verify My Income works" section
       // uses the original Steps.tsx (photo cards + scroll progress bar)
       // directly, not via this renderer. Never point this case at Steps.tsx.
-      return <StepsGeneric content={section.content as StepsGenericContent} />;
+      return <StepsGeneric content={section.content as StepsGenericContent} backgroundColor={section.background_color} />;
     case "voices":
       return <Voices content={section.content as VoicesContent} backgroundColor={section.background_color} />;
     case "partners":
@@ -69,13 +69,15 @@ export function SectionBlock({ section }: { section: Section }) {
       // and delivering results" sections use the original CaseStudy.tsx
       // (.case-grid/.case-card) directly, not via this renderer. Never point
       // this case at CaseStudy.tsx.
-      return <CaseStudyGeneric content={section.content as CaseStudyGenericContent} />;
+      return (
+        <CaseStudyGeneric content={section.content as CaseStudyGenericContent} backgroundColor={section.background_color} />
+      );
     case "text":
-      return <Text content={section.content as TextContent} />;
+      return <Text content={section.content as TextContent} backgroundColor={section.background_color} />;
     case "content-cards":
-      return <ContentCards content={section.content as ContentCardsContent} />;
+      return <ContentCards content={section.content as ContentCardsContent} backgroundColor={section.background_color} />;
     case "comparison":
-      return <Comparison content={section.content as ComparisonContent} />;
+      return <Comparison content={section.content as ComparisonContent} backgroundColor={section.background_color} />;
     default:
       return null;
   }

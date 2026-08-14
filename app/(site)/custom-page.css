@@ -228,10 +228,12 @@
 /* ─── TEAM GRID ───────────────────────────────────── */
 /* .team-grid/.team-card are already fully styled globally in shared.css
    (used unscoped by About's real "Our team" section with a fixed 3-column
-   grid — left untouched there). Auto-fit here only, so a custom page's team
-   grid fills the row evenly with fewer members instead of leaving gaps. */
+   grid — left untouched there). Capped auto-fit here only (same max-3,
+   fill-if-fewer formula as the card grid blocks — team-grid's own 2px gap
+   plugged in), so a custom page's team grid fills the row evenly with
+   fewer members instead of leaving gaps, and never exceeds 3 per row. */
 .page-custom .team-grid {
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(max(240px, calc((100% - 4px) / 3)), 1fr));
 }
 
 

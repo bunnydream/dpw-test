@@ -450,6 +450,9 @@ a { color: inherit; }
 
 .a-section-item.is-open { border-color: var(--copper); box-shadow: 0 0 0 3px var(--rose-gold); }
 
+.a-section-item.is-dragging { opacity: .4; }
+.a-section-item.is-drag-over { border-color: var(--copper); box-shadow: 0 -3px 0 var(--copper); }
+
 .a-section-item.is-section-hidden .a-section-row { opacity: .5; }
 .a-section-item.is-section-hidden .a-section-name { text-decoration: line-through; text-decoration-color: var(--aluminum); }
 
