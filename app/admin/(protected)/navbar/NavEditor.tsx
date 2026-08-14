@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateNavSettings } from "@/lib/admin/site-settings";
 import { uploadMedia } from "@/lib/admin/media";
+import LinkPicker from "@/components/admin/LinkPicker";
 import type { NavItem, NavSettings } from "@/lib/site-settings";
 
 // Small inline icon set, scoped to this route — mirrors the style of
@@ -168,7 +169,7 @@ export default function NavEditor({ initial }: { initial: NavSettings }) {
           <div className="a-card">
             <div className="a-settings-card-title">Navigation items</div>
             <div className="a-settings-card-sub">
-              Toggle visibility and reorder the pages shown in the header. Custom pages are added elsewhere.
+              Toggle visibility and reorder the pages shown in the header.
             </div>
             <div className="a-nav-editor-list">
               {settings.items.map((item, i) => (
@@ -225,10 +226,7 @@ export default function NavEditor({ initial }: { initial: NavSettings }) {
           </div>
 
           <div className="a-card">
-            <div className="a-settings-card-title">Request-a-demo button</div>
-            <div className="a-settings-card-sub">
-              Text and link for the fixed call-to-action button. Its position in the header can&apos;t be changed here.
-            </div>
+            <div className="a-settings-card-title">Call to action button</div>
             <div className="a-field-row">
               <div className="a-field">
                 <label htmlFor="nav-cta-text">Button text</label>
@@ -239,15 +237,7 @@ export default function NavEditor({ initial }: { initial: NavSettings }) {
                   onChange={(e) => update({ ctaText: e.target.value })}
                 />
               </div>
-              <div className="a-field">
-                <label htmlFor="nav-cta-link">Button link</label>
-                <input
-                  className="a-input"
-                  id="nav-cta-link"
-                  value={settings.ctaLink}
-                  onChange={(e) => update({ ctaLink: e.target.value })}
-                />
-              </div>
+              <LinkPicker label="Button link" value={settings.ctaLink} onChange={(v) => update({ ctaLink: v })} />
             </div>
           </div>
         </div>

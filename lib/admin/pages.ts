@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PageStatus, SectionType } from "@/lib/supabase/types";
 import { pageSlugToPath } from "@/lib/page-path";
-import { appendPageToNav } from "@/lib/admin/site-settings";
+import { appendPageToNav, renameNavItem } from "@/lib/admin/site-settings";
 
 function revalidateForSlug(slug: string) {
   revalidatePath(pageSlugToPath(slug));
@@ -148,5 +148,8 @@ export async function updatePageTitle(pageId: string, title: string) {
   const { data, error } = await supabase.from("pages").update({ title }).eq("id", pageId).select("slug").single();
   if (error) throw new Error(error.message);
   revalidatePath("/admin");
-  if (data) revalidateForSlug(data.slug);
+  if (data) {
+    revalidateForSlug(data.slug);
+    await renameNavItem(data.slug, title);
+  }
 }

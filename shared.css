@@ -16,6 +16,13 @@
   padding: 0;
 }
 
+/* Guards against long unbroken strings (URLs, names, admin-entered text
+   with no natural break point) overflowing their container instead of
+   wrapping — a no-op for normal text, which already wraps at spaces. */
+p, h1, h2, h3, h4, h5, h6, span, a, li, blockquote {
+  overflow-wrap: break-word;
+}
+
 
 /* ─── DESIGN TOKENS ─────────────────────────────────────── */
 :root {
@@ -425,6 +432,14 @@ table.ct th:first-child {
   color: var(--light-al);
 }
 
+/* 2-column comparison variant (the comparison block) — even 50/50 split
+   instead of the 3-column product-page table's 18% dimension column. */
+table.ct.ct--split th:first-child,
+table.ct.ct--split td:first-child {
+  width: 50%;
+  color: inherit;
+}
+
 table.ct td {
   font-size: var(--t-data);
   padding: 14px 20px;
@@ -732,7 +747,7 @@ table.ct tr:last-child td {
 }
 
 .case-detail {
-  font-size: var(--t-small);
+  font-size: var(--t-body);
   line-height: 1.7;
   color: var(--steel);
 }
@@ -811,6 +826,17 @@ table.ct tr:last-child td {
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 40px;
+}
+
+/* Auto-fit variant — up to 3 cards per row, wraps beyond that, and fewer
+   cards resize to fill the row width evenly. The minmax lower bound is
+   fixed at (100% - 2 gaps) / 3, so a 4th column physically cannot fit;
+   that's what caps it at 3 without a column-count variable or media query.
+   Only ever applied where explicitly opted into via this modifier class —
+   Product's "Built to fit your systems" keeps the fixed 3-column .io-grid
+   above untouched. */
+.io-grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(max(240px, calc((100% - 32px) / 3)), 1fr));
 }
 
 .io-card {

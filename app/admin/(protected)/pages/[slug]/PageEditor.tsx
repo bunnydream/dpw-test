@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   createSection,
@@ -72,13 +72,21 @@ export default function PageEditor({
   const router = useRouter();
   const [sections, setSections] = useState<SectionRow[]>(initialSections);
   const [dirtyIds, setDirtyIds] = useState<Set<string>>(new Set());
-  const [openIds, setOpenIds] = useState<Set<string>>(new Set());
+  const [openId, setOpenId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [previewKey, setPreviewKey] = useState(0);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Scroll the newly-opened section into view so it's visible without the
+  // user having to hunt for it, e.g. after adding a block at the bottom of
+  // a long list.
+  useEffect(() => {
+    if (!openId) return;
+    document.getElementById(`section-${openId}`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [openId]);
 
   // Linear undo/redo history over `sections`. A snapshot of the *current*
   // sections is pushed onto `past` right before a structural mutation is
@@ -155,12 +163,7 @@ export default function PageEditor({
   }
 
   function toggleOpen(id: string) {
-    setOpenIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+    setOpenId((prev) => (prev === id ? null : id));
   }
 
   function updateSectionLocal(id: string, patch: Partial<SectionRow>) {
@@ -222,7 +225,7 @@ export default function PageEditor({
     try {
       const created = await createSection(page.id, type, starterName(type), starterContent(type), sections.length);
       setSections((prev) => [...prev, created]);
-      setOpenIds((prev) => new Set(prev).add(created.id));
+      setOpenId(created.id);
       showToast("Block added");
     } catch (err) {
       console.error(err);
@@ -312,14 +315,19 @@ export default function PageEditor({
             ) : null}
           </div>
 
-          <button className="a-icon-btn" onClick={handleUndo} disabled={past.length === 0} title="Undo">
-            <UndoIcon />
-          </button>
-          <button className="a-icon-btn" onClick={handleRedo} disabled={future.length === 0} title="Redo">
-            <RedoIcon />
-          </button>
+          <div className="a-undo-redo-group">
+            <button className="a-icon-btn" onClick={handleUndo} disabled={past.length === 0} title="Undo">
+              <UndoIcon />
+            </button>
+            <button className="a-icon-btn" onClick={handleRedo} disabled={future.length === 0} title="Redo">
+              <RedoIcon />
+            </button>
+          </div>
           <button className="a-icon-btn" onClick={() => setPreviewKey((k) => k + 1)} title="Refresh preview">
             <RefreshIcon />
+          </button>
+          <button className="a-icon-btn" onClick={() => setAddModalOpen(true)} title="Add a new block">
+            <PlusIcon />
           </button>
         </div>
         <div className="admin-topbar-actions">
@@ -343,11 +351,11 @@ export default function PageEditor({
 
       <div className="a-editor-shell">
         <div className="a-preview-pane">
-          <div className="a-preview-pane-label">Live preview</div>
+          <div className="a-preview-pane-label">Live preview. Click Save draft then refresh button to view changes.</div>
           <div className="a-preview-frame">
             <iframe
               key={previewKey}
-              src={livePath}
+              src={previewKey === 0 ? livePath : `${livePath}${livePath.includes("?") ? "&" : "?"}_preview=${previewKey}`}
               title="Live preview"
               style={{ width: "100%", height: "100%", border: "none", display: "block" }}
             />
@@ -362,9 +370,9 @@ export default function PageEditor({
 
           <ul className="a-section-list">
             {sections.map((section, i) => {
-              const isOpen = openIds.has(section.id);
+              const isOpen = openId === section.id;
               return (
-                <li className={`a-section-item${isOpen ? " is-open" : ""}`} key={section.id}>
+                <li className={`a-section-item${isOpen ? " is-open" : ""}`} key={section.id} id={`section-${section.id}`}>
                   <div className="a-section-row" onClick={() => toggleOpen(section.id)}>
                     <span className="a-section-grip">
                       <GripIcon />
@@ -435,7 +443,7 @@ export default function PageEditor({
               <div className="a-block-grid">
                 {BLOCK_TYPES.map((b) => (
                   <button key={b.type} className="a-block-option" onClick={() => handleAddSection(b.type)}>
-                    <PlusIcon />
+                    {b.icon}
                     <strong>{b.label}</strong>
                     <span>{b.description}</span>
                   </button>

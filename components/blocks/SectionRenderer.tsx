@@ -2,12 +2,12 @@ import type { Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "./Hero";
 import Stats, { type StatsContent } from "./Stats";
 import PhotoText, { type PhotoTextContent } from "./PhotoText";
-import Steps, { type StepsContent } from "./Steps";
+import StepsGeneric, { type StepsGenericContent } from "./StepsGeneric";
 import Voices, { type VoicesContent } from "./Voices";
 import Partners, { type PartnersContent } from "./Partners";
 import Cta, { type CtaContent } from "./Cta";
 import TeamMember, { type TeamMemberContent } from "./TeamMember";
-import CaseStudy, { type CaseStudyContent } from "./CaseStudy";
+import CaseStudyGeneric, { type CaseStudyGenericContent } from "./CaseStudyGeneric";
 import Text, { type TextContent } from "./Text";
 import ContentCards, { type ContentCardsContent } from "./ContentCards";
 import Comparison, { type ComparisonContent } from "./Comparison";
@@ -43,7 +43,10 @@ export function SectionBlock({ section }: { section: Section }) {
         />
       );
     case "steps":
-      return <Steps content={section.content as StepsContent} />;
+      // Custom pages only — Home's real "How Verify My Income works" section
+      // uses the original Steps.tsx (photo cards + scroll progress bar)
+      // directly, not via this renderer. Never point this case at Steps.tsx.
+      return <StepsGeneric content={section.content as StepsGenericContent} />;
     case "voices":
       return <Voices content={section.content as VoicesContent} backgroundColor={section.background_color} />;
     case "partners":
@@ -51,9 +54,22 @@ export function SectionBlock({ section }: { section: Section }) {
     case "cta":
       return <Cta content={section.content as CtaContent} backgroundColor={section.background_color} />;
     case "team-member":
-      return <TeamMember content={section.content as TeamMemberContent} />;
+      // TeamMember renders bare (no self-wrapper) so the 6 fixed pages can
+      // wrap it in their own section chrome — the generic renderer supplies
+      // the same section-pad/section-inner wrapper here.
+      return (
+        <div className="section-pad">
+          <div className="section-inner">
+            <TeamMember content={section.content as TeamMemberContent} />
+          </div>
+        </div>
+      );
     case "case-study":
-      return <CaseStudy content={section.content as CaseStudyContent} />;
+      // Custom pages only — Product's "In the field" and Impact's "Deployed
+      // and delivering results" sections use the original CaseStudy.tsx
+      // (.case-grid/.case-card) directly, not via this renderer. Never point
+      // this case at CaseStudy.tsx.
+      return <CaseStudyGeneric content={section.content as CaseStudyGenericContent} />;
     case "text":
       return <Text content={section.content as TextContent} />;
     case "content-cards":

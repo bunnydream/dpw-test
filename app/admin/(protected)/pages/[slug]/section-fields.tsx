@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { uploadMedia } from "@/lib/admin/media";
-import type { SectionType } from "@/lib/supabase/types";
-import { TrashIcon, PlusIcon, UploadIcon } from "./icons";
+import { useEffect, useRef, useState } from "react";
+import { listMedia, uploadMedia } from "@/lib/admin/media";
+import type { Database, SectionType } from "@/lib/supabase/types";
+import { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, CloseIcon, TrashIcon, PlusIcon, UploadIcon } from "./icons";
+
+type MediaRow = Database["public"]["Tables"]["media"]["Row"];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Content = Record<string, any>;
@@ -17,11 +19,11 @@ export function sectionDisplayName(type: SectionType, content: Content): string 
     case "hero":
       return content.headline || "Untitled hero";
     case "stats":
-      return content.heading || "Stat row";
+      return "Stat row";
     case "photo-text":
       return content.heading || "Untitled photo + text block";
     case "steps":
-      return "Step timeline";
+      return content.heading || "Step timeline";
     case "voices":
       return content.heading || "Quote carousel";
     case "partners":
@@ -29,7 +31,7 @@ export function sectionDisplayName(type: SectionType, content: Content): string 
     case "cta":
       return content.heading || "Call-to-action banner";
     case "team-member":
-      return "Team member grid";
+      return content.heading || "Team member grid";
     case "text":
       return content.heading || (content.text ? String(content.text).slice(0, 60) : "Text block");
     case "content-cards":
@@ -52,20 +54,30 @@ export function TextField({
   value,
   onChange,
   placeholder,
+  maxLength,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  maxLength?: number;
 }) {
   return (
     <div className="a-field">
-      <label>{label}</label>
+      <label>
+        {label}
+        {maxLength ? (
+          <span className="a-field-counter">
+            {(value ?? "").length}/{maxLength}
+          </span>
+        ) : null}
+      </label>
       <input
         className="a-input"
         type="text"
         value={value ?? ""}
         placeholder={placeholder}
+        maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
@@ -78,21 +90,31 @@ export function TextAreaField({
   onChange,
   rows = 3,
   placeholder,
+  maxLength,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   rows?: number;
   placeholder?: string;
+  maxLength?: number;
 }) {
   return (
     <div className="a-field">
-      <label>{label}</label>
+      <label>
+        {label}
+        {maxLength ? (
+          <span className="a-field-counter">
+            {(value ?? "").length}/{maxLength}
+          </span>
+        ) : null}
+      </label>
       <textarea
         className="a-textarea"
         rows={rows}
         value={value ?? ""}
         placeholder={placeholder}
+        maxLength={maxLength}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
@@ -103,68 +125,8 @@ export function FieldRow({ children }: { children: React.ReactNode }) {
   return <div className="a-field-row">{children}</div>;
 }
 
-const SITE_LINKS: [string, string][] = [
-  ["/", "Home"],
-  ["/about", "About"],
-  ["/product", "Product"],
-  ["/impact", "Impact"],
-  ["/careers", "Careers"],
-  ["/contact", "Contact"],
-  ["/insights", "Insights / Blog"],
-];
-
-export function LinkPicker({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  const [customMode, setCustomMode] = useState(() => !!value && !SITE_LINKS.some(([v]) => v === value));
-  const selectValue = customMode ? "custom" : value || "";
-  return (
-    <div className="a-field">
-      <label>{label}</label>
-      <select
-        className="a-select"
-        value={selectValue}
-        onChange={(e) => {
-          const v = e.target.value;
-          if (v === "custom") {
-            setCustomMode(true);
-          } else {
-            setCustomMode(false);
-            onChange(v);
-          }
-        }}
-      >
-        {!value && !customMode ? (
-          <option value="" disabled>
-            Choose a page...
-          </option>
-        ) : null}
-        {SITE_LINKS.map(([v, l]) => (
-          <option key={v} value={v}>
-            {l}
-          </option>
-        ))}
-        <option value="custom">Custom link...</option>
-      </select>
-      {customMode ? (
-        <input
-          className="a-input"
-          type="text"
-          placeholder="https://..."
-          style={{ marginTop: 8 }}
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      ) : null}
-    </div>
-  );
-}
+import LinkPicker from "@/components/admin/LinkPicker";
+export { LinkPicker };
 
 export function BackgroundColorField({
   value,
@@ -204,10 +166,63 @@ export function BackgroundColorField({
   );
 }
 
-/** Shared "replace photo" / "click to upload" field — uploads immediately
- * via uploadMedia() and reports back the public URL. Mirrors uploadBlock()/
- * emptyPhotoField() from the mockup, minus the media-library option (out of
- * scope per task brief: direct upload only). */
+/** Picks an existing upload from the media library instead of uploading a
+ * new file. Reuses the same grid styling as the full media library page. */
+function MediaLibraryModal({ onSelect, onClose }: { onSelect: (url: string) => void; onClose: () => void }) {
+  const [media, setMedia] = useState<MediaRow[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    listMedia()
+      .then(setMedia)
+      .catch((err) => setError(err instanceof Error ? err.message : "Failed to load media library"));
+  }, []);
+
+  return (
+    <div className="a-modal-overlay is-open" onClick={onClose}>
+      <div className="a-modal a-modal--scroll" onClick={(e) => e.stopPropagation()}>
+        <div className="a-modal-sticky">
+          <div className="a-modal-header">
+            <h2>Choose from media library</h2>
+            <button type="button" className="a-modal-close" onClick={onClose}>
+              <CloseIcon />
+            </button>
+          </div>
+        </div>
+        <div className="a-modal-scroll-body">
+          {error ? (
+            <p className="a-field-hint" style={{ color: "#B91C1C" }}>
+              {error}
+            </p>
+          ) : !media ? (
+            <p className="a-field-hint">Loading...</p>
+          ) : media.length === 0 ? (
+            <p className="a-field-hint">No photos uploaded yet. Upload one first.</p>
+          ) : (
+            <div className="a-media-page-grid">
+              {media.map((m) => (
+                <button
+                  type="button"
+                  key={m.id}
+                  className="a-media-page-item a-media-picker-item"
+                  onClick={() => onSelect(m.url)}
+                  title="Use this photo"
+                >
+                  <img src={m.url} alt="" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Shared "replace photo" / "click to upload" field — uploads a new file
+ * via uploadMedia(), or lets the user pick an already-uploaded one from the
+ * media library instead. Mirrors uploadBlock()/emptyPhotoField() from the
+ * mockup. */
 export function PhotoField({
   label,
   url,
@@ -225,6 +240,7 @@ export function PhotoField({
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -244,6 +260,11 @@ export function PhotoField({
     e.target.value = "";
   }
 
+  function handlePicked(pickedUrl: string) {
+    setPickerOpen(false);
+    onUrlChange(pickedUrl);
+  }
+
   return (
     <div className="a-field">
       <label>{label}</label>
@@ -259,19 +280,35 @@ export function PhotoField({
             >
               {uploading ? "Uploading..." : "Replace photo"}
             </button>
+            <button type="button" className="a-btn a-btn-outline a-btn-sm" onClick={() => setPickerOpen(true)} disabled={uploading}>
+              Media library
+            </button>
+            <button
+              type="button"
+              className="a-btn a-btn-outline a-btn-sm"
+              onClick={() => onUrlChange("")}
+              disabled={uploading}
+            >
+              Remove photo
+            </button>
           </div>
           <input ref={inputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleFile} />
         </div>
       ) : (
-        <div className="a-upload">
-          <div className="a-upload-cta">
-            <UploadIcon />
-            <span>
-              <strong>{uploading ? "Uploading..." : "Click to upload"}</strong>
-              {!uploading ? " a photo" : ""}
-            </span>
+        <div className="a-upload-empty">
+          <div className="a-upload">
+            <div className="a-upload-cta">
+              <UploadIcon />
+              <span>
+                <strong>{uploading ? "Uploading..." : "Click to upload"}</strong>
+                {!uploading ? " a photo" : ""}
+              </span>
+            </div>
+            <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
           </div>
-          <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
+          <button type="button" className="a-btn a-btn-outline a-btn-sm" onClick={() => setPickerOpen(true)} disabled={uploading}>
+            Media library
+          </button>
         </div>
       )}
       {error ? (
@@ -289,6 +326,55 @@ export function PhotoField({
           onChange={(e) => onAltChange(e.target.value)}
         />
       ) : null}
+      {pickerOpen ? <MediaLibraryModal onSelect={handlePicked} onClose={() => setPickerOpen(false)} /> : null}
+    </div>
+  );
+}
+
+/** 4-arrow nudge control for a hero photo's object-position, stored as
+ * {x, y} percentages. Nudges by 10 points per click, clamped 0–100. */
+export function PhotoPositionField({
+  value,
+  onChange,
+}: {
+  value: { x: number; y: number };
+  onChange: (v: { x: number; y: number }) => void;
+}) {
+  const step = 10;
+  const clamp = (n: number) => Math.max(0, Math.min(100, n));
+
+  function nudge(dx: number, dy: number) {
+    onChange({ x: clamp(value.x + dx), y: clamp(value.y + dy) });
+  }
+
+  return (
+    <div className="a-field">
+      <label>Photo position</label>
+      <div className="a-field-hint">Move the visible part of the photo within its frame.</div>
+      <div className="a-photo-position-control">
+        <button type="button" className="a-icon-btn" onClick={() => nudge(0, -step)} title="Move focus up">
+          <ArrowUpIcon />
+        </button>
+        <div className="a-photo-position-row">
+          <button type="button" className="a-icon-btn" onClick={() => nudge(-step, 0)} title="Move focus left">
+            <ArrowLeftIcon />
+          </button>
+          <button
+            type="button"
+            className="a-icon-btn"
+            onClick={() => onChange({ x: 50, y: 50 })}
+            title="Reset to center"
+          >
+            <span style={{ fontSize: 10, fontWeight: 700 }}>{Math.round(value.x)},{Math.round(value.y)}</span>
+          </button>
+          <button type="button" className="a-icon-btn" onClick={() => nudge(step, 0)} title="Move focus right">
+            <ArrowRightIcon />
+          </button>
+        </div>
+        <button type="button" className="a-icon-btn" onClick={() => nudge(0, step)} title="Move focus down">
+          <ArrowDownIcon />
+        </button>
+      </div>
     </div>
   );
 }
@@ -312,15 +398,27 @@ export function CompactPhotoField({ url, onChange }: { url?: string | null; onCh
   }
 
   return (
-    <div className="a-upload" style={{ width: 44, height: 44, padding: 0, flexShrink: 0 }} title="Click to replace logo">
+    <div className="a-compact-photo-field">
+      <div className="a-upload" style={{ width: 44, height: 44, padding: 0, flexShrink: 0 }} title="Click to replace logo">
+        {url ? (
+          <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: 6 }} />
+        ) : (
+          <div className="a-upload-cta" style={{ padding: 0, height: 44, justifyContent: "center" }}>
+            <UploadIcon />
+          </div>
+        )}
+        <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
+      </div>
       {url ? (
-        <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: 6 }} />
-      ) : (
-        <div className="a-upload-cta" style={{ padding: 0, height: 44, justifyContent: "center" }}>
-          <UploadIcon />
-        </div>
-      )}
-      <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} />
+        <button
+          type="button"
+          className="a-compact-photo-remove"
+          title="Remove photo"
+          onClick={() => onChange("")}
+        >
+          <TrashIcon />
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -373,15 +471,57 @@ function removeAt<T>(arr: T[], i: number): T[] {
 
 type FieldsProps = { content: Content; onChange: (content: Content) => void };
 
+function HeroButtonField({
+  label,
+  button,
+  onChange,
+  onRemove,
+  onAdd,
+}: {
+  label: string;
+  button: { text?: string; link?: string } | null;
+  onChange: (v: { text: string; link: string }) => void;
+  onRemove: () => void;
+  onAdd: () => void;
+}) {
+  if (!button) {
+    return (
+      <AddMiniCardButton label={`Add ${label.toLowerCase()}`} onClick={onAdd} />
+    );
+  }
+  return (
+    <MiniCard label={label} onRemove={onRemove}>
+      <FieldRow>
+        <TextField label="Button text" value={button.text ?? ""} onChange={(v) => onChange({ text: v, link: button.link ?? "" })} />
+        <LinkPicker label="Button links to" value={button.link ?? ""} onChange={(v) => onChange({ text: button.text ?? "", link: v })} />
+      </FieldRow>
+    </MiniCard>
+  );
+}
+
 function HeroFields({ content, onChange }: FieldsProps) {
   const primary = content.button_primary as { text?: string; link?: string } | null;
   const secondary = content.button_secondary as { text?: string; link?: string } | null;
   return (
     <>
       <TextAreaField label="Headline" rows={2} value={content.headline} onChange={(v) => onChange({ ...content, headline: v })} />
-      <TextField label="Subtitle" value={content.subtitle} onChange={(v) => onChange({ ...content, subtitle: v })} />
-      <TextAreaField label="Text" rows={4} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
-      <TextAreaField label="Footnote text" rows={2} value={content.footnote} onChange={(v) => onChange({ ...content, footnote: v })} />
+      <TextField
+        label="Subtitle (optional)"
+        value={content.subtitle}
+        onChange={(v) => onChange({ ...content, subtitle: v })}
+      />
+      <TextAreaField
+        label="Text (optional)"
+        rows={4}
+        value={content.text}
+        onChange={(v) => onChange({ ...content, text: v })}
+      />
+      <TextAreaField
+        label="Footnote text (optional)"
+        rows={2}
+        value={content.footnote}
+        onChange={(v) => onChange({ ...content, footnote: v })}
+      />
       <PhotoField
         label="Hero photo"
         url={content.photo_url}
@@ -389,33 +529,31 @@ function HeroFields({ content, onChange }: FieldsProps) {
         onUrlChange={(v) => onChange({ ...content, photo_url: v })}
         onAltChange={(v) => onChange({ ...content, photo_alt: v })}
       />
-      <FieldRow>
-        <TextField
-          label="Primary button text"
-          value={primary?.text ?? ""}
-          onChange={(v) => onChange({ ...content, button_primary: v ? { text: v, link: primary?.link ?? "" } : null })}
+      {content.photo_url ? (
+        <PhotoPositionField
+          value={content.photo_position ?? { x: 50, y: 50 }}
+          onChange={(v) => onChange({ ...content, photo_position: v })}
         />
-        <LinkPicker
-          label="Primary button links to"
-          value={primary?.link ?? ""}
-          onChange={(v) => onChange({ ...content, button_primary: primary?.text ? { text: primary.text, link: v } : { text: "", link: v } })}
+      ) : null}
+      <div className="a-field">
+        <label>Buttons</label>
+        <HeroButtonField
+          label="Primary button"
+          button={primary}
+          onChange={(v) => onChange({ ...content, button_primary: v })}
+          onRemove={() => onChange({ ...content, button_primary: null })}
+          onAdd={() => onChange({ ...content, button_primary: { text: "", link: "" } })}
         />
-      </FieldRow>
-      <FieldRow>
-        <TextField
-          label="Secondary button text"
-          value={secondary?.text ?? ""}
-          onChange={(v) => onChange({ ...content, button_secondary: v ? { text: v, link: secondary?.link ?? "" } : null })}
+      </div>
+      <div className="a-field">
+        <HeroButtonField
+          label="Secondary button"
+          button={secondary}
+          onChange={(v) => onChange({ ...content, button_secondary: v })}
+          onRemove={() => onChange({ ...content, button_secondary: null })}
+          onAdd={() => onChange({ ...content, button_secondary: { text: "", link: "" } })}
         />
-        <LinkPicker
-          label="Secondary button links to"
-          value={secondary?.link ?? ""}
-          onChange={(v) =>
-            onChange({ ...content, button_secondary: secondary?.text ? { text: secondary.text, link: v } : { text: "", link: v } })
-          }
-        />
-      </FieldRow>
-      <div className="a-field-hint">Leave a button&apos;s text empty to hide it on the live page.</div>
+      </div>
     </>
   );
 }
@@ -424,7 +562,6 @@ function StatsFields({ content, onChange }: FieldsProps) {
   const stats: { number: string; label: string }[] = content.stats ?? [];
   return (
     <>
-      <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
       <MiniCardList>
         {stats.map((stat, i) => (
           <MiniCard key={i} label={`Stat ${i + 1}`} onRemove={() => onChange({ ...content, stats: removeAt(stats, i) })}>
@@ -500,6 +637,7 @@ function StepsFields({ content, onChange }: FieldsProps) {
   const steps: { heading: string; description: string; photo_url?: string; photo_alt?: string }[] = content.steps ?? [];
   return (
     <>
+      <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
       <MiniCardList>
         {steps.map((step, i) => (
           <MiniCard key={i} label={`Step ${i + 1}`} onRemove={() => onChange({ ...content, steps: removeAt(steps, i) })}>
@@ -515,7 +653,7 @@ function StepsFields({ content, onChange }: FieldsProps) {
               onChange={(v) => onChange({ ...content, steps: updateAt(steps, i, { description: v }) })}
             />
             <PhotoField
-              label="Step photo (optional)"
+              label="Step photo"
               url={step.photo_url}
               alt={step.photo_alt}
               onUrlChange={(v) => onChange({ ...content, steps: updateAt(steps, i, { photo_url: v }) })}
@@ -536,7 +674,7 @@ function VoicesFields({ content, onChange }: FieldsProps) {
   const quotes: { quote: string; name: string; role: string }[] = content.quotes ?? [];
   return (
     <>
-      <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
       <MiniCardList>
         {quotes.map((q, i) => (
           <MiniCard key={i} label={`Card ${i + 1}`} onRemove={() => onChange({ ...content, quotes: removeAt(quotes, i) })}>
@@ -627,6 +765,7 @@ function CtaFields({ content, onChange }: FieldsProps) {
   return (
     <>
       <TextAreaField label="Heading" rows={2} value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextAreaField label="Text (optional)" rows={2} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
       <TextField label="Button text" value={content.button_text} onChange={(v) => onChange({ ...content, button_text: v })} />
       <LinkPicker label="Button links to" value={content.link ?? ""} onChange={(v) => onChange({ ...content, link: v })} />
       <PhotoField
@@ -642,6 +781,7 @@ function TeamMemberFields({ content, onChange }: FieldsProps) {
   const members: { name: string; title: string; text: string; photo_url?: string; photo_alt?: string }[] = content.members ?? [];
   return (
     <>
+      <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
       <MiniCardList>
         {members.map((m, i) => (
           <MiniCard key={i} label={m.name || "Team member"} onRemove={() => onChange({ ...content, members: removeAt(members, i) })}>
@@ -678,7 +818,7 @@ function TextFields({ content, onChange }: FieldsProps) {
 }
 
 function ContentCardsFields({ content, onChange }: FieldsProps) {
-  const cards: { heading: string; text: string; photo_url?: string; photo_alt?: string }[] = content.cards ?? [];
+  const cards: { title?: string; heading: string; text: string; photo_url?: string; photo_alt?: string }[] = content.cards ?? [];
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
@@ -686,6 +826,11 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
+            <TextField
+              label="Title"
+              value={c.title ?? ""}
+              onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { title: v }) })}
+            />
             <TextField label="Heading" value={c.heading} onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { heading: v }) })} />
             <TextAreaField
               label="Text"
@@ -705,7 +850,7 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
       </MiniCardList>
       <AddMiniCardButton
         label="Add card"
-        onClick={() => onChange({ ...content, cards: [...cards, { heading: "", text: "", photo_url: "", photo_alt: "" }] })}
+        onClick={() => onChange({ ...content, cards: [...cards, { title: "", heading: "", text: "", photo_url: "", photo_alt: "" }] })}
       />
     </>
   );
@@ -731,8 +876,17 @@ function ComparisonFields({ content, onChange }: FieldsProps) {
       <MiniCardList>
         {rows.map((r, i) => (
           <MiniCard key={i} label={r.heading || `Row ${i + 1}`} onRemove={() => onChange({ ...content, rows: removeAt(rows, i) })}>
-            <TextField label="Heading" value={r.heading} onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { heading: v }) })} />
-            <TextAreaField label="Text" rows={2} value={r.text} onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { text: v }) })} />
+            <TextField
+              label="Column A text"
+              value={r.heading}
+              onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { heading: v }) })}
+            />
+            <TextAreaField
+              label="Column B text"
+              rows={2}
+              value={r.text}
+              onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { text: v }) })}
+            />
           </MiniCard>
         ))}
       </MiniCardList>
@@ -742,12 +896,18 @@ function ComparisonFields({ content, onChange }: FieldsProps) {
 }
 
 function CaseStudyFields({ content, onChange }: FieldsProps) {
-  const cards: { heading: string; text: string; photo_url?: string; photo_alt?: string; link?: string }[] = content.cards ?? [];
+  const cards: { title?: string; heading: string; text: string; photo_url?: string; photo_alt?: string; link?: string }[] =
+    content.cards ?? [];
   return (
     <>
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
+            <TextField
+              label="Title"
+              value={c.title ?? ""}
+              onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { title: v }) })}
+            />
             <TextField label="Heading" value={c.heading} onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { heading: v }) })} />
             <TextAreaField
               label="Text"
@@ -756,7 +916,7 @@ function CaseStudyFields({ content, onChange }: FieldsProps) {
               onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { text: v }) })}
             />
             <PhotoField
-              label="Photo"
+              label="Photo (optional)"
               url={c.photo_url}
               alt={c.photo_alt}
               onUrlChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { photo_url: v }) })}
@@ -768,7 +928,7 @@ function CaseStudyFields({ content, onChange }: FieldsProps) {
       </MiniCardList>
       <AddMiniCardButton
         label="Add card"
-        onClick={() => onChange({ ...content, cards: [...cards, { heading: "", text: "", photo_url: "", photo_alt: "", link: "" }] })}
+        onClick={() => onChange({ ...content, cards: [...cards, { title: "", heading: "", text: "", photo_url: "", photo_alt: "", link: "" }] })}
       />
     </>
   );

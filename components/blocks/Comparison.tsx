@@ -21,7 +21,7 @@ export default function Comparison({ content }: { content: ComparisonContent }) 
       <div className="section-inner">
         {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
         <div className="ct-wrap reveal">
-          <table className="ct" aria-label={`${column_a_title} vs. ${column_b_title} comparison`}>
+          <table className="ct ct--split" aria-label={`${column_a_title} vs. ${column_b_title} comparison`}>
             <thead>
               <tr>
                 <th scope="col">{column_a_title}</th>

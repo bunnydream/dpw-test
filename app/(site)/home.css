@@ -302,7 +302,7 @@
 /* Body tier: CTA section sub-copy */
 .page-home .cta-sub {
   font-size: var(--t-body);
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--white);
   margin-bottom: 32px;
   line-height: 1.65;
 }

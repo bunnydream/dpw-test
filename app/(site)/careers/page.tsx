@@ -41,7 +41,9 @@ export default async function CareersPage() {
   return (
     <div className="page-careers">
       {/* HERO */}
-      {hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null}
+      {hero ? (
+        <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} matchTaglineWidthToHeadline />
+      ) : null}
 
       {/* INTRO */}
       {introContent ? (

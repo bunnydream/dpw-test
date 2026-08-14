@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroTaglineWidthMatch from "@/components/HeroTaglineWidthMatch";
 
 export type HeroButton = {
   text: string;
@@ -12,6 +13,9 @@ export type HeroContent = {
   footnote?: string | null;
   photo_url?: string | null;
   photo_alt?: string | null;
+  /** Focal point within the photo column, as percentages (0-100). Defaults
+   * to centered when absent. */
+  photo_position?: { x: number; y: number } | null;
   button_primary?: HeroButton | null;
   button_secondary?: HeroButton | null;
 };
@@ -47,6 +51,7 @@ export default function Hero({
   subtitleMarginBottom = "28px",
   primaryButtonStyle,
   subtitleLayout = "tagline-only",
+  matchTaglineWidthToHeadline = false,
   imgWidth,
   imgHeight,
 }: {
@@ -55,6 +60,11 @@ export default function Hero({
   /** margin-bottom on .hero-heading-stack when a subtitle is present — only used by
    * the "tagline-only" layout (about/careers pattern). Ignored otherwise. */
   subtitleMarginBottom?: string;
+  /** When true (only the "tagline-only" layout supports this), the subtitle's
+   * wrap width is measured live from the rendered h1 instead of flowing to
+   * the full column width — so it wraps at the same line length as the
+   * headline. Opt-in and inert everywhere it isn't explicitly passed. */
+  matchTaglineWidthToHeadline?: boolean;
   /** optional inline style passed to the primary button link (e.g. product's live
    * markup has `style={{ marginTop: "8px" }}` on its "Request a Demo" button) */
   primaryButtonStyle?: React.CSSProperties;
@@ -83,7 +93,7 @@ export default function Hero({
   imgWidth?: number;
   imgHeight?: number;
 }) {
-  const { headline, subtitle, text, footnote, photo_url, photo_alt, button_primary, button_secondary } = content;
+  const { headline, subtitle, text, footnote, photo_url, photo_alt, photo_position, button_primary, button_secondary } = content;
 
   const heroLeftClass = subtitleLayout === "tagline-only" ? "hero-left reveal" : "hero-left";
 
@@ -94,7 +104,11 @@ export default function Hero({
         <h1>{headline}</h1>
         {subtitle ? (
           <div className="hero-heading-stack" style={{ marginBottom: subtitleMarginBottom }}>
-            <p className="hero-tagline">{subtitle}</p>
+            {matchTaglineWidthToHeadline ? (
+              <HeroTaglineWidthMatch>{subtitle}</HeroTaglineWidthMatch>
+            ) : (
+              <p className="hero-tagline">{subtitle}</p>
+            )}
           </div>
         ) : null}
       </>
@@ -137,7 +151,18 @@ export default function Hero({
 
       {photo_url ? (
         <div className="hero-img reveal d2">
-          <img src={photo_url} alt={photo_alt ?? ""} loading="eager" width={imgWidth ?? 900} height={imgHeight ?? 1125} />
+          <img
+            src={photo_url}
+            alt={photo_alt ?? ""}
+            loading="eager"
+            width={imgWidth ?? 900}
+            height={imgHeight ?? 1125}
+            style={
+              photo_position
+                ? { objectPosition: `${photo_position.x}% ${photo_position.y}%` }
+                : undefined
+            }
+          />
         </div>
       ) : null}
     </section>

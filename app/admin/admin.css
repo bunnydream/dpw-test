@@ -659,6 +659,7 @@ a { color: inherit; }
 .a-upload-actions {
   display: flex;
   justify-content: center;
+  gap: 8px;
   position: relative;
 }
 
@@ -1357,6 +1358,99 @@ a { color: inherit; }
   border: 1px solid var(--light-al);
   border-radius: 8px;
   background: var(--white);
+}
+/* Row holds two label+input .a-field columns (Text / Text Link) — cancel
+   .a-field's default margin-top so both columns align at the same height. */
+.a-footer-editor-link-row .a-field { margin-top: 0 !important; }
+
+/* ─── UNDO/REDO GROUP (tighter gap than the surrounding topbar row) ─ */
+.a-undo-redo-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* ─── FIELD CHARACTER COUNTER ────────────────────────────── */
+.a-field-counter {
+  margin-left: auto;
+  font-weight: 400;
+  font-size: 11px;
+  color: var(--aluminum);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* ─── HERO PHOTO POSITION (4-arrow nudge control) ────────── */
+.a-photo-position-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  width: fit-content;
+}
+
+.a-photo-position-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── COMPACT PHOTO FIELD (partner logos) — remove button ─── */
+.a-compact-photo-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.a-compact-photo-remove {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--aluminum);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.a-compact-photo-remove:hover {
+  color: #B91C1C;
+  background: var(--cool-white);
+}
+
+.a-compact-photo-remove svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ─── PHOTO FIELD: empty state (upload + media library) ──── */
+.a-upload-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.a-upload-empty .a-upload {
+  flex: 1;
+}
+
+/* ─── PHOTO FIELD: media library picker modal ─────────────── */
+.a-media-picker-item {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--light-al);
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.a-media-picker-item:hover {
+  border-color: var(--copper);
 }
 
 /* ─── RESPONSIVE (basic) ─────────────────────────────────── */

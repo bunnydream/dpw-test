@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateFooterSettings } from "@/lib/admin/site-settings";
 import { uploadMedia } from "@/lib/admin/media";
+import LinkPicker from "@/components/admin/LinkPicker";
 import type { FooterLink, FooterSettings } from "@/lib/site-settings";
 
 // Small inline icon set, scoped to this route — mirrors the style of
@@ -142,7 +143,6 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
 
           <div className="a-card">
             <div className="a-settings-card-title">Call to action</div>
-            <div className="a-settings-card-sub">The &quot;Ready to pilot?&quot; prompt and demo button in the footer.</div>
             <div className="a-field" style={{ marginTop: 0 }}>
               <label htmlFor="footer-cta-label">Label</label>
               <input
@@ -162,21 +162,12 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
                   onChange={(e) => update({ ctaText: e.target.value })}
                 />
               </div>
-              <div className="a-field">
-                <label htmlFor="footer-cta-link">Button link</label>
-                <input
-                  className="a-input"
-                  id="footer-cta-link"
-                  value={settings.ctaLink}
-                  onChange={(e) => update({ ctaLink: e.target.value })}
-                />
-              </div>
+              <LinkPicker label="Button link" value={settings.ctaLink} onChange={(v) => update({ ctaLink: v })} />
             </div>
           </div>
 
           <div className="a-card">
             <div className="a-settings-card-title">Details</div>
-            <div className="a-settings-card-sub">Tagline, contact email, and mailing address.</div>
             <div className="a-field" style={{ marginTop: 0 }}>
               <label htmlFor="footer-tagline">Tagline</label>
               <input
@@ -209,21 +200,22 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
 
           <div className="a-card">
             <div className="a-settings-card-title">Links</div>
-            <div className="a-settings-card-sub">Edit the label and link for each footer link.</div>
             <div className="a-footer-editor-links">
               {settings.links.map((link) => (
                 <div className="a-footer-editor-link-row" key={link.id}>
-                  <input
-                    className="a-input"
-                    value={link.label}
-                    onChange={(e) => updateLink(link.id, { label: e.target.value })}
-                    placeholder="Label"
-                  />
-                  <input
-                    className="a-input"
+                  <div className="a-field">
+                    <label>Text</label>
+                    <input
+                      className="a-input"
+                      value={link.label}
+                      onChange={(e) => updateLink(link.id, { label: e.target.value })}
+                      placeholder="Label"
+                    />
+                  </div>
+                  <LinkPicker
+                    label="Text Link"
                     value={link.href}
-                    onChange={(e) => updateLink(link.id, { href: e.target.value })}
-                    placeholder="/path"
+                    onChange={(v) => updateLink(link.id, { href: v })}
                   />
                 </div>
               ))}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import InsightsFilter from "@/components/InsightsFilter";
+import LinkedCard from "@/components/blocks/LinkedCard";
 import { createClient } from "@/lib/supabase/server";
 import "./insights.css";
 
@@ -72,27 +73,19 @@ export default async function InsightsPage() {
           <InsightsFilter categories={categories}>
             {publishedPosts.map((post, idx) => {
               const excerpt = excerptByPostId[post.id];
-              const delayClass = idx % 3 === 1 ? " d1" : idx % 3 === 2 ? " d2" : "";
+              const delayClass = idx % 3 === 1 ? "d1" : idx % 3 === 2 ? "d2" : "";
               return (
-                <a
+                <LinkedCard
                   key={post.id}
                   href={`/insights/${post.slug}`}
-                  className={`case-card reveal${delayClass}`}
-                  data-cat={post.category}
-                >
-                  <div className="case-text">
-                    <span className="case-state">{post.category}</span>
-                    <h3>{post.title}</h3>
-                    {excerpt && <p className="case-detail">{excerpt}</p>}
-                  </div>
-                  {post.featured_image_url ? (
-                    <div className="case-photo">
-                      <img src={post.featured_image_url} alt={post.featured_image_alt ?? ""} />
-                    </div>
-                  ) : (
-                    <div className="case-photo post-photo-placeholder"></div>
-                  )}
-                </a>
+                  label={post.category}
+                  heading={post.title}
+                  text={excerpt}
+                  photoUrl={post.featured_image_url}
+                  photoAlt={post.featured_image_alt}
+                  dataCat={post.category}
+                  className={`reveal${delayClass ? ` ${delayClass}` : ""}`}
+                />
               );
             })}
           </InsightsFilter>

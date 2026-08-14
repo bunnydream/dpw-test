@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 export type CtaContent = {
   heading: string;
+  text?: string | null;
   button_text: string;
   link: string;
   background_photo_url: string;
@@ -31,7 +32,7 @@ export default function Cta({
    * here, keeping this component free of home-only text). */
   children?: ReactNode;
 }) {
-  const { heading, button_text, link, background_photo_url } = content;
+  const { heading, text, button_text, link, background_photo_url } = content;
 
   return (
     <div
@@ -43,6 +44,7 @@ export default function Cta({
     >
       <div className="cta-inner">
         <h2 className="cta-h reveal">{heading}</h2>
+        {text ? <p className="cta-sub reveal d1">{text}</p> : null}
         {children}
         {link.startsWith("/") ? (
           <Link href={link} className="btn btn-white reveal d2">
