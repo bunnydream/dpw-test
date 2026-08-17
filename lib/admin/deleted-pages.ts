@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { pageSlugToPath } from "@/lib/page-path";
+import { appendPageToNav, removeNavItem } from "@/lib/admin/site-settings";
 
 /** Soft-deletes a page: snapshots it (with all its sections) into deleted_pages,
  * then removes the live row (sections cascade via FK). Kept for 30 days before
@@ -28,6 +29,8 @@ export async function softDeletePage(pageId: string, slug: string, name: string)
 
   const { error: deleteError } = await supabase.from("pages").delete().eq("id", pageId);
   if (deleteError) throw new Error(deleteError.message);
+
+  await removeNavItem(slug);
 
   revalidatePath(pageSlugToPath(slug));
   revalidatePath("/admin");
@@ -86,6 +89,10 @@ export async function restorePage(deletedPageId: string) {
   }
 
   await supabase.from("deleted_pages").update({ restored: true }).eq("id", deletedPageId);
+
+  if (snapshot.page.status === "published") {
+    await appendPageToNav(snapshot.page.slug, snapshot.page.title);
+  }
 
   revalidatePath(pageSlugToPath(snapshot.page.slug));
   revalidatePath("/admin");

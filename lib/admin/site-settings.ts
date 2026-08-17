@@ -54,6 +54,23 @@ export async function renameNavItem(slug: string, title: string) {
   revalidatePath("/", "layout");
 }
 
+/** Removes a page's nav item, if present (no-op otherwise — e.g. a page
+ * that was never published/added to the nav). Called when a page is
+ * soft-deleted so it doesn't linger in the public navbar. */
+export async function removeNavItem(slug: string) {
+  const supabase = createAdminClient();
+  const { data } = await supabase.from("site_settings").select("value").eq("key", "nav").maybeSingle();
+  const nav = (data?.value as NavSettings | undefined) ?? DEFAULT_NAV_SETTINGS;
+  const href = pageSlugToPath(slug);
+
+  if (!nav.items.some((item) => item.href === href)) return;
+
+  const items = nav.items.filter((item) => item.href !== href);
+  const { error } = await supabase.from("site_settings").update({ value: { ...nav, items } }).eq("key", "nav");
+  if (error) throw new Error(error.message);
+  revalidatePath("/", "layout");
+}
+
 /** Appends a page to the end of the nav items list (before the fixed CTA
  * button) if it isn't already present, keyed by href. Called from
  * publishPage() so a newly published custom page shows up in the navbar

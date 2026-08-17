@@ -453,7 +453,7 @@ export function AddMiniCardButton({ label, onClick }: { label: string; onClick: 
 /** Optional "pullquote" subsection — a single highlighted line of text.
  * Collapsed to a "+ Add pullquote" button until set. */
 export function PullquoteToggleField({ content, onChange }: FieldsProps) {
-  return content.pullquote ? (
+  return content.pullquote != null ? (
     <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
       <TextAreaField label="Pullquote" rows={2} value={content.pullquote ?? ""} onChange={(v) => onChange({ ...content, pullquote: v })} />
       <button
@@ -475,7 +475,7 @@ export function PullquoteToggleField({ content, onChange }: FieldsProps) {
 /** Optional "footnote" subsection — a trailing note below the block's main
  * content. Collapsed to a "+ Add footnote" button until set. */
 export function FootnoteToggleField({ content, onChange }: FieldsProps) {
-  return content.footnote ? (
+  return content.footnote != null ? (
     <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
       <TextAreaField label="Footnote" rows={2} value={content.footnote ?? ""} onChange={(v) => onChange({ ...content, footnote: v })} />
       <button
@@ -498,7 +498,7 @@ export function FootnoteToggleField({ content, onChange }: FieldsProps) {
  * text, e.g. "65% of our users access VMI on a smartphone." Collapsed to a
  * "+ Add callout" button until set. */
 export function CalloutToggleField({ content, onChange }: FieldsProps) {
-  return content.callout_number || content.callout_text ? (
+  return content.callout_number != null || content.callout_text != null ? (
     <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
       <FieldRow>
         <TextField label="Callout number" value={content.callout_number ?? ""} onChange={(v) => onChange({ ...content, callout_number: v })} />
@@ -679,12 +679,6 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
         }
       />
       <div className="a-field-hint">Separate paragraphs with a blank line.</div>
-      <TextAreaField
-        label="Pullquote (optional)"
-        rows={2}
-        value={content.pullquote ?? ""}
-        onChange={(v) => onChange({ ...content, pullquote: v || null })}
-      />
       <PhotoField
         label="Photo"
         url={content.photo_url}
@@ -692,7 +686,7 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
         onUrlChange={(v) => onChange({ ...content, photo_url: v })}
         onAltChange={(v) => onChange({ ...content, photo_alt: v })}
       />
-      {content.button_text || content.button_link ? (
+      {content.button_text != null || content.button_link != null ? (
         <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
           <TextField
             label="Button text"
@@ -711,11 +705,12 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
         </div>
       ) : (
         <div style={{ marginTop: 24 }}>
-          <AddMiniCardButton label="Add button" onClick={() => onChange({ ...content, button_text: "Learn more", button_link: "" })} />
+          <AddMiniCardButton label="Add button" onClick={() => onChange({ ...content, button_text: "", button_link: "" })} />
         </div>
       )}
+      <PullquoteToggleField content={content} onChange={onChange} />
       <FootnoteToggleField content={content} onChange={onChange} />
-      {content.stat_number || content.stat_text ? (
+      {content.stat_number != null || content.stat_text != null ? (
         <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
           <FieldRow>
             <TextField label="Callout number" value={content.stat_number ?? ""} onChange={(v) => onChange({ ...content, stat_number: v })} />
@@ -741,6 +736,11 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
 
 function StepsFields({ content, onChange }: FieldsProps) {
   const steps: { heading: string; description: string; photo_url?: string; photo_alt?: string }[] = content.steps ?? [];
+  // Step photos are only offered when this section already has at least one
+  // (i.e. Home's original step timeline, which was built with photos) — new
+  // "Step timeline" blocks created via "Add a block" start with none and
+  // never get the option, since that design has no photo slot.
+  const stepsHavePhotos = steps.some((s) => s.photo_url);
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
@@ -758,13 +758,15 @@ function StepsFields({ content, onChange }: FieldsProps) {
               value={step.description}
               onChange={(v) => onChange({ ...content, steps: updateAt(steps, i, { description: v }) })}
             />
-            <PhotoField
-              label="Step photo"
-              url={step.photo_url}
-              alt={step.photo_alt}
-              onUrlChange={(v) => onChange({ ...content, steps: updateAt(steps, i, { photo_url: v }) })}
-              onAltChange={(v) => onChange({ ...content, steps: updateAt(steps, i, { photo_alt: v }) })}
-            />
+            {stepsHavePhotos ? (
+              <PhotoField
+                label="Step photo"
+                url={step.photo_url}
+                alt={step.photo_alt}
+                onUrlChange={(v) => onChange({ ...content, steps: updateAt(steps, i, { photo_url: v }) })}
+                onAltChange={(v) => onChange({ ...content, steps: updateAt(steps, i, { photo_alt: v }) })}
+              />
+            ) : null}
           </MiniCard>
         ))}
       </MiniCardList>
@@ -772,13 +774,8 @@ function StepsFields({ content, onChange }: FieldsProps) {
         label="Add step"
         onClick={() => onChange({ ...content, steps: [...steps, { heading: "", description: "", photo_url: "", photo_alt: "" }] })}
       />
-      <TextAreaField
-        label="Footnote (optional)"
-        rows={2}
-        value={content.footnote ?? ""}
-        onChange={(v) => onChange({ ...content, footnote: v })}
-      />
       <PullquoteToggleField content={content} onChange={onChange} />
+      <FootnoteToggleField content={content} onChange={onChange} />
       <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
@@ -960,13 +957,8 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
         label="Add card"
         onClick={() => onChange({ ...content, cards: [...cards, { title: "", heading: "", text: "", photo_url: "", photo_alt: "" }] })}
       />
-      <TextAreaField
-        label="Footnote (optional)"
-        rows={2}
-        value={content.footnote ?? ""}
-        onChange={(v) => onChange({ ...content, footnote: v })}
-      />
       <PullquoteToggleField content={content} onChange={onChange} />
+      <FootnoteToggleField content={content} onChange={onChange} />
       <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
@@ -1116,13 +1108,8 @@ function IconCardsFields({ content, onChange }: FieldsProps) {
         label="Add card"
         onClick={() => onChange({ ...content, cards: [...cards, { icon: "document", label: "", heading: "", text: "" }] })}
       />
-      <TextAreaField
-        label="Footnote (optional)"
-        rows={2}
-        value={content.footnote ?? ""}
-        onChange={(v) => onChange({ ...content, footnote: v })}
-      />
       <PullquoteToggleField content={content} onChange={onChange} />
+      <FootnoteToggleField content={content} onChange={onChange} />
       <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
@@ -1331,7 +1318,7 @@ function ContactFormSectionFields({ content, onChange }: FieldsProps) {
           Partners/Funders never had an address block in the original design
           and shouldn't be able to add one. */}
       {"subject_label" in content ? (
-        content.address_org_name || content.address_line1 || content.address_line2 || content.address_email ? (
+        content.address_org_name != null || content.address_line1 != null || content.address_line2 != null || content.address_email != null ? (
           <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
             <TextField label="Address: organization name (optional)" value={content.address_org_name ?? ""} onChange={(v) => onChange({ ...content, address_org_name: v })} />
             <TextField label="Address: line 1 (optional)" value={content.address_line1 ?? ""} onChange={(v) => onChange({ ...content, address_line1: v })} />
