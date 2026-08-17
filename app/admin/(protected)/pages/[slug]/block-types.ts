@@ -98,6 +98,8 @@ const HIDDEN_BLOCK_TYPES: { type: SectionType; label: string }[] = [
   { type: "impact-manual-table", label: "Manual vs. VMI table (impact)" },
   { type: "impact-year-in-review", label: "Year in review (impact)" },
   { type: "contact-form-section", label: "Contact form section" },
+  { type: "careers-intro", label: "Careers intro" },
+  { type: "careers-openings", label: "Open positions (careers)" },
 ];
 
 export const SECTION_TYPE_LABEL: Record<SectionType, string> = [...BLOCK_TYPES, ...HIDDEN_BLOCK_TYPES].reduce(
@@ -192,6 +194,10 @@ export function starterContent(type: SectionType): Record<string, any> {
       return { heading: "", panels: [{ header: "", content: "" }] };
     case "image":
       return { photo_url: "", photo_alt: "" };
+    case "careers-intro":
+      return { text: "" };
+    case "careers-openings":
+      return { heading: "", text: "" };
   }
 }
 

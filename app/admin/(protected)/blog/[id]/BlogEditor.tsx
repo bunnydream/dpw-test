@@ -31,7 +31,7 @@ const NEW_AUTHOR_VALUE = "__new__";
 const BLOCK_LABELS: Record<BlogBlockType, string> = {
   heading: "Heading",
   paragraph: "Paragraph",
-  quote: "Quote",
+  quote: "Pullquote",
   photo: "Photo",
 };
 
@@ -565,7 +565,7 @@ export default function BlogEditor({
                     )}
                     {block.type === "quote" && (
                       <div className="a-field">
-                        <label>Quote text</label>
+                        <label>Pullquote text</label>
                         <textarea
                           className="a-textarea"
                           rows={3}
@@ -733,15 +733,22 @@ export default function BlogEditor({
                   </button>
                 </>
               )}
-              <a
-                className="a-btn a-btn-ghost"
-                style={{ justifyContent: "center" }}
-                href={`/insights/${post.slug}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Preview on Insights page
-              </a>
+              {status === "published" && (
+                <a
+                  className="a-btn a-btn-ghost"
+                  style={{ justifyContent: "center" }}
+                  href={`/insights/${post.slug}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  View blog post
+                </a>
+              )}
             </div>
 
             <div className="a-card">
@@ -793,7 +800,7 @@ export default function BlogEditor({
                 <path d="M3 21c3-1 5-3 5-6V9a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1" />
                 <path d="M14 21c3-1 5-3 5-6V9a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1" />
               </svg>
-              <strong>Quote</strong>
+              <strong>Pullquote</strong>
               <span>A pulled quote, set apart from body text.</span>
             </button>
             <button className="a-block-option" onClick={() => addBlock("photo")}>

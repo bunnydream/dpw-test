@@ -28,9 +28,8 @@ export default async function CareersPage() {
   const sections = result?.sections ?? [];
 
   const hero = byType(sections, "hero")[0];
-  const textSections = byType(sections, "text");
-  const intro = textSections[0];
-  const openings = textSections[1];
+  const intro = byType(sections, "careers-intro")[0];
+  const openings = byType(sections, "careers-openings")[0];
 
   const introContent = intro?.content as TextContent | undefined;
   const openingsContent = (openings?.content as TextContent | undefined) ?? DEFAULT_OPENINGS;

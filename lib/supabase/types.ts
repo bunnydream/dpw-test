@@ -25,7 +25,9 @@ export type SectionType =
   | "impact-year-in-review"
   | "contact-form-section"
   | "accordion"
-  | "image";
+  | "image"
+  | "careers-intro"
+  | "careers-openings";
 
 export type BlogBlockType = "heading" | "paragraph" | "quote" | "photo";
 

@@ -61,6 +61,10 @@ export function sectionDisplayName(type: SectionType, content: Content): string 
       return content.heading || "Accordion";
     case "image":
       return "Image";
+    case "careers-intro":
+      return "Careers intro";
+    case "careers-openings":
+      return content.heading || "Open Positions";
     default:
       return "Section";
   }
@@ -1437,6 +1441,9 @@ export function SectionContentFields({ type, content, onChange }: { type: Sectio
       return <AccordionFields content={content} onChange={onChange} />;
     case "image":
       return <ImageFields content={content} onChange={onChange} />;
+    case "careers-intro":
+    case "careers-openings":
+      return <TextFields content={content} onChange={onChange} />;
     default:
       return null;
   }
