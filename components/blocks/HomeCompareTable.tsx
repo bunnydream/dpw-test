@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 export type HomeCompareRow = {
+  label: string;
   traditional: string;
   vmi: string;
 };
@@ -28,11 +29,17 @@ function CheckIcon() {
  * specific, non-reusable — never registered in block-types.ts's BLOCK_TYPES,
  * so it can't be added via "Add a block". Exact markup from home/page.tsx's
  * former hardcoded ".compare-teaser" section. */
-export default function HomeCompareTable({ content }: { content: HomeCompareTableContent }) {
+export default function HomeCompareTable({
+  content,
+  backgroundColor,
+}: {
+  content: HomeCompareTableContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, traditional_label, vmi_label, link_text, link, rows } = content;
 
   return (
-    <section className="compare-teaser">
+    <section className="compare-teaser" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="compare-teaser-inner">
         <div className="ct-header reveal">
           <h2 style={{ fontSize: "clamp(28px, 3vw, 36px)" }}>{heading}</h2>
@@ -60,7 +67,7 @@ export default function HomeCompareTable({ content }: { content: HomeCompareTabl
             <tbody>
               {rows.map((row, i) => (
                 <tr key={i}>
-                  <td className="ct-dim"></td>
+                  <td className="ct-dim">{row.label}</td>
                   <td className="ct-them">{row.traditional}</td>
                   <td className="ct-vmi">
                     <CheckIcon />

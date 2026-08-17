@@ -11,11 +11,17 @@ export type ProductTalkCtaContent = {
  * `Bring <i>VMI</i> to your state →` — italics can't be represented in a
  * plain content.heading field (same accepted tradeoff as Cta.tsx), so the
  * dynamic heading renders as plain text. */
-export default function ProductTalkCta({ content }: { content: ProductTalkCtaContent }) {
+export default function ProductTalkCta({
+  content,
+  backgroundColor,
+}: {
+  content: ProductTalkCtaContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, subtext, link } = content;
 
   return (
-    <div className="talk-cta">
+    <div className="talk-cta" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <svg
         className="talk-cta-lines"
         aria-hidden="true"

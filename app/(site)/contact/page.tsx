@@ -133,7 +133,7 @@ export default async function ContactPage() {
       </section>
 
       {/* FOR STATE PARTNERS */}
-      <section className="section-pad" style={{ background: "var(--cool-white)" }}>
+      <section className="section-pad" style={{ background: (formSections[0]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -237,7 +237,7 @@ export default async function ContactPage() {
       </section>
 
       {/* FOR FUNDERS */}
-      <section className="section-pad" style={{ background: "var(--cool-white)" }}>
+      <section className="section-pad" style={{ background: (formSections[1]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -328,7 +328,7 @@ export default async function ContactPage() {
       </section>
 
       {/* FOR COMMUNITY + ADDRESS */}
-      <section className="section-pad" style={{ background: "var(--cool-white)" }}>
+      <section className="section-pad" style={{ background: (formSections[2]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">

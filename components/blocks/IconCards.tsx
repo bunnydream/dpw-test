@@ -17,6 +17,9 @@ export type IconCardsContent = {
   text?: string | null;
   /** Trailing note rendered below the card grid, e.g. home's discovery-sprint paragraph. */
   footnote?: string | null;
+  /** Background color applied to each card (independent of the section's
+   * own background_color). */
+  card_background_color?: string | null;
   cards: IconCard[];
 };
 
@@ -95,7 +98,7 @@ function CardIcon({ icon, icon_url }: { icon: IconCardIcon; icon_url?: string | 
  * section-pad/section-inner wrapper itself.
  */
 export default function IconCards({ content }: { content: IconCardsContent }) {
-  const { heading, text, footnote, cards } = content;
+  const { heading, text, footnote, card_background_color, cards } = content;
 
   return (
     <>
@@ -103,7 +106,11 @@ export default function IconCards({ content }: { content: IconCardsContent }) {
       {text ? <p className="body-p reveal d1">{text}</p> : null}
       <div className="content-card-grid">
         {cards.map((card, i) => (
-          <div className={`content-card reveal d${i + 1}`} key={i}>
+          <div
+            className={`content-card reveal d${i + 1}`}
+            key={i}
+            style={card_background_color ? { background: card_background_color } : undefined}
+          >
             <div className="content-card-accent"></div>
             <div className="content-card-body">
               <div className="content-card-icon" aria-hidden="true">

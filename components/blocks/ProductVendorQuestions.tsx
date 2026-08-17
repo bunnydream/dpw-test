@@ -15,11 +15,17 @@ export type ProductVendorQuestionsContent = {
  * note: one live answer has an inline <em> emphasis that a plain text field
  * can't represent; it renders as plain text (same accepted tradeoff used
  * elsewhere for inline markup inside admin-editable copy). */
-export default function ProductVendorQuestions({ content }: { content: ProductVendorQuestionsContent }) {
+export default function ProductVendorQuestions({
+  content,
+  backgroundColor,
+}: {
+  content: ProductVendorQuestionsContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, items } = content;
 
   return (
-    <section className="vendor-q section-pad" id="vendor-questions">
+    <section className="vendor-q section-pad" id="vendor-questions" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         <h2 className="section-h reveal">{heading}</h2>
         <div className="vq-list reveal d1">

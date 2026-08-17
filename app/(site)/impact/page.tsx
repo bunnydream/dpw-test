@@ -130,34 +130,48 @@ export default async function ImpactPage() {
           has no pullquote but does have a fixed .comp-card widget that isn't
           part of admin's photo-text field shape at all. */}
       <section className="families">
-        {/* Left: full-bleed image */}
-        <div className="families-img">
-          <img
-            src={familiesContent?.photo_url ?? "/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg"}
-            alt={familiesContent?.photo_alt ?? "A woman looking at her phone"}
-            loading="lazy"
-          />
-        </div>
+        {(() => {
+          const imgEl = (
+            <div className="families-img">
+              <img
+                src={familiesContent?.photo_url ?? "/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg"}
+                alt={familiesContent?.photo_alt ?? "A woman looking at her phone"}
+                loading="lazy"
+              />
+            </div>
+          );
+          const contentEl = (
+            <div className="families-right">
+              <h2 className="section-h reveal">
+                {familiesContent?.heading ?? "From hours of paperwork to five minutes — without leaving home"}
+              </h2>
 
-        {/* Right: content */}
-        <div className="families-right">
-          <h2 className="section-h reveal">
-            {familiesContent?.heading ?? "From hours of paperwork to five minutes — without leaving home"}
-          </h2>
+              <div className="body-text reveal d1">
+                {(
+                  familiesContent?.text ?? [
+                    "Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting an office, and waiting. If something was missing, the process started over. For someone navigating a job change, caring for children, or managing a health crisis, this time tax could mean weeks without benefits.",
+                    "With Verify My Income, an applicant receives a secure link from their agency. They consent to share their payroll data and connect to their employer's payroll system. In under five minutes, a verified income report is delivered directly to their caseworker. No documents to find. No follow-up calls. No delays.",
+                  ]
+                ).map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
 
-          <div className="body-text reveal d1">
-            {(
-              familiesContent?.text ?? [
-                "Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting an office, and waiting. If something was missing, the process started over. For someone navigating a job change, caring for children, or managing a health crisis, this time tax could mean weeks without benefits.",
-                "With Verify My Income, an applicant receives a secure link from their agency. They consent to share their payroll data and connect to their employer's payroll system. In under five minutes, a verified income report is delivered directly to their caseworker. No documents to find. No follow-up calls. No delays.",
-              ]
-            ).map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
-          </div>
-
-          <ImpactManualTable content={manualTableContent} />
-        </div>
+              <ImpactManualTable content={manualTableContent} />
+            </div>
+          );
+          return familiesContent?.side === "right" ? (
+            <>
+              {contentEl}
+              {imgEl}
+            </>
+          ) : (
+            <>
+              {imgEl}
+              {contentEl}
+            </>
+          );
+        })()}
       </section>
 
       {/* ─── 4. VOICES CAROUSEL ─── */}
@@ -174,10 +188,14 @@ export default async function ImpactPage() {
       </section>
 
       {/* ─── 6. YEAR IN REVIEW ─── */}
-      <ImpactYearInReview content={yearInReviewContent} />
+      <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview?.background_color} />
 
       {/* ─── 7. FUNDING MODEL ─── */}
-      <section className="funding section-pad" id="funding-model">
+      <section
+        className="funding section-pad"
+        id="funding-model"
+        style={fundingModel?.background_color ? { background: fundingModel.background_color } : undefined}
+      >
         <div className="section-inner">
           <IconCards content={fundingModelContent} />
         </div>

@@ -28,6 +28,7 @@ type ContentCardsContent = {
 };
 
 type ProblemPhotoTextContent = {
+  side?: "left" | "right" | null;
   heading: string;
   text: string;
   photo_url: string;
@@ -35,6 +36,7 @@ type ProblemPhotoTextContent = {
 };
 
 type AccessPhotoTextContent = {
+  side?: "left" | "right" | null;
   heading: string;
   text: string[];
   photo_url: string;
@@ -101,30 +103,37 @@ const DEFAULT_COMPARE_TABLE: ProductCompareTableContent = {
   vmi_label: "VMI — Digital Public Works",
   rows: [
     {
+      label: "What you get",
       traditional: "A data connection, a bundled add-on to a larger contract, or a commercial product. The state fills the gaps.",
       vmi: "A complete verification service. Consent, benefits-specific data validation, and caseworker-ready reports included.",
     },
     {
+      label: "Pricing",
       traditional: "Commercial pricing that rises over time. Some vendors bundle verification into larger contracts, hiding the true cost.",
       vmi: "Nonprofit, at cost. Price decreases as more states join the platform.",
     },
     {
+      label: "Data quality",
       traditional: "Raw data delivered as-is. No validation against program requirements. Incomplete or unusable records reach caseworkers.",
       vmi: "Every report passes through programmatic validation. Reports that do not meet eligibility-grade standards are rejected and applicants are redirected to existing options.",
     },
     {
+      label: "Open source",
       traditional: "Proprietary. No visibility into how the system works.",
       vmi: "Full codebase published under AGPL-3.0 on GitHub.",
     },
     {
+      label: "Vendor lock-in",
       traditional: "High. Switching vendors means rebuilding. Some states are locked into multi-year contracts with no exit path.",
       vmi: "None. If DPW ceased to exist, states retain full access to the code, architecture, and documentation.",
     },
     {
+      label: "Accessibility",
       traditional: "State inherits responsibility for all embedded components, including third-party interfaces it does not control.",
       vmi: "WCAG 2.1 AA commitment with independent third-party auditing funded by AARP Foundation.",
     },
     {
+      label: "Service model",
       traditional: "Per-verification billing regardless of eligibility value.",
       vmi: "Embedded partnership: discovery sprints, case reviews, ongoing service design, and workflow improvement.",
     },
@@ -263,71 +272,114 @@ export default async function ProductPage() {
       <section className="ps-section section-pad" id="the-problem">
         <div className="section-inner">
           <div className="ps-grid">
-            <div className="ps-visual reveal">
-              <img
-                src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
-                alt={
-                  verificationProblemContent?.photo_alt ??
-                  "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
-                }
-                loading="lazy"
-              />
-            </div>
+            {verificationProblemContent?.side === "right" ? (
+              <>
+                <div className="ps-right reveal d1">
+                  <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
+                  <p className="ps-right-intro">
+                    {verificationProblemContent?.text ??
+                      "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
+                  </p>
 
-            <div className="ps-right reveal d1">
-              <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
-              <p className="ps-right-intro">
-                {verificationProblemContent?.text ??
-                  "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
-              </p>
+                  <ProductProblemAccordion content={problemAccordionContent} />
+                </div>
+                <div className="ps-visual reveal">
+                  <img
+                    src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
+                    alt={
+                      verificationProblemContent?.photo_alt ??
+                      "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
+                    }
+                    loading="lazy"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="ps-visual reveal">
+                  <img
+                    src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
+                    alt={
+                      verificationProblemContent?.photo_alt ??
+                      "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
+                    }
+                    loading="lazy"
+                  />
+                </div>
 
-              <ProductProblemAccordion content={problemAccordionContent} />
-            </div>
+                <div className="ps-right reveal d1">
+                  <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
+                  <p className="ps-right-intro">
+                    {verificationProblemContent?.text ??
+                      "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
+                  </p>
+
+                  <ProductProblemAccordion content={problemAccordionContent} />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
 
       {/* TALK TO US CTA BANNER */}
-      <ProductTalkCta content={talkCtaContent} />
+      <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta?.background_color} />
 
       {/* COMPARISON TABLE */}
-      <ProductCompareTable content={compareTableContent} />
+      <ProductCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />
 
       {/* ═══════════════════════════════════════════════
           QUESTIONS TO ASK — bigger bare chevrons
           ═══════════════════════════════════════════════ */}
-      <ProductVendorQuestions content={vendorQuestionsContent} />
+      <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions?.background_color} />
 
       {/* ACCESSIBLE BY DESIGN */}
       <section className="access-section" id="accessibility">
-        <div className="access-left">
-          <h2 className="section-h reveal">
-            {accessibleContent?.heading ?? "Accessible by design, not as an afterthought"}
-          </h2>
-          <div className="body-text reveal d1">
-            {(
-              accessibleContent?.text ?? [
-                "DPW is investing in accessibility research in partnership with the AARP Foundation, with independent third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility standards. The platform supports English and Spanish.",
-                "We do not treat accessibility as a compliance checkbox. We are conducting original research into how income verification tools can be made usable for older adults, people with disabilities, and individuals with limited English proficiency. Findings from this research will be published and shared with the field.",
-              ]
-            ).map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
-          </div>
-          <div className="callout-stat reveal d2">
-            <span className="callout-stat-num">{accessibleContent?.stat_number ?? "65%"}</span>
-            <p className="callout-stat-text">
-              {accessibleContent?.stat_text ?? "of our users access VMI on a smartphone. The platform is built mobile-first."}
-            </p>
-          </div>
-        </div>
-        <div className="access-photo reveal d2">
-          <img
-            src={accessibleContent?.photo_url ?? "/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg"}
-            alt={accessibleContent?.photo_alt ?? "An older adult using a cell phone to verify her income"}
-            loading="lazy"
-          />
-        </div>
+        {(() => {
+          const textEl = (
+            <div className="access-left">
+              <h2 className="section-h reveal">
+                {accessibleContent?.heading ?? "Accessible by design, not as an afterthought"}
+              </h2>
+              <div className="body-text reveal d1">
+                {(
+                  accessibleContent?.text ?? [
+                    "DPW is investing in accessibility research in partnership with the AARP Foundation, with independent third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility standards. The platform supports English and Spanish.",
+                    "We do not treat accessibility as a compliance checkbox. We are conducting original research into how income verification tools can be made usable for older adults, people with disabilities, and individuals with limited English proficiency. Findings from this research will be published and shared with the field.",
+                  ]
+                ).map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
+              <div className="callout-stat reveal d2">
+                <span className="callout-stat-num">{accessibleContent?.stat_number ?? "65%"}</span>
+                <p className="callout-stat-text">
+                  {accessibleContent?.stat_text ?? "of our users access VMI on a smartphone. The platform is built mobile-first."}
+                </p>
+              </div>
+            </div>
+          );
+          const photoEl = (
+            <div className="access-photo reveal d2">
+              <img
+                src={accessibleContent?.photo_url ?? "/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg"}
+                alt={accessibleContent?.photo_alt ?? "An older adult using a cell phone to verify her income"}
+                loading="lazy"
+              />
+            </div>
+          );
+          return accessibleContent?.side === "left" ? (
+            <>
+              {photoEl}
+              {textEl}
+            </>
+          ) : (
+            <>
+              {textEl}
+              {photoEl}
+            </>
+          );
+        })()}
       </section>
 
       {/* ═══════════════════════════════════════════════

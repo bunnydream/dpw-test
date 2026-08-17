@@ -27,11 +27,11 @@ const DEFAULT_COMPARE_TABLE: HomeCompareTableContent = {
   link_text: "See the full comparison",
   link: "/product#comparison",
   rows: [
-    { traditional: "Per-query, rising over time", vmi: "Nonprofit, at-cost. Price falls as more states join." },
-    { traditional: "Raw data, no validation", vmi: "Every report programmatically validated" },
-    { traditional: "Proprietary", vmi: "Open source under AGPL-3.0" },
-    { traditional: "High — no exit path", vmi: "None. Full code and architecture access." },
-    { traditional: "Data hand-off", vmi: "Embedded partnership and service design" },
+    { label: "Pricing", traditional: "Per-query, rising over time", vmi: "Nonprofit, at-cost. Price falls as more states join." },
+    { label: "Data quality", traditional: "Raw data, no validation", vmi: "Every report programmatically validated" },
+    { label: "Source code", traditional: "Proprietary", vmi: "Open source under AGPL-3.0" },
+    { label: "Vendor lock-in", traditional: "High — no exit path", vmi: "None. Full code and architecture access." },
+    { label: "Service model", traditional: "Data hand-off", vmi: "Embedded partnership and service design" },
   ],
 };
 
@@ -161,7 +161,7 @@ export default async function HomePage() {
       </section>
 
       {/* COMPARISON TEASER */}
-      <HomeCompareTable content={compareTableContent} />
+      <HomeCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />
 
       {/* PRESSURE */}
       {pressure ? (
@@ -199,7 +199,7 @@ export default async function HomePage() {
       <HowStepsProgress />
 
       {/* STORIES */}
-      <section className="stories">
+      <section className="stories" style={stories?.background_color ? { background: stories.background_color } : undefined}>
         <div className="stories-inner">
           <IconCards content={storiesContent} />
         </div>

@@ -39,7 +39,12 @@ type SectionRow = Database["public"]["Tables"]["sections"]["Row"];
 // Block types whose individual cards have their own background color,
 // separate from the section's own background_color — rendered directly
 // above it so the two color pickers sit next to each other.
-const CARD_BACKGROUND_TYPES: SectionType[] = ["steps", "voices", "content-cards", "case-study"];
+const CARD_BACKGROUND_TYPES: SectionType[] = ["steps", "voices", "content-cards", "case-study", "icon-cards"];
+
+// Types with no background_color control: "cta" sets its own via a required
+// background photo; the other two are nested widgets inside another
+// section's own chrome (no independent section background of their own).
+const NO_BACKGROUND_TYPES: SectionType[] = ["cta", "product-problem-accordion", "impact-manual-table"];
 
 const FIXED_PAGE_LABELS: Record<string, string> = {
   home: "Home page",
@@ -493,7 +498,7 @@ export default function PageEditor({
                           }
                         />
                       ) : null}
-                      {section.type !== "cta" ? (
+                      {!NO_BACKGROUND_TYPES.includes(section.type) ? (
                         <BackgroundColorField
                           value={section.background_color}
                           onChange={(v) => updateSectionLocal(section.id, { background_color: v })}

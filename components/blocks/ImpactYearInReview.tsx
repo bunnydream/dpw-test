@@ -10,11 +10,17 @@ export type ImpactYearInReviewContent = {
 /** Impact's "Year in review" section (".annual", id="annual-report").
  * Page-specific, non-reusable. The decorative "report-book" visual and its
  * "Annual Report" label are fixed design chrome, not editable copy. */
-export default function ImpactYearInReview({ content }: { content: ImpactYearInReviewContent }) {
+export default function ImpactYearInReview({
+  content,
+  backgroundColor,
+}: {
+  content: ImpactYearInReviewContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, text, button_text, link } = content;
 
   return (
-    <section className="annual section-pad" id="annual-report">
+    <section className="annual section-pad" id="annual-report" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner annual-inner">
         <div>
           <h2 className="section-h reveal">{heading}</h2>

@@ -38,7 +38,7 @@ export function sectionDisplayName(type: SectionType, content: Content): string 
     case "comparison":
       return content.heading || "Comparison table";
     case "case-study":
-      return "Case study cards";
+      return content.heading || "Linked card grid";
     case "icon-cards":
       return content.heading || "Icon cards";
     case "home-compare-table":
@@ -623,7 +623,7 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
         onAltChange={(v) => onChange({ ...content, photo_alt: v })}
       />
       {content.button_text || content.button_link ? (
-        <>
+        <div className="a-mini-card" style={{ marginBottom: 16 }}>
           <TextField
             label="Button text"
             value={content.button_text ?? ""}
@@ -633,11 +633,12 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
           <button
             type="button"
             className="a-btn a-btn-outline a-btn-sm"
+            style={{ marginTop: 14 }}
             onClick={() => onChange({ ...content, button_text: null, button_link: null })}
           >
             Remove button
           </button>
-        </>
+        </div>
       ) : (
         <AddMiniCardButton label="Add button" onClick={() => onChange({ ...content, button_text: "Learn more", button_link: "" })} />
       )}
@@ -1034,7 +1035,7 @@ function IconCardsFields({ content, onChange }: FieldsProps) {
 }
 
 function CompareRowsFields({ content, onChange }: FieldsProps) {
-  const rows: { traditional: string; vmi: string }[] = content.rows ?? [];
+  const rows: { label: string; traditional: string; vmi: string }[] = content.rows ?? [];
   return (
     <>
       <FieldRow>
@@ -1043,7 +1044,8 @@ function CompareRowsFields({ content, onChange }: FieldsProps) {
       </FieldRow>
       <MiniCardList>
         {rows.map((r, i) => (
-          <MiniCard key={i} label={`Row ${i + 1}`} onRemove={() => onChange({ ...content, rows: removeAt(rows, i) })}>
+          <MiniCard key={i} label={r.label || `Row ${i + 1}`} onRemove={() => onChange({ ...content, rows: removeAt(rows, i) })}>
+            <TextField label="Row label" value={r.label} onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { label: v }) })} />
             <TextAreaField
               label="Traditional approaches text"
               rows={2}
@@ -1059,7 +1061,7 @@ function CompareRowsFields({ content, onChange }: FieldsProps) {
           </MiniCard>
         ))}
       </MiniCardList>
-      <AddMiniCardButton label="Add row" onClick={() => onChange({ ...content, rows: [...rows, { traditional: "", vmi: "" }] })} />
+      <AddMiniCardButton label="Add row" onClick={() => onChange({ ...content, rows: [...rows, { label: "", traditional: "", vmi: "" }] })} />
     </>
   );
 }

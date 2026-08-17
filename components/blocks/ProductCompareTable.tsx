@@ -1,4 +1,5 @@
 export type ProductCompareRow = {
+  label: string;
   traditional: string;
   vmi: string;
 };
@@ -15,11 +16,17 @@ export type ProductCompareTableContent = {
  * different design from the generic reusable "Comparison table" block
  * (table.ct vs table.ct--split; this one has a 3rd label column and badge
  * icons in the header). */
-export default function ProductCompareTable({ content }: { content: ProductCompareTableContent }) {
+export default function ProductCompareTable({
+  content,
+  backgroundColor,
+}: {
+  content: ProductCompareTableContent;
+  backgroundColor?: string | null;
+}) {
   const { heading, traditional_label, vmi_label, rows } = content;
 
   return (
-    <section className="compare-full section-pad" id="comparison">
+    <section className="compare-full section-pad" id="comparison" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         <h2 className="section-h reveal">{heading}</h2>
         <div className="ct-wrap reveal d1">
@@ -48,7 +55,7 @@ export default function ProductCompareTable({ content }: { content: ProductCompa
             <tbody>
               {rows.map((row, i) => (
                 <tr key={i}>
-                  <td className="ct-dim"></td>
+                  <td className="ct-dim">{row.label}</td>
                   <td className="ct-them">{row.traditional}</td>
                   <td className="ct-vmi">{row.vmi}</td>
                 </tr>

@@ -51,19 +51,39 @@ export default async function AboutPage() {
         <section className="story section-pad" style={story?.background_color ? { background: story.background_color } : undefined}>
           <div className="section-inner">
             <div className="story-grid">
-              <div className="story-photo reveal">
-                <img src={storyContent.photo_url} alt={storyContent.photo_alt ?? ""} loading="lazy" />
-              </div>
-              <div>
-                <h2 className="section-h reveal" style={{ marginBottom: "clamp(24px, 3vw, 36px)" }}>
-                  {storyContent.heading}
-                </h2>
-                <div className="body-text reveal d1">
-                  {storyContent.text.map((paragraph, i) => (
-                    <p key={i}>{paragraph}</p>
-                  ))}
-                </div>
-              </div>
+              {storyContent.side === "right" ? (
+                <>
+                  <div>
+                    <h2 className="section-h reveal" style={{ marginBottom: "clamp(24px, 3vw, 36px)" }}>
+                      {storyContent.heading}
+                    </h2>
+                    <div className="body-text reveal d1">
+                      {storyContent.text.map((paragraph, i) => (
+                        <p key={i}>{paragraph}</p>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="story-photo reveal">
+                    <img src={storyContent.photo_url} alt={storyContent.photo_alt ?? ""} loading="lazy" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="story-photo reveal">
+                    <img src={storyContent.photo_url} alt={storyContent.photo_alt ?? ""} loading="lazy" />
+                  </div>
+                  <div>
+                    <h2 className="section-h reveal" style={{ marginBottom: "clamp(24px, 3vw, 36px)" }}>
+                      {storyContent.heading}
+                    </h2>
+                    <div className="body-text reveal d1">
+                      {storyContent.text.map((paragraph, i) => (
+                        <p key={i}>{paragraph}</p>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </section>
