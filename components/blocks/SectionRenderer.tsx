@@ -37,7 +37,7 @@ export function SectionBlock({ section }: { section: Section }) {
     case "hero":
       return <Hero content={section.content as HeroContent} backgroundColor={section.background_color} />;
     case "stats":
-      return <Stats content={section.content as StatsContent} backgroundColor={section.background_color} />;
+      return <Stats content={section.content as StatsContent} backgroundColor={section.background_color} variant="auto" />;
     case "photo-text":
       return (
         <PhotoText

@@ -1445,6 +1445,16 @@ table.ct tr:last-child td {
   gap: 0;
 }
 
+/* Reflow variant for new stat-row blocks (any number of stats) — every
+   fixed page's own CSS hardcodes grid-template-columns to match its real
+   content's exact stat count (e.g. Impact's real "Metrics" is always 4), so
+   a new stat row with a different count needs to override that per-page
+   rule regardless of specificity. !important is deliberate here, same
+   reasoning as any other "always win" utility modifier. */
+.stat-row--auto {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+}
+
 .stat-cell::before {
   content: '';
   display: block;
