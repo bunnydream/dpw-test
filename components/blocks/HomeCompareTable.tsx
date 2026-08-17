@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 export type HomeCompareRow = {
-  label: string;
   traditional: string;
   vmi: string;
 };
@@ -61,7 +60,7 @@ export default function HomeCompareTable({ content }: { content: HomeCompareTabl
             <tbody>
               {rows.map((row, i) => (
                 <tr key={i}>
-                  <td className="ct-dim">{row.label}</td>
+                  <td className="ct-dim"></td>
                   <td className="ct-them">{row.traditional}</td>
                   <td className="ct-vmi">
                     <CheckIcon />

@@ -1,7 +1,10 @@
-export type IconCardIcon = "document" | "eye-slash" | "refresh" | "gift" | "trend-down" | "lock-open";
+export type IconCardIcon = "document" | "eye-slash" | "refresh" | "gift" | "trend-down" | "lock-open" | "custom";
 
 export type IconCard = {
   icon: IconCardIcon;
+  /** Used only when icon === "custom" — an uploaded image shown in place of
+   * the preset icon set. */
+  icon_url?: string | null;
   /** Small uppercase label above the heading, e.g. "Finding 1" — optional,
    * used by home's "Stories" cards but not impact's "Funding model" cards. */
   label?: string | null;
@@ -22,8 +25,10 @@ export type IconCardsContent = {
  * strokeWidth 1.6) — sizes intentionally differ per icon, matching each
  * icon's original page so switching to this shared component changes
  * nothing visually. */
-function CardIcon({ icon }: { icon: IconCardIcon }) {
+function CardIcon({ icon, icon_url }: { icon: IconCardIcon; icon_url?: string | null }) {
   switch (icon) {
+    case "custom":
+      return icon_url ? <img src={icon_url} alt="" width="28" height="28" /> : null;
     case "document":
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -102,7 +107,7 @@ export default function IconCards({ content }: { content: IconCardsContent }) {
             <div className="content-card-accent"></div>
             <div className="content-card-body">
               <div className="content-card-icon" aria-hidden="true">
-                <CardIcon icon={card.icon} />
+                <CardIcon icon={card.icon} icon_url={card.icon_url} />
               </div>
               {card.label ? <span className="content-card-label">{card.label}</span> : null}
               <h4>{card.heading}</h4>

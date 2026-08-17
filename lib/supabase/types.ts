@@ -23,7 +23,9 @@ export type SectionType =
   | "product-vendor-questions"
   | "impact-manual-table"
   | "impact-year-in-review"
-  | "contact-form-section";
+  | "contact-form-section"
+  | "accordion"
+  | "image";
 
 export type BlogBlockType = "heading" | "paragraph" | "quote" | "photo";
 

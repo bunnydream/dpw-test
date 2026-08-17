@@ -1,5 +1,4 @@
 export type ProductCompareRow = {
-  label: string;
   traditional: string;
   vmi: string;
 };
@@ -49,7 +48,7 @@ export default function ProductCompareTable({ content }: { content: ProductCompa
             <tbody>
               {rows.map((row, i) => (
                 <tr key={i}>
-                  <td className="ct-dim">{row.label}</td>
+                  <td className="ct-dim"></td>
                   <td className="ct-them">{row.traditional}</td>
                   <td className="ct-vmi">{row.vmi}</td>
                 </tr>

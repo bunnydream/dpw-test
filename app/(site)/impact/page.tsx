@@ -166,7 +166,9 @@ export default async function ImpactPage() {
       {/* ─── 5. DEPLOYED AND DELIVERING RESULTS ─── */}
       <section className="field section-pad" id="deployed">
         <div className="section-inner">
-          <h2 className="section-h reveal">Deployed and delivering results</h2>
+          <h2 className="section-h reveal">
+            {deployed ? (deployed.content as CaseStudyContent).heading ?? "Deployed and delivering results" : "Deployed and delivering results"}
+          </h2>
           {deployed ? <CaseStudy content={deployed.content as CaseStudyContent} /> : null}
         </div>
       </section>

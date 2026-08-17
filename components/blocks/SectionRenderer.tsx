@@ -12,6 +12,8 @@ import Text, { type TextContent } from "./Text";
 import ContentCards, { type ContentCardsContent } from "./ContentCards";
 import Comparison, { type ComparisonContent } from "./Comparison";
 import IconCards, { type IconCardsContent } from "./IconCards";
+import Image, { type ImageContent } from "./Image";
+import AccordionGeneric, { type AccordionGenericContent } from "./AccordionGeneric";
 
 /**
  * Renders a list of sections by switching on `section.type`, covering all 12
@@ -84,6 +86,16 @@ export function SectionBlock({ section }: { section: Section }) {
         <div className="section-pad" style={section.background_color ? { background: section.background_color } : undefined}>
           <div className="section-inner">
             <IconCards content={section.content as IconCardsContent} />
+          </div>
+        </div>
+      );
+    case "image":
+      return <Image content={section.content as ImageContent} backgroundColor={section.background_color} />;
+    case "accordion":
+      return (
+        <div className="section-pad" style={section.background_color ? { background: section.background_color } : undefined}>
+          <div className="section-inner">
+            <AccordionGeneric content={section.content as AccordionGenericContent} />
           </div>
         </div>
       );

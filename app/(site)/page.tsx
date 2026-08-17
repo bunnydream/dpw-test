@@ -9,6 +9,7 @@ import Partners, { type PartnersContent } from "@/components/blocks/Partners";
 import Cta, { type CtaContent } from "@/components/blocks/Cta";
 import HomeCompareTable, { type HomeCompareTableContent } from "@/components/blocks/HomeCompareTable";
 import IconCards, { type IconCardsContent } from "@/components/blocks/IconCards";
+import { type ImageContent } from "@/components/blocks/Image";
 import "./home.css";
 
 type TextContent = {
@@ -26,11 +27,11 @@ const DEFAULT_COMPARE_TABLE: HomeCompareTableContent = {
   link_text: "See the full comparison",
   link: "/product#comparison",
   rows: [
-    { label: "Pricing", traditional: "Per-query, rising over time", vmi: "Nonprofit, at-cost. Price falls as more states join." },
-    { label: "Data quality", traditional: "Raw data, no validation", vmi: "Every report programmatically validated" },
-    { label: "Source code", traditional: "Proprietary", vmi: "Open source under AGPL-3.0" },
-    { label: "Vendor lock-in", traditional: "High — no exit path", vmi: "None. Full code and architecture access." },
-    { label: "Service model", traditional: "Data hand-off", vmi: "Embedded partnership and service design" },
+    { traditional: "Per-query, rising over time", vmi: "Nonprofit, at-cost. Price falls as more states join." },
+    { traditional: "Raw data, no validation", vmi: "Every report programmatically validated" },
+    { traditional: "Proprietary", vmi: "Open source under AGPL-3.0" },
+    { traditional: "High — no exit path", vmi: "None. Full code and architecture access." },
+    { traditional: "Data hand-off", vmi: "Embedded partnership and service design" },
   ],
 };
 
@@ -71,6 +72,11 @@ const DEFAULT_STORIES: IconCardsContent = {
   ],
 };
 
+const DEFAULT_HOW_IMAGE: ImageContent = {
+  photo_url: "/images/home/home-howVMIworks.png",
+  photo_alt: "How VMI works diagram",
+};
+
 function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
@@ -88,6 +94,7 @@ export default async function HomePage() {
   const howHeading = byType(sections, "text")[0];
   const steps = byType(sections, "steps")[0];
   const stories = byType(sections, "icon-cards")[0];
+  const howImage = byType(sections, "image")[0];
   const voices = byType(sections, "voices")[0];
   const partners = byType(sections, "partners")[0];
   const cta = byType(sections, "cta")[0];
@@ -95,6 +102,7 @@ export default async function HomePage() {
   const compareTableContent = (compareTable?.content as HomeCompareTableContent | undefined) ?? DEFAULT_COMPARE_TABLE;
   const howHeadingContent = (howHeading?.content as TextContent | undefined) ?? DEFAULT_HOW_HEADING;
   const storiesContent = (stories?.content as IconCardsContent | undefined) ?? DEFAULT_STORIES;
+  const howImageContent = (howImage?.content as ImageContent | undefined) ?? DEFAULT_HOW_IMAGE;
 
   return (
     <div className="page-home">
@@ -183,7 +191,7 @@ export default async function HomePage() {
             </div>
 
             <div className="how-right reveal d2">
-              <img src="/images/home/home-howVMIworks.png" alt="How VMI works diagram" loading="lazy" />
+              <img src={howImageContent.photo_url} alt={howImageContent.photo_alt ?? ""} loading="lazy" />
             </div>
           </div>
         </div>
@@ -218,9 +226,13 @@ export default async function HomePage() {
 
       {/* PILOT CTA */}
       {cta ? (
-        <Cta content={cta.content as CtaContent} backgroundColor={cta.background_color}>
-          <p className="cta-sub reveal d1">No procurement required to begin the conversation.</p>
-        </Cta>
+        <Cta
+          content={{
+            ...(cta.content as CtaContent),
+            text: (cta.content as CtaContent).text ?? "No procurement required to begin the conversation.",
+          }}
+          backgroundColor={cta.background_color}
+        />
       ) : null}
     </div>
   );

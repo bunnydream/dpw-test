@@ -57,6 +57,10 @@ export function sectionDisplayName(type: SectionType, content: Content): string 
       return content.heading || "Year in review";
     case "contact-form-section":
       return content.heading || "Contact form section";
+    case "accordion":
+      return content.heading || "Accordion";
+    case "image":
+      return "Image";
     default:
       return "Section";
   }
@@ -618,12 +622,37 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
         onUrlChange={(v) => onChange({ ...content, photo_url: v })}
         onAltChange={(v) => onChange({ ...content, photo_alt: v })}
       />
-      <TextField
-        label="Button text (optional)"
-        value={content.button_text ?? ""}
-        onChange={(v) => onChange({ ...content, button_text: v })}
-      />
-      <LinkPicker label="Button links to" value={content.button_link ?? ""} onChange={(v) => onChange({ ...content, button_link: v })} />
+      {content.button_text || content.button_link ? (
+        <>
+          <TextField
+            label="Button text"
+            value={content.button_text ?? ""}
+            onChange={(v) => onChange({ ...content, button_text: v })}
+          />
+          <LinkPicker label="Button links to" value={content.button_link ?? ""} onChange={(v) => onChange({ ...content, button_link: v })} />
+          <button
+            type="button"
+            className="a-btn a-btn-outline a-btn-sm"
+            onClick={() => onChange({ ...content, button_text: null, button_link: null })}
+          >
+            Remove button
+          </button>
+        </>
+      ) : (
+        <AddMiniCardButton label="Add button" onClick={() => onChange({ ...content, button_text: "Learn more", button_link: "" })} />
+      )}
+      <FieldRow>
+        <TextField
+          label="Callout stat number (optional)"
+          value={content.stat_number ?? ""}
+          onChange={(v) => onChange({ ...content, stat_number: v })}
+        />
+        <TextField
+          label="Callout stat text (optional)"
+          value={content.stat_text ?? ""}
+          onChange={(v) => onChange({ ...content, stat_text: v })}
+        />
+      </FieldRow>
     </>
   );
 }
@@ -633,12 +662,6 @@ function StepsFields({ content, onChange }: FieldsProps) {
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
-      <TextAreaField
-        label="Footnote (optional)"
-        rows={2}
-        value={content.footnote ?? ""}
-        onChange={(v) => onChange({ ...content, footnote: v })}
-      />
       <MiniCardList>
         {steps.map((step, i) => (
           <MiniCard key={i} label={`Step ${i + 1}`} onRemove={() => onChange({ ...content, steps: removeAt(steps, i) })}>
@@ -666,6 +689,12 @@ function StepsFields({ content, onChange }: FieldsProps) {
       <AddMiniCardButton
         label="Add step"
         onClick={() => onChange({ ...content, steps: [...steps, { heading: "", description: "", photo_url: "", photo_alt: "" }] })}
+      />
+      <TextAreaField
+        label="Footnote (optional)"
+        rows={2}
+        value={content.footnote ?? ""}
+        onChange={(v) => onChange({ ...content, footnote: v })}
       />
     </>
   );
@@ -815,18 +844,6 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
       <TextAreaField label="Intro text (optional)" rows={2} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
-      <TextAreaField
-        label="Footnote (optional)"
-        rows={2}
-        value={content.footnote ?? ""}
-        onChange={(v) => onChange({ ...content, footnote: v })}
-      />
-      <TextAreaField
-        label="Message shown when there are no cards (optional)"
-        rows={2}
-        value={content.empty_text ?? ""}
-        onChange={(v) => onChange({ ...content, empty_text: v })}
-      />
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
@@ -855,6 +872,12 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
       <AddMiniCardButton
         label="Add card"
         onClick={() => onChange({ ...content, cards: [...cards, { title: "", heading: "", text: "", photo_url: "", photo_alt: "" }] })}
+      />
+      <TextAreaField
+        label="Footnote (optional)"
+        rows={2}
+        value={content.footnote ?? ""}
+        onChange={(v) => onChange({ ...content, footnote: v })}
       />
     </>
   );
@@ -946,6 +969,7 @@ const ICON_CARD_OPTIONS: { value: string; label: string }[] = [
   { value: "gift", label: "Gift" },
   { value: "trend-down", label: "Downward trend" },
   { value: "lock-open", label: "Open lock" },
+  { value: "custom", label: "Custom (upload)" },
 ];
 
 function IconSelectField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
@@ -964,7 +988,7 @@ function IconSelectField({ value, onChange }: { value: string; onChange: (v: str
 }
 
 function IconCardsFields({ content, onChange }: FieldsProps) {
-  const cards: { icon: string; label?: string; heading: string; text: string }[] = content.cards ?? [];
+  const cards: { icon: string; icon_url?: string; label?: string; heading: string; text: string }[] = content.cards ?? [];
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading ?? ""} onChange={(v) => onChange({ ...content, heading: v })} />
@@ -973,6 +997,13 @@ function IconCardsFields({ content, onChange }: FieldsProps) {
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
             <IconSelectField value={c.icon} onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { icon: v }) })} />
+            {c.icon === "custom" ? (
+              <PhotoField
+                label="Custom icon"
+                url={c.icon_url}
+                onUrlChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { icon_url: v }) })}
+              />
+            ) : null}
             <TextField
               label="Label (optional)"
               value={c.label ?? ""}
@@ -1003,7 +1034,7 @@ function IconCardsFields({ content, onChange }: FieldsProps) {
 }
 
 function CompareRowsFields({ content, onChange }: FieldsProps) {
-  const rows: { label: string; traditional: string; vmi: string }[] = content.rows ?? [];
+  const rows: { traditional: string; vmi: string }[] = content.rows ?? [];
   return (
     <>
       <FieldRow>
@@ -1012,8 +1043,7 @@ function CompareRowsFields({ content, onChange }: FieldsProps) {
       </FieldRow>
       <MiniCardList>
         {rows.map((r, i) => (
-          <MiniCard key={i} label={r.label || `Row ${i + 1}`} onRemove={() => onChange({ ...content, rows: removeAt(rows, i) })}>
-            <TextField label="Row label" value={r.label} onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { label: v }) })} />
+          <MiniCard key={i} label={`Row ${i + 1}`} onRemove={() => onChange({ ...content, rows: removeAt(rows, i) })}>
             <TextAreaField
               label="Traditional approaches text"
               rows={2}
@@ -1029,7 +1059,7 @@ function CompareRowsFields({ content, onChange }: FieldsProps) {
           </MiniCard>
         ))}
       </MiniCardList>
-      <AddMiniCardButton label="Add row" onClick={() => onChange({ ...content, rows: [...rows, { label: "", traditional: "", vmi: "" }] })} />
+      <AddMiniCardButton label="Add row" onClick={() => onChange({ ...content, rows: [...rows, { traditional: "", vmi: "" }] })} />
     </>
   );
 }
@@ -1202,6 +1232,41 @@ function ContactFormSectionFields({ content, onChange }: FieldsProps) {
   );
 }
 
+function AccordionFields({ content, onChange }: FieldsProps) {
+  const panels: { header: string; content: string }[] = content.panels ?? [];
+  return (
+    <>
+      <TextField label="Heading (optional)" value={content.heading ?? ""} onChange={(v) => onChange({ ...content, heading: v })} />
+      <MiniCardList>
+        {panels.map((p, i) => (
+          <MiniCard key={i} label={p.header || `Panel ${i + 1}`} onRemove={() => onChange({ ...content, panels: removeAt(panels, i) })}>
+            <TextField label="Header" value={p.header} onChange={(v) => onChange({ ...content, panels: updateAt(panels, i, { header: v }) })} />
+            <TextAreaField
+              label="Content"
+              rows={3}
+              value={p.content}
+              onChange={(v) => onChange({ ...content, panels: updateAt(panels, i, { content: v }) })}
+            />
+          </MiniCard>
+        ))}
+      </MiniCardList>
+      <AddMiniCardButton label="Add panel" onClick={() => onChange({ ...content, panels: [...panels, { header: "", content: "" }] })} />
+    </>
+  );
+}
+
+function ImageFields({ content, onChange }: FieldsProps) {
+  return (
+    <PhotoField
+      label="Photo"
+      url={content.photo_url}
+      alt={content.photo_alt}
+      onUrlChange={(v) => onChange({ ...content, photo_url: v })}
+      onAltChange={(v) => onChange({ ...content, photo_alt: v })}
+    />
+  );
+}
+
 export function SectionContentFields({ type, content, onChange }: { type: SectionType } & FieldsProps) {
   switch (type) {
     case "hero":
@@ -1246,6 +1311,10 @@ export function SectionContentFields({ type, content, onChange }: { type: Sectio
       return <ImpactYearInReviewFields content={content} onChange={onChange} />;
     case "contact-form-section":
       return <ContactFormSectionFields content={content} onChange={onChange} />;
+    case "accordion":
+      return <AccordionFields content={content} onChange={onChange} />;
+    case "image":
+      return <ImageFields content={content} onChange={onChange} />;
     default:
       return null;
   }

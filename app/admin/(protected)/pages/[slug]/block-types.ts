@@ -5,12 +5,14 @@
 import type { ReactNode } from "react";
 import type { SectionType } from "@/lib/supabase/types";
 import {
+  BlockAccordionIcon,
   BlockCardsIcon,
   BlockCaseStudyIcon,
   BlockComparisonIcon,
   BlockCtaIcon,
   BlockHeroIcon,
   BlockIconCardsIcon,
+  BlockImageIcon,
   BlockPartnersIcon,
   BlockPhotoTextIcon,
   BlockStatsIcon,
@@ -68,6 +70,18 @@ export const BLOCK_TYPES: { type: SectionType; label: string; description: strin
     label: "Icon cards",
     description: 'A row of icon cards with a heading and text each, like "We fix the process."',
     icon: BlockIconCardsIcon(),
+  },
+  {
+    type: "accordion",
+    label: "Accordion",
+    description: 'Expandable panels, like "Questions to Ask Any Income Verification Vendor."',
+    icon: BlockAccordionIcon(),
+  },
+  {
+    type: "image",
+    label: "Image",
+    description: "A single standalone photo.",
+    icon: BlockImageIcon(),
   },
 ];
 
@@ -174,6 +188,10 @@ export function starterContent(type: SectionType): Record<string, any> {
         submit_label: "Submit",
         success_message: "Thanks for reaching out.",
       };
+    case "accordion":
+      return { heading: "", panels: [{ header: "", content: "" }] };
+    case "image":
+      return { photo_url: "", photo_alt: "" };
   }
 }
 

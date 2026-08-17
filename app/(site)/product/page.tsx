@@ -19,6 +19,7 @@ type ContentCardsContent = {
   text: string;
   footnote?: string | null;
   cards: {
+    title?: string | null;
     heading: string;
     text: string;
     photo_url: string;
@@ -38,6 +39,8 @@ type AccessPhotoTextContent = {
   text: string[];
   photo_url: string;
   photo_alt?: string | null;
+  stat_number?: string | null;
+  stat_text?: string | null;
 };
 
 type PilotStepsContent = {
@@ -98,37 +101,30 @@ const DEFAULT_COMPARE_TABLE: ProductCompareTableContent = {
   vmi_label: "VMI — Digital Public Works",
   rows: [
     {
-      label: "What you get",
       traditional: "A data connection, a bundled add-on to a larger contract, or a commercial product. The state fills the gaps.",
       vmi: "A complete verification service. Consent, benefits-specific data validation, and caseworker-ready reports included.",
     },
     {
-      label: "Pricing",
       traditional: "Commercial pricing that rises over time. Some vendors bundle verification into larger contracts, hiding the true cost.",
       vmi: "Nonprofit, at cost. Price decreases as more states join the platform.",
     },
     {
-      label: "Data quality",
       traditional: "Raw data delivered as-is. No validation against program requirements. Incomplete or unusable records reach caseworkers.",
       vmi: "Every report passes through programmatic validation. Reports that do not meet eligibility-grade standards are rejected and applicants are redirected to existing options.",
     },
     {
-      label: "Open source",
       traditional: "Proprietary. No visibility into how the system works.",
       vmi: "Full codebase published under AGPL-3.0 on GitHub.",
     },
     {
-      label: "Vendor lock-in",
       traditional: "High. Switching vendors means rebuilding. Some states are locked into multi-year contracts with no exit path.",
       vmi: "None. If DPW ceased to exist, states retain full access to the code, architecture, and documentation.",
     },
     {
-      label: "Accessibility",
       traditional: "State inherits responsibility for all embedded components, including third-party interfaces it does not control.",
       vmi: "WCAG 2.1 AA commitment with independent third-party auditing funded by AARP Foundation.",
     },
     {
-      label: "Service model",
       traditional: "Per-verification billing regardless of eligibility value.",
       vmi: "Embedded partnership: discovery sprints, case reviews, ongoing service design, and workflow improvement.",
     },
@@ -250,7 +246,7 @@ export default async function ProductPage() {
                     <img src={card.photo_url} alt={card.photo_alt ?? ""} loading="lazy" />
                   </div>
                   <div className="io-body">
-                    <span className="io-pill">Option {i + 1}</span>
+                    <span className="io-pill">{card.title ?? `Option ${i + 1}`}</span>
                     <h3>{card.heading}</h3>
                     <p className="io-desc">{card.text}</p>
                   </div>
@@ -319,8 +315,10 @@ export default async function ProductPage() {
             ))}
           </div>
           <div className="callout-stat reveal d2">
-            <span className="callout-stat-num">65%</span>
-            <p className="callout-stat-text">of our users access VMI on a smartphone. The platform is built mobile-first.</p>
+            <span className="callout-stat-num">{accessibleContent?.stat_number ?? "65%"}</span>
+            <p className="callout-stat-text">
+              {accessibleContent?.stat_text ?? "of our users access VMI on a smartphone. The platform is built mobile-first."}
+            </p>
           </div>
         </div>
         <div className="access-photo reveal d2">
@@ -366,7 +364,7 @@ export default async function ProductPage() {
       {inTheField ? (
         <section className="field section-pad" id="in-the-field">
           <div className="section-inner">
-            <h2 className="section-h reveal">In the field</h2>
+            <h2 className="section-h reveal">{(inTheField.content as CaseStudyContent).heading ?? "In the field"}</h2>
             <CaseStudy content={inTheField.content as CaseStudyContent} />
           </div>
         </section>

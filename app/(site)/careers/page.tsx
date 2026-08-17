@@ -24,7 +24,6 @@ type ContentCard = {
 
 type ContentCardsContent = {
   heading?: string | null;
-  empty_text?: string | null;
   cards: ContentCard[];
 };
 
@@ -72,7 +71,7 @@ export default async function CareersPage() {
             <div className="openings-rule"></div>
           </div>
           {cards.length === 0 ? (
-            <p className="openings-body reveal d1">{openingsContent?.empty_text ?? DEFAULT_EMPTY_TEXT}</p>
+            <p className="openings-body reveal d1">{DEFAULT_EMPTY_TEXT}</p>
           ) : (
             <div className="content-card-grid">
               {cards.map((card, i) => (

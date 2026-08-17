@@ -7,6 +7,10 @@ export type CaseStudyCard = {
 };
 
 export type CaseStudyContent = {
+  /** Not rendered by this component (it renders bare, no wrapper) — read by
+   * the page's own heading above it (product's "In the field", impact's
+   * "Deployed and delivering results"). */
+  heading?: string | null;
   cards: CaseStudyCard[];
 };
 
