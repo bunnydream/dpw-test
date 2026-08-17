@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 export type PhotoTextContent = {
   side: "left" | "right";
@@ -7,6 +8,10 @@ export type PhotoTextContent = {
   pullquote?: string | null;
   photo_url: string;
   photo_alt?: string | null;
+  /** Optional button rendered after the pullquote — e.g. home's "pressure"
+   * section's "Request a demo" link. Only rendered when both are set. */
+  button_text?: string | null;
+  button_link?: string | null;
 };
 
 /**
@@ -41,7 +46,7 @@ export default function PhotoText({
   /** extra fixed JSX to render after the text block (e.g. the "pressure" section's CTA button) */
   children?: ReactNode;
 }) {
-  const { side, heading, text, pullquote, photo_url, photo_alt } = content;
+  const { side, heading, text, pullquote, photo_url, photo_alt, button_text, button_link } = content;
   const isLeft = side === "left";
   const sectionClass = isLeft ? "pressure" : "model";
   const imgWrapClass = isLeft ? "pressure-img" : "model-photo";
@@ -73,6 +78,17 @@ export default function PhotoText({
         <PullquoteTag className="pullquote reveal d2">
           <p className="pq-text">{pullquote}</p>
         </PullquoteTag>
+      ) : null}
+      {button_text && button_link ? (
+        button_link.startsWith("/") ? (
+          <Link href={button_link} className="btn btn-forge reveal d3">
+            {button_text}
+          </Link>
+        ) : (
+          <a href={button_link} className="btn btn-forge reveal d3">
+            {button_text}
+          </a>
+        )
       ) : null}
       {children}
     </div>

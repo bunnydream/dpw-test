@@ -10,6 +10,7 @@ import {
   BlockComparisonIcon,
   BlockCtaIcon,
   BlockHeroIcon,
+  BlockIconCardsIcon,
   BlockPartnersIcon,
   BlockPhotoTextIcon,
   BlockStatsIcon,
@@ -62,9 +63,30 @@ export const BLOCK_TYPES: { type: SectionType; label: string; description: strin
     description: "A grid of photo cards that link out to state or partner stories.",
     icon: BlockCaseStudyIcon(),
   },
+  {
+    type: "icon-cards",
+    label: "Icon cards",
+    description: 'A row of icon cards with a heading and text each, like "We fix the process."',
+    icon: BlockIconCardsIcon(),
+  },
 ];
 
-export const SECTION_TYPE_LABEL: Record<SectionType, string> = BLOCK_TYPES.reduce(
+/** Page-specific, one-off designs used by exactly one fixed page each —
+ * registered here (for the section-list label + starter content) but
+ * intentionally left out of BLOCK_TYPES so they can't be added via
+ * "Add a block" or reused anywhere else. */
+const HIDDEN_BLOCK_TYPES: { type: SectionType; label: string }[] = [
+  { type: "home-compare-table", label: "Compare table (home)" },
+  { type: "product-problem-accordion", label: "Problem accordion (product)" },
+  { type: "product-talk-cta", label: "Talk CTA banner (product)" },
+  { type: "product-compare-table", label: "Compare table (product)" },
+  { type: "product-vendor-questions", label: "Vendor questions (product)" },
+  { type: "impact-manual-table", label: "Manual vs. VMI table (impact)" },
+  { type: "impact-year-in-review", label: "Year in review (impact)" },
+  { type: "contact-form-section", label: "Contact form section" },
+];
+
+export const SECTION_TYPE_LABEL: Record<SectionType, string> = [...BLOCK_TYPES, ...HIDDEN_BLOCK_TYPES].reduce(
   (acc, b) => ({ ...acc, [b.type]: b.label }),
   {} as Record<SectionType, string>
 );
@@ -112,6 +134,46 @@ export function starterContent(type: SectionType): Record<string, any> {
       return { heading: "", column_a_title: "", column_b_title: "", rows: [] };
     case "case-study":
       return { cards: [] };
+    case "icon-cards":
+      return { heading: "", text: "", footnote: "", cards: [] };
+    case "home-compare-table":
+      return { heading: "", traditional_label: "Traditional Approaches", vmi_label: "VMI — Digital Public Works", link_text: "", link: "/product#comparison", rows: [] };
+    case "product-problem-accordion":
+      return {
+        solution_label: "How VMI solves it",
+        items: [
+          { title: "", problem: "", solution: "" },
+          { title: "", problem: "", solution: "" },
+          { title: "", problem: "", solution: "" },
+          { title: "", problem: "", solution: "" },
+        ],
+      };
+    case "product-talk-cta":
+      return { heading: "", subtext: "", link: "/contact" };
+    case "product-compare-table":
+      return { heading: "", traditional_label: "Traditional Approaches", vmi_label: "VMI — Digital Public Works", rows: [] };
+    case "product-vendor-questions":
+      return { heading: "", items: [] };
+    case "impact-manual-table":
+      return { manual_label: "Manual process", vmi_label: "With Verify My Income", rows: [] };
+    case "impact-year-in-review":
+      return { heading: "", text: "", button_text: "", link: "#" };
+    case "contact-form-section":
+      return {
+        kicker_label: "",
+        heading: "",
+        text: "",
+        first_name_label: "First name",
+        first_name_placeholder: "Jane",
+        last_name_label: "Last name",
+        last_name_placeholder: "Smith",
+        email_label: "Email",
+        email_placeholder: "jane@example.com",
+        message_label: "Message",
+        message_placeholder: "",
+        submit_label: "Submit",
+        success_message: "Thanks for reaching out.",
+      };
   }
 }
 

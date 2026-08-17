@@ -11,6 +11,11 @@ export type ContentCard = {
 export type ContentCardsContent = {
   heading?: string | null;
   text?: string | null;
+  /** Trailing note below the card grid, e.g. product's white-labeling note. */
+  footnote?: string | null;
+  /** Shown instead of the card grid when `cards` is empty, e.g. careers'
+   * "no current openings" message. Falls back to a generic message if unset. */
+  empty_text?: string | null;
   /** Background color applied to each card (independent of the section's
    * own background_color). */
   card_background_color?: string | null;
@@ -33,33 +38,38 @@ export default function ContentCards({
   content: ContentCardsContent;
   backgroundColor?: string | null;
 }) {
-  const { heading, text, cards, card_background_color } = content;
+  const { heading, text, footnote, empty_text, cards, card_background_color } = content;
 
   return (
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
         {text ? <p className="body-p reveal d1">{text}</p> : null}
-        <div className="io-grid io-grid--auto">
-          {cards.map((card, i) => (
-            <div
-              className="io-card reveal"
-              key={i}
-              style={card_background_color ? { background: card_background_color } : undefined}
-            >
-              {card.photo_url ? (
-                <div className="io-top">
-                  <img src={card.photo_url} alt={card.photo_alt ?? ""} loading="lazy" />
+        {cards.length === 0 && empty_text ? (
+          <p className="body-p reveal d1">{empty_text}</p>
+        ) : (
+          <div className="io-grid io-grid--auto">
+            {cards.map((card, i) => (
+              <div
+                className="io-card reveal"
+                key={i}
+                style={card_background_color ? { background: card_background_color } : undefined}
+              >
+                {card.photo_url ? (
+                  <div className="io-top">
+                    <img src={card.photo_url} alt={card.photo_alt ?? ""} loading="lazy" />
+                  </div>
+                ) : null}
+                <div className="io-body">
+                  {card.title ? <span className="io-pill">{card.title}</span> : null}
+                  <h3>{card.heading}</h3>
+                  <p className="io-desc">{card.text}</p>
                 </div>
-              ) : null}
-              <div className="io-body">
-                {card.title ? <span className="io-pill">{card.title}</span> : null}
-                <h3>{card.heading}</h3>
-                <p className="io-desc">{card.text}</p>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+        {footnote ? <p className="inline-note reveal">{footnote}</p> : null}
       </div>
     </div>
   );

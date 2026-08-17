@@ -6,6 +6,12 @@ export type Step = {
 };
 
 export type StepsContent = {
+  /** Optional heading/footnote — unused by this component (home's fixed
+   * "how it works" heading lives at a different DOM level, above this
+   * component's siblings, not inside it). Read by product/page.tsx's own
+   * bespoke rendering of its "path to a pilot" steps instead. */
+  heading?: string | null;
+  footnote?: string | null;
   steps: Step[];
 };
 

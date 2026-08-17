@@ -135,6 +135,26 @@ export function RedoIcon() {
   );
 }
 
+/** Open eye — block is visible on the live site. */
+export function EyeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+/** Eye with a slash — block is hidden from the live site. */
+export function EyeOffIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.14 19.14 0 0 1 4.22-5.44M9.9 4.24A10.4 10.4 0 0 1 12 4c7 0 11 8 11 8a19.14 19.14 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+      <line x1="1" y1="1" x2="23" y2="23" />
+    </svg>
+  );
+}
+
 /** Pencil — used next to the page title field. */
 export function EditIcon() {
   return (
@@ -261,6 +281,19 @@ export function BlockComparisonIcon() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="4" width="20" height="16" rx="1" />
       <line x1="12" y1="4" x2="12" y2="20" />
+    </svg>
+  );
+}
+
+export function BlockIconCardsIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="5" width="6" height="14" rx="1" />
+      <rect x="9" y="5" width="6" height="14" rx="1" />
+      <rect x="16" y="5" width="6" height="14" rx="1" />
+      <circle cx="5" cy="9" r="1.2" />
+      <circle cx="12" cy="9" r="1.2" />
+      <circle cx="19" cy="9" r="1.2" />
     </svg>
   );
 }

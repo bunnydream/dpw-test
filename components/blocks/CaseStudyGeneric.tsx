@@ -12,6 +12,7 @@ export type CaseStudyGenericCard = {
 };
 
 export type CaseStudyGenericContent = {
+  heading?: string | null;
   /** Background color applied to each card (independent of the section's
    * own background_color). */
   card_background_color?: string | null;
@@ -35,11 +36,12 @@ export default function CaseStudyGeneric({
   content: CaseStudyGenericContent;
   backgroundColor?: string | null;
 }) {
-  const { cards, card_background_color } = content;
+  const { heading, cards, card_background_color } = content;
 
   return (
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
+        {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
         <div className="io-grid io-grid--auto">
           {cards.map((card, i) => (
             <LinkedCard

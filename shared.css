@@ -83,12 +83,6 @@ p, h1, h2, h3, h4, h5, h6, span, a, li, blockquote {
 }
 
 
-/* ─── BASE ───────────────────────────────────────────────── */
-html {
-  scroll-behavior: smooth;
-}
-
-
 /* ─── BASE TYPOGRAPHY ────────────────────────────────────── */
 /* Font properties for headings live here — no raw margin-bottom
    except on h1. Per-component classes set their own margins.     */

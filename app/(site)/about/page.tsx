@@ -73,8 +73,7 @@ export default async function AboutPage() {
       {teamContent ? (
         <section className="team section-pad">
           <div className="section-inner">
-            <h2 className="section-h reveal">Our team</h2>
-            <TeamMember content={teamContent} />
+            <TeamMember content={{ ...teamContent, heading: teamContent.heading ?? "Our team" }} />
           </div>
         </section>
       ) : null}

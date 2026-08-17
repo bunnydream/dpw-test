@@ -11,6 +11,7 @@ import CaseStudyGeneric, { type CaseStudyGenericContent } from "./CaseStudyGener
 import Text, { type TextContent } from "./Text";
 import ContentCards, { type ContentCardsContent } from "./ContentCards";
 import Comparison, { type ComparisonContent } from "./Comparison";
+import IconCards, { type IconCardsContent } from "./IconCards";
 
 /**
  * Renders a list of sections by switching on `section.type`, covering all 12
@@ -78,6 +79,14 @@ export function SectionBlock({ section }: { section: Section }) {
       return <ContentCards content={section.content as ContentCardsContent} backgroundColor={section.background_color} />;
     case "comparison":
       return <Comparison content={section.content as ComparisonContent} backgroundColor={section.background_color} />;
+    case "icon-cards":
+      return (
+        <div className="section-pad" style={section.background_color ? { background: section.background_color } : undefined}>
+          <div className="section-inner">
+            <IconCards content={section.content as IconCardsContent} />
+          </div>
+        </div>
+      );
     default:
       return null;
   }

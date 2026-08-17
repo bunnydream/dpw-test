@@ -14,7 +14,16 @@ export type SectionType =
   | "text"
   | "content-cards"
   | "comparison"
-  | "case-study";
+  | "case-study"
+  | "icon-cards"
+  | "home-compare-table"
+  | "product-problem-accordion"
+  | "product-talk-cta"
+  | "product-compare-table"
+  | "product-vendor-questions"
+  | "impact-manual-table"
+  | "impact-year-in-review"
+  | "contact-form-section";
 
 export type BlogBlockType = "heading" | "paragraph" | "quote" | "photo";
 
@@ -53,6 +62,7 @@ export interface Database {
           background_color: string | null;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           content: Record<string, any>;
+          hidden: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -65,6 +75,7 @@ export interface Database {
           background_color?: string | null;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           content?: Record<string, any>;
+          hidden?: boolean;
           created_at?: string;
           updated_at?: string;
         };

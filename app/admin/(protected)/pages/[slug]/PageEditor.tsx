@@ -21,6 +21,8 @@ import {
   DownIcon,
   EditIcon,
   ExternalLinkIcon,
+  EyeIcon,
+  EyeOffIcon,
   GripIcon,
   PlusIcon,
   RedoIcon,
@@ -178,6 +180,13 @@ export default function PageEditor({
     setDirtyIds((prev) => new Set(prev).add(id));
   }
 
+  function toggleHidden(id: string) {
+    checkpoint();
+    const section = sections.find((s) => s.id === id);
+    if (!section) return;
+    updateSectionLocal(id, { hidden: !section.hidden });
+  }
+
   /** Persists every section with pending edits via updateSectionContent — this
    * only writes to the DB, it never revalidates the public route on its own
    * (see lib/admin/pages.ts). Shared by both "Save draft" and the first half
@@ -191,7 +200,7 @@ export default function PageEditor({
         ids.map((id) => {
           const s = sections.find((sec) => sec.id === id);
           if (!s) return Promise.resolve();
-          return updateSectionContent(id, s.content, s.background_color);
+          return updateSectionContent(id, s.content, s.background_color, s.hidden);
         })
       );
       setDirtyIds(new Set());
@@ -424,7 +433,7 @@ export default function PageEditor({
                 <li
                   className={`a-section-item${isOpen ? " is-open" : ""}${draggingId === section.id ? " is-dragging" : ""}${
                     dragOverId === section.id ? " is-drag-over" : ""
-                  }`}
+                  }${section.hidden ? " is-section-hidden" : ""}`}
                   key={section.id}
                   id={`section-${section.id}`}
                   onDragOver={(e) => handleDragOver(e, section.id)}
@@ -447,6 +456,13 @@ export default function PageEditor({
                       <div className="a-section-name">{sectionDisplayName(section.type, section.content)}</div>
                     </div>
                     <div className="a-section-row-actions" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        className="a-icon-btn"
+                        onClick={() => toggleHidden(section.id)}
+                        title={section.hidden ? "Hidden — click to show on live site" : "Visible — click to hide from live site"}
+                      >
+                        {section.hidden ? <EyeOffIcon /> : <EyeIcon />}
+                      </button>
                       <button className="a-icon-btn" onClick={() => moveSection(section.id, -1)} disabled={i === 0} title="Move up">
                         <UpIcon />
                       </button>

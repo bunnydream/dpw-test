@@ -23,8 +23,13 @@ type ContentCard = {
 };
 
 type ContentCardsContent = {
+  heading?: string | null;
+  empty_text?: string | null;
   cards: ContentCard[];
 };
+
+const DEFAULT_EMPTY_TEXT =
+  "Thank you for your interest in joining our team. We do not have any current job openings and are not accepting applications at this time. We encourage you to visit this page periodically for future opportunities.";
 
 export default async function CareersPage() {
   const result = await getPageSections("careers");
@@ -63,15 +68,11 @@ export default async function CareersPage() {
       <section className="openings section-pad">
         <div className="section-inner">
           <div className="openings-header reveal">
-            <h2 className="openings-h">Open Positions</h2>
+            <h2 className="openings-h">{openingsContent?.heading ?? "Open Positions"}</h2>
             <div className="openings-rule"></div>
           </div>
           {cards.length === 0 ? (
-            <p className="openings-body reveal d1">
-              Thank you for your interest in joining our team. We do not have any current job openings and are not
-              accepting applications at this time. We encourage you to visit this page periodically for future
-              opportunities.
-            </p>
+            <p className="openings-body reveal d1">{openingsContent?.empty_text ?? DEFAULT_EMPTY_TEXT}</p>
           ) : (
             <div className="content-card-grid">
               {cards.map((card, i) => (

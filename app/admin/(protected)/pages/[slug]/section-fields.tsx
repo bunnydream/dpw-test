@@ -39,6 +39,24 @@ export function sectionDisplayName(type: SectionType, content: Content): string 
       return content.heading || "Comparison table";
     case "case-study":
       return "Case study cards";
+    case "icon-cards":
+      return content.heading || "Icon cards";
+    case "home-compare-table":
+      return content.heading || "Compare table";
+    case "product-problem-accordion":
+      return "Problem accordion";
+    case "product-talk-cta":
+      return content.heading || "Talk CTA banner";
+    case "product-compare-table":
+      return content.heading || "Compare table";
+    case "product-vendor-questions":
+      return content.heading || "Vendor questions";
+    case "impact-manual-table":
+      return "Manual vs. VMI table";
+    case "impact-year-in-review":
+      return content.heading || "Year in review";
+    case "contact-form-section":
+      return content.heading || "Contact form section";
     default:
       return "Section";
   }
@@ -400,16 +418,20 @@ export function MiniCard({
   children,
 }: {
   label: string;
-  onRemove: () => void;
+  /** Omit to hide the remove button — for fixed-length lists (e.g. product's
+   * problem accordion, which always has exactly 4 items). */
+  onRemove?: () => void;
   children: React.ReactNode;
 }) {
   return (
     <div className="a-mini-card">
       <div className="a-mini-card-head">
         <span className="a-mini-card-label">{label}</span>
-        <button type="button" className="a-icon-btn-xs" onClick={onRemove} title="Remove">
-          <TrashIcon />
-        </button>
+        {onRemove ? (
+          <button type="button" className="a-icon-btn-xs" onClick={onRemove} title="Remove">
+            <TrashIcon />
+          </button>
+        ) : null}
       </div>
       {children}
     </div>
@@ -596,6 +618,12 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
         onUrlChange={(v) => onChange({ ...content, photo_url: v })}
         onAltChange={(v) => onChange({ ...content, photo_alt: v })}
       />
+      <TextField
+        label="Button text (optional)"
+        value={content.button_text ?? ""}
+        onChange={(v) => onChange({ ...content, button_text: v })}
+      />
+      <LinkPicker label="Button links to" value={content.button_link ?? ""} onChange={(v) => onChange({ ...content, button_link: v })} />
     </>
   );
 }
@@ -605,6 +633,12 @@ function StepsFields({ content, onChange }: FieldsProps) {
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextAreaField
+        label="Footnote (optional)"
+        rows={2}
+        value={content.footnote ?? ""}
+        onChange={(v) => onChange({ ...content, footnote: v })}
+      />
       <MiniCardList>
         {steps.map((step, i) => (
           <MiniCard key={i} label={`Step ${i + 1}`} onRemove={() => onChange({ ...content, steps: removeAt(steps, i) })}>
@@ -781,6 +815,18 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
       <TextAreaField label="Intro text (optional)" rows={2} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
+      <TextAreaField
+        label="Footnote (optional)"
+        rows={2}
+        value={content.footnote ?? ""}
+        onChange={(v) => onChange({ ...content, footnote: v })}
+      />
+      <TextAreaField
+        label="Message shown when there are no cards (optional)"
+        rows={2}
+        value={content.empty_text ?? ""}
+        onChange={(v) => onChange({ ...content, empty_text: v })}
+      />
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
@@ -858,6 +904,7 @@ function CaseStudyFields({ content, onChange }: FieldsProps) {
     content.cards ?? [];
   return (
     <>
+      <TextField label="Heading (optional)" value={content.heading ?? ""} onChange={(v) => onChange({ ...content, heading: v })} />
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
@@ -892,6 +939,269 @@ function CaseStudyFields({ content, onChange }: FieldsProps) {
   );
 }
 
+const ICON_CARD_OPTIONS: { value: string; label: string }[] = [
+  { value: "document", label: "Document" },
+  { value: "eye-slash", label: "Crossed-out eye" },
+  { value: "refresh", label: "Refresh" },
+  { value: "gift", label: "Gift" },
+  { value: "trend-down", label: "Downward trend" },
+  { value: "lock-open", label: "Open lock" },
+];
+
+function IconSelectField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="a-field">
+      <label>Icon</label>
+      <select className="a-select" value={value} onChange={(e) => onChange(e.target.value)}>
+        {ICON_CARD_OPTIONS.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function IconCardsFields({ content, onChange }: FieldsProps) {
+  const cards: { icon: string; label?: string; heading: string; text: string }[] = content.cards ?? [];
+  return (
+    <>
+      <TextField label="Heading (optional)" value={content.heading ?? ""} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextAreaField label="Intro text (optional)" rows={2} value={content.text ?? ""} onChange={(v) => onChange({ ...content, text: v })} />
+      <MiniCardList>
+        {cards.map((c, i) => (
+          <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
+            <IconSelectField value={c.icon} onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { icon: v }) })} />
+            <TextField
+              label="Label (optional)"
+              value={c.label ?? ""}
+              onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { label: v }) })}
+            />
+            <TextField label="Heading" value={c.heading} onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { heading: v }) })} />
+            <TextAreaField
+              label="Text"
+              rows={3}
+              value={c.text}
+              onChange={(v) => onChange({ ...content, cards: updateAt(cards, i, { text: v }) })}
+            />
+          </MiniCard>
+        ))}
+      </MiniCardList>
+      <AddMiniCardButton
+        label="Add card"
+        onClick={() => onChange({ ...content, cards: [...cards, { icon: "document", label: "", heading: "", text: "" }] })}
+      />
+      <TextAreaField
+        label="Footnote (optional)"
+        rows={2}
+        value={content.footnote ?? ""}
+        onChange={(v) => onChange({ ...content, footnote: v })}
+      />
+    </>
+  );
+}
+
+function CompareRowsFields({ content, onChange }: FieldsProps) {
+  const rows: { label: string; traditional: string; vmi: string }[] = content.rows ?? [];
+  return (
+    <>
+      <FieldRow>
+        <TextField label="Traditional column label" value={content.traditional_label} onChange={(v) => onChange({ ...content, traditional_label: v })} />
+        <TextField label="VMI column label" value={content.vmi_label} onChange={(v) => onChange({ ...content, vmi_label: v })} />
+      </FieldRow>
+      <MiniCardList>
+        {rows.map((r, i) => (
+          <MiniCard key={i} label={r.label || `Row ${i + 1}`} onRemove={() => onChange({ ...content, rows: removeAt(rows, i) })}>
+            <TextField label="Row label" value={r.label} onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { label: v }) })} />
+            <TextAreaField
+              label="Traditional approaches text"
+              rows={2}
+              value={r.traditional}
+              onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { traditional: v }) })}
+            />
+            <TextAreaField
+              label="VMI text"
+              rows={2}
+              value={r.vmi}
+              onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { vmi: v }) })}
+            />
+          </MiniCard>
+        ))}
+      </MiniCardList>
+      <AddMiniCardButton label="Add row" onClick={() => onChange({ ...content, rows: [...rows, { label: "", traditional: "", vmi: "" }] })} />
+    </>
+  );
+}
+
+function HomeCompareTableFields({ content, onChange }: FieldsProps) {
+  return (
+    <>
+      <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <FieldRow>
+        <TextField label="Link text" value={content.link_text} onChange={(v) => onChange({ ...content, link_text: v })} />
+        <LinkPicker label="Link goes to" value={content.link ?? ""} onChange={(v) => onChange({ ...content, link: v })} />
+      </FieldRow>
+      <CompareRowsFields content={content} onChange={onChange} />
+    </>
+  );
+}
+
+function ProductProblemAccordionFields({ content, onChange }: FieldsProps) {
+  const items: { title: string; problem: string; solution: string }[] = content.items ?? [];
+  return (
+    <>
+      <TextField label="'Solution' label" value={content.solution_label} onChange={(v) => onChange({ ...content, solution_label: v })} />
+      <MiniCardList>
+        {items.map((item, i) => (
+          <MiniCard key={i} label={item.title || `Item ${i + 1}`}>
+            <TextField label="Title" value={item.title} onChange={(v) => onChange({ ...content, items: updateAt(items, i, { title: v }) })} />
+            <TextAreaField
+              label="Problem"
+              rows={3}
+              value={item.problem}
+              onChange={(v) => onChange({ ...content, items: updateAt(items, i, { problem: v }) })}
+            />
+            <TextAreaField
+              label="Solution"
+              rows={3}
+              value={item.solution}
+              onChange={(v) => onChange({ ...content, items: updateAt(items, i, { solution: v }) })}
+            />
+          </MiniCard>
+        ))}
+      </MiniCardList>
+      <div className="a-field-hint">This design has a fixed set of 4 items — text only, can&apos;t be added or removed.</div>
+    </>
+  );
+}
+
+function ProductTalkCtaFields({ content, onChange }: FieldsProps) {
+  return (
+    <>
+      <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextField label="Subtext" value={content.subtext} onChange={(v) => onChange({ ...content, subtext: v })} />
+      <LinkPicker label="Links to" value={content.link ?? ""} onChange={(v) => onChange({ ...content, link: v })} />
+    </>
+  );
+}
+
+function ProductCompareTableFields({ content, onChange }: FieldsProps) {
+  return (
+    <>
+      <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <CompareRowsFields content={content} onChange={onChange} />
+    </>
+  );
+}
+
+function ProductVendorQuestionsFields({ content, onChange }: FieldsProps) {
+  const items: { question: string; answer: string }[] = content.items ?? [];
+  return (
+    <>
+      <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <MiniCardList>
+        {items.map((item, i) => (
+          <MiniCard key={i} label={item.question || `Question ${i + 1}`} onRemove={() => onChange({ ...content, items: removeAt(items, i) })}>
+            <TextField label="Question" value={item.question} onChange={(v) => onChange({ ...content, items: updateAt(items, i, { question: v }) })} />
+            <TextAreaField
+              label="Answer"
+              rows={3}
+              value={item.answer}
+              onChange={(v) => onChange({ ...content, items: updateAt(items, i, { answer: v }) })}
+            />
+          </MiniCard>
+        ))}
+      </MiniCardList>
+      <AddMiniCardButton label="Add question" onClick={() => onChange({ ...content, items: [...items, { question: "", answer: "" }] })} />
+    </>
+  );
+}
+
+function ImpactManualTableFields({ content, onChange }: FieldsProps) {
+  const rows: { manual: string; vmi: string }[] = content.rows ?? [];
+  return (
+    <>
+      <FieldRow>
+        <TextField label="Manual column label" value={content.manual_label} onChange={(v) => onChange({ ...content, manual_label: v })} />
+        <TextField label="VMI column label" value={content.vmi_label} onChange={(v) => onChange({ ...content, vmi_label: v })} />
+      </FieldRow>
+      <MiniCardList>
+        {rows.map((r, i) => (
+          <MiniCard key={i} label={`Row ${i + 1}`} onRemove={() => onChange({ ...content, rows: removeAt(rows, i) })}>
+            <TextAreaField
+              label="Manual process text"
+              rows={2}
+              value={r.manual}
+              onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { manual: v }) })}
+            />
+            <TextAreaField
+              label="With VMI text"
+              rows={2}
+              value={r.vmi}
+              onChange={(v) => onChange({ ...content, rows: updateAt(rows, i, { vmi: v }) })}
+            />
+          </MiniCard>
+        ))}
+      </MiniCardList>
+      <AddMiniCardButton label="Add row" onClick={() => onChange({ ...content, rows: [...rows, { manual: "", vmi: "" }] })} />
+    </>
+  );
+}
+
+function ImpactYearInReviewFields({ content, onChange }: FieldsProps) {
+  return (
+    <>
+      <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextAreaField label="Text" rows={3} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
+      <TextField label="Button text" value={content.button_text} onChange={(v) => onChange({ ...content, button_text: v })} />
+      <LinkPicker label="Button links to" value={content.link ?? ""} onChange={(v) => onChange({ ...content, link: v })} />
+    </>
+  );
+}
+
+function ContactFormSectionFields({ content, onChange }: FieldsProps) {
+  return (
+    <>
+      <TextField label="Kicker label" value={content.kicker_label} onChange={(v) => onChange({ ...content, kicker_label: v })} />
+      <TextField label="Heading" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextAreaField label="Text" rows={3} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
+      <FieldRow>
+        <TextField label="First name label" value={content.first_name_label} onChange={(v) => onChange({ ...content, first_name_label: v })} />
+        <TextField label="First name placeholder" value={content.first_name_placeholder} onChange={(v) => onChange({ ...content, first_name_placeholder: v })} />
+      </FieldRow>
+      <FieldRow>
+        <TextField label="Last name label" value={content.last_name_label} onChange={(v) => onChange({ ...content, last_name_label: v })} />
+        <TextField label="Last name placeholder" value={content.last_name_placeholder} onChange={(v) => onChange({ ...content, last_name_placeholder: v })} />
+      </FieldRow>
+      <FieldRow>
+        <TextField label="Email label" value={content.email_label} onChange={(v) => onChange({ ...content, email_label: v })} />
+        <TextField label="Email placeholder" value={content.email_placeholder} onChange={(v) => onChange({ ...content, email_placeholder: v })} />
+      </FieldRow>
+      <FieldRow>
+        <TextField label="Organization label (optional)" value={content.org_label ?? ""} onChange={(v) => onChange({ ...content, org_label: v })} />
+        <TextField label="Organization placeholder (optional)" value={content.org_placeholder ?? ""} onChange={(v) => onChange({ ...content, org_placeholder: v })} />
+      </FieldRow>
+      <TextField label="State dropdown label (optional)" value={content.state_field_label ?? ""} onChange={(v) => onChange({ ...content, state_field_label: v })} />
+      <FieldRow>
+        <TextField label="Subject label (optional)" value={content.subject_label ?? ""} onChange={(v) => onChange({ ...content, subject_label: v })} />
+        <TextField label="Subject placeholder (optional)" value={content.subject_placeholder ?? ""} onChange={(v) => onChange({ ...content, subject_placeholder: v })} />
+      </FieldRow>
+      <FieldRow>
+        <TextField label="Message label" value={content.message_label} onChange={(v) => onChange({ ...content, message_label: v })} />
+        <TextField label="Message placeholder" value={content.message_placeholder} onChange={(v) => onChange({ ...content, message_placeholder: v })} />
+      </FieldRow>
+      <TextField label="Submit button text" value={content.submit_label} onChange={(v) => onChange({ ...content, submit_label: v })} />
+      <TextAreaField label="Success message" rows={2} value={content.success_message} onChange={(v) => onChange({ ...content, success_message: v })} />
+      <div className="a-field-hint">Community section only, below:</div>
+      <TextField label="Address: organization name (optional)" value={content.address_org_name ?? ""} onChange={(v) => onChange({ ...content, address_org_name: v })} />
+      <TextField label="Address: line 1 (optional)" value={content.address_line1 ?? ""} onChange={(v) => onChange({ ...content, address_line1: v })} />
+      <TextField label="Address: line 2 (optional)" value={content.address_line2 ?? ""} onChange={(v) => onChange({ ...content, address_line2: v })} />
+      <TextField label="Address: email (optional)" value={content.address_email ?? ""} onChange={(v) => onChange({ ...content, address_email: v })} />
+    </>
+  );
+}
+
 export function SectionContentFields({ type, content, onChange }: { type: SectionType } & FieldsProps) {
   switch (type) {
     case "hero":
@@ -918,6 +1228,24 @@ export function SectionContentFields({ type, content, onChange }: { type: Sectio
       return <ComparisonFields content={content} onChange={onChange} />;
     case "case-study":
       return <CaseStudyFields content={content} onChange={onChange} />;
+    case "icon-cards":
+      return <IconCardsFields content={content} onChange={onChange} />;
+    case "home-compare-table":
+      return <HomeCompareTableFields content={content} onChange={onChange} />;
+    case "product-problem-accordion":
+      return <ProductProblemAccordionFields content={content} onChange={onChange} />;
+    case "product-talk-cta":
+      return <ProductTalkCtaFields content={content} onChange={onChange} />;
+    case "product-compare-table":
+      return <ProductCompareTableFields content={content} onChange={onChange} />;
+    case "product-vendor-questions":
+      return <ProductVendorQuestionsFields content={content} onChange={onChange} />;
+    case "impact-manual-table":
+      return <ImpactManualTableFields content={content} onChange={onChange} />;
+    case "impact-year-in-review":
+      return <ImpactYearInReviewFields content={content} onChange={onChange} />;
+    case "contact-form-section":
+      return <ContactFormSectionFields content={content} onChange={onChange} />;
     default:
       return null;
   }

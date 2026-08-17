@@ -35,12 +35,13 @@ export async function updateSectionContent(
   sectionId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: Record<string, any>,
-  backgroundColor: string | null
+  backgroundColor: string | null,
+  hidden?: boolean
 ) {
   const supabase = createAdminClient();
   const { error } = await supabase
     .from("sections")
-    .update({ content, background_color: backgroundColor })
+    .update({ content, background_color: backgroundColor, ...(hidden !== undefined ? { hidden } : {}) })
     .eq("id", sectionId);
   if (error) throw new Error(error.message);
 }

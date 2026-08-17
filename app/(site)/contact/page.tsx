@@ -12,6 +12,101 @@ type TextContent = {
   text?: string | null;
 };
 
+type ContactFormSectionContent = {
+  kicker_label: string;
+  heading: string;
+  text: string;
+  first_name_label: string;
+  first_name_placeholder: string;
+  last_name_label: string;
+  last_name_placeholder: string;
+  email_label: string;
+  email_placeholder: string;
+  org_label?: string | null;
+  org_placeholder?: string | null;
+  state_field_label?: string | null;
+  subject_label?: string | null;
+  subject_placeholder?: string | null;
+  message_label: string;
+  message_placeholder: string;
+  submit_label: string;
+  success_message: string;
+  address_org_name?: string | null;
+  address_line1?: string | null;
+  address_line2?: string | null;
+  address_email?: string | null;
+};
+
+const US_STATES = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida",
+  "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine",
+  "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska",
+  "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
+  "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas",
+  "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming", "Washington D.C.",
+];
+
+const DEFAULT_STATE_PARTNERS: ContactFormSectionContent = {
+  kicker_label: "For State Partners",
+  heading: "Request a demo of Verify My Income",
+  text:
+    "We work with state health and human services agencies to pilot and implement real-time income verification for Medicaid, SNAP, and other benefit programs. If you're interested in exploring a partnership, we'd love to connect.",
+  first_name_label: "First name",
+  first_name_placeholder: "Jane",
+  last_name_label: "Last name",
+  last_name_placeholder: "Smith",
+  email_label: "Work email",
+  email_placeholder: "jane.smith@agency.gov",
+  org_label: "Agency / organization",
+  org_placeholder: "State Dept. of Health and Human Services",
+  state_field_label: "State",
+  message_label: "Tell us about your program",
+  message_placeholder: "Which benefit programs are you administering? What income verification challenges are you facing?",
+  submit_label: "Request a demo",
+  success_message: "Thanks for reaching out — we'll be in touch about scheduling a demo soon.",
+};
+
+const DEFAULT_FUNDERS: ContactFormSectionContent = {
+  kicker_label: "For Funders",
+  heading: "Support our work",
+  text:
+    "Digital Public Works is an independent 501(c)(3) nonprofit. Philanthropic support enables us to keep our fees at cost for state agencies and to invest in research, accessibility, and the communities our work serves.",
+  first_name_label: "First name",
+  first_name_placeholder: "Jane",
+  last_name_label: "Last name",
+  last_name_placeholder: "Smith",
+  email_label: "Work email",
+  email_placeholder: "jane@foundation.org",
+  org_label: "Foundation / organization",
+  org_placeholder: "Example Foundation",
+  message_label: "How can we help?",
+  message_placeholder: "",
+  submit_label: "Get in touch",
+  success_message: "Thank you for your interest in supporting our work — we'll follow up soon.",
+};
+
+const DEFAULT_COMMUNITY: ContactFormSectionContent = {
+  kicker_label: "For Community",
+  heading: "Everything else",
+  text: "Press inquiries, partnership ideas, and general questions are all welcome. We read everything.",
+  first_name_label: "First name",
+  first_name_placeholder: "Jane",
+  last_name_label: "Last name",
+  last_name_placeholder: "Smith",
+  email_label: "Email",
+  email_placeholder: "jane@example.com",
+  subject_label: "Subject",
+  subject_placeholder: "What's this about?",
+  message_label: "Message",
+  message_placeholder: "Your message here…",
+  submit_label: "Get in touch",
+  success_message: "Thanks for reaching out — we read everything and will get back to you soon.",
+  address_org_name: "Digital Public Works",
+  address_line1: "2261 Market Street, Suite 32572",
+  address_line2: "San Francisco, CA 94114",
+  address_email: "info@digitalpublicworks.org",
+};
+
 function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
@@ -20,11 +115,12 @@ export default async function ContactPage() {
   const result = await getPageSections("contact");
   const sections = result?.sections ?? [];
 
-  const textSections = byType(sections, "text");
-  const header = textSections[0]?.content as TextContent | undefined;
-  const statePartners = textSections[1]?.content as TextContent | undefined;
-  const funders = textSections[2]?.content as TextContent | undefined;
-  const community = textSections[3]?.content as TextContent | undefined;
+  const header = byType(sections, "text")[0]?.content as TextContent | undefined;
+  const formSections = byType(sections, "contact-form-section");
+
+  const statePartners = (formSections[0]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_STATE_PARTNERS;
+  const funders = (formSections[1]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_FUNDERS;
+  const community = (formSections[2]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_COMMUNITY;
 
   return (
     <div className="page-contact">
@@ -41,11 +137,11 @@ export default async function ContactPage() {
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
-              <span className="contact-label">For State Partners</span>
+              <span className="contact-label">{statePartners.kicker_label}</span>
               <span className="section-divider"></span>
-              <h2 style={{ fontSize: "var(--t-headline)", marginBottom: "20px" }}>{statePartners?.heading}</h2>
+              <h2 style={{ fontSize: "var(--t-headline)", marginBottom: "20px" }}>{statePartners.heading}</h2>
               <div className="body-text">
-                <p>{statePartners?.text}</p>
+                <p>{statePartners.text}</p>
               </div>
             </div>
             <div className="reveal d1">
@@ -53,132 +149,84 @@ export default async function ContactPage() {
                 <ContactForm
                   formName="state-partner-contact"
                   action={process.env.NEXT_PUBLIC_FORMSPREE_STATE_PARTNER ?? ""}
-                  submitLabel="Request a demo"
-                  successMessage="Thanks for reaching out — we'll be in touch about scheduling a demo soon."
+                  submitLabel={statePartners.submit_label}
+                  successMessage={statePartners.success_message}
                 >
                   <div className="form-row-2">
                     <div className="form-group">
                       <label className="form-label" htmlFor="sp-first">
-                        First name
+                        {statePartners.first_name_label}
                       </label>
                       <input
                         className="form-input"
                         type="text"
                         id="sp-first"
                         name="first_name"
-                        placeholder="Jane"
+                        placeholder={statePartners.first_name_placeholder}
                         autoComplete="given-name"
                       />
                     </div>
                     <div className="form-group">
                       <label className="form-label" htmlFor="sp-last">
-                        Last name
+                        {statePartners.last_name_label}
                       </label>
                       <input
                         className="form-input"
                         type="text"
                         id="sp-last"
                         name="last_name"
-                        placeholder="Smith"
+                        placeholder={statePartners.last_name_placeholder}
                         autoComplete="family-name"
                       />
                     </div>
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="sp-email">
-                      Work email
+                      {statePartners.email_label}
                     </label>
                     <input
                       className="form-input"
                       type="email"
                       id="sp-email"
                       name="email"
-                      placeholder="jane.smith@agency.gov"
+                      placeholder={statePartners.email_placeholder}
                       autoComplete="email"
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="sp-org">
-                      Agency / organization
+                      {statePartners.org_label}
                     </label>
                     <input
                       className="form-input"
                       type="text"
                       id="sp-org"
                       name="organization"
-                      placeholder="State Dept. of Health and Human Services"
+                      placeholder={statePartners.org_placeholder ?? ""}
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="sp-state">
-                      State
+                      {statePartners.state_field_label}
                     </label>
                     <select className="form-select" id="sp-state" name="state" defaultValue="">
                       <option value="" disabled>
                         Select a state
                       </option>
-                      <option>Alabama</option>
-                      <option>Alaska</option>
-                      <option>Arizona</option>
-                      <option>Arkansas</option>
-                      <option>California</option>
-                      <option>Colorado</option>
-                      <option>Connecticut</option>
-                      <option>Delaware</option>
-                      <option>Florida</option>
-                      <option>Georgia</option>
-                      <option>Hawaii</option>
-                      <option>Idaho</option>
-                      <option>Illinois</option>
-                      <option>Indiana</option>
-                      <option>Iowa</option>
-                      <option>Kansas</option>
-                      <option>Kentucky</option>
-                      <option>Louisiana</option>
-                      <option>Maine</option>
-                      <option>Maryland</option>
-                      <option>Massachusetts</option>
-                      <option>Michigan</option>
-                      <option>Minnesota</option>
-                      <option>Mississippi</option>
-                      <option>Missouri</option>
-                      <option>Montana</option>
-                      <option>Nebraska</option>
-                      <option>Nevada</option>
-                      <option>New Hampshire</option>
-                      <option>New Jersey</option>
-                      <option>New Mexico</option>
-                      <option>New York</option>
-                      <option>North Carolina</option>
-                      <option>North Dakota</option>
-                      <option>Ohio</option>
-                      <option>Oklahoma</option>
-                      <option>Oregon</option>
-                      <option>Pennsylvania</option>
-                      <option>Rhode Island</option>
-                      <option>South Carolina</option>
-                      <option>South Dakota</option>
-                      <option>Tennessee</option>
-                      <option>Texas</option>
-                      <option>Utah</option>
-                      <option>Vermont</option>
-                      <option>Virginia</option>
-                      <option>Washington</option>
-                      <option>West Virginia</option>
-                      <option>Wisconsin</option>
-                      <option>Wyoming</option>
-                      <option>Washington D.C.</option>
+                      {US_STATES.map((s) => (
+                        <option key={s}>{s}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="sp-message">
-                      Tell us about your program
+                      {statePartners.message_label}
                     </label>
                     <textarea
                       className="form-textarea"
                       id="sp-message"
                       name="message"
-                      placeholder="Which benefit programs are you administering? What income verification challenges are you facing?"
+                      placeholder={statePartners.message_placeholder}
                     ></textarea>
                   </div>
                 </ContactForm>
@@ -193,11 +241,11 @@ export default async function ContactPage() {
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
-              <span className="contact-label">For Funders</span>
+              <span className="contact-label">{funders.kicker_label}</span>
               <span className="section-divider"></span>
-              <h2 style={{ fontSize: "var(--t-headline)", marginBottom: "20px" }}>{funders?.heading}</h2>
+              <h2 style={{ fontSize: "var(--t-headline)", marginBottom: "20px" }}>{funders.heading}</h2>
               <div className="body-text">
-                <p>{funders?.text}</p>
+                <p>{funders.text}</p>
               </div>
             </div>
             <div className="reveal d1">
@@ -205,71 +253,71 @@ export default async function ContactPage() {
                 <ContactForm
                   formName="funder-contact"
                   action={process.env.NEXT_PUBLIC_FORMSPREE_FUNDER ?? ""}
-                  submitLabel="Get in touch"
-                  successMessage="Thank you for your interest in supporting our work — we'll follow up soon."
+                  submitLabel={funders.submit_label}
+                  successMessage={funders.success_message}
                 >
                   <div className="form-row-2">
                     <div className="form-group">
                       <label className="form-label" htmlFor="fn-first">
-                        First name
+                        {funders.first_name_label}
                       </label>
                       <input
                         className="form-input"
                         type="text"
                         id="fn-first"
                         name="first_name"
-                        placeholder="Jane"
+                        placeholder={funders.first_name_placeholder}
                         autoComplete="given-name"
                       />
                     </div>
                     <div className="form-group">
                       <label className="form-label" htmlFor="fn-last">
-                        Last name
+                        {funders.last_name_label}
                       </label>
                       <input
                         className="form-input"
                         type="text"
                         id="fn-last"
                         name="last_name"
-                        placeholder="Smith"
+                        placeholder={funders.last_name_placeholder}
                         autoComplete="family-name"
                       />
                     </div>
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="fn-email">
-                      Work email
+                      {funders.email_label}
                     </label>
                     <input
                       className="form-input"
                       type="email"
                       id="fn-email"
                       name="email"
-                      placeholder="jane@foundation.org"
+                      placeholder={funders.email_placeholder}
                       autoComplete="email"
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="fn-org">
-                      Foundation / organization
+                      {funders.org_label}
                     </label>
                     <input
                       className="form-input"
                       type="text"
                       id="fn-org"
                       name="organization"
-                      placeholder="Example Foundation"
+                      placeholder={funders.org_placeholder ?? ""}
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="fn-message">
-                      How can we help?
+                      {funders.message_label}
                     </label>
                     <textarea
                       className="form-textarea"
                       id="fn-message"
                       name="message"
-                      placeholder="Tell us about your foundation's priorities and what drew you to DPW's work."
+                      placeholder={funders.message_placeholder}
                     ></textarea>
                   </div>
                 </ContactForm>
@@ -284,22 +332,22 @@ export default async function ContactPage() {
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
-              <span className="contact-label">For Community</span>
+              <span className="contact-label">{community.kicker_label}</span>
               <span className="section-divider"></span>
-              <h2 style={{ fontSize: "var(--t-headline)", marginBottom: "20px" }}>{community?.heading}</h2>
+              <h2 style={{ fontSize: "var(--t-headline)", marginBottom: "20px" }}>{community.heading}</h2>
               <div className="body-text">
-                <p>{community?.text}</p>
+                <p>{community.text}</p>
               </div>
               <div className="address-block reveal d1">
                 <address>
-                  <strong>Digital Public Works</strong>
+                  <strong>{community.address_org_name}</strong>
                   <br />
-                  2261 Market Street, Suite 32572
+                  {community.address_line1}
                   <br />
-                  San Francisco, CA 94114
+                  {community.address_line2}
                   <br />
                   <br />
-                  <a href="mailto:info@digitalpublicworks.org">info@digitalpublicworks.org</a>
+                  <a href={`mailto:${community.address_email}`}>{community.address_email}</a>
                 </address>
               </div>
             </div>
@@ -308,71 +356,71 @@ export default async function ContactPage() {
                 <ContactForm
                   formName="general-contact"
                   action={process.env.NEXT_PUBLIC_FORMSPREE_COMMUNITY ?? ""}
-                  submitLabel="Get in touch"
-                  successMessage="Thanks for reaching out — we read everything and will get back to you soon."
+                  submitLabel={community.submit_label}
+                  successMessage={community.success_message}
                 >
                   <div className="form-row-2">
                     <div className="form-group">
                       <label className="form-label" htmlFor="gc-first">
-                        First name
+                        {community.first_name_label}
                       </label>
                       <input
                         className="form-input"
                         type="text"
                         id="gc-first"
                         name="first_name"
-                        placeholder="Jane"
+                        placeholder={community.first_name_placeholder}
                         autoComplete="given-name"
                       />
                     </div>
                     <div className="form-group">
                       <label className="form-label" htmlFor="gc-last">
-                        Last name
+                        {community.last_name_label}
                       </label>
                       <input
                         className="form-input"
                         type="text"
                         id="gc-last"
                         name="last_name"
-                        placeholder="Smith"
+                        placeholder={community.last_name_placeholder}
                         autoComplete="family-name"
                       />
                     </div>
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="gc-email">
-                      Email
+                      {community.email_label}
                     </label>
                     <input
                       className="form-input"
                       type="email"
                       id="gc-email"
                       name="email"
-                      placeholder="jane@example.com"
+                      placeholder={community.email_placeholder}
                       autoComplete="email"
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="gc-subject">
-                      Subject
+                      {community.subject_label}
                     </label>
                     <input
                       className="form-input"
                       type="text"
                       id="gc-subject"
                       name="subject"
-                      placeholder="What's this about?"
+                      placeholder={community.subject_placeholder ?? ""}
                     />
                   </div>
                   <div className="form-group">
                     <label className="form-label" htmlFor="gc-message">
-                      Message
+                      {community.message_label}
                     </label>
                     <textarea
                       className="form-textarea"
                       id="gc-message"
                       name="message"
-                      placeholder="Your message here…"
+                      placeholder={community.message_placeholder}
                     ></textarea>
                   </div>
                 </ContactForm>

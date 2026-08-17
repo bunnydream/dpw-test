@@ -1,14 +1,74 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { getPageSections, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import Voices, { type VoicesContent } from "@/components/blocks/Voices";
 import CaseStudy, { type CaseStudyContent } from "@/components/blocks/CaseStudy";
+import Cta, { type CtaContent } from "@/components/blocks/Cta";
 import type { PhotoTextContent } from "@/components/blocks/PhotoText";
+import type { StatsContent } from "@/components/blocks/Stats";
+import ImpactManualTable, { type ImpactManualTableContent } from "@/components/blocks/ImpactManualTable";
+import ImpactYearInReview, { type ImpactYearInReviewContent } from "@/components/blocks/ImpactYearInReview";
+import IconCards, { type IconCardsContent } from "@/components/blocks/IconCards";
 import "./impact.css";
 
 export const metadata: Metadata = {
   title: "Impact — Digital Public Works",
+};
+
+const DEFAULT_STATS: StatsContent = {
+  stats: [
+    { number: "56%", label: "Application completion rate in recent statewide pilot, vs. 20–40% industry standard" },
+    { number: "100%", label: "Of reports provide real-time data from linked payroll systems" },
+    { number: "90%", label: "Of reports include a paystub from the last 14 days" },
+    { number: "Under 5 min", label: "Median verification time, vs. 45 minutes for manual document submission" },
+  ],
+};
+
+const DEFAULT_MANUAL_TABLE: ImpactManualTableContent = {
+  manual_label: "Manual process",
+  vmi_label: "With Verify My Income",
+  rows: [
+    { manual: "Find old pay stubs, print forms, and visit a benefits office in person", vmi: "Receive a secure link and connect payroll in minutes, from any device" },
+    { manual: "Wait days or weeks for a caseworker to manually review documents", vmi: "Verified income report delivered to caseworker in under 5 minutes" },
+    { manual: "Restart the process from scratch if anything is missing or wrong", vmi: "No documents to find, no follow-up calls, no delays" },
+    { manual: "Stale quarterly wage data or documents that may be rejected", vmi: "Real-time payroll data, programmatically validated before delivery" },
+  ],
+};
+
+const DEFAULT_YEAR_IN_REVIEW: ImpactYearInReviewContent = {
+  heading: "Year in review",
+  text: "Read our annual report to learn how DPW went from zero to one: from founding to production in two states.",
+  button_text: "Read the 2025 Annual Report",
+  link: "#",
+};
+
+const DEFAULT_FUNDING_MODEL: IconCardsContent = {
+  heading: "How philanthropic investment creates public value",
+  text: "DPW's model is built for the long term. As states move from pilots to paid contracts, earned revenue from per-verification pricing covers a growing share of operating costs.",
+  cards: [
+    {
+      icon: "gift",
+      heading: "Free to try",
+      text: "Philanthropic investment funds free pilots and platform development. States can experience the full VMI service — service design, integration planning, and hands-on support — at no cost.",
+    },
+    {
+      icon: "trend-down",
+      heading: "Lower prices over time",
+      text: "Because DPW operates at cost with no profit margin, every efficiency gain passes through to state partners as lower prices. The price of income verification goes down over time, not up.",
+    },
+    {
+      icon: "lock-open",
+      heading: "Open source forever",
+      text: "VMI is open source. The public investment in this infrastructure is permanently protected from privatization.",
+    },
+  ],
+};
+
+const DEFAULT_BOTTOM_CTA: CtaContent = {
+  heading: "Read our research on accessibility",
+  button_text: "Read our insights",
+  link: "/insights",
+  background_photo_url: "/images/impact/christin-hume-Hcfwew744z4-unsplash.jpg",
 };
 
 function byType(sections: Section[], type: Section["type"]) {
@@ -20,10 +80,21 @@ export default async function ImpactPage() {
   const sections = result?.sections ?? [];
 
   const hero = byType(sections, "hero")[0];
+  const stats = byType(sections, "stats")[0];
   const families = byType(sections, "photo-text")[0];
   const familiesContent = families?.content as PhotoTextContent | undefined;
+  const manualTable = byType(sections, "impact-manual-table")[0];
   const voices = byType(sections, "voices")[0];
   const deployed = byType(sections, "case-study")[0];
+  const yearInReview = byType(sections, "impact-year-in-review")[0];
+  const fundingModel = byType(sections, "icon-cards")[0];
+  const bottomCta = byType(sections, "cta")[0];
+
+  const statsContent = (stats?.content as StatsContent | undefined) ?? DEFAULT_STATS;
+  const manualTableContent = (manualTable?.content as ImpactManualTableContent | undefined) ?? DEFAULT_MANUAL_TABLE;
+  const yearInReviewContent = (yearInReview?.content as ImpactYearInReviewContent | undefined) ?? DEFAULT_YEAR_IN_REVIEW;
+  const fundingModelContent = (fundingModel?.content as IconCardsContent | undefined) ?? DEFAULT_FUNDING_MODEL;
+  const bottomCtaContent = (bottomCta?.content as CtaContent | undefined) ?? DEFAULT_BOTTOM_CTA;
 
   return (
     <div className="page-impact">
@@ -38,29 +109,18 @@ export default async function ImpactPage() {
         />
       ) : null}
 
-      {/* ─── 2. METRICS ─── */}
+      {/* ─── 2. METRICS ───
+          Rendered inline rather than via the shared Stats component: the
+          live markup uses <span class="stat-label"> while Stats.tsx renders
+          <p class="stat-label"> — a real tag difference with no explicit
+          `display` override in CSS, so swapping would risk a layout shift. */}
       <div className="stat-row" role="list">
-        <div className="stat-cell reveal d1" role="listitem">
-          <span className="stat-num">56%</span>
-          <span className="stat-label">
-            Application completion rate in recent statewide pilot, vs. 20–40% industry standard
-          </span>
-        </div>
-
-        <div className="stat-cell reveal d2" role="listitem">
-          <span className="stat-num">100%</span>
-          <span className="stat-label">Of reports provide real-time data from linked payroll systems</span>
-        </div>
-
-        <div className="stat-cell reveal d3" role="listitem">
-          <span className="stat-num">90%</span>
-          <span className="stat-label">Of reports include a paystub from the last 14 days</span>
-        </div>
-
-        <div className="stat-cell reveal d4" role="listitem">
-          <span className="stat-num">Under 5 min</span>
-          <span className="stat-label">Median verification time, vs. 45 minutes for manual document submission</span>
-        </div>
+        {statsContent.stats.map((stat, i) => (
+          <div className={`stat-cell reveal d${i + 1}`} role="listitem" key={i}>
+            <span className="stat-num">{stat.number}</span>
+            <span className="stat-label">{stat.label}</span>
+          </div>
+        ))}
       </div>
 
       {/* ─── 3. FAMILIES + COMPARISON ───
@@ -96,63 +156,7 @@ export default async function ImpactPage() {
             ))}
           </div>
 
-          {/* COMPARISON CARD: Manual left, VMI right — fixed chrome, not part of admin's photo-text shape */}
-          <div className="comp-card reveal d2">
-            <div className="comp-header">
-              <div className="comp-col-head comp-col-head--manual">
-                <div className="comp-col-dot comp-col-dot--al"></div>
-                Manual process
-              </div>
-              <div className="comp-col-head comp-col-head--vmi">
-                <div className="comp-col-dot comp-col-dot--vg"></div>
-                With Verify My Income
-              </div>
-            </div>
-
-            <div className="comp-row">
-              <div className="comp-cell comp-cell--manual">
-                <div className="comp-dot comp-dot--al"></div>
-                <p>Find old pay stubs, print forms, and visit a benefits office in person</p>
-              </div>
-              <div className="comp-cell comp-cell--vmi">
-                <div className="comp-dot comp-dot--vg"></div>
-                <p>Receive a secure link and connect payroll in minutes, from any device</p>
-              </div>
-            </div>
-
-            <div className="comp-row">
-              <div className="comp-cell comp-cell--manual">
-                <div className="comp-dot comp-dot--al"></div>
-                <p>Wait days or weeks for a caseworker to manually review documents</p>
-              </div>
-              <div className="comp-cell comp-cell--vmi">
-                <div className="comp-dot comp-dot--vg"></div>
-                <p>Verified income report delivered to caseworker in under 5 minutes</p>
-              </div>
-            </div>
-
-            <div className="comp-row">
-              <div className="comp-cell comp-cell--manual">
-                <div className="comp-dot comp-dot--al"></div>
-                <p>Restart the process from scratch if anything is missing or wrong</p>
-              </div>
-              <div className="comp-cell comp-cell--vmi">
-                <div className="comp-dot comp-dot--vg"></div>
-                <p>No documents to find, no follow-up calls, no delays</p>
-              </div>
-            </div>
-
-            <div className="comp-row">
-              <div className="comp-cell comp-cell--manual">
-                <div className="comp-dot comp-dot--al"></div>
-                <p>Stale quarterly wage data or documents that may be rejected</p>
-              </div>
-              <div className="comp-cell comp-cell--vmi">
-                <div className="comp-dot comp-dot--vg"></div>
-                <p>Real-time payroll data, programmatically validated before delivery</p>
-              </div>
-            </div>
-          </div>
+          <ImpactManualTable content={manualTableContent} />
         </div>
       </section>
 
@@ -168,136 +172,17 @@ export default async function ImpactPage() {
       </section>
 
       {/* ─── 6. YEAR IN REVIEW ─── */}
-      <section className="annual section-pad" id="annual-report">
-        <div className="section-inner annual-inner">
-          <div>
-            <h2 className="section-h reveal">Year in review</h2>
-            <p className="body-p reveal d1">
-              Read our annual report to learn how DPW went from zero to one: from founding to production in two
-              states.
-            </p>
-            {/* NOTE: Replace href="#" with final PDF link before launch */}
-            <a href="#" className="btn btn-forge reveal d2">
-              Read the 2025 Annual Report <span aria-hidden="true">→</span>
-            </a>
-          </div>
-
-          <div className="annual-visual reveal d2">
-            <div className="report-book">
-              <span>Annual Report</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ImpactYearInReview content={yearInReviewContent} />
 
       {/* ─── 7. FUNDING MODEL ─── */}
       <section className="funding section-pad" id="funding-model">
         <div className="section-inner">
-          <h2 className="section-h reveal">How philanthropic investment creates public value</h2>
-          <p className="body-p reveal d1">
-            DPW&apos;s model is built for the long term. As states move from pilots to paid contracts, earned revenue
-            from per-verification pricing covers a growing share of operating costs.
-          </p>
-
-          <div className="content-card-grid">
-            <div className="content-card reveal d1">
-              <div className="content-card-accent"></div>
-              <div className="content-card-body">
-                <span className="content-card-icon" aria-hidden="true">
-                  {/* Gift box icon */}
-                  <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 28 28"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="3" y="11" width="22" height="4" rx="1" />
-                    <rect x="5" y="15" width="18" height="10" rx="1" />
-                    <line x1="14" y1="11" x2="14" y2="25" />
-                    <path d="M14 11C14 11 11 5 8 6C6 7 7 11 14 11Z" />
-                    <path d="M14 11C14 11 17 5 20 6C22 7 21 11 14 11Z" />
-                  </svg>
-                </span>
-                <h4>Free to try</h4>
-                <p>
-                  Philanthropic investment funds free pilots and platform development. States can experience the
-                  full VMI service — service design, integration planning, and hands-on support — at no cost.
-                </p>
-              </div>
-            </div>
-
-            <div className="content-card reveal d2">
-              <div className="content-card-accent"></div>
-              <div className="content-card-body">
-                <span className="content-card-icon" aria-hidden="true">
-                  {/* Downward trending arrow icon */}
-                  <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 28 28"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="4,8 10,14 16,10 24,20" />
-                    <polyline points="19,20 24,20 24,15" />
-                  </svg>
-                </span>
-                <h4>Lower prices over time</h4>
-                <p>
-                  Because DPW operates at cost with no profit margin, every efficiency gain passes through to state
-                  partners as lower prices. The price of income verification goes down over time, not up.
-                </p>
-              </div>
-            </div>
-
-            <div className="content-card reveal d3">
-              <div className="content-card-accent"></div>
-              <div className="content-card-body">
-                <span className="content-card-icon" aria-hidden="true">
-                  {/* Open lock icon */}
-                  <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 28 28"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <rect x="5" y="13" width="18" height="13" rx="2" />
-                    <path d="M9 13V8C9 5.2 11.2 3 14 3C16.8 3 19 5.2 19 8V8" />
-                    <circle cx="14" cy="19" r="2" fill="none" />
-                    <line x1="14" y1="21" x2="14" y2="24" />
-                  </svg>
-                </span>
-                <h4>Open source forever</h4>
-                <p>
-                  VMI is open source. The public investment in this infrastructure is permanently protected from
-                  privatization.
-                </p>
-              </div>
-            </div>
-          </div>
+          <IconCards content={fundingModelContent} />
         </div>
       </section>
 
       {/* INSIGHTS CTA */}
-      <div className="cta-section">
-        <div className="cta-inner">
-          <h2 className="cta-h reveal">Read our research on accessibility</h2>
-          <Link href="/insights" className="btn btn-white reveal d1">
-            Read our insights
-          </Link>
-        </div>
-      </div>
+      <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />
     </div>
   );
 }
