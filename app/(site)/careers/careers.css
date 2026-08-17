@@ -78,3 +78,168 @@
   color: var(--steel);
   max-width: 62ch;
 }
+
+
+/* ─── GENERIC BLOCKS (added via "Add a block" in admin) ───
+   Careers' real design never uses these block types, so nothing here styles
+   them yet — without this, a newly added block would render unstyled.
+   Adapted from custom-page.css's .page-custom rules (same technique), just
+   re-scoped to .page-careers. Skips anything Careers already styles for
+   real content (.hero). */
+
+.page-careers .pressure {
+  background: var(--cool-white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+.page-careers .pressure-right {
+  padding: clamp(56px, 8vw, 96px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2)) clamp(56px, 8vw, 96px) clamp(48px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.page-careers .pressure-img {
+  overflow: hidden;
+}
+
+.page-careers .pressure-img img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.page-careers .model {
+  background: var(--white);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.page-careers .model-content {
+  padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 64px) clamp(56px, 8vw, 96px) max(clamp(20px, 5vw, 64px), calc((100vw - 1400px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.page-careers .model-photo {
+  overflow: hidden;
+  position: relative;
+}
+
+.page-careers .model-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+}
+
+@media (max-width: 1024px) {
+  .page-careers .pressure,
+  .page-careers .model {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .page-careers .pressure-img,
+  .page-careers .model-photo {
+    height: 340px;
+  }
+}
+
+.page-careers .stat-row {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  padding: 0 clamp(20px, 5vw, 64px) clamp(32px, 4vw, 48px);
+  background: var(--cool-white);
+}
+
+.page-careers .stat-cell {
+  padding: clamp(56px, 7vw, 88px) clamp(16px, 2.5vw, 28px) clamp(48px, 6vw, 72px);
+}
+
+.page-careers .stat-cell::before {
+  margin-bottom: 18px;
+}
+
+.page-careers .stat-num {
+  font-size: clamp(36px, 4.2vw, 56px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.page-careers .stat-label {
+  font-size: var(--t-body);
+  letter-spacing: 0.06em;
+}
+
+.page-careers .cta-section {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  padding: clamp(56px, 8vw, 96px) clamp(20px, 5vw, 64px) clamp(56px, 8vw, 96px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.page-careers .cta-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+}
+
+.page-careers .cta-inner {
+  max-width: 640px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.page-careers .cta-h {
+  margin-bottom: 12px;
+  color: var(--white);
+}
+
+.page-careers .cta-sub {
+  font-size: var(--t-body);
+  color: var(--white);
+  margin-bottom: 32px;
+  line-height: 1.65;
+}
+
+.page-careers .team-grid {
+  grid-template-columns: repeat(auto-fit, minmax(max(240px, calc((100% - 2 * clamp(28px, 3vw, 40px)) / 3)), 1fr));
+  gap: clamp(36px, 4vw, 56px) clamp(28px, 3vw, 40px);
+}
+
+.page-careers .team-photo {
+  aspect-ratio: 1 / 1;
+}
+
+.page-careers .team-info {
+  padding: clamp(16px, 2vw, 20px) 0 0 0;
+}
+
+.page-careers .block-text p {
+  font-size: var(--t-body);
+  line-height: 1.82;
+  color: var(--steel);
+  max-width: 68ch;
+}
+
+.page-careers .post-photo-placeholder {
+  background: var(--light-al);
+}
