@@ -280,13 +280,6 @@
   line-height: 1.65;
 }
 
-.page-about .block-text p {
-  font-size: var(--t-body);
-  line-height: 1.82;
-  color: var(--steel);
-  max-width: 68ch;
-}
-
 .page-about .post-photo-placeholder {
   background: var(--light-al);
 }

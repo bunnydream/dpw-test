@@ -20,7 +20,7 @@ export default function Text({
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner block-text">
         {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
-        <p className="reveal">{text}</p>
+        <p className="body-p reveal">{text}</p>
         {pullquote ? (
           <div className="pullquote reveal">
             <p className="pq-text">{pullquote}</p>

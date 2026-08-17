@@ -298,13 +298,6 @@
   padding: clamp(16px, 2vw, 20px) 0 0 0;
 }
 
-.page-contact .block-text p {
-  font-size: var(--t-body);
-  line-height: 1.82;
-  color: var(--steel);
-  max-width: 68ch;
-}
-
 .page-contact .post-photo-placeholder {
   background: var(--light-al);
 }

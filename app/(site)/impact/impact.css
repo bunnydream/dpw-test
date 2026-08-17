@@ -276,6 +276,13 @@
   color: var(--white);
 }
 
+.page-impact .cta-sub {
+  font-size: var(--t-body);
+  color: var(--white);
+  margin-bottom: 32px;
+  line-height: 1.65;
+}
+
 
 /* ─── GENERIC BLOCKS (added via "Add a block" in admin) ───
    Adapted from custom-page.css's .page-custom rules, re-scoped to
@@ -362,13 +369,6 @@
 
 .page-impact .team-info {
   padding: clamp(16px, 2vw, 20px) 0 0 0;
-}
-
-.page-impact .block-text p {
-  font-size: var(--t-body);
-  line-height: 1.82;
-  color: var(--steel);
-  max-width: 68ch;
 }
 
 .page-impact .post-photo-placeholder {

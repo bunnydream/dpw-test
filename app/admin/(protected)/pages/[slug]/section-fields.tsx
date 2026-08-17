@@ -774,9 +774,15 @@ function StepsFields({ content, onChange }: FieldsProps) {
         label="Add step"
         onClick={() => onChange({ ...content, steps: [...steps, { heading: "", description: "", photo_url: "", photo_alt: "" }] })}
       />
-      <PullquoteToggleField content={content} onChange={onChange} />
-      <FootnoteToggleField content={content} onChange={onChange} />
-      <CalloutToggleField content={content} onChange={onChange} />
+      {/* Same grandfathering as step photos above: pullquote/footnote/callout
+         are only offered when this section already has one set (e.g.
+         Product's real "path to a pilot" footnote) — new "Step timeline"
+         blocks never get the option to add one. */}
+      {content.pullquote != null ? <PullquoteToggleField content={content} onChange={onChange} /> : null}
+      {content.footnote != null ? <FootnoteToggleField content={content} onChange={onChange} /> : null}
+      {content.callout_number != null || content.callout_text != null ? (
+        <CalloutToggleField content={content} onChange={onChange} />
+      ) : null}
     </>
   );
 }
