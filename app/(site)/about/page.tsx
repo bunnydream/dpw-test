@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { getPageSections, type Section } from "@/lib/sections";
+import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import { type PhotoTextContent } from "@/components/blocks/PhotoText";
 import TeamMember, { type TeamMemberContent } from "@/components/blocks/TeamMember";
 import Partners, { type PartnersContent } from "@/components/blocks/Partners";
+import SectionRenderer from "@/components/blocks/SectionRenderer";
 import "./about.css";
 
 export const metadata: Metadata = {
@@ -33,11 +34,17 @@ export default async function AboutPage() {
   const teamContent = team?.content as TeamMemberContent | undefined;
   const orgStatusContent = orgStatus?.content as TextContent | undefined;
 
+  const consumedIds = new Set([hero, story, team, partners, orgStatus].filter((s): s is Section => !!s).map((s) => s.id));
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const slot = makeExtrasSlotter(extraSections);
+
   return (
     <div className="page-about">
+      <SectionRenderer sections={slot(hero?.position ?? 0)} />
       {/* HERO */}
       {hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null}
 
+      <SectionRenderer sections={slot(story?.position ?? Infinity)} />
       {/* FOUNDING STORY */}
       {/* NOTE: rendered inline (not via the shared PhotoText component) — the
           live "story" section uses the section-pad > section-inner > story-grid
@@ -89,20 +96,23 @@ export default async function AboutPage() {
         </section>
       ) : null}
 
+      <SectionRenderer sections={slot(team?.position ?? Infinity)} />
       {/* OUR TEAM */}
       {teamContent ? (
-        <section className="team section-pad">
+        <section className="team section-pad" style={team?.background_color ? { background: team.background_color } : undefined}>
           <div className="section-inner">
             <TeamMember content={{ ...teamContent, heading: teamContent.heading ?? "Our team" }} />
           </div>
         </section>
       ) : null}
 
+      <SectionRenderer sections={slot(partners?.position ?? Infinity)} />
       {/* FUNDERS */}
       {partners ? (
         <Partners content={partners.content as PartnersContent} backgroundColor={partners.background_color} />
       ) : null}
 
+      <SectionRenderer sections={slot(orgStatus?.position ?? Infinity)} />
       {/* ORGANIZATION STATUS */}
       {orgStatusContent ? (
         <section className="org-status section-pad" style={orgStatus?.background_color ? { background: orgStatus.background_color } : undefined}>
@@ -115,6 +125,9 @@ export default async function AboutPage() {
           </div>
         </section>
       ) : null}
+
+      {/* Any remaining new blocks added via "Add a block" */}
+      <SectionRenderer sections={slot(Infinity)} />
     </div>
   );
 }

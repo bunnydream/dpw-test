@@ -776,6 +776,12 @@ table.ct tr:last-child td {
   gap: 16px;
 }
 
+/* Auto-fit variant — up to 3 cards per row, wraps beyond that, and fewer
+   cards resize to fill the row width evenly. Same technique as .io-grid--auto. */
+.content-card-grid--auto {
+  grid-template-columns: repeat(auto-fit, minmax(max(240px, calc((100% - 32px) / 3)), 1fr));
+}
+
 .content-card {
   background: var(--white);
   border: none;

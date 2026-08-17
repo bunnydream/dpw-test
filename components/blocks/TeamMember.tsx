@@ -8,6 +8,9 @@ export type TeamMemberEntry = {
 
 export type TeamMemberContent = {
   heading?: string | null;
+  /** Background color applied to each card (independent of the section's
+   * own background_color). */
+  card_background_color?: string | null;
   members: TeamMemberEntry[];
 };
 
@@ -17,14 +20,18 @@ export type TeamMemberContent = {
  * auto-fit so any other usage — with fewer or more members — fills the row
  * evenly and wraps responsively without JS. */
 export default function TeamMember({ content }: { content: TeamMemberContent }) {
-  const { heading, members } = content;
+  const { heading, members, card_background_color } = content;
 
   return (
     <>
       {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
       <div className="team-grid">
         {members.map((member, i) => (
-          <div className={`team-card reveal${i % 3 !== 0 ? ` d${i % 3}` : ""}`} key={i}>
+          <div
+            className={`team-card reveal${i % 3 !== 0 ? ` d${i % 3}` : ""}`}
+            key={i}
+            style={card_background_color ? { background: card_background_color } : undefined}
+          >
             <div className="team-photo">
               <img src={member.photo_url} alt={member.photo_alt ?? member.name} loading="lazy" />
             </div>

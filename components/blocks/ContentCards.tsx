@@ -13,6 +13,9 @@ export type ContentCardsContent = {
   text?: string | null;
   /** Trailing note below the card grid, e.g. product's white-labeling note. */
   footnote?: string | null;
+  pullquote?: string | null;
+  callout_number?: string | null;
+  callout_text?: string | null;
   /** Background color applied to each card (independent of the section's
    * own background_color). */
   card_background_color?: string | null;
@@ -35,7 +38,7 @@ export default function ContentCards({
   content: ContentCardsContent;
   backgroundColor?: string | null;
 }) {
-  const { heading, text, footnote, cards, card_background_color } = content;
+  const { heading, text, footnote, pullquote, callout_number, callout_text, cards, card_background_color } = content;
 
   return (
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
@@ -62,6 +65,17 @@ export default function ContentCards({
             </div>
           ))}
         </div>
+        {pullquote ? (
+          <div className="pullquote reveal">
+            <p className="pq-text">{pullquote}</p>
+          </div>
+        ) : null}
+        {callout_number || callout_text ? (
+          <div className="callout-stat reveal">
+            <span className="callout-stat-num">{callout_number}</span>
+            <p className="callout-stat-text">{callout_text}</p>
+          </div>
+        ) : null}
         {footnote ? <p className="inline-note reveal">{footnote}</p> : null}
       </div>
     </div>

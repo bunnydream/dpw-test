@@ -110,7 +110,7 @@ export function starterContent(type: SectionType): Record<string, any> {
   switch (type) {
     case "hero":
       return {
-        headline: "New headline",
+        headline: "",
         subtitle: "",
         text: "",
         footnote: "",
@@ -129,15 +129,15 @@ export function starterContent(type: SectionType): Record<string, any> {
         ],
       };
     case "photo-text":
-      return { side: "left", heading: "New heading", text: [""], pullquote: null, photo_url: "", photo_alt: "" };
+      return { side: "left", heading: "", text: [""], pullquote: null, photo_url: "", photo_alt: "" };
     case "steps":
       return { heading: "", steps: [{ heading: "", description: "", photo_url: "", photo_alt: "" }] };
     case "voices":
-      return { heading: "New heading", quotes: [{ quote: "", name: "", role: "" }] };
+      return { heading: "", quotes: [{ quote: "", name: "", role: "" }] };
     case "partners":
-      return { heading: "New heading", partners: [] };
+      return { heading: "", partners: [] };
     case "cta":
-      return { heading: "New heading", text: "", button_text: "Learn more", link: "/contact", background_photo_url: "" };
+      return { heading: "", text: "", button_text: "", link: "", background_photo_url: "" };
     case "team-member":
       return { heading: "", members: [] };
     case "text":

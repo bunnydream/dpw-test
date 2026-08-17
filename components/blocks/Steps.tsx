@@ -12,6 +12,7 @@ export type StepsContent = {
    * bespoke rendering of its "path to a pilot" steps instead. */
   heading?: string | null;
   footnote?: string | null;
+  card_background_color?: string | null;
   steps: Step[];
 };
 
@@ -25,7 +26,7 @@ const STAGGER_CLASSES = ["", "d1", "d2", "d3", "d4"];
  * array index, not stored data.
  */
 export default function Steps({ content }: { content: StepsContent }) {
-  const { steps } = content;
+  const { steps, card_background_color } = content;
 
   return (
     <div className="how-steps-wrap">
@@ -38,7 +39,7 @@ export default function Steps({ content }: { content: StepsContent }) {
             <span className="step-n">{String(i + 1).padStart(2, "0")}</span>
             <span className="step-lbl">Step</span>
           </div>
-          <div className="how-step-card">
+          <div className="how-step-card" style={card_background_color ? { background: card_background_color } : undefined}>
             {step.photo_url ? (
               <div className="how-step-img">
                 <img src={step.photo_url} alt={step.photo_alt ?? ""} loading="lazy" />

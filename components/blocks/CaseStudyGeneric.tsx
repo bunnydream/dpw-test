@@ -13,6 +13,11 @@ export type CaseStudyGenericCard = {
 
 export type CaseStudyGenericContent = {
   heading?: string | null;
+  text?: string | null;
+  pullquote?: string | null;
+  footnote?: string | null;
+  callout_number?: string | null;
+  callout_text?: string | null;
   /** Background color applied to each card (independent of the section's
    * own background_color). */
   card_background_color?: string | null;
@@ -36,12 +41,13 @@ export default function CaseStudyGeneric({
   content: CaseStudyGenericContent;
   backgroundColor?: string | null;
 }) {
-  const { heading, cards, card_background_color } = content;
+  const { heading, text, pullquote, footnote, callout_number, callout_text, cards, card_background_color } = content;
 
   return (
     <div className="section-pad" style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className="section-inner">
         {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
+        {text ? <p className="body-p reveal d1">{text}</p> : null}
         <div className="io-grid io-grid--auto">
           {cards.map((card, i) => (
             <LinkedCard
@@ -57,6 +63,18 @@ export default function CaseStudyGeneric({
             />
           ))}
         </div>
+        {pullquote ? (
+          <div className="pullquote reveal">
+            <p className="pq-text">{pullquote}</p>
+          </div>
+        ) : null}
+        {callout_number || callout_text ? (
+          <div className="callout-stat reveal">
+            <span className="callout-stat-num">{callout_number}</span>
+            <p className="callout-stat-text">{callout_text}</p>
+          </div>
+        ) : null}
+        {footnote ? <p className="inline-note reveal">{footnote}</p> : null}
       </div>
     </div>
   );

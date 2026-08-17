@@ -1,5 +1,5 @@
 import HowStepsProgress from "@/components/HowStepsProgress";
-import { getPageSections, type Section } from "@/lib/sections";
+import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import Stats, { type StatsContent } from "@/components/blocks/Stats";
 import PhotoText, { type PhotoTextContent } from "@/components/blocks/PhotoText";
@@ -10,6 +10,7 @@ import Cta, { type CtaContent } from "@/components/blocks/Cta";
 import HomeCompareTable, { type HomeCompareTableContent } from "@/components/blocks/HomeCompareTable";
 import IconCards, { type IconCardsContent } from "@/components/blocks/IconCards";
 import { type ImageContent } from "@/components/blocks/Image";
+import SectionRenderer from "@/components/blocks/SectionRenderer";
 import "./home.css";
 
 type TextContent = {
@@ -104,11 +105,25 @@ export default async function HomePage() {
   const storiesContent = (stories?.content as IconCardsContent | undefined) ?? DEFAULT_STORIES;
   const howImageContent = (howImage?.content as ImageContent | undefined) ?? DEFAULT_HOW_IMAGE;
 
+  // Sections not claimed by any of the slots above (e.g. new blocks added
+  // via "Add a block" in admin) — rendered generically at the end of the
+  // page so they actually show up on the live site instead of being
+  // silently dropped.
+  const consumedIds = new Set(
+    [hero, stats, pressure, model, compareTable, howHeading, steps, stories, howImage, voices, partners, cta]
+      .filter((s): s is Section => !!s)
+      .map((s) => s.id)
+  );
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const slot = makeExtrasSlotter(extraSections);
+
   return (
     <div className="page-home">
+      <SectionRenderer sections={slot(hero?.position ?? 0)} />
       {/* HERO */}
       {hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null}
 
+      <SectionRenderer sections={slot(stats?.position ?? Infinity)} />
       {/* STAT ROW */}
       {stats ? <Stats content={stats.content as StatsContent} backgroundColor={stats.background_color} /> : null}
 
@@ -160,9 +175,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(compareTable?.position ?? Infinity)} />
       {/* COMPARISON TEASER */}
       <HomeCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />
 
+      <SectionRenderer sections={slot(pressure?.position ?? Infinity)} />
       {/* PRESSURE */}
       {pressure ? (
         <PhotoText
@@ -179,6 +196,7 @@ export default async function HomePage() {
         />
       ) : null}
 
+      <SectionRenderer sections={slot(howHeading?.position ?? Infinity)} />
       {/* HOW IT WORKS */}
       <section className="how" id="how-vmi-works">
         <div className="how-inner">
@@ -198,6 +216,7 @@ export default async function HomePage() {
       </section>
       <HowStepsProgress />
 
+      <SectionRenderer sections={slot(stories?.position ?? Infinity)} />
       {/* STORIES */}
       <section className="stories" style={stories?.background_color ? { background: stories.background_color } : undefined}>
         <div className="stories-inner">
@@ -205,6 +224,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(model?.position ?? Infinity)} />
       {/* MODEL */}
       {model ? (
         <PhotoText
@@ -216,14 +236,17 @@ export default async function HomePage() {
         />
       ) : null}
 
+      <SectionRenderer sections={slot(voices?.position ?? Infinity)} />
       {/* QUOTES CAROUSEL */}
       {voices ? <Voices content={voices.content as VoicesContent} backgroundColor={voices.background_color} /> : null}
 
+      <SectionRenderer sections={slot(partners?.position ?? Infinity)} />
       {/* FUNDERS */}
       {partners ? (
         <Partners content={partners.content as PartnersContent} backgroundColor={partners.background_color} />
       ) : null}
 
+      <SectionRenderer sections={slot(cta?.position ?? Infinity)} />
       {/* PILOT CTA */}
       {cta ? (
         <Cta
@@ -234,6 +257,9 @@ export default async function HomePage() {
           backgroundColor={cta.background_color}
         />
       ) : null}
+
+      {/* Any remaining new blocks added via "Add a block" */}
+      <SectionRenderer sections={slot(Infinity)} />
     </div>
   );
 }

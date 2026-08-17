@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { getPageSections, type Section } from "@/lib/sections";
+import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
+import SectionRenderer from "@/components/blocks/SectionRenderer";
 import "./careers.css";
 
 export const metadata: Metadata = {
@@ -16,39 +17,37 @@ type TextContent = {
   text: string;
 };
 
-type ContentCard = {
-  heading: string;
-  text: string;
-  photo_url?: string | null;
+const DEFAULT_OPENINGS: TextContent = {
+  heading: "Open Positions",
+  text:
+    "Thank you for your interest in joining our team. We do not have any current job openings and are not accepting applications at this time. We encourage you to visit this page periodically for future opportunities.",
 };
-
-type ContentCardsContent = {
-  heading?: string | null;
-  cards: ContentCard[];
-};
-
-const DEFAULT_EMPTY_TEXT =
-  "Thank you for your interest in joining our team. We do not have any current job openings and are not accepting applications at this time. We encourage you to visit this page periodically for future opportunities.";
 
 export default async function CareersPage() {
   const result = await getPageSections("careers");
   const sections = result?.sections ?? [];
 
   const hero = byType(sections, "hero")[0];
-  const intro = byType(sections, "text")[0];
-  const openings = byType(sections, "content-cards")[0];
+  const textSections = byType(sections, "text");
+  const intro = textSections[0];
+  const openings = textSections[1];
 
   const introContent = intro?.content as TextContent | undefined;
-  const openingsContent = openings?.content as ContentCardsContent | undefined;
-  const cards = openingsContent?.cards ?? [];
+  const openingsContent = (openings?.content as TextContent | undefined) ?? DEFAULT_OPENINGS;
+
+  const consumedIds = new Set([hero, intro, openings].filter((s): s is Section => !!s).map((s) => s.id));
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const slot = makeExtrasSlotter(extraSections);
 
   return (
     <div className="page-careers">
+      <SectionRenderer sections={slot(hero?.position ?? 0)} />
       {/* HERO */}
       {hero ? (
         <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} matchTaglineWidthToHeadline />
       ) : null}
 
+      <SectionRenderer sections={slot(intro?.position ?? Infinity)} />
       {/* INTRO */}
       {introContent ? (
         <section className="intro section-pad">
@@ -63,29 +62,23 @@ export default async function CareersPage() {
         </section>
       ) : null}
 
+      <SectionRenderer sections={slot(openings?.position ?? Infinity)} />
       {/* OPEN POSITIONS */}
-      <section className="openings section-pad">
+      <section
+        className="openings section-pad"
+        style={openings?.background_color ? { background: openings.background_color } : undefined}
+      >
         <div className="section-inner">
           <div className="openings-header reveal">
-            <h2 className="openings-h">{openingsContent?.heading ?? "Open Positions"}</h2>
+            <h2 className="openings-h">{openingsContent.heading}</h2>
             <div className="openings-rule"></div>
           </div>
-          {cards.length === 0 ? (
-            <p className="openings-body reveal d1">{DEFAULT_EMPTY_TEXT}</p>
-          ) : (
-            <div className="content-card-grid">
-              {cards.map((card, i) => (
-                <div className="content-card reveal" key={i}>
-                  <div className="content-card-body">
-                    <h4>{card.heading}</h4>
-                    <p>{card.text}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <p className="openings-body reveal d1">{openingsContent.text}</p>
         </div>
       </section>
+
+      {/* Any remaining new blocks added via "Add a block" */}
+      <SectionRenderer sections={slot(Infinity)} />
     </div>
   );
 }

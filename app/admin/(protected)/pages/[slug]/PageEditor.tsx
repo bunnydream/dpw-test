@@ -39,7 +39,7 @@ type SectionRow = Database["public"]["Tables"]["sections"]["Row"];
 // Block types whose individual cards have their own background color,
 // separate from the section's own background_color — rendered directly
 // above it so the two color pickers sit next to each other.
-const CARD_BACKGROUND_TYPES: SectionType[] = ["steps", "voices", "content-cards", "case-study", "icon-cards"];
+const CARD_BACKGROUND_TYPES: SectionType[] = ["steps", "voices", "content-cards", "case-study", "icon-cards", "team-member"];
 
 // Types with no background_color control: "cta" sets its own via a required
 // background photo; the other two are nested widgets inside another

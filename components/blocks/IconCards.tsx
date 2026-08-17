@@ -20,6 +20,9 @@ export type IconCardsContent = {
   /** Background color applied to each card (independent of the section's
    * own background_color). */
   card_background_color?: string | null;
+  pullquote?: string | null;
+  callout_number?: string | null;
+  callout_text?: string | null;
   cards: IconCard[];
 };
 
@@ -98,13 +101,13 @@ function CardIcon({ icon, icon_url }: { icon: IconCardIcon; icon_url?: string | 
  * section-pad/section-inner wrapper itself.
  */
 export default function IconCards({ content }: { content: IconCardsContent }) {
-  const { heading, text, footnote, card_background_color, cards } = content;
+  const { heading, text, footnote, pullquote, callout_number, callout_text, card_background_color, cards } = content;
 
   return (
     <>
       {heading ? <h2 className="section-h reveal">{heading}</h2> : null}
       {text ? <p className="body-p reveal d1">{text}</p> : null}
-      <div className="content-card-grid">
+      <div className="content-card-grid content-card-grid--auto">
         {cards.map((card, i) => (
           <div
             className={`content-card reveal d${i + 1}`}
@@ -123,6 +126,17 @@ export default function IconCards({ content }: { content: IconCardsContent }) {
           </div>
         ))}
       </div>
+      {pullquote ? (
+        <div className="pullquote reveal">
+          <p className="pq-text">{pullquote}</p>
+        </div>
+      ) : null}
+      {callout_number || callout_text ? (
+        <div className="callout-stat reveal">
+          <span className="callout-stat-num">{callout_number}</span>
+          <p className="callout-stat-text">{callout_text}</p>
+        </div>
+      ) : null}
       {footnote ? <p className="inline-note reveal d4">{footnote}</p> : null}
     </>
   );

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getPageSections, type Section } from "@/lib/sections";
+import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import Voices, { type VoicesContent } from "@/components/blocks/Voices";
 import CaseStudy, { type CaseStudyContent } from "@/components/blocks/CaseStudy";
@@ -9,6 +9,7 @@ import type { StatsContent } from "@/components/blocks/Stats";
 import ImpactManualTable, { type ImpactManualTableContent } from "@/components/blocks/ImpactManualTable";
 import ImpactYearInReview, { type ImpactYearInReviewContent } from "@/components/blocks/ImpactYearInReview";
 import IconCards, { type IconCardsContent } from "@/components/blocks/IconCards";
+import SectionRenderer from "@/components/blocks/SectionRenderer";
 import "./impact.css";
 
 export const metadata: Metadata = {
@@ -96,8 +97,17 @@ export default async function ImpactPage() {
   const fundingModelContent = (fundingModel?.content as IconCardsContent | undefined) ?? DEFAULT_FUNDING_MODEL;
   const bottomCtaContent = (bottomCta?.content as CtaContent | undefined) ?? DEFAULT_BOTTOM_CTA;
 
+  const consumedIds = new Set(
+    [hero, stats, families, manualTable, voices, deployed, yearInReview, fundingModel, bottomCta]
+      .filter((s): s is Section => !!s)
+      .map((s) => s.id)
+  );
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const slot = makeExtrasSlotter(extraSections);
+
   return (
     <div className="page-impact">
+      <SectionRenderer sections={slot(hero?.position ?? 0)} />
       {/* ─── 1. HERO ─── */}
       {hero ? (
         <Hero
@@ -114,6 +124,7 @@ export default async function ImpactPage() {
           live markup uses <span class="stat-label"> while Stats.tsx renders
           <p class="stat-label"> — a real tag difference with no explicit
           `display` override in CSS, so swapping would risk a layout shift. */}
+      <SectionRenderer sections={slot(stats?.position ?? Infinity)} />
       <div className="stat-row" role="list">
         {statsContent.stats.map((stat, i) => (
           <div className={`stat-cell reveal d${i + 1}`} role="listitem" key={i}>
@@ -129,6 +140,7 @@ export default async function ImpactPage() {
           home's pressure/model pattern that PhotoText.tsx implements, and it
           has no pullquote but does have a fixed .comp-card widget that isn't
           part of admin's photo-text field shape at all. */}
+      <SectionRenderer sections={slot(families?.position ?? Infinity)} />
       <section className="families">
         {(() => {
           const imgEl = (
@@ -174,9 +186,11 @@ export default async function ImpactPage() {
         })()}
       </section>
 
+      <SectionRenderer sections={slot(voices?.position ?? Infinity)} />
       {/* ─── 4. VOICES CAROUSEL ─── */}
       {voices ? <Voices content={voices.content as VoicesContent} backgroundColor={voices.background_color} /> : null}
 
+      <SectionRenderer sections={slot(deployed?.position ?? Infinity)} />
       {/* ─── 5. DEPLOYED AND DELIVERING RESULTS ─── */}
       <section className="field section-pad" id="deployed">
         <div className="section-inner">
@@ -187,9 +201,11 @@ export default async function ImpactPage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(yearInReview?.position ?? Infinity)} />
       {/* ─── 6. YEAR IN REVIEW ─── */}
       <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview?.background_color} />
 
+      <SectionRenderer sections={slot(fundingModel?.position ?? Infinity)} />
       {/* ─── 7. FUNDING MODEL ─── */}
       <section
         className="funding section-pad"
@@ -201,8 +217,12 @@ export default async function ImpactPage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(bottomCta?.position ?? Infinity)} />
       {/* INSIGHTS CTA */}
       <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />
+
+      {/* Any remaining new blocks added via "Add a block" */}
+      <SectionRenderer sections={slot(Infinity)} />
     </div>
   );
 }

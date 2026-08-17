@@ -153,6 +153,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .page-custom .model-photo {

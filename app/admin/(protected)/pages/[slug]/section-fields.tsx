@@ -450,6 +450,76 @@ export function AddMiniCardButton({ label, onClick }: { label: string; onClick: 
   );
 }
 
+/** Optional "pullquote" subsection — a single highlighted line of text.
+ * Collapsed to a "+ Add pullquote" button until set. */
+export function PullquoteToggleField({ content, onChange }: FieldsProps) {
+  return content.pullquote ? (
+    <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
+      <TextAreaField label="Pullquote" rows={2} value={content.pullquote ?? ""} onChange={(v) => onChange({ ...content, pullquote: v })} />
+      <button
+        type="button"
+        className="a-btn a-btn-outline a-btn-sm"
+        style={{ marginTop: 14 }}
+        onClick={() => onChange({ ...content, pullquote: null })}
+      >
+        Remove pullquote
+      </button>
+    </div>
+  ) : (
+    <div style={{ marginTop: 24 }}>
+      <AddMiniCardButton label="Add pullquote" onClick={() => onChange({ ...content, pullquote: "" })} />
+    </div>
+  );
+}
+
+/** Optional "footnote" subsection — a trailing note below the block's main
+ * content. Collapsed to a "+ Add footnote" button until set. */
+export function FootnoteToggleField({ content, onChange }: FieldsProps) {
+  return content.footnote ? (
+    <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
+      <TextAreaField label="Footnote" rows={2} value={content.footnote ?? ""} onChange={(v) => onChange({ ...content, footnote: v })} />
+      <button
+        type="button"
+        className="a-btn a-btn-outline a-btn-sm"
+        style={{ marginTop: 14 }}
+        onClick={() => onChange({ ...content, footnote: null })}
+      >
+        Remove footnote
+      </button>
+    </div>
+  ) : (
+    <div style={{ marginTop: 24 }}>
+      <AddMiniCardButton label="Add footnote" onClick={() => onChange({ ...content, footnote: "" })} />
+    </div>
+  );
+}
+
+/** Optional "callout" subsection — a big number/stat plus a short line of
+ * text, e.g. "65% of our users access VMI on a smartphone." Collapsed to a
+ * "+ Add callout" button until set. */
+export function CalloutToggleField({ content, onChange }: FieldsProps) {
+  return content.callout_number || content.callout_text ? (
+    <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
+      <FieldRow>
+        <TextField label="Callout number" value={content.callout_number ?? ""} onChange={(v) => onChange({ ...content, callout_number: v })} />
+        <TextField label="Callout text" value={content.callout_text ?? ""} onChange={(v) => onChange({ ...content, callout_text: v })} />
+      </FieldRow>
+      <button
+        type="button"
+        className="a-btn a-btn-outline a-btn-sm"
+        style={{ marginTop: 14 }}
+        onClick={() => onChange({ ...content, callout_number: null, callout_text: null })}
+      >
+        Remove callout
+      </button>
+    </div>
+  ) : (
+    <div style={{ marginTop: 24 }}>
+      <AddMiniCardButton label="Add callout" onClick={() => onChange({ ...content, callout_number: "", callout_text: "" })} />
+    </div>
+  );
+}
+
 // small array helpers
 function updateAt<T>(arr: T[], i: number, patch: Partial<T>): T[] {
   return arr.map((item, idx) => (idx === i ? { ...item, ...patch } : item));
@@ -623,7 +693,7 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
         onAltChange={(v) => onChange({ ...content, photo_alt: v })}
       />
       {content.button_text || content.button_link ? (
-        <div className="a-mini-card" style={{ marginBottom: 16 }}>
+        <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
           <TextField
             label="Button text"
             value={content.button_text ?? ""}
@@ -640,20 +710,31 @@ function PhotoTextFields({ content, onChange }: FieldsProps) {
           </button>
         </div>
       ) : (
-        <AddMiniCardButton label="Add button" onClick={() => onChange({ ...content, button_text: "Learn more", button_link: "" })} />
+        <div style={{ marginTop: 24 }}>
+          <AddMiniCardButton label="Add button" onClick={() => onChange({ ...content, button_text: "Learn more", button_link: "" })} />
+        </div>
       )}
-      <FieldRow>
-        <TextField
-          label="Callout stat number (optional)"
-          value={content.stat_number ?? ""}
-          onChange={(v) => onChange({ ...content, stat_number: v })}
-        />
-        <TextField
-          label="Callout stat text (optional)"
-          value={content.stat_text ?? ""}
-          onChange={(v) => onChange({ ...content, stat_text: v })}
-        />
-      </FieldRow>
+      <FootnoteToggleField content={content} onChange={onChange} />
+      {content.stat_number || content.stat_text ? (
+        <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
+          <FieldRow>
+            <TextField label="Callout number" value={content.stat_number ?? ""} onChange={(v) => onChange({ ...content, stat_number: v })} />
+            <TextField label="Callout text" value={content.stat_text ?? ""} onChange={(v) => onChange({ ...content, stat_text: v })} />
+          </FieldRow>
+          <button
+            type="button"
+            className="a-btn a-btn-outline a-btn-sm"
+            style={{ marginTop: 14 }}
+            onClick={() => onChange({ ...content, stat_number: null, stat_text: null })}
+          >
+            Remove callout
+          </button>
+        </div>
+      ) : (
+        <div style={{ marginTop: 24 }}>
+          <AddMiniCardButton label="Add callout" onClick={() => onChange({ ...content, stat_number: "", stat_text: "" })} />
+        </div>
+      )}
     </>
   );
 }
@@ -697,6 +778,8 @@ function StepsFields({ content, onChange }: FieldsProps) {
         value={content.footnote ?? ""}
         onChange={(v) => onChange({ ...content, footnote: v })}
       />
+      <PullquoteToggleField content={content} onChange={onChange} />
+      <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
 }
@@ -835,6 +918,9 @@ function TextFields({ content, onChange }: FieldsProps) {
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
       <TextAreaField label="Text" rows={5} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
+      <PullquoteToggleField content={content} onChange={onChange} />
+      <FootnoteToggleField content={content} onChange={onChange} />
+      <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
 }
@@ -844,7 +930,7 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading} onChange={(v) => onChange({ ...content, heading: v })} />
-      <TextAreaField label="Intro text (optional)" rows={2} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
+      <TextAreaField label="Text (optional)" rows={2} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
@@ -880,6 +966,8 @@ function ContentCardsFields({ content, onChange }: FieldsProps) {
         value={content.footnote ?? ""}
         onChange={(v) => onChange({ ...content, footnote: v })}
       />
+      <PullquoteToggleField content={content} onChange={onChange} />
+      <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
 }
@@ -929,6 +1017,7 @@ function CaseStudyFields({ content, onChange }: FieldsProps) {
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading ?? ""} onChange={(v) => onChange({ ...content, heading: v })} />
+      <TextAreaField label="Text (optional)" rows={2} value={content.text ?? ""} onChange={(v) => onChange({ ...content, text: v })} />
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
@@ -959,6 +1048,9 @@ function CaseStudyFields({ content, onChange }: FieldsProps) {
         label="Add card"
         onClick={() => onChange({ ...content, cards: [...cards, { title: "", heading: "", text: "", photo_url: "", photo_alt: "", link: "" }] })}
       />
+      <PullquoteToggleField content={content} onChange={onChange} />
+      <FootnoteToggleField content={content} onChange={onChange} />
+      <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
 }
@@ -993,7 +1085,7 @@ function IconCardsFields({ content, onChange }: FieldsProps) {
   return (
     <>
       <TextField label="Heading (optional)" value={content.heading ?? ""} onChange={(v) => onChange({ ...content, heading: v })} />
-      <TextAreaField label="Intro text (optional)" rows={2} value={content.text ?? ""} onChange={(v) => onChange({ ...content, text: v })} />
+      <TextAreaField label="Text (optional)" rows={2} value={content.text ?? ""} onChange={(v) => onChange({ ...content, text: v })} />
       <MiniCardList>
         {cards.map((c, i) => (
           <MiniCard key={i} label={c.heading || `Card ${i + 1}`} onRemove={() => onChange({ ...content, cards: removeAt(cards, i) })}>
@@ -1030,6 +1122,8 @@ function IconCardsFields({ content, onChange }: FieldsProps) {
         value={content.footnote ?? ""}
         onChange={(v) => onChange({ ...content, footnote: v })}
       />
+      <PullquoteToggleField content={content} onChange={onChange} />
+      <CalloutToggleField content={content} onChange={onChange} />
     </>
   );
 }
@@ -1188,6 +1282,13 @@ function ImpactYearInReviewFields({ content, onChange }: FieldsProps) {
       <TextAreaField label="Text" rows={3} value={content.text} onChange={(v) => onChange({ ...content, text: v })} />
       <TextField label="Button text" value={content.button_text} onChange={(v) => onChange({ ...content, button_text: v })} />
       <LinkPicker label="Button links to" value={content.link ?? ""} onChange={(v) => onChange({ ...content, link: v })} />
+      <PhotoField
+        label="Report cover image (optional)"
+        url={content.photo_url}
+        alt={content.photo_alt}
+        onUrlChange={(v) => onChange({ ...content, photo_url: v })}
+        onAltChange={(v) => onChange({ ...content, photo_alt: v })}
+      />
     </>
   );
 }
@@ -1225,11 +1326,37 @@ function ContactFormSectionFields({ content, onChange }: FieldsProps) {
       </FieldRow>
       <TextField label="Submit button text" value={content.submit_label} onChange={(v) => onChange({ ...content, submit_label: v })} />
       <TextAreaField label="Success message" rows={2} value={content.success_message} onChange={(v) => onChange({ ...content, success_message: v })} />
-      <div className="a-field-hint">Community section only, below:</div>
-      <TextField label="Address: organization name (optional)" value={content.address_org_name ?? ""} onChange={(v) => onChange({ ...content, address_org_name: v })} />
-      <TextField label="Address: line 1 (optional)" value={content.address_line1 ?? ""} onChange={(v) => onChange({ ...content, address_line1: v })} />
-      <TextField label="Address: line 2 (optional)" value={content.address_line2 ?? ""} onChange={(v) => onChange({ ...content, address_line2: v })} />
-      <TextField label="Address: email (optional)" value={content.address_email ?? ""} onChange={(v) => onChange({ ...content, address_email: v })} />
+      {/* Address is only offered on the Community form (the only one of the
+          3 contact-form-section instances with a "subject" field) — State
+          Partners/Funders never had an address block in the original design
+          and shouldn't be able to add one. */}
+      {"subject_label" in content ? (
+        content.address_org_name || content.address_line1 || content.address_line2 || content.address_email ? (
+          <div className="a-mini-card" style={{ marginTop: 24, marginBottom: 16 }}>
+            <TextField label="Address: organization name (optional)" value={content.address_org_name ?? ""} onChange={(v) => onChange({ ...content, address_org_name: v })} />
+            <TextField label="Address: line 1 (optional)" value={content.address_line1 ?? ""} onChange={(v) => onChange({ ...content, address_line1: v })} />
+            <TextField label="Address: line 2 (optional)" value={content.address_line2 ?? ""} onChange={(v) => onChange({ ...content, address_line2: v })} />
+            <TextField label="Address: email (optional)" value={content.address_email ?? ""} onChange={(v) => onChange({ ...content, address_email: v })} />
+            <button
+              type="button"
+              className="a-btn a-btn-outline a-btn-sm"
+              style={{ marginTop: 14 }}
+              onClick={() =>
+                onChange({ ...content, address_org_name: null, address_line1: null, address_line2: null, address_email: null })
+              }
+            >
+              Remove address
+            </button>
+          </div>
+        ) : (
+          <div style={{ marginTop: 24 }}>
+            <AddMiniCardButton
+              label="Add address"
+              onClick={() => onChange({ ...content, address_org_name: "", address_line1: "", address_line2: "", address_email: "" })}
+            />
+          </div>
+        )
+      ) : null}
     </>
   );
 }

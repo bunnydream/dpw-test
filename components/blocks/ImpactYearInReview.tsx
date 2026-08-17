@@ -5,11 +5,14 @@ export type ImpactYearInReviewContent = {
   text: string;
   button_text: string;
   link: string;
+  /** Report cover image shown inside the ".report-book" frame. Falls back to
+   * a plain "Annual Report" text placeholder when unset. */
+  photo_url?: string | null;
+  photo_alt?: string | null;
 };
 
 /** Impact's "Year in review" section (".annual", id="annual-report").
- * Page-specific, non-reusable. The decorative "report-book" visual and its
- * "Annual Report" label are fixed design chrome, not editable copy. */
+ * Page-specific, non-reusable. */
 export default function ImpactYearInReview({
   content,
   backgroundColor,
@@ -17,7 +20,7 @@ export default function ImpactYearInReview({
   content: ImpactYearInReviewContent;
   backgroundColor?: string | null;
 }) {
-  const { heading, text, button_text, link } = content;
+  const { heading, text, button_text, link, photo_url, photo_alt } = content;
 
   return (
     <section className="annual section-pad" id="annual-report" style={backgroundColor ? { background: backgroundColor } : undefined}>
@@ -36,11 +39,18 @@ export default function ImpactYearInReview({
           )}
         </div>
 
-        <div className="annual-visual reveal d2">
-          <div className="report-book">
-            <span>Annual Report</span>
+        {photo_url ? (
+          <div className="annual-visual reveal d2">
+            <div className="report-book">
+              <img
+                src={photo_url}
+                alt={photo_alt ?? "Annual report cover"}
+                loading="lazy"
+                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "3px" }}
+              />
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </section>
   );

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/admin/auth";
 import type { Database } from "@/lib/supabase/types";
+import type { NavItem } from "@/lib/site-settings";
+import { pageSlugToPath } from "@/lib/page-path";
 
 type PageRow = Database["public"]["Tables"]["pages"]["Row"];
 
@@ -148,7 +150,18 @@ function NavIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function Sidebar({ email, pages = [] }: { email: string; pages?: PageRow[] }) {
+export default function Sidebar({
+  email,
+  pages = [],
+  navItems = [],
+}: {
+  email: string;
+  pages?: PageRow[];
+  /** Live navbar order — page rows are sorted to match so the sidebar
+   * reflects however the admin has arranged the public nav. Pages not in
+   * the nav (e.g. an unpublished draft) sort after everything that is. */
+  navItems?: NavItem[];
+}) {
   const pathname = usePathname();
   const initials = email.slice(0, 2).toUpperCase();
 
@@ -157,10 +170,19 @@ export default function Sidebar({ email, pages = [] }: { email: string; pages?: 
     return pathname.startsWith(href);
   }
 
-  // Custom (non-fixed) pages, sorted alphabetically after the 6 built-ins.
+  function navOrder(slug: string) {
+    const href = pageSlugToPath(slug);
+    const index = navItems.findIndex((item) => item.href === href);
+    return index === -1 ? navItems.length : index;
+  }
+
+  const fixedPages = [...FIXED_PAGE_META].sort((a, b) => navOrder(a.slug) - navOrder(b.slug));
+
+  // Custom (non-fixed) pages: nav order first, then alphabetically for any
+  // not yet in the nav (e.g. unpublished drafts).
   const customPages = pages
     .filter((p) => !FIXED_PAGE_SLUGS.includes(p.slug))
-    .sort((a, b) => a.title.localeCompare(b.title));
+    .sort((a, b) => navOrder(a.slug) - navOrder(b.slug) || a.title.localeCompare(b.title));
 
   return (
     <aside className="admin-sidebar">
@@ -179,7 +201,7 @@ export default function Sidebar({ email, pages = [] }: { email: string; pages?: 
         </li>
 
         <li className="admin-nav-label">Website pages</li>
-        {FIXED_PAGE_META.map((link) => {
+        {fixedPages.map((link) => {
           const href = `/admin/pages/${link.slug}`;
           return (
             <li key={link.slug}>

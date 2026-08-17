@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { listPagesWithMeta } from "@/lib/admin/pages";
+import { getNavSettingsAdmin } from "@/lib/admin/site-settings";
 import Sidebar from "@/components/admin/Sidebar";
 import "../admin.css";
 
@@ -17,11 +18,12 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
   }
 
   const pages = await listPagesWithMeta();
+  const navSettings = await getNavSettingsAdmin();
 
   return (
     <div className="admin">
       <div className="admin-shell">
-        <Sidebar email={user.email ?? ""} pages={pages} />
+        <Sidebar email={user.email ?? ""} pages={pages} navItems={navSettings.items} />
         <div className="admin-main">{children}</div>
       </div>
     </div>

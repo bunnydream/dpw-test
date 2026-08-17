@@ -1,4 +1,7 @@
 export type CaseStudyCard = {
+  /** Small state/partner label above the heading, e.g. "Pennsylvania". Falls
+   * back to a heading-derived guess (see below) when unset. */
+  title?: string | null;
   heading: string;
   text: string;
   photo_url: string;
@@ -17,11 +20,10 @@ export type CaseStudyContent = {
 /**
  * Renders the ".case-grid" / ".case-card" structure used identically by
  * product's "In the field" section and impact's "Deployed and delivering
- * results" section. `case-state` (e.g. "Pennsylvania") is derived from the
- * first word of `heading` up to " Department" — both current live instances
- * follow that pattern ("Pennsylvania Department of Human Services" ->
- * "Pennsylvania"). If a card's heading doesn't contain " Department", the
- * whole heading is used as the state label.
+ * results" section. `case-state` (e.g. "Pennsylvania") comes from `card.title`
+ * when set; otherwise it's derived from the first word of `heading` up to
+ * " Department" (both current live cards follow that pattern), or the whole
+ * heading if it doesn't contain " Department".
  */
 export default function CaseStudy({ content }: { content: CaseStudyContent }) {
   const { cards } = content;
@@ -29,7 +31,7 @@ export default function CaseStudy({ content }: { content: CaseStudyContent }) {
   return (
     <div className="case-grid">
       {cards.map((card, i) => {
-        const state = card.heading.includes(" Department") ? card.heading.split(" Department")[0] : card.heading;
+        const state = card.title || (card.heading.includes(" Department") ? card.heading.split(" Department")[0] : card.heading);
         return (
           <a href={card.link || "#"} className={`case-card reveal d${(i % 3) + 1}`} key={i}>
             <div className="case-text">

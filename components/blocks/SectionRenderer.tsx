@@ -61,7 +61,7 @@ export function SectionBlock({ section }: { section: Section }) {
       // wrap it in their own section chrome — the generic renderer supplies
       // the same section-pad/section-inner wrapper here.
       return (
-        <div className="section-pad">
+        <div className="section-pad" style={section.background_color ? { background: section.background_color } : undefined}>
           <div className="section-inner">
             <TeamMember content={section.content as TeamMemberContent} />
           </div>

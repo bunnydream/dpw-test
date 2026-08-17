@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import ProductAccordion from "@/components/ProductAccordion";
-import { getPageSections, type Section } from "@/lib/sections";
+import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import CaseStudy, { type CaseStudyContent } from "@/components/blocks/CaseStudy";
 import Cta, { type CtaContent } from "@/components/blocks/Cta";
@@ -8,6 +8,7 @@ import ProductProblemAccordion, { type ProductProblemAccordionContent } from "@/
 import ProductTalkCta, { type ProductTalkCtaContent } from "@/components/blocks/ProductTalkCta";
 import ProductCompareTable, { type ProductCompareTableContent } from "@/components/blocks/ProductCompareTable";
 import ProductVendorQuestions, { type ProductVendorQuestionsContent } from "@/components/blocks/ProductVendorQuestions";
+import SectionRenderer from "@/components/blocks/SectionRenderer";
 import "./product.css";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ type ContentCardsContent = {
   heading: string;
   text: string;
   footnote?: string | null;
+  card_background_color?: string | null;
   cards: {
     title?: string | null;
     heading: string;
@@ -224,10 +226,19 @@ export default async function ProductPage() {
   const vendorQuestionsContent = (vendorQuestions?.content as ProductVendorQuestionsContent | undefined) ?? DEFAULT_VENDOR_QUESTIONS;
   const bottomCtaContent = (bottomCta?.content as CtaContent | undefined) ?? DEFAULT_BOTTOM_CTA;
 
+  const consumedIds = new Set(
+    [hero, builtToFit, verificationProblem, accessible, problemAccordion, talkCta, compareTable, vendorQuestions, pilotSteps, inTheField, bottomCta]
+      .filter((s): s is Section => !!s)
+      .map((s) => s.id)
+  );
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const slot = makeExtrasSlotter(extraSections);
+
   return (
     <div className="page-product">
       <ProductAccordion />
 
+      <SectionRenderer sections={slot(hero?.position ?? 0)} />
       {/* HERO */}
       {hero ? (
         <Hero
@@ -238,19 +249,28 @@ export default async function ProductPage() {
         />
       ) : null}
 
+      <SectionRenderer sections={slot(builtToFit?.position ?? Infinity)} />
       {/* ═══════════════════════════════════════════════
           BUILT TO FIT YOUR SYSTEMS
           Option labels: copper text only. No checkmarks.
           ═══════════════════════════════════════════════ */}
       {builtToFitContent ? (
-        <section className="integration section-pad" id="integration">
+        <section
+          className="integration section-pad"
+          id="integration"
+          style={builtToFit?.background_color ? { background: builtToFit.background_color } : undefined}
+        >
           <div className="section-inner">
             <h2 className="section-h reveal">{builtToFitContent.heading}</h2>
             <p className="body-p reveal d1">{builtToFitContent.text}</p>
 
             <div className="io-grid">
               {builtToFitContent.cards.map((card, i) => (
-                <div className={`io-card reveal d${i + 1}`} key={i}>
+                <div
+                  className={`io-card reveal d${i + 1}`}
+                  key={i}
+                  style={builtToFitContent.card_background_color ? { background: builtToFitContent.card_background_color } : undefined}
+                >
                   <div className="io-top">
                     <img src={card.photo_url} alt={card.photo_alt ?? ""} loading="lazy" />
                   </div>
@@ -268,8 +288,13 @@ export default async function ProductPage() {
         </section>
       ) : null}
 
+      <SectionRenderer sections={slot(verificationProblem?.position ?? Infinity)} />
       {/* THE VERIFICATION PROBLEM */}
-      <section className="ps-section section-pad" id="the-problem">
+      <section
+        className="ps-section section-pad"
+        id="the-problem"
+        style={verificationProblem?.background_color ? { background: verificationProblem.background_color } : undefined}
+      >
         <div className="section-inner">
           <div className="ps-grid">
             {verificationProblemContent?.side === "right" ? (
@@ -322,19 +347,27 @@ export default async function ProductPage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(talkCta?.position ?? Infinity)} />
       {/* TALK TO US CTA BANNER */}
       <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta?.background_color} />
 
+      <SectionRenderer sections={slot(compareTable?.position ?? Infinity)} />
       {/* COMPARISON TABLE */}
       <ProductCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />
 
+      <SectionRenderer sections={slot(vendorQuestions?.position ?? Infinity)} />
       {/* ═══════════════════════════════════════════════
           QUESTIONS TO ASK — bigger bare chevrons
           ═══════════════════════════════════════════════ */}
       <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions?.background_color} />
 
+      <SectionRenderer sections={slot(accessible?.position ?? Infinity)} />
       {/* ACCESSIBLE BY DESIGN */}
-      <section className="access-section" id="accessibility">
+      <section
+        className="access-section"
+        id="accessibility"
+        style={accessible?.background_color ? { background: accessible.background_color } : undefined}
+      >
         {(() => {
           const textEl = (
             <div className="access-left">
@@ -382,11 +415,16 @@ export default async function ProductPage() {
         })()}
       </section>
 
+      <SectionRenderer sections={slot(pilotSteps?.position ?? Infinity)} />
       {/* ═══════════════════════════════════════════════
           THE PATH TO A PILOT — racetrack path
           ═══════════════════════════════════════════════ */}
       {pilotStepsContent ? (
-        <section className="pilot section-pad" id="path-to-pilot">
+        <section
+          className="pilot section-pad"
+          id="path-to-pilot"
+          style={pilotSteps?.background_color ? { background: pilotSteps.background_color } : undefined}
+        >
           <div className="section-inner">
             <h2 className="section-h reveal">{pilotStepsContent.heading ?? DEFAULT_PILOT_HEADING}</h2>
 
@@ -412,9 +450,14 @@ export default async function ProductPage() {
         </section>
       ) : null}
 
+      <SectionRenderer sections={slot(inTheField?.position ?? Infinity)} />
       {/* IN THE FIELD */}
       {inTheField ? (
-        <section className="field section-pad" id="in-the-field">
+        <section
+          className="field section-pad"
+          id="in-the-field"
+          style={inTheField?.background_color ? { background: inTheField.background_color } : undefined}
+        >
           <div className="section-inner">
             <h2 className="section-h reveal">{(inTheField.content as CaseStudyContent).heading ?? "In the field"}</h2>
             <CaseStudy content={inTheField.content as CaseStudyContent} />
@@ -422,8 +465,12 @@ export default async function ProductPage() {
         </section>
       ) : null}
 
+      <SectionRenderer sections={slot(bottomCta?.position ?? Infinity)} />
       {/* IMPACT CTA */}
       <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />
+
+      {/* Any remaining new blocks added via "Add a block" */}
+      <SectionRenderer sections={slot(Infinity)} />
     </div>
   );
 }

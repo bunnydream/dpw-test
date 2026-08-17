@@ -12,6 +12,11 @@ export type PhotoTextContent = {
    * section's "Request a demo" link. Only rendered when both are set. */
   button_text?: string | null;
   button_link?: string | null;
+  /** Optional trailing note below everything else in the text column. */
+  footnote?: string | null;
+  /** Optional callout stat, e.g. Product's "65% of our users..." block. */
+  stat_number?: string | null;
+  stat_text?: string | null;
 };
 
 /**
@@ -46,7 +51,7 @@ export default function PhotoText({
   /** extra fixed JSX to render after the text block (e.g. the "pressure" section's CTA button) */
   children?: ReactNode;
 }) {
-  const { side, heading, text, pullquote, photo_url, photo_alt, button_text, button_link } = content;
+  const { side, heading, text, pullquote, photo_url, photo_alt, button_text, button_link, footnote, stat_number, stat_text } = content;
   const isLeft = side === "left";
   const sectionClass = isLeft ? "pressure" : "model";
   const imgWrapClass = isLeft ? "pressure-img" : "model-photo";
@@ -90,6 +95,13 @@ export default function PhotoText({
           </a>
         )
       ) : null}
+      {stat_number || stat_text ? (
+        <div className="callout-stat reveal d2">
+          <span className="callout-stat-num">{stat_number}</span>
+          <p className="callout-stat-text">{stat_text}</p>
+        </div>
+      ) : null}
+      {footnote ? <p className="inline-note reveal">{footnote}</p> : null}
       {children}
     </div>
   );

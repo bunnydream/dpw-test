@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
-import { getPageSections, type Section } from "@/lib/sections";
+import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import SectionRenderer from "@/components/blocks/SectionRenderer";
 import "./contact.css";
 
 export const metadata: Metadata = {
@@ -115,15 +116,23 @@ export default async function ContactPage() {
   const result = await getPageSections("contact");
   const sections = result?.sections ?? [];
 
-  const header = byType(sections, "text")[0]?.content as TextContent | undefined;
+  const headerSection = byType(sections, "text")[0];
+  const header = headerSection?.content as TextContent | undefined;
   const formSections = byType(sections, "contact-form-section");
 
   const statePartners = (formSections[0]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_STATE_PARTNERS;
   const funders = (formSections[1]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_FUNDERS;
   const community = (formSections[2]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_COMMUNITY;
 
+  const consumedIds = new Set(
+    [headerSection, ...formSections.slice(0, 3)].filter((s): s is Section => !!s).map((s) => s.id)
+  );
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const slot = makeExtrasSlotter(extraSections);
+
   return (
     <div className="page-contact">
+      <SectionRenderer sections={slot(headerSection?.position ?? 0)} />
       {/* PAGE HEADER */}
       <section className="page-header">
         <div className="page-header-inner">
@@ -132,6 +141,7 @@ export default async function ContactPage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(formSections[0]?.position ?? Infinity)} />
       {/* FOR STATE PARTNERS */}
       <section className="section-pad" style={{ background: (formSections[0]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
@@ -236,6 +246,7 @@ export default async function ContactPage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(formSections[1]?.position ?? Infinity)} />
       {/* FOR FUNDERS */}
       <section className="section-pad" style={{ background: (formSections[1]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
@@ -327,6 +338,7 @@ export default async function ContactPage() {
         </div>
       </section>
 
+      <SectionRenderer sections={slot(formSections[2]?.position ?? Infinity)} />
       {/* FOR COMMUNITY + ADDRESS */}
       <section className="section-pad" style={{ background: (formSections[2]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
@@ -429,6 +441,9 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
+
+      {/* Any remaining new blocks added via "Add a block" */}
+      <SectionRenderer sections={slot(Infinity)} />
     </div>
   );
 }
