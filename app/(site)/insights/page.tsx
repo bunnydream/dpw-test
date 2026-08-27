@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import InsightsFilter from "@/components/InsightsFilter";
 import LinkedCard from "@/components/blocks/LinkedCard";
 import { createClient } from "@/lib/supabase/server";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import "./insights.css";
 
-export const metadata: Metadata = {
-  title: "Insights — Digital Public Works",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const siteSeo = await getSeoSettings();
+  return resolveMetadata({ item: null, fallbackTitle: "Insights", path: "/insights", siteSeo });
+}
 
 function excerptFrom(text: string | undefined, max = 160) {
   if (!text) return "";
