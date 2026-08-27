@@ -10,11 +10,14 @@ import ImpactManualTable, { type ImpactManualTableContent } from "@/components/b
 import ImpactYearInReview, { type ImpactYearInReviewContent } from "@/components/blocks/ImpactYearInReview";
 import IconCards, { type IconCardsContent } from "@/components/blocks/IconCards";
 import SectionRenderer from "@/components/blocks/SectionRenderer";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import "./impact.css";
 
-export const metadata: Metadata = {
-  title: "Impact — Digital Public Works",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [result, siteSeo] = await Promise.all([getPageSections("impact"), getSeoSettings()]);
+  return resolveMetadata({ item: result?.page ?? null, fallbackTitle: "Impact", path: "/impact", siteSeo });
+}
 
 const DEFAULT_STATS: StatsContent = {
   stats: [

@@ -9,10 +9,12 @@ import {
   setPostStatus,
   updateBlock,
   updatePostMeta,
+  updatePostSeo,
 } from "@/lib/admin/blog";
 import { softDeletePost } from "@/lib/admin/deleted-blog-posts";
 import { uploadMedia } from "@/lib/admin/media";
 import MediaLibraryModal from "@/components/admin/MediaLibraryModal";
+import SeoFieldsCard, { type SeoFieldsValue } from "@/components/admin/SeoFieldsCard";
 import type { BlogBlockType, Database, PageStatus } from "@/lib/supabase/types";
 
 type BlogPostRow = Database["public"]["Tables"]["blog_posts"]["Row"];
@@ -100,6 +102,22 @@ export default function BlogEditor({
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState(post.status === "published" ? "Published" : "Draft");
+
+  // SEO fields: own local state, seeded from the `post` prop, deliberately
+  // independent of the block-editing state above. Persisted by saveAll()
+  // alongside title/subtitle/etc. (see the updatePostSeo call below) rather
+  // than through a separate save action.
+  const [seoValue, setSeoValue] = useState<SeoFieldsValue>({
+    meta_title: post.meta_title,
+    meta_description: post.meta_description,
+    og_image_url: post.og_image_url,
+    canonical_url: post.canonical_url,
+    noindex: post.noindex,
+  });
+
+  function updateSeo(patch: Partial<SeoFieldsValue>) {
+    setSeoValue((s) => ({ ...s, ...patch }));
+  }
 
   const [toast, setToast] = useState<string | null>(null);
   let toastTimer: ReturnType<typeof setTimeout> | null = null;
@@ -238,6 +256,8 @@ export default function BlogEditor({
         featured_image_alt: featuredAlt || null,
         featured_image_caption: featuredCaption || null,
       });
+
+      await updatePostSeo(post.id, seoValue);
 
       if (showNewCategory && finalCategory) {
         setCategory(finalCategory);
@@ -707,6 +727,8 @@ export default function BlogEditor({
                 </div>
               )}
             </div>
+
+            <SeoFieldsCard value={seoValue} onChange={updateSeo} />
 
             <div className="a-editor-actions">
               {status === "published" ? (

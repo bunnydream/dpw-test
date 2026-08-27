@@ -9,11 +9,19 @@ import ProductTalkCta, { type ProductTalkCtaContent } from "@/components/blocks/
 import ProductCompareTable, { type ProductCompareTableContent } from "@/components/blocks/ProductCompareTable";
 import ProductVendorQuestions, { type ProductVendorQuestionsContent } from "@/components/blocks/ProductVendorQuestions";
 import SectionRenderer from "@/components/blocks/SectionRenderer";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import "./product.css";
 
-export const metadata: Metadata = {
-  title: "Verify My Income — Digital Public Works",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [result, siteSeo] = await Promise.all([getPageSections("product"), getSeoSettings()]);
+  return resolveMetadata({
+    item: result?.page ?? null,
+    fallbackTitle: "Verify My Income",
+    path: "/product",
+    siteSeo,
+  });
+}
 
 type ContentCardsContent = {
   heading: string;

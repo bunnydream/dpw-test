@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import "../insights.css";
 
 export async function generateMetadata({
@@ -10,17 +12,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
-  const { data: post } = await supabase
-    .from("blog_posts")
-    .select("title")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .maybeSingle();
+  const [{ data: post }, siteSeo] = await Promise.all([
+    supabase
+      .from("blog_posts")
+      .select("title, meta_title, meta_description, og_image_url, canonical_url, noindex")
+      .eq("slug", slug)
+      .eq("status", "published")
+      .maybeSingle(),
+    getSeoSettings(),
+  ]);
 
   if (!post) {
     return { title: "Insights — Digital Public Works" };
   }
-  return { title: `${post.title} — Digital Public Works` };
+  return resolveMetadata({ item: post, fallbackTitle: post.title, path: `/insights/${slug}`, siteSeo });
 }
 
 export default async function InsightPostPage({

@@ -44,6 +44,11 @@ export interface Database {
           status: PageStatus;
           created_at: string;
           updated_at: string;
+          meta_title: string | null;
+          meta_description: string | null;
+          og_image_url: string | null;
+          canonical_url: string | null;
+          noindex: boolean;
         };
         Insert: {
           id?: string;
@@ -52,6 +57,11 @@ export interface Database {
           status?: PageStatus;
           created_at?: string;
           updated_at?: string;
+          meta_title?: string | null;
+          meta_description?: string | null;
+          og_image_url?: string | null;
+          canonical_url?: string | null;
+          noindex?: boolean;
         };
         Update: Partial<Database["public"]["Tables"]["pages"]["Insert"]>;
         Relationships: [];
@@ -109,6 +119,11 @@ export interface Database {
           published_at: string | null;
           created_at: string;
           updated_at: string;
+          meta_title: string | null;
+          meta_description: string | null;
+          og_image_url: string | null;
+          canonical_url: string | null;
+          noindex: boolean;
         };
         Insert: {
           id?: string;
@@ -124,6 +139,11 @@ export interface Database {
           published_at?: string | null;
           created_at?: string;
           updated_at?: string;
+          meta_title?: string | null;
+          meta_description?: string | null;
+          og_image_url?: string | null;
+          canonical_url?: string | null;
+          noindex?: boolean;
         };
         Update: Partial<Database["public"]["Tables"]["blog_posts"]["Insert"]>;
         Relationships: [];

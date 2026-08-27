@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
+import { getSeoSettings } from "@/lib/site-settings";
+import { SITE_URL } from "@/lib/seo";
 import "../shared.css";
 
-export const metadata: Metadata = {
-  title: "Digital Public Works: Building digital infrastructure that strengthens communities.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSeoSettings();
+  return {
+    title: "Digital Public Works: Building digital infrastructure that strengthens communities.",
+    metadataBase: new URL(SITE_URL),
+    icons: seo.faviconUrl ? { icon: seo.faviconUrl } : undefined,
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

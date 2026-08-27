@@ -5,8 +5,10 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import {
   DEFAULT_FOOTER_SETTINGS,
   DEFAULT_NAV_SETTINGS,
+  DEFAULT_SEO_SETTINGS,
   type FooterSettings,
   type NavSettings,
+  type SeoSettings,
 } from "@/lib/site-settings";
 import { pageSlugToPath } from "@/lib/page-path";
 
@@ -32,6 +34,19 @@ export async function getFooterSettingsAdmin(): Promise<FooterSettings> {
 export async function updateFooterSettings(value: FooterSettings) {
   const supabase = createAdminClient();
   const { error } = await supabase.from("site_settings").update({ value }).eq("key", "footer");
+  if (error) throw new Error(error.message);
+  revalidatePath("/", "layout");
+}
+
+export async function getSeoSettingsAdmin(): Promise<SeoSettings> {
+  const supabase = createAdminClient();
+  const { data } = await supabase.from("site_settings").select("value").eq("key", "seo").maybeSingle();
+  return (data?.value as SeoSettings | undefined) ?? DEFAULT_SEO_SETTINGS;
+}
+
+export async function updateSeoSettings(value: SeoSettings) {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from("site_settings").update({ value }).eq("key", "seo");
   if (error) throw new Error(error.message);
   revalidatePath("/", "layout");
 }

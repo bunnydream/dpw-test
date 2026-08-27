@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import HowStepsProgress from "@/components/HowStepsProgress";
 import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import Stats, { type StatsContent } from "@/components/blocks/Stats";
 import PhotoText, { type PhotoTextContent } from "@/components/blocks/PhotoText";
@@ -80,6 +83,17 @@ const DEFAULT_HOW_IMAGE: ImageContent = {
 
 function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [result, siteSeo] = await Promise.all([getPageSections("home"), getSeoSettings()]);
+  return resolveMetadata({
+    item: result?.page ?? null,
+    fallbackTitle: "Digital Public Works: Building digital infrastructure that strengthens communities.",
+    rawFallbackTitle: true,
+    path: "/",
+    siteSeo,
+  });
 }
 
 export default async function HomePage() {

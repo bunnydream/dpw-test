@@ -1481,3 +1481,29 @@ a { color: inherit; }
   .admin-shell { grid-template-columns: 1fr; }
   .admin-sidebar { display: none; }
 }
+
+/* ─── SEO fields card (PageEditor.tsx / BlogEditor.tsx) ─────────────────── */
+.a-seo-card { margin-top: 20px; }
+
+.a-seo-card-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.a-seo-card-chevron { display: flex; transition: transform 0.15s ease; color: var(--steel); }
+.a-seo-card-chevron.is-open { transform: rotate(180deg); }
+
+.a-seo-card-body { margin-top: 4px; }
+
+.a-seo-char-count { font-size: 11.5px; color: var(--steel); margin-top: 4px; text-align: right; }
+
+.a-seo-noindex-row { display: flex; align-items: center; justify-content: space-between; }

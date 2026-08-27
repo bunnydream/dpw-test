@@ -81,6 +81,23 @@ export async function updatePostMeta(
   revalidateInsights(existing?.slug);
 }
 
+export async function updatePostSeo(
+  id: string,
+  fields: Partial<{
+    meta_title: string | null;
+    meta_description: string | null;
+    og_image_url: string | null;
+    canonical_url: string | null;
+    noindex: boolean;
+  }>
+) {
+  const supabase = createAdminClient();
+  const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
+  const { error } = await supabase.from("blog_posts").update(fields).eq("id", id);
+  if (error) throw new Error(error.message);
+  revalidateInsights(existing?.slug);
+}
+
 export async function setPostStatus(id: string, status: PageStatus) {
   const supabase = createAdminClient();
   const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();

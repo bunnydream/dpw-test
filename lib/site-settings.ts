@@ -69,3 +69,24 @@ export async function getFooterSettings(): Promise<FooterSettings> {
   const { data } = await supabase.from("site_settings").select("value").eq("key", "footer").maybeSingle();
   return (data?.value as FooterSettings | undefined) ?? DEFAULT_FOOTER_SETTINGS;
 }
+
+export type SeoSettings = {
+  titleSuffix: string;
+  defaultMetaDescription: string;
+  defaultOgImageUrl: string | null;
+  faviconUrl: string | null;
+};
+
+export const DEFAULT_SEO_SETTINGS: SeoSettings = {
+  titleSuffix: "— Digital Public Works",
+  defaultMetaDescription:
+    "Digital Public Works is an independent 501(c)(3) nonprofit building digital infrastructure that strengthens communities.",
+  defaultOgImageUrl: null,
+  faviconUrl: null,
+};
+
+export async function getSeoSettings(): Promise<SeoSettings> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("site_settings").select("value").eq("key", "seo").maybeSingle();
+  return (data?.value as SeoSettings | undefined) ?? DEFAULT_SEO_SETTINGS;
+}

@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import SectionRenderer from "@/components/blocks/SectionRenderer";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import "./careers.css";
 
-export const metadata: Metadata = {
-  title: "Careers — Digital Public Works",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [result, siteSeo] = await Promise.all([getPageSections("careers"), getSeoSettings()]);
+  return resolveMetadata({ item: result?.page ?? null, fallbackTitle: "Careers", path: "/careers", siteSeo });
+}
 
 function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);

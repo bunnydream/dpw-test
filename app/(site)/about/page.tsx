@@ -5,11 +5,14 @@ import { type PhotoTextContent } from "@/components/blocks/PhotoText";
 import TeamMember, { type TeamMemberContent } from "@/components/blocks/TeamMember";
 import Partners, { type PartnersContent } from "@/components/blocks/Partners";
 import SectionRenderer from "@/components/blocks/SectionRenderer";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import "./about.css";
 
-export const metadata: Metadata = {
-  title: "About — Digital Public Works",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [result, siteSeo] = await Promise.all([getPageSections("about"), getSeoSettings()]);
+  return resolveMetadata({ item: result?.page ?? null, fallbackTitle: "About", path: "/about", siteSeo });
+}
 
 type TextContent = {
   heading?: string | null;

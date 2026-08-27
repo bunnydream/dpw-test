@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
 import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
 import SectionRenderer from "@/components/blocks/SectionRenderer";
+import { getSeoSettings } from "@/lib/site-settings";
+import { resolveMetadata } from "@/lib/seo";
 import "./contact.css";
 
-export const metadata: Metadata = {
-  title: "Contact — Digital Public Works",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [result, siteSeo] = await Promise.all([getPageSections("contact"), getSeoSettings()]);
+  return resolveMetadata({ item: result?.page ?? null, fallbackTitle: "Contact", path: "/contact", siteSeo });
+}
 
 type TextContent = {
   heading?: string | null;

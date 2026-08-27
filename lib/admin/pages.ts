@@ -154,3 +154,21 @@ export async function updatePageTitle(pageId: string, title: string) {
     await renameNavItem(data.slug, title);
   }
 }
+
+export async function updatePageSeo(
+  pageId: string,
+  fields: Partial<{
+    meta_title: string | null;
+    meta_description: string | null;
+    og_image_url: string | null;
+    canonical_url: string | null;
+    noindex: boolean;
+  }>
+) {
+  const supabase = createAdminClient();
+  const { data: existing, error: fetchError } = await supabase.from("pages").select("slug").eq("id", pageId).single();
+  if (fetchError || !existing) throw new Error(fetchError?.message ?? "Page not found");
+  const { error } = await supabase.from("pages").update(fields).eq("id", pageId);
+  if (error) throw new Error(error.message);
+  revalidateForSlug(existing.slug);
+}

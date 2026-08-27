@@ -7,6 +7,7 @@ import {
   deleteSection,
   publishPage,
   reorderSections,
+  updatePageSeo,
   updatePageTitle,
   updateSectionContent,
 } from "@/lib/admin/pages";
@@ -14,6 +15,7 @@ import type { Database, SectionType } from "@/lib/supabase/types";
 import { FIXED_PAGE_SLUGS, pageSlugToPath } from "@/lib/page-path";
 import { BLOCK_TYPES, SECTION_TYPE_LABEL, starterContent, starterName } from "./block-types";
 import { BackgroundColorField, SectionContentFields, sectionDisplayName } from "./section-fields";
+import SeoFieldsCard, { type SeoFieldsValue } from "@/components/admin/SeoFieldsCard";
 import {
   CheckIcon,
   ChevronIcon,
@@ -119,7 +121,42 @@ export default function PageEditor({
   const titleDirty = titleValue.trim() !== page.title && titleValue.trim().length > 0;
 
   const livePath = pageSlugToPath(slug);
-  const hasUnsaved = dirtyIds.size > 0;
+
+  // SEO fields: own local state, seeded from the `page` prop, deliberately
+  // independent of `sections`/`dirtyIds`/undo-redo above. Persisted by
+  // handleSaveDraft/handlePublish alongside section changes (see
+  // persistSeo() below) rather than through a separate save action, so one
+  // Save draft/Publish click saves everything on the page.
+  const [seoValue, setSeoValue] = useState<SeoFieldsValue>({
+    meta_title: page.meta_title,
+    meta_description: page.meta_description,
+    og_image_url: page.og_image_url,
+    canonical_url: page.canonical_url,
+    noindex: page.noindex,
+  });
+  const [seoDirty, setSeoDirty] = useState(false);
+
+  function updateSeo(patch: Partial<SeoFieldsValue>) {
+    setSeoValue((s) => ({ ...s, ...patch }));
+    setSeoDirty(true);
+  }
+
+  const hasUnsaved = dirtyIds.size > 0 || seoDirty;
+
+  /** Persists SEO fields if changed. Shared by handleSaveDraft and
+   * handlePublish so both save actions cover the SEO card too. */
+  async function persistSeo(): Promise<boolean> {
+    if (!seoDirty) return true;
+    try {
+      await updatePageSeo(page.id, seoValue);
+      setSeoDirty(false);
+      return true;
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to save SEO settings");
+      return false;
+    }
+  }
 
   function checkpoint() {
     setPast((prev) => [...prev, sections]);
@@ -219,19 +256,21 @@ export default function PageEditor({
 
   async function handleSaveDraft() {
     setSaving(true);
-    const ok = await persistDirty();
+    const sectionsOk = await persistDirty();
+    const seoOk = await persistSeo();
     setSaving(false);
-    if (ok) showToast("Draft saved");
+    if (sectionsOk && seoOk) showToast("Draft saved");
   }
 
   async function handlePublish() {
     setSaving(true);
-    const ok = await persistDirty();
-    if (ok) {
+    const sectionsOk = await persistDirty();
+    const seoOk = await persistSeo();
+    if (sectionsOk) {
       try {
         await publishPage(slug);
         setPreviewKey((k) => k + 1);
-        showToast("Published to the live site");
+        showToast(seoOk ? "Published to the live site" : "Published, but SEO settings failed to save");
       } catch (err) {
         console.error(err);
         showToast("Saved, but publishing failed");
@@ -521,6 +560,8 @@ export default function PageEditor({
             <PlusIcon />
             Add a new block
           </button>
+
+          <SeoFieldsCard value={seoValue} onChange={updateSeo} />
         </div>
       </div>
 
