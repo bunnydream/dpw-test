@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Fragment, type ReactNode } from "react";
 import HowStepsProgress from "@/components/HowStepsProgress";
-import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import { getPageSections, type Section } from "@/lib/sections";
 import { getSeoSettings } from "@/lib/site-settings";
 import { resolveMetadata } from "@/lib/seo";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
@@ -129,18 +130,143 @@ export default async function HomePage() {
       .map((s) => s.id)
   );
   const extraSections = sections.filter((s) => !consumedIds.has(s.id));
-  const slot = makeExtrasSlotter(extraSections);
+
+  // Rank used as a section's sort position only when its DB row doesn't
+  // exist yet — reproduces today's fixed order for freshly-seeded pages.
+  const RANK = {
+    hero: 0,
+    stats: 1,
+    compareTable: 2,
+    pressure: 3,
+    how: 4,
+    stories: 5,
+    model: 6,
+    voices: 7,
+    partners: 8,
+    cta: 9,
+  };
+
+  type Block = { key: string; position: number; node: ReactNode };
+
+  const blocks: Block[] = [
+    {
+      key: hero?.id ?? "hero",
+      position: hero?.position ?? RANK.hero,
+      node: hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null,
+    },
+    {
+      key: stats?.id ?? "stats",
+      position: stats?.position ?? RANK.stats,
+      node: stats ? <Stats content={stats.content as StatsContent} backgroundColor={stats.background_color} /> : null,
+    },
+    {
+      key: compareTable?.id ?? "compareTable",
+      position: compareTable?.position ?? RANK.compareTable,
+      node: <HomeCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />,
+    },
+    {
+      key: pressure?.id ?? "pressure",
+      position: pressure?.position ?? RANK.pressure,
+      node: pressure ? (
+        <PhotoText
+          content={{
+            ...(pressure.content as PhotoTextContent),
+            button_text: (pressure.content as PhotoTextContent).button_text ?? "Request a demo",
+            button_link: (pressure.content as PhotoTextContent).button_link ?? "/contact",
+          }}
+          backgroundColor={pressure.background_color}
+          pullquoteTag="div"
+          id="pressure"
+          imgWidth={1400}
+          imgHeight={1050}
+        />
+      ) : null,
+    },
+    {
+      key: howHeading?.id ?? steps?.id ?? howImage?.id ?? "how",
+      position: howHeading?.position ?? steps?.position ?? howImage?.position ?? RANK.how,
+      node: (
+        <>
+          <section className="how" id="how-vmi-works">
+            <div className="how-inner">
+              <h2 className="section-h reveal">{howHeadingContent.heading}</h2>
+              <p className="body-p reveal d1">{howHeadingContent.text}</p>
+
+              <div className="how-cols">
+                <div className="how-left">
+                  {steps ? <Steps content={steps.content as StepsContent} /> : null}
+                </div>
+
+                <div className="how-right reveal d2">
+                  <img src={howImageContent.photo_url} alt={howImageContent.photo_alt ?? ""} loading="lazy" />
+                </div>
+              </div>
+            </div>
+          </section>
+          <HowStepsProgress />
+        </>
+      ),
+    },
+    {
+      key: stories?.id ?? "stories",
+      position: stories?.position ?? RANK.stories,
+      node: (
+        <section className="stories" style={stories?.background_color ? { background: stories.background_color } : undefined}>
+          <div className="stories-inner">
+            <IconCards content={storiesContent} />
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: model?.id ?? "model",
+      position: model?.position ?? RANK.model,
+      node: model ? (
+        <PhotoText
+          content={model.content as PhotoTextContent}
+          backgroundColor={model.background_color}
+          pullquoteTag="blockquote"
+          imgWidth={800}
+          imgHeight={1000}
+        />
+      ) : null,
+    },
+    {
+      key: voices?.id ?? "voices",
+      position: voices?.position ?? RANK.voices,
+      node: voices ? <Voices content={voices.content as VoicesContent} backgroundColor={voices.background_color} /> : null,
+    },
+    {
+      key: partners?.id ?? "partners",
+      position: partners?.position ?? RANK.partners,
+      node: partners ? (
+        <Partners content={partners.content as PartnersContent} backgroundColor={partners.background_color} />
+      ) : null,
+    },
+    {
+      key: cta?.id ?? "cta",
+      position: cta?.position ?? RANK.cta,
+      node: cta ? (
+        <Cta
+          content={{
+            ...(cta.content as CtaContent),
+            text: (cta.content as CtaContent).text ?? "No procurement required to begin the conversation.",
+          }}
+          backgroundColor={cta.background_color}
+        />
+      ) : null,
+    },
+    ...extraSections.map((section) => ({
+      key: section.id,
+      position: section.position,
+      node: <SectionRenderer sections={[section]} />,
+    })),
+  ];
+
+  blocks.sort((a, b) => a.position - b.position);
 
   return (
     <div className="page-home">
-      <SectionRenderer sections={slot(hero?.position ?? 0)} />
-      {/* HERO */}
-      {hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null}
-
-      <SectionRenderer sections={slot(stats?.position ?? Infinity)} />
-      {/* STAT ROW */}
-      {stats ? <Stats content={stats.content as StatsContent} backgroundColor={stats.background_color} /> : null}
-
       {/* LOGOS — hidden at launch. CMS: sections table, type='logo_row', visible=false */}
       <section className="logos-section" id="logos" style={{ display: "none" }} aria-label="Partners and funders">
         <div className="logos-inner">
@@ -189,91 +315,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <SectionRenderer sections={slot(compareTable?.position ?? Infinity)} />
-      {/* COMPARISON TEASER */}
-      <HomeCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />
-
-      <SectionRenderer sections={slot(pressure?.position ?? Infinity)} />
-      {/* PRESSURE */}
-      {pressure ? (
-        <PhotoText
-          content={{
-            ...(pressure.content as PhotoTextContent),
-            button_text: (pressure.content as PhotoTextContent).button_text ?? "Request a demo",
-            button_link: (pressure.content as PhotoTextContent).button_link ?? "/contact",
-          }}
-          backgroundColor={pressure.background_color}
-          pullquoteTag="div"
-          id="pressure"
-          imgWidth={1400}
-          imgHeight={1050}
-        />
-      ) : null}
-
-      <SectionRenderer sections={slot(howHeading?.position ?? Infinity)} />
-      {/* HOW IT WORKS */}
-      <section className="how" id="how-vmi-works">
-        <div className="how-inner">
-          <h2 className="section-h reveal">{howHeadingContent.heading}</h2>
-          <p className="body-p reveal d1">{howHeadingContent.text}</p>
-
-          <div className="how-cols">
-            <div className="how-left">
-              {steps ? <Steps content={steps.content as StepsContent} /> : null}
-            </div>
-
-            <div className="how-right reveal d2">
-              <img src={howImageContent.photo_url} alt={howImageContent.photo_alt ?? ""} loading="lazy" />
-            </div>
-          </div>
-        </div>
-      </section>
-      <HowStepsProgress />
-
-      <SectionRenderer sections={slot(stories?.position ?? Infinity)} />
-      {/* STORIES */}
-      <section className="stories" style={stories?.background_color ? { background: stories.background_color } : undefined}>
-        <div className="stories-inner">
-          <IconCards content={storiesContent} />
-        </div>
-      </section>
-
-      <SectionRenderer sections={slot(model?.position ?? Infinity)} />
-      {/* MODEL */}
-      {model ? (
-        <PhotoText
-          content={model.content as PhotoTextContent}
-          backgroundColor={model.background_color}
-          pullquoteTag="blockquote"
-          imgWidth={800}
-          imgHeight={1000}
-        />
-      ) : null}
-
-      <SectionRenderer sections={slot(voices?.position ?? Infinity)} />
-      {/* QUOTES CAROUSEL */}
-      {voices ? <Voices content={voices.content as VoicesContent} backgroundColor={voices.background_color} /> : null}
-
-      <SectionRenderer sections={slot(partners?.position ?? Infinity)} />
-      {/* FUNDERS */}
-      {partners ? (
-        <Partners content={partners.content as PartnersContent} backgroundColor={partners.background_color} />
-      ) : null}
-
-      <SectionRenderer sections={slot(cta?.position ?? Infinity)} />
-      {/* PILOT CTA */}
-      {cta ? (
-        <Cta
-          content={{
-            ...(cta.content as CtaContent),
-            text: (cta.content as CtaContent).text ?? "No procurement required to begin the conversation.",
-          }}
-          backgroundColor={cta.background_color}
-        />
-      ) : null}
-
-      {/* Any remaining new blocks added via "Add a block" */}
-      <SectionRenderer sections={slot(Infinity)} />
+      {blocks.map((block) => (
+        <Fragment key={block.key}>{block.node}</Fragment>
+      ))}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import { Fragment, type ReactNode } from "react";
+import { getPageSections, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import { type PhotoTextContent } from "@/components/blocks/PhotoText";
 import TeamMember, { type TeamMemberContent } from "@/components/blocks/TeamMember";
@@ -39,25 +40,31 @@ export default async function AboutPage() {
 
   const consumedIds = new Set([hero, story, team, partners, orgStatus].filter((s): s is Section => !!s).map((s) => s.id));
   const extraSections = sections.filter((s) => !consumedIds.has(s.id));
-  const slot = makeExtrasSlotter(extraSections);
 
-  return (
-    <div className="page-about">
-      <SectionRenderer sections={slot(hero?.position ?? 0)} />
-      {/* HERO */}
-      {hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null}
+  // Rank used as a section's sort position only when its DB row doesn't
+  // exist yet — reproduces today's fixed order for freshly-seeded pages.
+  const RANK = { hero: 0, story: 1, team: 2, partners: 3, orgStatus: 4 };
 
-      <SectionRenderer sections={slot(story?.position ?? Infinity)} />
-      {/* FOUNDING STORY */}
-      {/* NOTE: rendered inline (not via the shared PhotoText component) — the
-          live "story" section uses the section-pad > section-inner > story-grid
-          wrapper pattern (shared.css's generic section wrapper), while
-          PhotoText.tsx renders home's "pressure"/"model" pattern, which grids
-          directly on the <section> with no such wrapper. These are two
-          genuinely different DOM structures, not just different class names,
-          so reusing PhotoText here would require faking a structure it
-          wasn't built for. Content is still fully dynamic from Supabase. */}
-      {storyContent ? (
+  type Block = { key: string; position: number; node: ReactNode };
+
+  const blocks: Block[] = [
+    {
+      key: hero?.id ?? "hero",
+      position: hero?.position ?? RANK.hero,
+      node: hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null,
+    },
+    {
+      key: story?.id ?? "story",
+      position: story?.position ?? RANK.story,
+      // NOTE: rendered inline (not via the shared PhotoText component) — the
+      // live "story" section uses the section-pad > section-inner > story-grid
+      // wrapper pattern (shared.css's generic section wrapper), while
+      // PhotoText.tsx renders home's "pressure"/"model" pattern, which grids
+      // directly on the <section> with no such wrapper. These are two
+      // genuinely different DOM structures, not just different class names,
+      // so reusing PhotoText here would require faking a structure it
+      // wasn't built for. Content is still fully dynamic from Supabase.
+      node: storyContent ? (
         <section className="story section-pad" style={story?.background_color ? { background: story.background_color } : undefined}>
           <div className="section-inner">
             <div className="story-grid">
@@ -97,27 +104,30 @@ export default async function AboutPage() {
             </div>
           </div>
         </section>
-      ) : null}
-
-      <SectionRenderer sections={slot(team?.position ?? Infinity)} />
-      {/* OUR TEAM */}
-      {teamContent ? (
+      ) : null,
+    },
+    {
+      key: team?.id ?? "team",
+      position: team?.position ?? RANK.team,
+      node: teamContent ? (
         <section className="team section-pad" style={team?.background_color ? { background: team.background_color } : undefined}>
           <div className="section-inner">
             <TeamMember content={{ ...teamContent, heading: teamContent.heading ?? "Our team" }} />
           </div>
         </section>
-      ) : null}
-
-      <SectionRenderer sections={slot(partners?.position ?? Infinity)} />
-      {/* FUNDERS */}
-      {partners ? (
+      ) : null,
+    },
+    {
+      key: partners?.id ?? "partners",
+      position: partners?.position ?? RANK.partners,
+      node: partners ? (
         <Partners content={partners.content as PartnersContent} backgroundColor={partners.background_color} />
-      ) : null}
-
-      <SectionRenderer sections={slot(orgStatus?.position ?? Infinity)} />
-      {/* ORGANIZATION STATUS */}
-      {orgStatusContent ? (
+      ) : null,
+    },
+    {
+      key: orgStatus?.id ?? "orgStatus",
+      position: orgStatus?.position ?? RANK.orgStatus,
+      node: orgStatusContent ? (
         <section className="org-status section-pad" style={orgStatus?.background_color ? { background: orgStatus.background_color } : undefined}>
           <div className="section-inner">
             <div className="funders-header reveal">
@@ -127,10 +137,22 @@ export default async function AboutPage() {
             <p className="funders-org reveal d1">{orgStatusContent.text}</p>
           </div>
         </section>
-      ) : null}
+      ) : null,
+    },
+    ...extraSections.map((section) => ({
+      key: section.id,
+      position: section.position,
+      node: <SectionRenderer sections={[section]} />,
+    })),
+  ];
 
-      {/* Any remaining new blocks added via "Add a block" */}
-      <SectionRenderer sections={slot(Infinity)} />
+  blocks.sort((a, b) => a.position - b.position);
+
+  return (
+    <div className="page-about">
+      {blocks.map((block) => (
+        <Fragment key={block.key}>{block.node}</Fragment>
+      ))}
     </div>
   );
 }

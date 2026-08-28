@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Fragment, type ReactNode } from "react";
 import ProductAccordion from "@/components/ProductAccordion";
-import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import { getPageSections, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import CaseStudy, { type CaseStudyContent } from "@/components/blocks/CaseStudy";
 import Cta, { type CtaContent } from "@/components/blocks/Cta";
@@ -240,29 +241,45 @@ export default async function ProductPage() {
       .map((s) => s.id)
   );
   const extraSections = sections.filter((s) => !consumedIds.has(s.id));
-  const slot = makeExtrasSlotter(extraSections);
 
-  return (
-    <div className="page-product">
-      <ProductAccordion />
+  // Rank used as a section's sort position only when its DB row doesn't
+  // exist yet — reproduces today's fixed order for freshly-seeded pages.
+  const RANK = {
+    hero: 0,
+    builtToFit: 1,
+    verificationProblem: 2,
+    talkCta: 3,
+    compareTable: 4,
+    vendorQuestions: 5,
+    accessible: 6,
+    pilotSteps: 7,
+    inTheField: 8,
+    bottomCta: 9,
+  };
 
-      <SectionRenderer sections={slot(hero?.position ?? 0)} />
-      {/* HERO */}
-      {hero ? (
+  type Block = { key: string; position: number; node: ReactNode };
+
+  const blocks: Block[] = [
+    {
+      key: hero?.id ?? "hero",
+      position: hero?.position ?? RANK.hero,
+      node: hero ? (
         <Hero
           content={hero.content as HeroContent}
           backgroundColor={hero.background_color}
           subtitleLayout="stack"
           primaryButtonStyle={{ marginTop: "8px" }}
         />
-      ) : null}
-
-      <SectionRenderer sections={slot(builtToFit?.position ?? Infinity)} />
-      {/* ═══════════════════════════════════════════════
-          BUILT TO FIT YOUR SYSTEMS
-          Option labels: copper text only. No checkmarks.
-          ═══════════════════════════════════════════════ */}
-      {builtToFitContent ? (
+      ) : null,
+    },
+    {
+      key: builtToFit?.id ?? "builtToFit",
+      position: builtToFit?.position ?? RANK.builtToFit,
+      // ═══════════════════════════════════════════════
+      // BUILT TO FIT YOUR SYSTEMS
+      // Option labels: copper text only. No checkmarks.
+      // ═══════════════════════════════════════════════
+      node: builtToFitContent ? (
         <section
           className="integration section-pad"
           id="integration"
@@ -294,140 +311,152 @@ export default async function ProductPage() {
             <p className="inline-note reveal">{builtToFitContent.footnote ?? DEFAULT_BUILT_TO_FIT_FOOTNOTE}</p>
           </div>
         </section>
-      ) : null}
+      ) : null,
+    },
+    {
+      key: verificationProblem?.id ?? problemAccordion?.id ?? "verificationProblem",
+      position: verificationProblem?.position ?? problemAccordion?.position ?? RANK.verificationProblem,
+      node: (
+        <section
+          className="ps-section section-pad"
+          id="the-problem"
+          style={verificationProblem?.background_color ? { background: verificationProblem.background_color } : undefined}
+        >
+          <div className="section-inner">
+            <div className="ps-grid">
+              {verificationProblemContent?.side === "right" ? (
+                <>
+                  <div className="ps-right reveal d1">
+                    <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
+                    <p className="ps-right-intro">
+                      {verificationProblemContent?.text ??
+                        "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
+                    </p>
 
-      <SectionRenderer sections={slot(verificationProblem?.position ?? Infinity)} />
-      {/* THE VERIFICATION PROBLEM */}
-      <section
-        className="ps-section section-pad"
-        id="the-problem"
-        style={verificationProblem?.background_color ? { background: verificationProblem.background_color } : undefined}
-      >
-        <div className="section-inner">
-          <div className="ps-grid">
-            {verificationProblemContent?.side === "right" ? (
-              <>
-                <div className="ps-right reveal d1">
-                  <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
-                  <p className="ps-right-intro">
-                    {verificationProblemContent?.text ??
-                      "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
+                    <ProductProblemAccordion content={problemAccordionContent} />
+                  </div>
+                  <div className="ps-visual reveal">
+                    <img
+                      src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
+                      alt={
+                        verificationProblemContent?.photo_alt ??
+                        "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
+                      }
+                      loading="lazy"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="ps-visual reveal">
+                    <img
+                      src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
+                      alt={
+                        verificationProblemContent?.photo_alt ??
+                        "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
+                      }
+                      loading="lazy"
+                    />
+                  </div>
+
+                  <div className="ps-right reveal d1">
+                    <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
+                    <p className="ps-right-intro">
+                      {verificationProblemContent?.text ??
+                        "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
+                    </p>
+
+                    <ProductProblemAccordion content={problemAccordionContent} />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: talkCta?.id ?? "talkCta",
+      position: talkCta?.position ?? RANK.talkCta,
+      node: <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta?.background_color} />,
+    },
+    {
+      key: compareTable?.id ?? "compareTable",
+      position: compareTable?.position ?? RANK.compareTable,
+      node: <ProductCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />,
+    },
+    {
+      key: vendorQuestions?.id ?? "vendorQuestions",
+      position: vendorQuestions?.position ?? RANK.vendorQuestions,
+      // ═══════════════════════════════════════════════
+      // QUESTIONS TO ASK — bigger bare chevrons
+      // ═══════════════════════════════════════════════
+      node: <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions?.background_color} />,
+    },
+    {
+      key: accessible?.id ?? "accessible",
+      position: accessible?.position ?? RANK.accessible,
+      node: (
+        <section
+          className="access-section"
+          id="accessibility"
+          style={accessible?.background_color ? { background: accessible.background_color } : undefined}
+        >
+          {(() => {
+            const textEl = (
+              <div className="access-left">
+                <h2 className="section-h reveal">
+                  {accessibleContent?.heading ?? "Accessible by design, not as an afterthought"}
+                </h2>
+                <div className="body-text reveal d1">
+                  {(
+                    accessibleContent?.text ?? [
+                      "DPW is investing in accessibility research in partnership with the AARP Foundation, with independent third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility standards. The platform supports English and Spanish.",
+                      "We do not treat accessibility as a compliance checkbox. We are conducting original research into how income verification tools can be made usable for older adults, people with disabilities, and individuals with limited English proficiency. Findings from this research will be published and shared with the field.",
+                    ]
+                  ).map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
+                  ))}
+                </div>
+                <div className="callout-stat reveal d2">
+                  <span className="callout-stat-num">{accessibleContent?.stat_number ?? "65%"}</span>
+                  <p className="callout-stat-text">
+                    {accessibleContent?.stat_text ?? "of our users access VMI on a smartphone. The platform is built mobile-first."}
                   </p>
-
-                  <ProductProblemAccordion content={problemAccordionContent} />
                 </div>
-                <div className="ps-visual reveal">
-                  <img
-                    src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
-                    alt={
-                      verificationProblemContent?.photo_alt ??
-                      "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
-                    }
-                    loading="lazy"
-                  />
-                </div>
+              </div>
+            );
+            const photoEl = (
+              <div className="access-photo reveal d2">
+                <img
+                  src={accessibleContent?.photo_url ?? "/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg"}
+                  alt={accessibleContent?.photo_alt ?? "An older adult using a cell phone to verify her income"}
+                  loading="lazy"
+                />
+              </div>
+            );
+            return accessibleContent?.side === "left" ? (
+              <>
+                {photoEl}
+                {textEl}
               </>
             ) : (
               <>
-                <div className="ps-visual reveal">
-                  <img
-                    src={verificationProblemContent?.photo_url ?? "/images/product/product-verify.png"}
-                    alt={
-                      verificationProblemContent?.photo_alt ??
-                      "VMI data flow diagram — applicant to payroll connection to VMI validation to caseworker-ready report to state eligibility system"
-                    }
-                    loading="lazy"
-                  />
-                </div>
-
-                <div className="ps-right reveal d1">
-                  <h2 className="section-h">{verificationProblemContent?.heading ?? "The verification problem"}</h2>
-                  <p className="ps-right-intro">
-                    {verificationProblemContent?.text ??
-                      "States face four systemic problems with income verification. VMI is built to address all of them — not as a data feed, but as a complete service."}
-                  </p>
-
-                  <ProductProblemAccordion content={problemAccordionContent} />
-                </div>
+                {textEl}
+                {photoEl}
               </>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <SectionRenderer sections={slot(talkCta?.position ?? Infinity)} />
-      {/* TALK TO US CTA BANNER */}
-      <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta?.background_color} />
-
-      <SectionRenderer sections={slot(compareTable?.position ?? Infinity)} />
-      {/* COMPARISON TABLE */}
-      <ProductCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />
-
-      <SectionRenderer sections={slot(vendorQuestions?.position ?? Infinity)} />
-      {/* ═══════════════════════════════════════════════
-          QUESTIONS TO ASK — bigger bare chevrons
-          ═══════════════════════════════════════════════ */}
-      <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions?.background_color} />
-
-      <SectionRenderer sections={slot(accessible?.position ?? Infinity)} />
-      {/* ACCESSIBLE BY DESIGN */}
-      <section
-        className="access-section"
-        id="accessibility"
-        style={accessible?.background_color ? { background: accessible.background_color } : undefined}
-      >
-        {(() => {
-          const textEl = (
-            <div className="access-left">
-              <h2 className="section-h reveal">
-                {accessibleContent?.heading ?? "Accessible by design, not as an afterthought"}
-              </h2>
-              <div className="body-text reveal d1">
-                {(
-                  accessibleContent?.text ?? [
-                    "DPW is investing in accessibility research in partnership with the AARP Foundation, with independent third-party accessibility auditing. VMI is designed to meet Section 508 and WCAG 2.1 AA accessibility standards. The platform supports English and Spanish.",
-                    "We do not treat accessibility as a compliance checkbox. We are conducting original research into how income verification tools can be made usable for older adults, people with disabilities, and individuals with limited English proficiency. Findings from this research will be published and shared with the field.",
-                  ]
-                ).map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))}
-              </div>
-              <div className="callout-stat reveal d2">
-                <span className="callout-stat-num">{accessibleContent?.stat_number ?? "65%"}</span>
-                <p className="callout-stat-text">
-                  {accessibleContent?.stat_text ?? "of our users access VMI on a smartphone. The platform is built mobile-first."}
-                </p>
-              </div>
-            </div>
-          );
-          const photoEl = (
-            <div className="access-photo reveal d2">
-              <img
-                src={accessibleContent?.photo_url ?? "/images/product/centre-for-ageing-better-6S4Vx0ZHD4k-unsplash.jpg"}
-                alt={accessibleContent?.photo_alt ?? "An older adult using a cell phone to verify her income"}
-                loading="lazy"
-              />
-            </div>
-          );
-          return accessibleContent?.side === "left" ? (
-            <>
-              {photoEl}
-              {textEl}
-            </>
-          ) : (
-            <>
-              {textEl}
-              {photoEl}
-            </>
-          );
-        })()}
-      </section>
-
-      <SectionRenderer sections={slot(pilotSteps?.position ?? Infinity)} />
-      {/* ═══════════════════════════════════════════════
-          THE PATH TO A PILOT — racetrack path
-          ═══════════════════════════════════════════════ */}
-      {pilotStepsContent ? (
+            );
+          })()}
+        </section>
+      ),
+    },
+    {
+      key: pilotSteps?.id ?? "pilotSteps",
+      position: pilotSteps?.position ?? RANK.pilotSteps,
+      // ═══════════════════════════════════════════════
+      // THE PATH TO A PILOT — racetrack path
+      // ═══════════════════════════════════════════════
+      node: pilotStepsContent ? (
         <section
           className="pilot section-pad"
           id="path-to-pilot"
@@ -456,11 +485,12 @@ export default async function ProductPage() {
             <p className="inline-note pilot-note reveal">{pilotStepsContent.footnote ?? DEFAULT_PILOT_FOOTNOTE}</p>
           </div>
         </section>
-      ) : null}
-
-      <SectionRenderer sections={slot(inTheField?.position ?? Infinity)} />
-      {/* IN THE FIELD */}
-      {inTheField ? (
+      ) : null,
+    },
+    {
+      key: inTheField?.id ?? "inTheField",
+      position: inTheField?.position ?? RANK.inTheField,
+      node: inTheField ? (
         <section
           className="field section-pad"
           id="in-the-field"
@@ -471,14 +501,29 @@ export default async function ProductPage() {
             <CaseStudy content={inTheField.content as CaseStudyContent} />
           </div>
         </section>
-      ) : null}
+      ) : null,
+    },
+    {
+      key: bottomCta?.id ?? "bottomCta",
+      position: bottomCta?.position ?? RANK.bottomCta,
+      node: <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />,
+    },
+    ...extraSections.map((section) => ({
+      key: section.id,
+      position: section.position,
+      node: <SectionRenderer sections={[section]} />,
+    })),
+  ];
 
-      <SectionRenderer sections={slot(bottomCta?.position ?? Infinity)} />
-      {/* IMPACT CTA */}
-      <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />
+  blocks.sort((a, b) => a.position - b.position);
 
-      {/* Any remaining new blocks added via "Add a block" */}
-      <SectionRenderer sections={slot(Infinity)} />
+  return (
+    <div className="page-product">
+      <ProductAccordion />
+
+      {blocks.map((block) => (
+        <Fragment key={block.key}>{block.node}</Fragment>
+      ))}
     </div>
   );
 }

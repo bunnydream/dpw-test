@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { Fragment, type ReactNode } from "react";
 import ContactForm from "@/components/ContactForm";
-import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import { getPageSections, type Section } from "@/lib/sections";
 import SectionRenderer from "@/components/blocks/SectionRenderer";
 import { getSeoSettings } from "@/lib/site-settings";
 import { resolveMetadata } from "@/lib/seo";
@@ -131,22 +132,31 @@ export default async function ContactPage() {
     [headerSection, ...formSections.slice(0, 3)].filter((s): s is Section => !!s).map((s) => s.id)
   );
   const extraSections = sections.filter((s) => !consumedIds.has(s.id));
-  const slot = makeExtrasSlotter(extraSections);
 
-  return (
-    <div className="page-contact">
-      <SectionRenderer sections={slot(headerSection?.position ?? 0)} />
-      {/* PAGE HEADER */}
-      <section className="page-header">
-        <div className="page-header-inner">
-          <h1 className="reveal d1">{header?.heading}</h1>
-          <p className="page-header-sub reveal d2">{header?.text}</p>
-        </div>
-      </section>
+  // Rank used as a section's sort position only when its DB row doesn't
+  // exist yet — reproduces today's fixed order for freshly-seeded pages.
+  const RANK = { headerSection: 0, statePartners: 1, funders: 2, community: 3 };
 
-      <SectionRenderer sections={slot(formSections[0]?.position ?? Infinity)} />
-      {/* FOR STATE PARTNERS */}
-      <section className="section-pad" style={{ background: (formSections[0]?.background_color) ?? "var(--cool-white)" }}>
+  type Block = { key: string; position: number; node: ReactNode };
+
+  const blocks: Block[] = [
+    {
+      key: headerSection?.id ?? "headerSection",
+      position: headerSection?.position ?? RANK.headerSection,
+      node: (
+        <section className="page-header">
+          <div className="page-header-inner">
+            <h1 className="reveal d1">{header?.heading}</h1>
+            <p className="page-header-sub reveal d2">{header?.text}</p>
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: formSections[0]?.id ?? "statePartners",
+      position: formSections[0]?.position ?? RANK.statePartners,
+      node: (
+        <section className="section-pad" style={{ background: (formSections[0]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -248,10 +258,13 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
-
-      <SectionRenderer sections={slot(formSections[1]?.position ?? Infinity)} />
-      {/* FOR FUNDERS */}
-      <section className="section-pad" style={{ background: (formSections[1]?.background_color) ?? "var(--cool-white)" }}>
+      ),
+    },
+    {
+      key: formSections[1]?.id ?? "funders",
+      position: formSections[1]?.position ?? RANK.funders,
+      node: (
+        <section className="section-pad" style={{ background: (formSections[1]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -340,10 +353,13 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
-
-      <SectionRenderer sections={slot(formSections[2]?.position ?? Infinity)} />
-      {/* FOR COMMUNITY + ADDRESS */}
-      <section className="section-pad" style={{ background: (formSections[2]?.background_color) ?? "var(--cool-white)" }}>
+      ),
+    },
+    {
+      key: formSections[2]?.id ?? "community",
+      position: formSections[2]?.position ?? RANK.community,
+      node: (
+        <section className="section-pad" style={{ background: (formSections[2]?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -444,9 +460,22 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
+      ),
+    },
+    ...extraSections.map((section) => ({
+      key: section.id,
+      position: section.position,
+      node: <SectionRenderer sections={[section]} />,
+    })),
+  ];
 
-      {/* Any remaining new blocks added via "Add a block" */}
-      <SectionRenderer sections={slot(Infinity)} />
+  blocks.sort((a, b) => a.position - b.position);
+
+  return (
+    <div className="page-contact">
+      {blocks.map((block) => (
+        <Fragment key={block.key}>{block.node}</Fragment>
+      ))}
     </div>
   );
 }

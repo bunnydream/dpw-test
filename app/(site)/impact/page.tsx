@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import { Fragment, type ReactNode } from "react";
+import { getPageSections, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import Voices, { type VoicesContent } from "@/components/blocks/Voices";
 import CaseStudy, { type CaseStudyContent } from "@/components/blocks/CaseStudy";
@@ -106,13 +107,27 @@ export default async function ImpactPage() {
       .map((s) => s.id)
   );
   const extraSections = sections.filter((s) => !consumedIds.has(s.id));
-  const slot = makeExtrasSlotter(extraSections);
 
-  return (
-    <div className="page-impact">
-      <SectionRenderer sections={slot(hero?.position ?? 0)} />
-      {/* ─── 1. HERO ─── */}
-      {hero ? (
+  // Rank used as a section's sort position only when its DB row doesn't
+  // exist yet — reproduces today's fixed order for freshly-seeded pages.
+  const RANK = {
+    hero: 0,
+    stats: 1,
+    families: 2,
+    voices: 3,
+    deployed: 4,
+    yearInReview: 5,
+    fundingModel: 6,
+    bottomCta: 7,
+  };
+
+  type Block = { key: string; position: number; node: ReactNode };
+
+  const blocks: Block[] = [
+    {
+      key: hero?.id ?? "hero",
+      position: hero?.position ?? RANK.hero,
+      node: hero ? (
         <Hero
           content={hero.content as HeroContent}
           backgroundColor={hero.background_color}
@@ -120,112 +135,139 @@ export default async function ImpactPage() {
           imgWidth={1200}
           imgHeight={1600}
         />
-      ) : null}
-
-      {/* ─── 2. METRICS ───
-          Rendered inline rather than via the shared Stats component: the
-          live markup uses <span class="stat-label"> while Stats.tsx renders
-          <p class="stat-label"> — a real tag difference with no explicit
-          `display` override in CSS, so swapping would risk a layout shift. */}
-      <SectionRenderer sections={slot(stats?.position ?? Infinity)} />
-      <div className="stat-row" role="list">
-        {statsContent.stats.map((stat, i) => (
-          <div className={`stat-cell reveal d${i + 1}`} role="listitem" key={i}>
-            <span className="stat-num">{stat.number}</span>
-            <span className="stat-label">{stat.label}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* ─── 3. FAMILIES + COMPARISON ───
-          Rendered inline rather than via the shared PhotoText component: this
-          section's classNames (families-img / families-right) differ from
-          home's pressure/model pattern that PhotoText.tsx implements, and it
-          has no pullquote but does have a fixed .comp-card widget that isn't
-          part of admin's photo-text field shape at all. */}
-      <SectionRenderer sections={slot(families?.position ?? Infinity)} />
-      <section className="families">
-        {(() => {
-          const imgEl = (
-            <div className="families-img">
-              <img
-                src={familiesContent?.photo_url ?? "/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg"}
-                alt={familiesContent?.photo_alt ?? "A woman looking at her phone"}
-                loading="lazy"
-              />
+      ) : null,
+    },
+    {
+      key: stats?.id ?? "stats",
+      position: stats?.position ?? RANK.stats,
+      // Rendered inline rather than via the shared Stats component: the
+      // live markup uses <span class="stat-label"> while Stats.tsx renders
+      // <p class="stat-label"> — a real tag difference with no explicit
+      // `display` override in CSS, so swapping would risk a layout shift.
+      node: (
+        <div className="stat-row" role="list">
+          {statsContent.stats.map((stat, i) => (
+            <div className={`stat-cell reveal d${i + 1}`} role="listitem" key={i}>
+              <span className="stat-num">{stat.number}</span>
+              <span className="stat-label">{stat.label}</span>
             </div>
-          );
-          const contentEl = (
-            <div className="families-right">
-              <h2 className="section-h reveal">
-                {familiesContent?.heading ?? "From hours of paperwork to five minutes — without leaving home"}
-              </h2>
-
-              <div className="body-text reveal d1">
-                {(
-                  familiesContent?.text ?? [
-                    "Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting an office, and waiting. If something was missing, the process started over. For someone navigating a job change, caring for children, or managing a health crisis, this time tax could mean weeks without benefits.",
-                    "With Verify My Income, an applicant receives a secure link from their agency. They consent to share their payroll data and connect to their employer's payroll system. In under five minutes, a verified income report is delivered directly to their caseworker. No documents to find. No follow-up calls. No delays.",
-                  ]
-                ).map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))}
+          ))}
+        </div>
+      ),
+    },
+    {
+      key: families?.id ?? manualTable?.id ?? "families",
+      position: families?.position ?? manualTable?.position ?? RANK.families,
+      // Rendered inline rather than via the shared PhotoText component: this
+      // section's classNames (families-img / families-right) differ from
+      // home's pressure/model pattern that PhotoText.tsx implements, and it
+      // has no pullquote but does have a fixed .comp-card widget that isn't
+      // part of admin's photo-text field shape at all.
+      node: (
+        <section className="families">
+          {(() => {
+            const imgEl = (
+              <div className="families-img">
+                <img
+                  src={familiesContent?.photo_url ?? "/images/impact/khaled-ali-e8ZJeTnfP6U-unsplash.jpg"}
+                  alt={familiesContent?.photo_alt ?? "A woman looking at her phone"}
+                  loading="lazy"
+                />
               </div>
+            );
+            const contentEl = (
+              <div className="families-right">
+                <h2 className="section-h reveal">
+                  {familiesContent?.heading ?? "From hours of paperwork to five minutes — without leaving home"}
+                </h2>
 
-              <ImpactManualTable content={manualTableContent} />
-            </div>
-          );
-          return familiesContent?.side === "right" ? (
-            <>
-              {contentEl}
-              {imgEl}
-            </>
-          ) : (
-            <>
-              {imgEl}
-              {contentEl}
-            </>
-          );
-        })()}
-      </section>
+                <div className="body-text reveal d1">
+                  {(
+                    familiesContent?.text ?? [
+                      "Before VMI, verifying income for SNAP or Medicaid meant finding old pay stubs, printing forms, visiting an office, and waiting. If something was missing, the process started over. For someone navigating a job change, caring for children, or managing a health crisis, this time tax could mean weeks without benefits.",
+                      "With Verify My Income, an applicant receives a secure link from their agency. They consent to share their payroll data and connect to their employer's payroll system. In under five minutes, a verified income report is delivered directly to their caseworker. No documents to find. No follow-up calls. No delays.",
+                    ]
+                  ).map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
+                  ))}
+                </div>
 
-      <SectionRenderer sections={slot(voices?.position ?? Infinity)} />
-      {/* ─── 4. VOICES CAROUSEL ─── */}
-      {voices ? <Voices content={voices.content as VoicesContent} backgroundColor={voices.background_color} /> : null}
+                <ImpactManualTable content={manualTableContent} />
+              </div>
+            );
+            return familiesContent?.side === "right" ? (
+              <>
+                {contentEl}
+                {imgEl}
+              </>
+            ) : (
+              <>
+                {imgEl}
+                {contentEl}
+              </>
+            );
+          })()}
+        </section>
+      ),
+    },
+    {
+      key: voices?.id ?? "voices",
+      position: voices?.position ?? RANK.voices,
+      node: voices ? <Voices content={voices.content as VoicesContent} backgroundColor={voices.background_color} /> : null,
+    },
+    {
+      key: deployed?.id ?? "deployed",
+      position: deployed?.position ?? RANK.deployed,
+      node: (
+        <section className="field section-pad" id="deployed">
+          <div className="section-inner">
+            <h2 className="section-h reveal">
+              {deployed ? (deployed.content as CaseStudyContent).heading ?? "Deployed and delivering results" : "Deployed and delivering results"}
+            </h2>
+            {deployed ? <CaseStudy content={deployed.content as CaseStudyContent} /> : null}
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: yearInReview?.id ?? "yearInReview",
+      position: yearInReview?.position ?? RANK.yearInReview,
+      node: <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview?.background_color} />,
+    },
+    {
+      key: fundingModel?.id ?? "fundingModel",
+      position: fundingModel?.position ?? RANK.fundingModel,
+      node: (
+        <section
+          className="funding section-pad"
+          id="funding-model"
+          style={fundingModel?.background_color ? { background: fundingModel.background_color } : undefined}
+        >
+          <div className="section-inner">
+            <IconCards content={fundingModelContent} />
+          </div>
+        </section>
+      ),
+    },
+    {
+      key: bottomCta?.id ?? "bottomCta",
+      position: bottomCta?.position ?? RANK.bottomCta,
+      node: <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />,
+    },
+    ...extraSections.map((section) => ({
+      key: section.id,
+      position: section.position,
+      node: <SectionRenderer sections={[section]} />,
+    })),
+  ];
 
-      <SectionRenderer sections={slot(deployed?.position ?? Infinity)} />
-      {/* ─── 5. DEPLOYED AND DELIVERING RESULTS ─── */}
-      <section className="field section-pad" id="deployed">
-        <div className="section-inner">
-          <h2 className="section-h reveal">
-            {deployed ? (deployed.content as CaseStudyContent).heading ?? "Deployed and delivering results" : "Deployed and delivering results"}
-          </h2>
-          {deployed ? <CaseStudy content={deployed.content as CaseStudyContent} /> : null}
-        </div>
-      </section>
+  blocks.sort((a, b) => a.position - b.position);
 
-      <SectionRenderer sections={slot(yearInReview?.position ?? Infinity)} />
-      {/* ─── 6. YEAR IN REVIEW ─── */}
-      <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview?.background_color} />
-
-      <SectionRenderer sections={slot(fundingModel?.position ?? Infinity)} />
-      {/* ─── 7. FUNDING MODEL ─── */}
-      <section
-        className="funding section-pad"
-        id="funding-model"
-        style={fundingModel?.background_color ? { background: fundingModel.background_color } : undefined}
-      >
-        <div className="section-inner">
-          <IconCards content={fundingModelContent} />
-        </div>
-      </section>
-
-      <SectionRenderer sections={slot(bottomCta?.position ?? Infinity)} />
-      {/* INSIGHTS CTA */}
-      <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />
-
-      {/* Any remaining new blocks added via "Add a block" */}
-      <SectionRenderer sections={slot(Infinity)} />
+  return (
+    <div className="page-impact">
+      {blocks.map((block) => (
+        <Fragment key={block.key}>{block.node}</Fragment>
+      ))}
     </div>
   );
 }

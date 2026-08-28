@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getPageSections, makeExtrasSlotter, type Section } from "@/lib/sections";
+import { Fragment, type ReactNode } from "react";
+import { getPageSections, type Section } from "@/lib/sections";
 import Hero, { type HeroContent } from "@/components/blocks/Hero";
 import SectionRenderer from "@/components/blocks/SectionRenderer";
 import { getSeoSettings } from "@/lib/site-settings";
@@ -39,19 +40,25 @@ export default async function CareersPage() {
 
   const consumedIds = new Set([hero, intro, openings].filter((s): s is Section => !!s).map((s) => s.id));
   const extraSections = sections.filter((s) => !consumedIds.has(s.id));
-  const slot = makeExtrasSlotter(extraSections);
 
-  return (
-    <div className="page-careers">
-      <SectionRenderer sections={slot(hero?.position ?? 0)} />
-      {/* HERO */}
-      {hero ? (
+  // Rank used as a section's sort position only when its DB row doesn't
+  // exist yet — reproduces today's fixed order for freshly-seeded pages.
+  const RANK = { hero: 0, intro: 1, openings: 2 };
+
+  type Block = { key: string; position: number; node: ReactNode };
+
+  const blocks: Block[] = [
+    {
+      key: hero?.id ?? "hero",
+      position: hero?.position ?? RANK.hero,
+      node: hero ? (
         <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} matchTaglineWidthToHeadline />
-      ) : null}
-
-      <SectionRenderer sections={slot(intro?.position ?? Infinity)} />
-      {/* INTRO */}
-      {introContent ? (
+      ) : null,
+    },
+    {
+      key: intro?.id ?? "intro",
+      position: intro?.position ?? RANK.intro,
+      node: introContent ? (
         <section className="intro section-pad">
           <div className="section-inner">
             <p
@@ -62,25 +69,40 @@ export default async function CareersPage() {
             </p>
           </div>
         </section>
-      ) : null}
-
-      <SectionRenderer sections={slot(openings?.position ?? Infinity)} />
-      {/* OPEN POSITIONS */}
-      <section
-        className="openings section-pad"
-        style={openings?.background_color ? { background: openings.background_color } : undefined}
-      >
-        <div className="section-inner">
-          <div className="openings-header reveal">
-            <h2 className="openings-h">{openingsContent.heading}</h2>
-            <div className="openings-rule"></div>
+      ) : null,
+    },
+    {
+      key: openings?.id ?? "openings",
+      position: openings?.position ?? RANK.openings,
+      node: (
+        <section
+          className="openings section-pad"
+          style={openings?.background_color ? { background: openings.background_color } : undefined}
+        >
+          <div className="section-inner">
+            <div className="openings-header reveal">
+              <h2 className="openings-h">{openingsContent.heading}</h2>
+              <div className="openings-rule"></div>
+            </div>
+            <p className="openings-body reveal d1">{openingsContent.text}</p>
           </div>
-          <p className="openings-body reveal d1">{openingsContent.text}</p>
-        </div>
-      </section>
+        </section>
+      ),
+    },
+    ...extraSections.map((section) => ({
+      key: section.id,
+      position: section.position,
+      node: <SectionRenderer sections={[section]} />,
+    })),
+  ];
 
-      {/* Any remaining new blocks added via "Add a block" */}
-      <SectionRenderer sections={slot(Infinity)} />
+  blocks.sort((a, b) => a.position - b.position);
+
+  return (
+    <div className="page-careers">
+      {blocks.map((block) => (
+        <Fragment key={block.key}>{block.node}</Fragment>
+      ))}
     </div>
   );
 }
