@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import {
   createSection,
   deleteSection,
+  getPageWithSections,
   publishPage,
   reorderSections,
+  restoreSection,
   updatePageSeo,
   updatePageTitle,
   updateSectionContent,
@@ -86,6 +88,12 @@ export default function PageEditor({
   const router = useRouter();
   const [sections, setSections] = useState<SectionRow[]>(initialSections);
   const [dirtyIds, setDirtyIds] = useState<Set<string>>(new Set());
+  // Tracks add/delete/reorder actions, which persist immediately (unlike
+  // text-field edits, which wait for Save draft/Publish) but weren't
+  // reflected in `hasUnsaved` below — so "Save draft" stayed disabled and
+  // the status showed "All changes saved" even right after a reorder or
+  // delete. Reset once a save/publish click acknowledges the change.
+  const [hasStructuralChanges, setHasStructuralChanges] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -95,6 +103,17 @@ export default function PageEditor({
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
+
+  // Tracks whether this page is currently published, so section/title/SEO
+  // writes know whether to go straight to the live rows (never-published
+  // page — today's behavior, correctly hidden by the `status` filter) or
+  // into the draft tables/draft_meta (already-published page — so "Save
+  // draft" can no longer change what the public site shows). Local state
+  // rather than reading `page.status` directly because the latter would go
+  // stale within a session: after this page's first-ever Publish click,
+  // `page.status` flips server-side but the `page` prop itself doesn't
+  // update until a fresh server fetch.
+  const [isPublished, setIsPublished] = useState(page.status === "published");
 
   // Scroll the newly-opened section into view so it's visible without the
   // user having to hunt for it, e.g. after adding a block at the bottom of
@@ -141,14 +160,14 @@ export default function PageEditor({
     setSeoDirty(true);
   }
 
-  const hasUnsaved = dirtyIds.size > 0 || seoDirty;
+  const hasUnsaved = dirtyIds.size > 0 || seoDirty || hasStructuralChanges;
 
   /** Persists SEO fields if changed. Shared by handleSaveDraft and
    * handlePublish so both save actions cover the SEO card too. */
   async function persistSeo(): Promise<boolean> {
     if (!seoDirty) return true;
     try {
-      await updatePageSeo(page.id, seoValue);
+      await updatePageSeo(page.id, seoValue, isPublished);
       setSeoDirty(false);
       return true;
     } catch (err) {
@@ -163,25 +182,104 @@ export default function PageEditor({
     setFuture([]);
   }
 
-  function handleUndo() {
-    setPast((prev) => {
-      if (prev.length === 0) return prev;
-      const next = prev.slice(0, -1);
-      const snapshot = prev[prev.length - 1];
-      setFuture((f) => [sections, ...f]);
-      setSections(snapshot);
-      return next;
-    });
+  /** True when both lists contain exactly the same section ids — i.e. the
+   * snapshot being restored only reorders sections, rather than reversing
+   * an add or a delete. */
+  function idsEqual(a: SectionRow[], b: SectionRow[]) {
+    if (a.length !== b.length) return false;
+    const bIds = new Set(b.map((s) => s.id));
+    return a.every((s) => bIds.has(s.id));
   }
 
-  function handleRedo() {
-    setFuture((prev) => {
-      if (prev.length === 0) return prev;
-      const [snapshot, ...rest] = prev;
-      setPast((p) => [...p, sections]);
+  /** Reconciles the server to match a restored snapshot that adds back a
+   * deleted section and/or removes an added one — i.e. not a pure reorder
+   * (see applySnapshot). Sections only in `current` were added since the
+   * snapshot and get removed via the same deleteSection call
+   * handleDeleteConfirmed uses; sections only in `snapshot` were deleted
+   * since and get restored via restoreSection, which may hand back a
+   * different id (see its own comment in lib/admin/pages.ts) — that gets
+   * swapped into the returned list so a later edit targets the row that
+   * actually exists rather than one that's gone. */
+  async function reconcileStructuralUndo(current: SectionRow[], snapshot: SectionRow[]): Promise<SectionRow[]> {
+    const currentIds = new Set(current.map((s) => s.id));
+    const snapshotIds = new Set(snapshot.map((s) => s.id));
+
+    const toRemove = current.filter((s) => !snapshotIds.has(s.id));
+    const toRestore = snapshot.filter((s) => !currentIds.has(s.id));
+
+    await Promise.all(toRemove.map((s) => deleteSection(s.id, isPublished)));
+
+    const idMap = new Map<string, string>();
+    await Promise.all(
+      toRestore.map(async (s) => {
+        const restored = await restoreSection(
+          page.id,
+          s.id,
+          s.type,
+          s.name,
+          s.content,
+          s.background_color,
+          s.position,
+          s.hidden,
+          isPublished
+        );
+        if (restored.id !== s.id) idMap.set(s.id, restored.id);
+      })
+    );
+
+    const finalSections = snapshot.map((s) => (idMap.has(s.id) ? { ...s, id: idMap.get(s.id)! } : s));
+    await reorderSections(finalSections.map((s) => s.id), isPublished);
+    return finalSections;
+  }
+
+  /** Undo/redo has never talked to the server — it only rewinds local
+   * `sections` state. A pure reorder (same ids, different order) re-syncs
+   * optimistically, the same way moveSection/handleDrop do: the screen
+   * updates immediately, then the order is pushed to the server. Undoing/
+   * redoing an add or a delete instead waits for reconcileStructuralUndo to
+   * finish before updating the screen, since it may need to swap in an id
+   * the server just generated — showing the restored block before that
+   * resolves would let a later edit silently target a row that doesn't
+   * exist yet. Either way, "Save draft" is enabled once this settles. */
+  async function applySnapshot(current: SectionRow[], snapshot: SectionRow[], label: "undo" | "redo") {
+    if (idsEqual(current, snapshot)) {
       setSections(snapshot);
-      return rest;
-    });
+      try {
+        await reorderSections(snapshot.map((s) => s.id), isPublished);
+        setHasStructuralChanges(true);
+      } catch (err) {
+        console.error(err);
+        showToast("Failed to reorder blocks");
+      }
+      return;
+    }
+
+    try {
+      const finalSections = await reconcileStructuralUndo(current, snapshot);
+      setSections(finalSections);
+      setHasStructuralChanges(true);
+    } catch (err) {
+      console.error(err);
+      showToast(label === "undo" ? "Failed to undo" : "Failed to redo");
+    }
+  }
+
+  async function handleUndo() {
+    if (past.length === 0) return;
+    const snapshot = past[past.length - 1];
+    const current = sections;
+    setFuture((f) => [current, ...f]);
+    setPast((prev) => prev.slice(0, -1));
+    await applySnapshot(current, snapshot, "undo");
+  }
+
+  async function handleRedo() {
+    if (future.length === 0) return;
+    const snapshot = future[0];
+    const current = sections;
+    setPast((p) => [...p, current]);
+    setFuture((prev) => prev.slice(1));
+    await applySnapshot(current, snapshot, "redo");
   }
 
   async function handleTitleSave() {
@@ -192,7 +290,7 @@ export default function PageEditor({
     }
     setTitleSaving(true);
     try {
-      await updatePageTitle(page.id, trimmed);
+      await updatePageTitle(page.id, trimmed, isPublished);
       showToast("Page name updated");
       // page.title (a server-fetched prop) won't reflect the new value until
       // the route's server data is re-fetched — refresh so titleDirty (and
@@ -242,7 +340,7 @@ export default function PageEditor({
         ids.map((id) => {
           const s = sections.find((sec) => sec.id === id);
           if (!s) return Promise.resolve();
-          return updateSectionContent(id, s.content, s.background_color, s.hidden);
+          return updateSectionContent(id, s.content, s.background_color, s.hidden, isPublished);
         })
       );
       setDirtyIds(new Set());
@@ -259,7 +357,10 @@ export default function PageEditor({
     const sectionsOk = await persistDirty();
     const seoOk = await persistSeo();
     setSaving(false);
-    if (sectionsOk && seoOk) showToast("Draft saved");
+    if (sectionsOk && seoOk) {
+      setHasStructuralChanges(false);
+      showToast("Draft saved");
+    }
   }
 
   async function handlePublish() {
@@ -269,6 +370,14 @@ export default function PageEditor({
     if (sectionsOk) {
       try {
         await publishPage(slug);
+        setIsPublished(true);
+        setHasStructuralChanges(false);
+        // Publishing may have changed which table section ids belong to
+        // (section_drafts get reseeded fresh from the live rows this just
+        // wrote) — refetch so `sections` state's ids stay consistent with
+        // whichever table subsequent edits (now in draft mode) will target.
+        const fresh = await getPageWithSections(slug);
+        if (fresh) setSections(fresh.sections);
         setPreviewKey((k) => k + 1);
         showToast(seoOk ? "Published to the live site" : "Published, but SEO settings failed to save");
       } catch (err) {
@@ -283,9 +392,10 @@ export default function PageEditor({
     setAddModalOpen(false);
     checkpoint();
     try {
-      const created = await createSection(page.id, type, starterName(type), starterContent(type), sections.length);
+      const created = await createSection(page.id, type, starterName(type), starterContent(type), sections.length, isPublished);
       setSections((prev) => [...prev, created]);
       setOpenId(created.id);
+      setHasStructuralChanges(true);
       showToast("Block added");
     } catch (err) {
       console.error(err);
@@ -299,13 +409,14 @@ export default function PageEditor({
     setDeleteTargetId(null);
     checkpoint();
     try {
-      await deleteSection(id);
+      await deleteSection(id, isPublished);
       setSections((prev) => prev.filter((s) => s.id !== id));
       setDirtyIds((prev) => {
         const next = new Set(prev);
         next.delete(id);
         return next;
       });
+      setHasStructuralChanges(true);
       showToast("Block deleted");
     } catch (err) {
       console.error(err);
@@ -322,7 +433,8 @@ export default function PageEditor({
     [next[idx], next[targetIdx]] = [next[targetIdx], next[idx]];
     setSections(next);
     try {
-      await reorderSections(next.map((s) => s.id));
+      await reorderSections(next.map((s) => s.id), isPublished);
+      setHasStructuralChanges(true);
     } catch (err) {
       console.error(err);
       showToast("Failed to reorder blocks");
@@ -364,7 +476,8 @@ export default function PageEditor({
     next.splice(targetIdx, 0, moved);
     setSections(next);
     try {
-      await reorderSections(next.map((s) => s.id));
+      await reorderSections(next.map((s) => s.id), isPublished);
+      setHasStructuralChanges(true);
     } catch (err) {
       console.error(err);
       showToast("Failed to reorder blocks");

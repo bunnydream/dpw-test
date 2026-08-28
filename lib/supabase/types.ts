@@ -49,6 +49,8 @@ export interface Database {
           og_image_url: string | null;
           canonical_url: string | null;
           noindex: boolean;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          draft_meta: Record<string, any> | null;
         };
         Insert: {
           id?: string;
@@ -62,6 +64,8 @@ export interface Database {
           og_image_url?: string | null;
           canonical_url?: string | null;
           noindex?: boolean;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          draft_meta?: Record<string, any> | null;
         };
         Update: Partial<Database["public"]["Tables"]["pages"]["Insert"]>;
         Relationships: [];
@@ -104,6 +108,55 @@ export interface Database {
           }
         ];
       };
+      section_drafts: {
+        Row: {
+          id: string;
+          page_id: string;
+          live_section_id: string | null;
+          type: SectionType;
+          position: number;
+          name: string;
+          background_color: string | null;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          content: Record<string, any>;
+          hidden: boolean;
+          deleted: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          page_id: string;
+          live_section_id?: string | null;
+          type: SectionType;
+          position?: number;
+          name?: string;
+          background_color?: string | null;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          content?: Record<string, any>;
+          hidden?: boolean;
+          deleted?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["section_drafts"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "section_drafts_page_id_fkey";
+            columns: ["page_id"];
+            isOneToOne: false;
+            referencedRelation: "pages";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "section_drafts_live_section_id_fkey";
+            columns: ["live_section_id"];
+            isOneToOne: false;
+            referencedRelation: "sections";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       blog_posts: {
         Row: {
           id: string;
@@ -124,6 +177,8 @@ export interface Database {
           og_image_url: string | null;
           canonical_url: string | null;
           noindex: boolean;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          draft_meta: Record<string, any> | null;
         };
         Insert: {
           id?: string;
@@ -144,6 +199,8 @@ export interface Database {
           og_image_url?: string | null;
           canonical_url?: string | null;
           noindex?: boolean;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          draft_meta?: Record<string, any> | null;
         };
         Update: Partial<Database["public"]["Tables"]["blog_posts"]["Insert"]>;
         Relationships: [];
@@ -176,6 +233,49 @@ export interface Database {
             columns: ["post_id"];
             isOneToOne: false;
             referencedRelation: "blog_posts";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      block_drafts: {
+        Row: {
+          id: string;
+          post_id: string;
+          live_block_id: string | null;
+          type: BlogBlockType;
+          position: number;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          content: Record<string, any>;
+          deleted: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          post_id: string;
+          live_block_id?: string | null;
+          type: BlogBlockType;
+          position?: number;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          content?: Record<string, any>;
+          deleted?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["block_drafts"]["Insert"]>;
+        Relationships: [
+          {
+            foreignKeyName: "block_drafts_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_posts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "block_drafts_live_block_id_fkey";
+            columns: ["live_block_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_blocks";
             referencedColumns: ["id"];
           }
         ];

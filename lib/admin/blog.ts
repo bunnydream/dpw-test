@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { BlogBlockType, PageStatus } from "@/lib/supabase/types";
 
+type AdminClient = ReturnType<typeof createAdminClient>;
+
 function revalidateInsights(slug?: string) {
   revalidatePath("/insights");
   if (slug) revalidatePath(`/insights/${slug}`);
@@ -17,10 +19,112 @@ export async function listPosts() {
   return data ?? [];
 }
 
+/** Ensures block_drafts rows exist for a post that's already published,
+ * lazily seeding them from the current live blocks the first time this is
+ * called for that post (subsequent calls just return the existing drafts).
+ * Only ever called for a published post — a post that's never been
+ * published keeps editing live `blog_blocks` rows directly. */
+async function ensureDraftBlocks(supabase: AdminClient, postId: string) {
+  const { data: existing, error } = await supabase
+    .from("block_drafts")
+    .select("*")
+    .eq("post_id", postId)
+    .order("position", { ascending: true });
+  if (error) throw new Error(error.message);
+  if (existing && existing.length > 0) return existing;
+
+  const { data: live, error: liveError } = await supabase
+    .from("blog_blocks")
+    .select("*")
+    .eq("post_id", postId)
+    .order("position", { ascending: true });
+  if (liveError) throw new Error(liveError.message);
+  if (!live || live.length === 0) return [];
+
+  const rows = live.map((b) => ({
+    post_id: postId,
+    live_block_id: b.id,
+    type: b.type,
+    position: b.position,
+    content: b.content,
+  }));
+  // Upsert (ignoring conflicts) rather than plain insert: a concurrent call
+  // seeding the same post_id/live_block_id pair loses the race silently
+  // instead of creating a duplicate shadow row (see 0011_draft_seed_dedup.sql).
+  const { error: insertError } = await supabase
+    .from("block_drafts")
+    .upsert(rows, { onConflict: "post_id,live_block_id", ignoreDuplicates: true });
+  if (insertError) throw new Error(insertError.message);
+
+  // Re-select rather than trusting the upsert's own return value: whichever
+  // call lost the race gets the authoritative full set either way.
+  const { data: seeded, error: seededError } = await supabase
+    .from("block_drafts")
+    .select("*")
+    .eq("post_id", postId)
+    .order("position", { ascending: true });
+  if (seededError) throw new Error(seededError.message);
+  return seeded ?? [];
+}
+
+type PostMetaSnapshot = {
+  title: string;
+  subtitle: string | null;
+  author: string | null;
+  category: string;
+  featured_image_url: string | null;
+  featured_image_alt: string | null;
+  featured_image_caption: string | null;
+  meta_title: string | null;
+  meta_description: string | null;
+  og_image_url: string | null;
+  canonical_url: string | null;
+  noindex: boolean;
+};
+
+/** Reads the pending draft_meta snapshot for a post, seeding it from the
+ * current live title/SEO fields if no draft override exists yet. Used by
+ * updatePostMeta/updatePostSeo when draftMode is true. */
+async function currentPostMeta(supabase: AdminClient, postId: string): Promise<{ slug: string; base: PostMetaSnapshot }> {
+  const { data: existing, error } = await supabase
+    .from("blog_posts")
+    .select(
+      "slug, title, subtitle, author, category, featured_image_url, featured_image_alt, featured_image_caption, meta_title, meta_description, og_image_url, canonical_url, noindex, draft_meta"
+    )
+    .eq("id", postId)
+    .single();
+  if (error || !existing) throw new Error(error?.message ?? "Post not found");
+  const base: PostMetaSnapshot = (existing.draft_meta as PostMetaSnapshot | null) ?? {
+    title: existing.title,
+    subtitle: existing.subtitle,
+    author: existing.author,
+    category: existing.category,
+    featured_image_url: existing.featured_image_url,
+    featured_image_alt: existing.featured_image_alt,
+    featured_image_caption: existing.featured_image_caption,
+    meta_title: existing.meta_title,
+    meta_description: existing.meta_description,
+    og_image_url: existing.og_image_url,
+    canonical_url: existing.canonical_url,
+    noindex: existing.noindex,
+  };
+  return { slug: existing.slug, base };
+}
+
 export async function getPostWithBlocks(id: string) {
   const supabase = createAdminClient();
   const { data: post, error: postError } = await supabase.from("blog_posts").select("*").eq("id", id).single();
   if (postError || !post) return null;
+
+  if (post.status === "published") {
+    const drafts = await ensureDraftBlocks(supabase, post.id);
+    const blocks = drafts
+      .filter((d) => !d.deleted)
+      .sort((a, b) => a.position - b.position)
+      .map(({ live_block_id: _liveBlockId, deleted: _deleted, ...rest }) => rest);
+    const effectivePost = { ...post, ...(post.draft_meta ?? {}) };
+    return { post: effectivePost, blocks };
+  }
 
   const { data: blocks, error: blocksError } = await supabase
     .from("blog_blocks")
@@ -72,13 +176,21 @@ export async function updatePostMeta(
     featured_image_url: string | null;
     featured_image_alt: string | null;
     featured_image_caption: string | null;
-  }>
+  }>,
+  draftMode: boolean
 ) {
   const supabase = createAdminClient();
-  const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
-  const { error } = await supabase.from("blog_posts").update(fields).eq("id", id);
+  if (!draftMode) {
+    const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
+    const { error } = await supabase.from("blog_posts").update(fields).eq("id", id);
+    if (error) throw new Error(error.message);
+    revalidateInsights(existing?.slug);
+    return;
+  }
+
+  const { base } = await currentPostMeta(supabase, id);
+  const { error } = await supabase.from("blog_posts").update({ draft_meta: { ...base, ...fields } }).eq("id", id);
   if (error) throw new Error(error.message);
-  revalidateInsights(existing?.slug);
 }
 
 export async function updatePostSeo(
@@ -89,24 +201,101 @@ export async function updatePostSeo(
     og_image_url: string | null;
     canonical_url: string | null;
     noindex: boolean;
-  }>
+  }>,
+  draftMode: boolean
 ) {
   const supabase = createAdminClient();
-  const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
-  const { error } = await supabase.from("blog_posts").update(fields).eq("id", id);
+  if (!draftMode) {
+    const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
+    const { error } = await supabase.from("blog_posts").update(fields).eq("id", id);
+    if (error) throw new Error(error.message);
+    revalidateInsights(existing?.slug);
+    return;
+  }
+
+  const { base } = await currentPostMeta(supabase, id);
+  const { error } = await supabase.from("blog_posts").update({ draft_meta: { ...base, ...fields } }).eq("id", id);
   if (error) throw new Error(error.message);
-  revalidateInsights(existing?.slug);
 }
 
+/** Publish/unpublish. Transitioning TO "published" first applies any pending
+ * block_drafts and draft_meta onto the live blog_blocks/blog_posts rows (a
+ * no-op if neither exists — the post's first-ever publish), then clears
+ * them. Transitioning to "draft" (Unpublish) discards any pending
+ * block_drafts/draft_meta rather than applying or preserving them: once
+ * unpublished, edits go straight to the live rows again (same as a
+ * never-published post), so stale leftover drafts must not survive to be
+ * incorrectly resurrected and applied on a later republish, potentially
+ * clobbering newer edits made in the meantime. */
 export async function setPostStatus(id: string, status: PageStatus) {
   const supabase = createAdminClient();
-  const { data: existing } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
+
+  if (status !== "published") {
+    const { data: existing, error: fetchError } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
+    if (fetchError) throw new Error(fetchError.message);
+    const { error: clearError } = await supabase.from("block_drafts").delete().eq("post_id", id);
+    if (clearError) throw new Error(clearError.message);
+    const { error } = await supabase
+      .from("blog_posts")
+      .update({ status, published_at: null, draft_meta: null })
+      .eq("id", id);
+    if (error) throw new Error(error.message);
+    revalidateInsights(existing?.slug);
+    return;
+  }
+
+  const { data: post, error: postError } = await supabase
+    .from("blog_posts")
+    .select("slug, status, published_at, draft_meta")
+    .eq("id", id)
+    .single();
+  if (postError || !post) throw new Error(postError?.message ?? "Post not found");
+
+  const { data: drafts, error: draftsError } = await supabase.from("block_drafts").select("*").eq("post_id", id);
+  if (draftsError) throw new Error(draftsError.message);
+
+  if (drafts && drafts.length > 0) {
+    for (const d of drafts) {
+      if (d.deleted && d.live_block_id) {
+        const { error } = await supabase.from("blog_blocks").delete().eq("id", d.live_block_id);
+        if (error) throw new Error(error.message);
+      } else if (!d.deleted && d.live_block_id) {
+        const { error } = await supabase
+          .from("blog_blocks")
+          .update({ type: d.type, position: d.position, content: d.content })
+          .eq("id", d.live_block_id);
+        if (error) throw new Error(error.message);
+      } else if (!d.deleted && !d.live_block_id) {
+        const { error } = await supabase.from("blog_blocks").insert({
+          post_id: id,
+          type: d.type,
+          position: d.position,
+          content: d.content,
+        });
+        if (error) throw new Error(error.message);
+      }
+    }
+    const { error: clearError } = await supabase.from("block_drafts").delete().eq("post_id", id);
+    if (clearError) throw new Error(clearError.message);
+  }
+
+  // Only stamp a fresh published_at on the actual draft→published transition
+  // (first-ever publish, or republishing after an Unpublish, which already
+  // nulled it out) — republishing further edits to a post that's already
+  // published shouldn't bump its published date and reorder it on /insights.
+  const publishedAtPatch = post.status === "published" && post.published_at ? {} : { published_at: new Date().toISOString() };
+
   const { error } = await supabase
     .from("blog_posts")
-    .update({ status, published_at: status === "published" ? new Date().toISOString() : null })
+    .update({
+      status: "published",
+      ...publishedAtPatch,
+      ...(post.draft_meta ?? {}),
+      draft_meta: null,
+    })
     .eq("id", id);
   if (error) throw new Error(error.message);
-  revalidateInsights(existing?.slug);
+  revalidateInsights(post.slug);
 }
 
 export async function createBlock(
@@ -114,9 +303,20 @@ export async function createBlock(
   type: BlogBlockType,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: Record<string, any>,
-  position: number
+  position: number,
+  draftMode: boolean
 ) {
   const supabase = createAdminClient();
+  if (draftMode) {
+    const { data, error } = await supabase
+      .from("block_drafts")
+      .insert({ post_id: postId, live_block_id: null, type, content, position })
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    const { live_block_id: _liveBlockId, deleted: _deleted, ...rest } = data;
+    return rest;
+  }
   const { data, error } = await supabase
     .from("blog_blocks")
     .insert({ post_id: postId, type, content, position })
@@ -129,22 +329,45 @@ export async function createBlock(
 export async function updateBlock(
   blockId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  content: Record<string, any>
+  content: Record<string, any>,
+  draftMode: boolean
 ) {
   const supabase = createAdminClient();
-  const { error } = await supabase.from("blog_blocks").update({ content }).eq("id", blockId);
+  const { error } = draftMode
+    ? await supabase.from("block_drafts").update({ content }).eq("id", blockId)
+    : await supabase.from("blog_blocks").update({ content }).eq("id", blockId);
   if (error) throw new Error(error.message);
 }
 
-export async function deleteBlock(blockId: string) {
+export async function deleteBlock(blockId: string, draftMode: boolean) {
   const supabase = createAdminClient();
-  const { error } = await supabase.from("blog_blocks").delete().eq("id", blockId);
-  if (error) throw new Error(error.message);
+  if (!draftMode) {
+    const { error } = await supabase.from("blog_blocks").delete().eq("id", blockId);
+    if (error) throw new Error(error.message);
+    return;
+  }
+
+  const { data: draft, error: fetchError } = await supabase
+    .from("block_drafts")
+    .select("live_block_id")
+    .eq("id", blockId)
+    .single();
+  if (fetchError) throw new Error(fetchError.message);
+
+  if (draft?.live_block_id) {
+    const { error } = await supabase.from("block_drafts").update({ deleted: true }).eq("id", blockId);
+    if (error) throw new Error(error.message);
+  } else {
+    const { error } = await supabase.from("block_drafts").delete().eq("id", blockId);
+    if (error) throw new Error(error.message);
+  }
 }
 
-export async function reorderBlocks(orderedIds: string[]) {
+export async function reorderBlocks(orderedIds: string[], draftMode: boolean) {
   const supabase = createAdminClient();
-  await Promise.all(
-    orderedIds.map((id, position) => supabase.from("blog_blocks").update({ position }).eq("id", id))
-  );
+  if (draftMode) {
+    await Promise.all(orderedIds.map((id, position) => supabase.from("block_drafts").update({ position }).eq("id", id)));
+  } else {
+    await Promise.all(orderedIds.map((id, position) => supabase.from("blog_blocks").update({ position }).eq("id", id)));
+  }
 }

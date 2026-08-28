@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   createBlock,
   deleteBlock,
+  getPostWithBlocks,
   reorderBlocks,
   setPostStatus,
   updateBlock,
@@ -244,20 +245,35 @@ export default function BlogEditor({
   async function saveAll(nextStatus?: PageStatus) {
     setIsSaving(true);
     try {
+      // Content writes always target whichever table the post's CURRENT
+      // (pre-transition) status implies — that's what `blocks`' ids
+      // currently belong to, whether or not this call is also about to flip
+      // `status`. An already-published post routes writes into the draft
+      // tables/draft_meta, so "Save changes" can't silently push edits live;
+      // "Unpublish" also writes there for the same reason (consistent ids),
+      // and setPostStatus() discards those drafts as part of the transition
+      // to "draft" (see its comment) rather than leaving them pending, so a
+      // later republish can't resurrect stale content over newer live edits.
+      const draftMode = status === "published";
+
       const finalCategory = (showNewCategory ? newCategory.trim() : category) || post.category;
       const finalAuthor = showNewAuthor ? newAuthor.trim() : author;
 
-      await updatePostMeta(post.id, {
-        title: title.trim() || "Untitled post",
-        subtitle: subtitle.trim() || null,
-        author: finalAuthor || null,
-        category: finalCategory,
-        featured_image_url: featuredUrl || null,
-        featured_image_alt: featuredAlt || null,
-        featured_image_caption: featuredCaption || null,
-      });
+      await updatePostMeta(
+        post.id,
+        {
+          title: title.trim() || "Untitled post",
+          subtitle: subtitle.trim() || null,
+          author: finalAuthor || null,
+          category: finalCategory,
+          featured_image_url: featuredUrl || null,
+          featured_image_alt: featuredAlt || null,
+          featured_image_caption: featuredCaption || null,
+        },
+        draftMode
+      );
 
-      await updatePostSeo(post.id, seoValue);
+      await updatePostSeo(post.id, seoValue, draftMode);
 
       if (showNewCategory && finalCategory) {
         setCategory(finalCategory);
@@ -275,26 +291,40 @@ export default function BlogEditor({
       for (let i = 0; i < blocks.length; i++) {
         const b = blocks[i];
         if (b.id.startsWith("temp-")) {
-          const created = await createBlock(post.id, b.type, b.content, i);
+          const created = await createBlock(post.id, b.type, b.content, i, draftMode);
           updatedBlocks.push({ id: created.id, type: b.type, content: b.content });
         } else {
-          await updateBlock(b.id, b.content);
+          await updateBlock(b.id, b.content, draftMode);
           updatedBlocks.push(b);
         }
       }
 
       for (const delId of deletedBlockIds) {
-        await deleteBlock(delId);
+        await deleteBlock(delId, draftMode);
       }
       setDeletedBlockIds([]);
 
-      await reorderBlocks(updatedBlocks.map((b) => b.id));
+      await reorderBlocks(updatedBlocks.map((b) => b.id), draftMode);
       setBlocks(updatedBlocks);
 
       if (nextStatus) {
         await setPostStatus(post.id, nextStatus);
         setStatus(nextStatus);
-        setPublishedAt(nextStatus === "published" ? new Date().toISOString() : null);
+
+        // The transition may have changed which table block ids belong to
+        // (block_drafts get reseeded fresh on a re-publish; a "draft"-status
+        // post reads live blog_blocks directly) — refetch so `blocks`
+        // state's ids stay consistent with whichever table the next save
+        // will target, instead of referencing a table that no longer applies.
+        // Also pick up published_at from the server rather than guessing it
+        // client-side: setPostStatus only stamps a fresh published_at on an
+        // actual draft->published transition, not on republishing further
+        // edits to an already-published post.
+        const fresh = await getPostWithBlocks(post.id);
+        if (fresh) {
+          setPublishedAt(fresh.post.published_at);
+          setBlocks(fresh.blocks.map((b) => ({ id: b.id, type: b.type, content: b.content })));
+        }
       }
 
       const message = nextStatus === "published" ? "Post published" : nextStatus === "draft" ? "Post unpublished" : "Draft saved";
@@ -733,7 +763,15 @@ export default function BlogEditor({
             <div className="a-editor-actions">
               {status === "published" ? (
                 <>
-                  <button className="a-btn a-btn-copper" onClick={() => saveAll()} disabled={isSaving}>
+                  <button className="a-btn a-btn-copper" onClick={() => saveAll("published")} disabled={isSaving}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                      <polyline points="17 21 17 13 7 13 7 21" />
+                      <polyline points="7 3 7 8 15 8" />
+                    </svg>
+                    Publish changes
+                  </button>
+                  <button className="a-btn a-btn-outline" onClick={() => saveAll()} disabled={isSaving}>
                     Save changes
                   </button>
                   <button className="a-btn a-btn-outline" onClick={() => saveAll("draft")} disabled={isSaving}>
