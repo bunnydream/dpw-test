@@ -392,7 +392,8 @@ export default function PageEditor({
     setAddModalOpen(false);
     checkpoint();
     try {
-      const created = await createSection(page.id, type, starterName(type), starterContent(type), sections.length, isPublished);
+      const nextPosition = sections.length ? Math.max(...sections.map((s) => s.position)) + 1 : 0;
+      const created = await createSection(page.id, type, starterName(type), starterContent(type), nextPosition, isPublished);
       setSections((prev) => [...prev, created]);
       setOpenId(created.id);
       setHasStructuralChanges(true);
