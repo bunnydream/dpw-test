@@ -207,22 +207,42 @@ function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
 
+// Matches sections of `type` to `names` by exact `name`, in order — pins
+// each fixed-role slot to the specific row it was created for, so a later
+// same-type block (added via "Add a new block", which always gets a
+// generic "New <type>" name — see starterName() in block-types.ts) can't
+// silently take over the slot. Any name with no match falls back to the
+// next remaining same-type row by position, matching today's behavior.
+function pickByName(sections: Section[], type: Section["type"], names: string[]) {
+  const candidates = byType(sections, type);
+  const claimed = new Set<string>();
+  const picks = names.map((name) => {
+    const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
+    if (match) claimed.add(match.id);
+    return match;
+  });
+  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  let i = 0;
+  return picks.map((p) => p ?? remaining[i++]);
+}
+
 export default async function ProductPage() {
   const result = await getPageSections("product");
   const sections = result?.sections ?? [];
 
-  const hero = byType(sections, "hero")[0];
-  const builtToFit = byType(sections, "content-cards")[0];
-  const photoTextSections = byType(sections, "photo-text");
-  const verificationProblem = photoTextSections[0];
-  const accessible = photoTextSections[1];
+  const hero = pickByName(sections, "hero", ["Verify My Income"])[0];
+  const builtToFit = pickByName(sections, "content-cards", ["Built to fit your systems"])[0];
+  const [verificationProblem, accessible] = pickByName(sections, "photo-text", [
+    "The verification problem",
+    "Accessible by design, not as an afterthought",
+  ]);
   const problemAccordion = byType(sections, "product-problem-accordion")[0];
   const talkCta = byType(sections, "product-talk-cta")[0];
   const compareTable = byType(sections, "product-compare-table")[0];
   const vendorQuestions = byType(sections, "product-vendor-questions")[0];
-  const pilotSteps = byType(sections, "steps")[0];
-  const inTheField = byType(sections, "case-study")[0];
-  const bottomCta = byType(sections, "cta")[0];
+  const pilotSteps = pickByName(sections, "steps", ["The path to a pilot"])[0];
+  const inTheField = pickByName(sections, "case-study", ["In the field"])[0];
+  const bottomCta = pickByName(sections, "cta", ["Impact CTA"])[0];
 
   const builtToFitContent = builtToFit?.content as ContentCardsContent | undefined;
   const verificationProblemContent = verificationProblem?.content as ProblemPhotoTextContent | undefined;

@@ -80,20 +80,41 @@ function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
 
+// Matches sections of `type` to `names` by exact `name`, in order — pins
+// each fixed-role slot to the specific row it was created for, so a later
+// same-type block (added via "Add a new block", which always gets a
+// generic "New <type>" name — see starterName() in block-types.ts) can't
+// silently take over the slot. Any name with no match falls back to the
+// next remaining same-type row by position, matching today's behavior.
+function pickByName(sections: Section[], type: Section["type"], names: string[]) {
+  const candidates = byType(sections, type);
+  const claimed = new Set<string>();
+  const picks = names.map((name) => {
+    const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
+    if (match) claimed.add(match.id);
+    return match;
+  });
+  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  let i = 0;
+  return picks.map((p) => p ?? remaining[i++]);
+}
+
 export default async function ImpactPage() {
   const result = await getPageSections("impact");
   const sections = result?.sections ?? [];
 
-  const hero = byType(sections, "hero")[0];
-  const stats = byType(sections, "stats")[0];
-  const families = byType(sections, "photo-text")[0];
+  const hero = pickByName(sections, "hero", ["Our Impact"])[0];
+  const stats = pickByName(sections, "stats", ["Metrics"])[0];
+  const families = pickByName(sections, "photo-text", [
+    "From hours of paperwork to five minutes — without leaving home",
+  ])[0];
   const familiesContent = families?.content as PhotoTextContent | undefined;
   const manualTable = byType(sections, "impact-manual-table")[0];
-  const voices = byType(sections, "voices")[0];
-  const deployed = byType(sections, "case-study")[0];
+  const voices = pickByName(sections, "voices", ["Real people. Real experiences."])[0];
+  const deployed = pickByName(sections, "case-study", ["Deployed and delivering results"])[0];
   const yearInReview = byType(sections, "impact-year-in-review")[0];
-  const fundingModel = byType(sections, "icon-cards")[0];
-  const bottomCta = byType(sections, "cta")[0];
+  const fundingModel = pickByName(sections, "icon-cards", ["Funding model"])[0];
+  const bottomCta = pickByName(sections, "cta", ["Insights CTA"])[0];
 
   const statsContent = (stats?.content as StatsContent | undefined) ?? DEFAULT_STATS;
   const manualTableContent = (manualTable?.content as ImpactManualTableContent | undefined) ?? DEFAULT_MANUAL_TABLE;

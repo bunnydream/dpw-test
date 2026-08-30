@@ -86,6 +86,25 @@ function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
 
+// Matches sections of `type` to `names` by exact `name`, in order — pins
+// each fixed-role slot to the specific row it was created for, so a later
+// same-type block (added via "Add a new block", which always gets a
+// generic "New <type>" name — see starterName() in block-types.ts) can't
+// silently take over the slot. Any name with no match falls back to the
+// next remaining same-type row by position, matching today's behavior.
+function pickByName(sections: Section[], type: Section["type"], names: string[]) {
+  const candidates = byType(sections, type);
+  const claimed = new Set<string>();
+  const picks = names.map((name) => {
+    const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
+    if (match) claimed.add(match.id);
+    return match;
+  });
+  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  let i = 0;
+  return picks.map((p) => p ?? remaining[i++]);
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const [result, siteSeo] = await Promise.all([getPageSections("home"), getSeoSettings()]);
   return resolveMetadata({
@@ -101,19 +120,19 @@ export default async function HomePage() {
   const result = await getPageSections("home");
   const sections = result?.sections ?? [];
 
-  const hero = byType(sections, "hero")[0];
-  const stats = byType(sections, "stats")[0];
-  const photoTextSections = byType(sections, "photo-text");
-  const pressure = photoTextSections[0];
-  const model = photoTextSections[1];
+  const hero = pickByName(sections, "hero", [
+    "What if income verification worked for families and states instead of vendors?",
+  ])[0];
+  const stats = pickByName(sections, "stats", ["Impact numbers"])[0];
+  const [pressure, model] = pickByName(sections, "photo-text", ["The pressure is real", "A better model"]);
   const compareTable = byType(sections, "home-compare-table")[0];
-  const howHeading = byType(sections, "text")[0];
-  const steps = byType(sections, "steps")[0];
-  const stories = byType(sections, "icon-cards")[0];
-  const howImage = byType(sections, "image")[0];
-  const voices = byType(sections, "voices")[0];
-  const partners = byType(sections, "partners")[0];
-  const cta = byType(sections, "cta")[0];
+  const howHeading = pickByName(sections, "text", ["How it works heading"])[0];
+  const steps = pickByName(sections, "steps", ["How Verify My Income works"])[0];
+  const stories = pickByName(sections, "icon-cards", ["Stories"])[0];
+  const howImage = pickByName(sections, "image", ["How it works diagram"])[0];
+  const voices = pickByName(sections, "voices", ["Trusted by real people"])[0];
+  const partners = pickByName(sections, "partners", ["Backed by"])[0];
+  const cta = pickByName(sections, "cta", ["Ready to pilot Verify My Income?"])[0];
 
   const compareTableContent = (compareTable?.content as HomeCompareTableContent | undefined) ?? DEFAULT_COMPARE_TABLE;
   const howHeadingContent = (howHeading?.content as TextContent | undefined) ?? DEFAULT_HOW_HEADING;

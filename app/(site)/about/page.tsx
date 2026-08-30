@@ -24,15 +24,34 @@ function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
 
+// Matches sections of `type` to `names` by exact `name`, in order — pins
+// each fixed-role slot to the specific row it was created for, so a later
+// same-type block (added via "Add a new block", which always gets a
+// generic "New <type>" name — see starterName() in block-types.ts) can't
+// silently take over the slot. Any name with no match falls back to the
+// next remaining same-type row by position, matching today's behavior.
+function pickByName(sections: Section[], type: Section["type"], names: string[]) {
+  const candidates = byType(sections, type);
+  const claimed = new Set<string>();
+  const picks = names.map((name) => {
+    const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
+    if (match) claimed.add(match.id);
+    return match;
+  });
+  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  let i = 0;
+  return picks.map((p) => p ?? remaining[i++]);
+}
+
 export default async function AboutPage() {
   const result = await getPageSections("about");
   const sections = result?.sections ?? [];
 
-  const hero = byType(sections, "hero")[0];
-  const story = byType(sections, "photo-text")[0];
-  const team = byType(sections, "team-member")[0];
-  const partners = byType(sections, "partners")[0];
-  const orgStatus = byType(sections, "text")[0];
+  const hero = pickByName(sections, "hero", ["About Us"])[0];
+  const story = pickByName(sections, "photo-text", ["How Digital Public Works started"])[0];
+  const team = pickByName(sections, "team-member", ["Our team"])[0];
+  const partners = pickByName(sections, "partners", ["Backed by"])[0];
+  const orgStatus = pickByName(sections, "text", ["Organization status"])[0];
 
   const storyContent = story?.content as PhotoTextContent | undefined;
   const teamContent = team?.content as TeamMemberContent | undefined;

@@ -116,20 +116,43 @@ function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
 
+// Matches sections of `type` to `names` by exact `name`, in order — pins
+// each fixed-role slot to the specific row it was created for, so a later
+// same-type block (added via "Add a new block", which always gets a
+// generic "New <type>" name — see starterName() in block-types.ts) can't
+// silently take over the slot. Any name with no match falls back to the
+// next remaining same-type row by position, matching today's behavior.
+function pickByName(sections: Section[], type: Section["type"], names: string[]) {
+  const candidates = byType(sections, type);
+  const claimed = new Set<string>();
+  const picks = names.map((name) => {
+    const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
+    if (match) claimed.add(match.id);
+    return match;
+  });
+  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  let i = 0;
+  return picks.map((p) => p ?? remaining[i++]);
+}
+
 export default async function ContactPage() {
   const result = await getPageSections("contact");
   const sections = result?.sections ?? [];
 
-  const headerSection = byType(sections, "text")[0];
+  const headerSection = pickByName(sections, "text", ["Page header"])[0];
   const header = headerSection?.content as TextContent | undefined;
-  const formSections = byType(sections, "contact-form-section");
+  const [statePartnersSection, fundersSection, communitySection] = pickByName(sections, "contact-form-section", [
+    "For State Partners",
+    "For Funders",
+    "For Community",
+  ]);
 
-  const statePartners = (formSections[0]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_STATE_PARTNERS;
-  const funders = (formSections[1]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_FUNDERS;
-  const community = (formSections[2]?.content as ContactFormSectionContent | undefined) ?? DEFAULT_COMMUNITY;
+  const statePartners = (statePartnersSection?.content as ContactFormSectionContent | undefined) ?? DEFAULT_STATE_PARTNERS;
+  const funders = (fundersSection?.content as ContactFormSectionContent | undefined) ?? DEFAULT_FUNDERS;
+  const community = (communitySection?.content as ContactFormSectionContent | undefined) ?? DEFAULT_COMMUNITY;
 
   const consumedIds = new Set(
-    [headerSection, ...formSections.slice(0, 3)].filter((s): s is Section => !!s).map((s) => s.id)
+    [headerSection, statePartnersSection, fundersSection, communitySection].filter((s): s is Section => !!s).map((s) => s.id)
   );
   const extraSections = sections.filter((s) => !consumedIds.has(s.id));
 
@@ -153,10 +176,10 @@ export default async function ContactPage() {
       ),
     },
     {
-      key: formSections[0]?.id ?? "statePartners",
-      position: formSections[0]?.position ?? RANK.statePartners,
+      key: statePartnersSection?.id ?? "statePartners",
+      position: statePartnersSection?.position ?? RANK.statePartners,
       node: (
-        <section className="section-pad" style={{ background: (formSections[0]?.background_color) ?? "var(--cool-white)" }}>
+        <section className="section-pad" style={{ background: (statePartnersSection?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -261,10 +284,10 @@ export default async function ContactPage() {
       ),
     },
     {
-      key: formSections[1]?.id ?? "funders",
-      position: formSections[1]?.position ?? RANK.funders,
+      key: fundersSection?.id ?? "funders",
+      position: fundersSection?.position ?? RANK.funders,
       node: (
-        <section className="section-pad" style={{ background: (formSections[1]?.background_color) ?? "var(--cool-white)" }}>
+        <section className="section-pad" style={{ background: (fundersSection?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -356,10 +379,10 @@ export default async function ContactPage() {
       ),
     },
     {
-      key: formSections[2]?.id ?? "community",
-      position: formSections[2]?.position ?? RANK.community,
+      key: communitySection?.id ?? "community",
+      position: communitySection?.position ?? RANK.community,
       node: (
-        <section className="section-pad" style={{ background: (formSections[2]?.background_color) ?? "var(--cool-white)" }}>
+        <section className="section-pad" style={{ background: (communitySection?.background_color) ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">

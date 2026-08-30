@@ -16,6 +16,25 @@ function byType(sections: Section[], type: Section["type"]) {
   return sections.filter((s) => s.type === type);
 }
 
+// Matches sections of `type` to `names` by exact `name`, in order — pins
+// each fixed-role slot to the specific row it was created for, so a later
+// same-type block (added via "Add a new block", which always gets a
+// generic "New <type>" name — see starterName() in block-types.ts) can't
+// silently take over the slot. Any name with no match falls back to the
+// next remaining same-type row by position, matching today's behavior.
+function pickByName(sections: Section[], type: Section["type"], names: string[]) {
+  const candidates = byType(sections, type);
+  const claimed = new Set<string>();
+  const picks = names.map((name) => {
+    const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
+    if (match) claimed.add(match.id);
+    return match;
+  });
+  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  let i = 0;
+  return picks.map((p) => p ?? remaining[i++]);
+}
+
 type TextContent = {
   heading?: string | null;
   text: string;
@@ -31,7 +50,7 @@ export default async function CareersPage() {
   const result = await getPageSections("careers");
   const sections = result?.sections ?? [];
 
-  const hero = byType(sections, "hero")[0];
+  const hero = pickByName(sections, "hero", ["Join Digital Public Works"])[0];
   const intro = byType(sections, "careers-intro")[0];
   const openings = byType(sections, "careers-openings")[0];
 
