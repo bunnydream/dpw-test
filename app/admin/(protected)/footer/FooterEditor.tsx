@@ -83,10 +83,10 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
         <div className="admin-topbar-actions">
           <span className={`a-save-status${isPending ? " is-saving" : ""}`}>
             {!isPending && !dirty ? <CheckIcon /> : null}
-            {isPending ? "Saving..." : dirty ? "Unsaved changes" : "All changes saved"}
+            {isPending ? "Publishing..." : dirty ? "Unsaved changes" : "All changes saved"}
           </span>
           <button type="button" className="a-btn a-btn-primary" onClick={handleSave} disabled={isPending || !dirty}>
-            {isPending ? "Saving…" : "Save changes"}
+            {isPending ? "Saving…" : "Publish changes"}
           </button>
         </div>
       </header>
