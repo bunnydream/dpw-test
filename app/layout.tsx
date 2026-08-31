@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getSeoSettings } from "@/lib/site-settings";
 import { SITE_URL } from "@/lib/seo";
 import "../shared.css";
+import { Analytics } from "@vercel/analytics/next";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSeoSettings();
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

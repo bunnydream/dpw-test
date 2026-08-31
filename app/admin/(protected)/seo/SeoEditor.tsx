@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { updateSeoSettings } from "@/lib/admin/site-settings";
 import { uploadMedia } from "@/lib/admin/media";
+import MediaLibraryModal from "@/components/admin/MediaLibraryModal";
 import type { SeoSettings } from "@/lib/site-settings";
 
 // Mirrors app/admin/(protected)/footer/FooterEditor.tsx's icon set.
@@ -32,6 +33,8 @@ export default function SeoEditor({ initial }: { initial: SeoSettings }) {
   const [uploadingOg, setUploadingOg] = useState(false);
   const [uploadingFavicon, setUploadingFavicon] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [ogPickerOpen, setOgPickerOpen] = useState(false);
+  const [faviconPickerOpen, setFaviconPickerOpen] = useState(false);
 
   function update(patch: Partial<SeoSettings>) {
     setSettings((s) => ({ ...s, ...patch }));
@@ -56,6 +59,11 @@ export default function SeoEditor({ initial }: { initial: SeoSettings }) {
     e.target.value = "";
   }
 
+  function handleOgPicked(url: string) {
+    setOgPickerOpen(false);
+    update({ defaultOgImageUrl: url });
+  }
+
   async function handleFaviconFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -71,6 +79,11 @@ export default function SeoEditor({ initial }: { initial: SeoSettings }) {
       setUploadError(res.error || "Upload failed");
     }
     e.target.value = "";
+  }
+
+  function handleFaviconPicked(url: string) {
+    setFaviconPickerOpen(false);
+    update({ faviconUrl: url });
   }
 
   function handleSave() {
@@ -97,7 +110,8 @@ export default function SeoEditor({ initial }: { initial: SeoSettings }) {
             {!isPending && !dirty ? <CheckIcon /> : null}
             {isPending ? "Publishing..." : dirty ? "Unsaved changes" : "All changes saved"}
           </span>
-          <button type="button" className="a-btn a-btn-primary" onClick={handleSave} disabled={isPending || !dirty}>
+          <button type="button" className="a-btn a-btn-copper" onClick={handleSave} disabled={isPending || !dirty}>
+            <CheckIcon />
             {isPending ? "Saving…" : "Publish changes"}
           </button>
         </div>
@@ -157,23 +171,43 @@ export default function SeoEditor({ initial }: { initial: SeoSettings }) {
                       disabled={uploadingOg}
                     />
                   </label>
+                  <button
+                    type="button"
+                    className="a-btn a-btn-outline a-btn-sm"
+                    onClick={() => setOgPickerOpen(true)}
+                  >
+                    Media library
+                  </button>
                   <button type="button" className="a-btn a-btn-outline a-btn-sm" onClick={() => update({ defaultOgImageUrl: null })}>
                     Remove
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="a-upload">
-                <div className="a-upload-cta">
-                  <UploadIcon />
-                  <span>
-                    <strong>{uploadingOg ? "Uploading..." : "Click to upload"}</strong>
-                    {!uploadingOg ? " a default share image" : ""}
-                  </span>
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div className="a-upload" style={{ flex: 1 }}>
+                  <div className="a-upload-cta">
+                    <UploadIcon />
+                    <span>
+                      <strong>{uploadingOg ? "Uploading..." : "Click to upload"}</strong>
+                      {!uploadingOg ? " a default share image" : ""}
+                    </span>
+                  </div>
+                  <input type="file" accept="image/*" onChange={handleOgFile} disabled={uploadingOg} />
                 </div>
-                <input type="file" accept="image/*" onChange={handleOgFile} disabled={uploadingOg} />
+                <button
+                  type="button"
+                  className="a-btn a-btn-outline a-btn-sm"
+                  onClick={() => setOgPickerOpen(true)}
+                  disabled={uploadingOg}
+                >
+                  Media library
+                </button>
               </div>
             )}
+            {ogPickerOpen ? (
+              <MediaLibraryModal onSelect={handleOgPicked} onClose={() => setOgPickerOpen(false)} />
+            ) : null}
           </div>
 
           <div className="a-card">
@@ -194,27 +228,47 @@ export default function SeoEditor({ initial }: { initial: SeoSettings }) {
                       disabled={uploadingFavicon}
                     />
                   </label>
+                  <button
+                    type="button"
+                    className="a-btn a-btn-outline a-btn-sm"
+                    onClick={() => setFaviconPickerOpen(true)}
+                  >
+                    Media library
+                  </button>
                   <button type="button" className="a-btn a-btn-outline a-btn-sm" onClick={() => update({ faviconUrl: null })}>
                     Use default icon
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="a-upload">
-                <div className="a-upload-cta">
-                  <UploadIcon />
-                  <span>
-                    <strong>{uploadingFavicon ? "Uploading..." : "Click to upload"}</strong>
-                    {!uploadingFavicon ? " a favicon (currently using the default icon)" : ""}
-                  </span>
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div className="a-upload" style={{ flex: 1 }}>
+                  <div className="a-upload-cta">
+                    <UploadIcon />
+                    <span>
+                      <strong>{uploadingFavicon ? "Uploading..." : "Click to upload"}</strong>
+                      {!uploadingFavicon ? " a favicon (currently using the default icon)" : ""}
+                    </span>
+                  </div>
+                  <input type="file" accept="image/*" onChange={handleFaviconFile} disabled={uploadingFavicon} />
                 </div>
-                <input type="file" accept="image/*" onChange={handleFaviconFile} disabled={uploadingFavicon} />
+                <button
+                  type="button"
+                  className="a-btn a-btn-outline a-btn-sm"
+                  onClick={() => setFaviconPickerOpen(true)}
+                  disabled={uploadingFavicon}
+                >
+                  Media library
+                </button>
               </div>
             )}
             {uploadError ? (
               <div className="a-field-hint" style={{ color: "#B91C1C" }}>
                 {uploadError}
               </div>
+            ) : null}
+            {faviconPickerOpen ? (
+              <MediaLibraryModal onSelect={handleFaviconPicked} onClose={() => setFaviconPickerOpen(false)} />
             ) : null}
           </div>
         </div>

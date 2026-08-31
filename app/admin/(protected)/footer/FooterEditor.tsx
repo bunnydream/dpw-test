@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { updateFooterSettings } from "@/lib/admin/site-settings";
 import { uploadMedia } from "@/lib/admin/media";
 import LinkPicker from "@/components/admin/LinkPicker";
+import MediaLibraryModal from "@/components/admin/MediaLibraryModal";
 import type { FooterLink, FooterSettings } from "@/lib/site-settings";
 
 // Small inline icon set, scoped to this route — mirrors the style of
@@ -33,6 +34,7 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [logoPickerOpen, setLogoPickerOpen] = useState(false);
 
   function update(patch: Partial<FooterSettings>) {
     setSettings((s) => ({ ...s, ...patch }));
@@ -61,6 +63,11 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
     e.target.value = "";
   }
 
+  function handleLogoPicked(url: string) {
+    setLogoPickerOpen(false);
+    update({ logoUrl: url });
+  }
+
   function handleSave() {
     startTransition(async () => {
       try {
@@ -85,7 +92,8 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
             {!isPending && !dirty ? <CheckIcon /> : null}
             {isPending ? "Publishing..." : dirty ? "Unsaved changes" : "All changes saved"}
           </span>
-          <button type="button" className="a-btn a-btn-primary" onClick={handleSave} disabled={isPending || !dirty}>
+          <button type="button" className="a-btn a-btn-copper" onClick={handleSave} disabled={isPending || !dirty}>
+            <CheckIcon />
             {isPending ? "Saving…" : "Publish changes"}
           </button>
         </div>
@@ -117,27 +125,47 @@ export default function FooterEditor({ initial }: { initial: FooterSettings }) {
                       disabled={uploading}
                     />
                   </label>
+                  <button
+                    type="button"
+                    className="a-btn a-btn-outline a-btn-sm"
+                    onClick={() => setLogoPickerOpen(true)}
+                  >
+                    Media library
+                  </button>
                   <button type="button" className="a-btn a-btn-outline a-btn-sm" onClick={() => update({ logoUrl: null })}>
                     Use default logo
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="a-upload">
-                <div className="a-upload-cta">
-                  <UploadIcon />
-                  <span>
-                    <strong>{uploading ? "Uploading..." : "Click to upload"}</strong>
-                    {!uploading ? " a logo (currently using the default logo)" : ""}
-                  </span>
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <div className="a-upload" style={{ flex: 1 }}>
+                  <div className="a-upload-cta">
+                    <UploadIcon />
+                    <span>
+                      <strong>{uploading ? "Uploading..." : "Click to upload"}</strong>
+                      {!uploading ? " a logo (currently using the default logo)" : ""}
+                    </span>
+                  </div>
+                  <input type="file" accept="image/*" onChange={handleLogoFile} disabled={uploading} />
                 </div>
-                <input type="file" accept="image/*" onChange={handleLogoFile} disabled={uploading} />
+                <button
+                  type="button"
+                  className="a-btn a-btn-outline a-btn-sm"
+                  onClick={() => setLogoPickerOpen(true)}
+                  disabled={uploading}
+                >
+                  Media library
+                </button>
               </div>
             )}
             {uploadError ? (
               <div className="a-field-hint" style={{ color: "#B91C1C" }}>
                 {uploadError}
               </div>
+            ) : null}
+            {logoPickerOpen ? (
+              <MediaLibraryModal onSelect={handleLogoPicked} onClose={() => setLogoPickerOpen(false)} />
             ) : null}
           </div>
 

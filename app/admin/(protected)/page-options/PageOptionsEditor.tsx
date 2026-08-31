@@ -102,10 +102,11 @@ export default function PageOptionsEditor({ pages }: { pages: PageRow[] }) {
           </span>
           <button
             type="button"
-            className="a-btn a-btn-primary"
+            className="a-btn a-btn-copper"
             onClick={handlePublishAll}
             disabled={publishingAll || pendingPages.length === 0}
           >
+            <CheckIcon />
             {publishingAll ? "Publishing..." : "Publish changes"}
           </button>
         </div>
