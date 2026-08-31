@@ -181,7 +181,9 @@ export default async function HomePage() {
     {
       key: compareTable?.id ?? "compareTable",
       position: compareTable?.position ?? RANK.compareTable,
-      node: <HomeCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />,
+      node: compareTable ? (
+        <HomeCompareTable content={compareTableContent} backgroundColor={compareTable.background_color} />
+      ) : null,
     },
     {
       key: pressure?.id ?? "pressure",
@@ -204,7 +206,7 @@ export default async function HomePage() {
     {
       key: howHeading?.id ?? steps?.id ?? howImage?.id ?? "how",
       position: howHeading?.position ?? steps?.position ?? howImage?.position ?? RANK.how,
-      node: (
+      node: howHeading || steps || howImage ? (
         <>
           <section className="how" id="how-vmi-works">
             <div className="how-inner">
@@ -224,18 +226,18 @@ export default async function HomePage() {
           </section>
           <HowStepsProgress />
         </>
-      ),
+      ) : null,
     },
     {
       key: stories?.id ?? "stories",
       position: stories?.position ?? RANK.stories,
-      node: (
-        <section className="stories" style={stories?.background_color ? { background: stories.background_color } : undefined}>
+      node: stories ? (
+        <section className="stories" style={stories.background_color ? { background: stories.background_color } : undefined}>
           <div className="stories-inner">
             <IconCards content={storiesContent} />
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: model?.id ?? "model",

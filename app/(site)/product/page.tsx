@@ -336,7 +336,7 @@ export default async function ProductPage() {
     {
       key: verificationProblem?.id ?? problemAccordion?.id ?? "verificationProblem",
       position: verificationProblem?.position ?? problemAccordion?.position ?? RANK.verificationProblem,
-      node: (
+      node: verificationProblem || problemAccordion ? (
         <section
           className="ps-section section-pad"
           id="the-problem"
@@ -393,17 +393,19 @@ export default async function ProductPage() {
             </div>
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: talkCta?.id ?? "talkCta",
       position: talkCta?.position ?? RANK.talkCta,
-      node: <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta?.background_color} />,
+      node: talkCta ? <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta.background_color} /> : null,
     },
     {
       key: compareTable?.id ?? "compareTable",
       position: compareTable?.position ?? RANK.compareTable,
-      node: <ProductCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />,
+      node: compareTable ? (
+        <ProductCompareTable content={compareTableContent} backgroundColor={compareTable.background_color} />
+      ) : null,
     },
     {
       key: vendorQuestions?.id ?? "vendorQuestions",
@@ -411,16 +413,18 @@ export default async function ProductPage() {
       // ═══════════════════════════════════════════════
       // QUESTIONS TO ASK — bigger bare chevrons
       // ═══════════════════════════════════════════════
-      node: <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions?.background_color} />,
+      node: vendorQuestions ? (
+        <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions.background_color} />
+      ) : null,
     },
     {
       key: accessible?.id ?? "accessible",
       position: accessible?.position ?? RANK.accessible,
-      node: (
+      node: accessible ? (
         <section
           className="access-section"
           id="accessibility"
-          style={accessible?.background_color ? { background: accessible.background_color } : undefined}
+          style={accessible.background_color ? { background: accessible.background_color } : undefined}
         >
           {(() => {
             const textEl = (
@@ -468,7 +472,7 @@ export default async function ProductPage() {
             );
           })()}
         </section>
-      ),
+      ) : null,
     },
     {
       key: pilotSteps?.id ?? "pilotSteps",
@@ -526,7 +530,7 @@ export default async function ProductPage() {
     {
       key: bottomCta?.id ?? "bottomCta",
       position: bottomCta?.position ?? RANK.bottomCta,
-      node: <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />,
+      node: bottomCta ? <Cta content={bottomCtaContent} backgroundColor={bottomCta.background_color} /> : null,
     },
     ...extraSections.map((section) => ({
       key: section.id,

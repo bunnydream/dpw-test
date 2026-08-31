@@ -165,7 +165,7 @@ export default async function ImpactPage() {
       // live markup uses <span class="stat-label"> while Stats.tsx renders
       // <p class="stat-label"> — a real tag difference with no explicit
       // `display` override in CSS, so swapping would risk a layout shift.
-      node: (
+      node: stats ? (
         <div className="stat-row" role="list">
           {statsContent.stats.map((stat, i) => (
             <div className={`stat-cell reveal d${i + 1}`} role="listitem" key={i}>
@@ -174,7 +174,7 @@ export default async function ImpactPage() {
             </div>
           ))}
         </div>
-      ),
+      ) : null,
     },
     {
       key: families?.id ?? manualTable?.id ?? "families",
@@ -184,7 +184,7 @@ export default async function ImpactPage() {
       // home's pressure/model pattern that PhotoText.tsx implements, and it
       // has no pullquote but does have a fixed .comp-card widget that isn't
       // part of admin's photo-text field shape at all.
-      node: (
+      node: families || manualTable ? (
         <section className="families">
           {(() => {
             const imgEl = (
@@ -229,7 +229,7 @@ export default async function ImpactPage() {
             );
           })()}
         </section>
-      ),
+      ) : null,
     },
     {
       key: voices?.id ?? "voices",
@@ -239,41 +239,41 @@ export default async function ImpactPage() {
     {
       key: deployed?.id ?? "deployed",
       position: deployed?.position ?? RANK.deployed,
-      node: (
+      node: deployed ? (
         <section className="field section-pad" id="deployed">
           <div className="section-inner">
             <h2 className="section-h reveal">
-              {deployed ? (deployed.content as CaseStudyContent).heading ?? "Deployed and delivering results" : "Deployed and delivering results"}
+              {(deployed.content as CaseStudyContent).heading ?? "Deployed and delivering results"}
             </h2>
-            {deployed ? <CaseStudy content={deployed.content as CaseStudyContent} /> : null}
+            <CaseStudy content={deployed.content as CaseStudyContent} />
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: yearInReview?.id ?? "yearInReview",
       position: yearInReview?.position ?? RANK.yearInReview,
-      node: <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview?.background_color} />,
+      node: yearInReview ? <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview.background_color} /> : null,
     },
     {
       key: fundingModel?.id ?? "fundingModel",
       position: fundingModel?.position ?? RANK.fundingModel,
-      node: (
+      node: fundingModel ? (
         <section
           className="funding section-pad"
           id="funding-model"
-          style={fundingModel?.background_color ? { background: fundingModel.background_color } : undefined}
+          style={fundingModel.background_color ? { background: fundingModel.background_color } : undefined}
         >
           <div className="section-inner">
             <IconCards content={fundingModelContent} />
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: bottomCta?.id ?? "bottomCta",
       position: bottomCta?.position ?? RANK.bottomCta,
-      node: <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />,
+      node: bottomCta ? <Cta content={bottomCtaContent} backgroundColor={bottomCta.background_color} /> : null,
     },
     ...extraSections.map((section) => ({
       key: section.id,

@@ -93,10 +93,10 @@ export default async function CareersPage() {
     {
       key: openings?.id ?? "openings",
       position: openings?.position ?? RANK.openings,
-      node: (
+      node: openings ? (
         <section
           className="openings section-pad"
-          style={openings?.background_color ? { background: openings.background_color } : undefined}
+          style={openings.background_color ? { background: openings.background_color } : undefined}
         >
           <div className="section-inner">
             <div className="openings-header reveal">
@@ -106,7 +106,7 @@ export default async function CareersPage() {
             <p className="openings-body reveal d1">{openingsContent.text}</p>
           </div>
         </section>
-      ),
+      ) : null,
     },
     ...extraSections.map((section) => ({
       key: section.id,

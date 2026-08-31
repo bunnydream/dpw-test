@@ -166,20 +166,20 @@ export default async function ContactPage() {
     {
       key: headerSection?.id ?? "headerSection",
       position: headerSection?.position ?? RANK.headerSection,
-      node: (
+      node: headerSection ? (
         <section className="page-header">
           <div className="page-header-inner">
             <h1 className="reveal d1">{header?.heading}</h1>
             <p className="page-header-sub reveal d2">{header?.text}</p>
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: statePartnersSection?.id ?? "statePartners",
       position: statePartnersSection?.position ?? RANK.statePartners,
-      node: (
-        <section className="section-pad" style={{ background: (statePartnersSection?.background_color) ?? "var(--cool-white)" }}>
+      node: statePartnersSection ? (
+        <section className="section-pad" style={{ background: statePartnersSection.background_color ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -281,13 +281,13 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
-      ),
+      ) : null,
     },
     {
       key: fundersSection?.id ?? "funders",
       position: fundersSection?.position ?? RANK.funders,
-      node: (
-        <section className="section-pad" style={{ background: (fundersSection?.background_color) ?? "var(--cool-white)" }}>
+      node: fundersSection ? (
+        <section className="section-pad" style={{ background: fundersSection.background_color ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -376,13 +376,13 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
-      ),
+      ) : null,
     },
     {
       key: communitySection?.id ?? "community",
       position: communitySection?.position ?? RANK.community,
-      node: (
-        <section className="section-pad" style={{ background: (communitySection?.background_color) ?? "var(--cool-white)" }}>
+      node: communitySection ? (
+        <section className="section-pad" style={{ background: communitySection.background_color ?? "var(--cool-white)" }}>
         <div className="section-inner">
           <div className="contact-pair">
             <div className="contact-desc reveal">
@@ -483,7 +483,7 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
-      ),
+      ) : null,
     },
     ...extraSections.map((section) => ({
       key: section.id,
