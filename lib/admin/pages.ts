@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { PageStatus, SectionType } from "@/lib/supabase/types";
-import { pageSlugToPath } from "@/lib/page-path";
-import { appendPageToNav, renameNavItem } from "@/lib/admin/site-settings";
+import { FIXED_PAGE_SLUGS, pageSlugToPath } from "@/lib/page-path";
+import { appendPageToNav, renameNavItem, renameNavItemHref } from "@/lib/admin/site-settings";
 
 type AdminClient = ReturnType<typeof createAdminClient>;
 
@@ -65,6 +65,7 @@ async function ensureDraftSections(supabase: AdminClient, pageId: string) {
 
 type PageMetaSnapshot = {
   title: string;
+  slug: string;
   meta_title: string | null;
   meta_description: string | null;
   og_image_url: string | null;
@@ -73,10 +74,12 @@ type PageMetaSnapshot = {
 };
 
 /** Reads the pending draft_meta snapshot for a page, seeding it from the
- * current live title/SEO fields if no draft override exists yet. Used by
- * updatePageTitle/updatePageSeo when draftMode is true, so a page's first
- * draft edit to any one of these fields starts from a full, consistent
- * snapshot rather than a partial patch. */
+ * current live title/slug/SEO fields if no draft override exists yet. Used
+ * by updatePageTitle/updatePageSlug/updatePageSeo when draftMode is true, so
+ * a page's first draft edit to any one of these fields starts from a full,
+ * consistent snapshot rather than a partial patch. The returned `slug` is
+ * always the row's actual live slug column (for lookups/revalidation),
+ * distinct from `base.slug`, which may hold a pending renamed value. */
 async function currentPageMeta(supabase: AdminClient, pageId: string): Promise<{ slug: string; base: PageMetaSnapshot }> {
   const { data: existing, error } = await supabase
     .from("pages")
@@ -86,6 +89,7 @@ async function currentPageMeta(supabase: AdminClient, pageId: string): Promise<{
   if (error || !existing) throw new Error(error?.message ?? "Page not found");
   const base: PageMetaSnapshot = (existing.draft_meta as PageMetaSnapshot | null) ?? {
     title: existing.title,
+    slug: existing.slug,
     meta_title: existing.meta_title,
     meta_description: existing.meta_description,
     og_image_url: existing.og_image_url,
@@ -329,19 +333,69 @@ export async function publishPage(slug: string) {
     if (clearError) throw new Error(clearError.message);
   }
 
+  const oldSlug = slug;
+  const newSlug = (page.draft_meta as PageMetaSnapshot | null)?.slug ?? oldSlug;
+
   const { data: updatedPage, error } = await supabase
     .from("pages")
     .update({ status: "published", ...(page.draft_meta ?? {}), draft_meta: null })
-    .eq("slug", slug)
+    .eq("slug", oldSlug)
     .select("title")
     .single();
   if (error) throw new Error(error.message);
 
-  revalidateForSlug(slug);
+  revalidateForSlug(oldSlug);
+  if (newSlug !== oldSlug) revalidateForSlug(newSlug);
   revalidatePath("/admin");
 
   if (updatedPage) {
-    await appendPageToNav(slug, updatedPage.title);
+    // Renaming the nav href first means appendPageToNav below is a no-op for
+    // a page that was already in the nav (its href now matches newSlug) and
+    // still adds a fresh entry for a page publishing for the first time.
+    if (newSlug !== oldSlug) await renameNavItemHref(oldSlug, newSlug);
+    // Syncs the nav label too, closing the gap where a title change deferred
+    // via draft_meta (an already-published page, edited in Page Options)
+    // never reached the navbar until this publish actually applies it.
+    await renameNavItem(newSlug, updatedPage.title);
+    await appendPageToNav(newSlug, updatedPage.title);
+  }
+}
+
+/** Applies a page's pending draft_meta (title/slug/SEO fields) onto the live
+ * row, without touching section_drafts/sections or `status` — for
+ * publishing an identity-only change made in Page Options on an
+ * already-published page, without also flushing unrelated pending
+ * page-content edits the way publishPage() does. No-op if there's no
+ * pending draft_meta. */
+export async function publishPageMeta(slug: string) {
+  const supabase = createAdminClient();
+  const { data: page, error: pageError } = await supabase
+    .from("pages")
+    .select("id, draft_meta")
+    .eq("slug", slug)
+    .single();
+  if (pageError || !page) throw new Error(pageError?.message ?? "Page not found");
+  if (!page.draft_meta) return;
+
+  const oldSlug = slug;
+  const newSlug = (page.draft_meta as PageMetaSnapshot | null)?.slug ?? oldSlug;
+
+  const { data: updatedPage, error } = await supabase
+    .from("pages")
+    .update({ ...(page.draft_meta ?? {}), draft_meta: null })
+    .eq("slug", oldSlug)
+    .select("title")
+    .single();
+  if (error) throw new Error(error.message);
+
+  revalidateForSlug(oldSlug);
+  if (newSlug !== oldSlug) revalidateForSlug(newSlug);
+  revalidatePath("/admin");
+
+  if (updatedPage) {
+    if (newSlug !== oldSlug) await renameNavItemHref(oldSlug, newSlug);
+    await renameNavItem(newSlug, updatedPage.title);
+    await appendPageToNav(newSlug, updatedPage.title);
   }
 }
 
@@ -405,6 +459,49 @@ export async function updatePageTitle(pageId: string, title: string, draftMode: 
   const { base } = await currentPageMeta(supabase, pageId);
   const { error } = await supabase.from("pages").update({ draft_meta: { ...base, title } }).eq("id", pageId);
   if (error) throw new Error(error.message);
+}
+
+/** Renames a page's URL slug. Mirrors updatePageTitle's shape: writes live
+ * and syncs the navbar immediately for a never-published page (!draftMode),
+ * or stashes the pending value into draft_meta for an already-published one,
+ * where it only takes effect (live row + navbar href) at the next
+ * publishPage() call. Rejects a slug already reserved by one of the 6
+ * built-in pages, or already used by another page/draft row (checked here,
+ * with the DB's unique constraint as a fallback in case of a race). */
+export async function updatePageSlug(pageId: string, newSlugRaw: string, draftMode: boolean) {
+  const supabase = createAdminClient();
+  const newSlug = slugify(newSlugRaw);
+  if (!newSlug) throw new Error("URL can't be empty");
+  if (FIXED_PAGE_SLUGS.includes(newSlug)) throw new Error("That URL is reserved for a built-in page");
+
+  const { data: existingRow, error: fetchError } = await supabase.from("pages").select("slug").eq("id", pageId).single();
+  if (fetchError || !existingRow) throw new Error(fetchError?.message ?? "Page not found");
+  if (FIXED_PAGE_SLUGS.includes(existingRow.slug)) throw new Error("Built-in pages can't have their URL changed");
+
+  const { data: collision } = await supabase.from("pages").select("id").eq("slug", newSlug).neq("id", pageId).maybeSingle();
+  if (collision) throw new Error("That URL is already used by another page");
+
+  if (!draftMode) {
+    const oldSlug = existingRow.slug;
+    const { error } = await supabase.from("pages").update({ slug: newSlug }).eq("id", pageId);
+    if (error) {
+      if (error.code === "23505") throw new Error("That URL is already used by another page");
+      throw new Error(error.message);
+    }
+    revalidatePath("/admin");
+    revalidateForSlug(oldSlug);
+    revalidateForSlug(newSlug);
+    await renameNavItemHref(oldSlug, newSlug);
+    return newSlug;
+  }
+
+  const { base } = await currentPageMeta(supabase, pageId);
+  const { error } = await supabase.from("pages").update({ draft_meta: { ...base, slug: newSlug } }).eq("id", pageId);
+  if (error) {
+    if (error.code === "23505") throw new Error("That URL is already used by another page");
+    throw new Error(error.message);
+  }
+  return newSlug;
 }
 
 export async function updatePageSeo(

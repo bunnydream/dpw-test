@@ -34,8 +34,8 @@ export default function Nav({
         >
           ✕
         </button>
-        {visibleItems.map((item) => (
-          <Link key={item.id} href={item.href} onClick={() => setMenuOpen(false)}>
+        {visibleItems.map((item, i) => (
+          <Link key={`${item.id}-${i}`} href={item.href} onClick={() => setMenuOpen(false)}>
             {item.label}
           </Link>
         ))}
@@ -135,9 +135,9 @@ export default function Nav({
           )}
         </Link>
         <div className="nav-links">
-          {visibleItems.map((item) => (
+          {visibleItems.map((item, i) => (
             <Link
-              key={item.id}
+              key={`${item.id}-${i}`}
               href={item.href}
               className={pathname === item.href ? "current-page" : undefined}
             >

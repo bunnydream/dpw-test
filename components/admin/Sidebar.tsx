@@ -124,6 +124,15 @@ function MediaIcon() {
   );
 }
 
+function PageOptionsIcon() {
+  return (
+    <>
+      <rect x="4" y="3" width="16" height="18" rx="1" />
+      <path d="M9 7h6M9 11h6M9 15h3" />
+    </>
+  );
+}
+
 function NavbarLinkIcon() {
   return (
     <>
@@ -242,6 +251,14 @@ export default function Sidebar({
         </li>
 
         <li className="admin-nav-label">Site</li>
+        <li>
+          <Link href="/admin/page-options" className={isActive("/admin/page-options") ? "active" : ""}>
+            <NavIcon>
+              <PageOptionsIcon />
+            </NavIcon>
+            Page Options
+          </Link>
+        </li>
         <li>
           <Link href="/admin/navbar" className={isActive("/admin/navbar") ? "active" : ""}>
             <NavIcon>

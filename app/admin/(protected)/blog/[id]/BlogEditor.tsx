@@ -11,6 +11,7 @@ import {
   updateBlock,
   updatePostMeta,
   updatePostSeo,
+  updatePostSlug,
 } from "@/lib/admin/blog";
 import { softDeletePost } from "@/lib/admin/deleted-blog-posts";
 import { uploadMedia } from "@/lib/admin/media";
@@ -71,6 +72,25 @@ export default function BlogEditor({
 
   const [title, setTitle] = useState(post.title);
   const [subtitle, setSubtitle] = useState(post.subtitle ?? "");
+
+  // URL slug editing. Unlike the per-field auto-save in PageEditor, this
+  // follows BlogEditor's own existing pattern: the value just lives in local
+  // state and is only actually persisted (via updatePostSlug) as part of
+  // saveAll(), alongside title/subtitle/etc. `post.slug` already reflects a
+  // pending draft rename for an already-published post, same as post.title.
+  const [slugValue, setSlugValue] = useState(post.slug);
+  const [showSlugWarning, setShowSlugWarning] = useState(false);
+
+  function handleSlugBlur() {
+    const trimmed = slugValue.trim();
+    if (!trimmed) {
+      setSlugValue(post.slug);
+      return;
+    }
+    if (trimmed !== post.slug && status === "published") {
+      setShowSlugWarning(true);
+    }
+  }
   const [category, setCategory] = useState(post.category);
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [newCategory, setNewCategory] = useState("");
@@ -274,6 +294,11 @@ export default function BlogEditor({
       );
 
       await updatePostSeo(post.id, seoValue, draftMode);
+
+      const trimmedSlug = slugValue.trim();
+      if (trimmedSlug && trimmedSlug !== post.slug) {
+        await updatePostSlug(post.id, trimmedSlug, draftMode);
+      }
 
       if (showNewCategory && finalCategory) {
         setCategory(finalCategory);
@@ -524,6 +549,20 @@ export default function BlogEditor({
                   style={{ fontSize: "17px", fontWeight: 700, fontFamily: "'Space Grotesk',sans-serif" }}
                 />
                 <div className="a-field-hint">This is the large headline on the post and on its card.</div>
+              </div>
+              <div className="a-field">
+                <label>URL</label>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ fontSize: 13, color: "var(--steel)", whiteSpace: "nowrap" }}>/insights/</span>
+                  <input
+                    className="a-input"
+                    type="text"
+                    value={slugValue}
+                    onChange={(e) => setSlugValue(e.target.value)}
+                    onBlur={handleSlugBlur}
+                  />
+                </div>
+                <div className="a-field-hint">This is the post&apos;s web address.</div>
               </div>
               <div className="a-field">
                 <label>Subtitle (optional)</label>
@@ -900,6 +939,45 @@ export default function BlogEditor({
               onClick={performDeleteBlock}
             >
               Delete block
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* SLUG CHANGE WARNING MODAL */}
+      <div className={`a-modal-overlay${showSlugWarning ? " is-open" : ""}`}>
+        <div className="a-modal a-modal-sm">
+          <div className="a-warning-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
+          <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: "18px", fontWeight: 700, marginBottom: "8px" }}>
+            Change this post&apos;s URL?
+          </h2>
+          <p className="a-modal-desc" style={{ marginBottom: "4px" }}>
+            This post is already published at <strong>/insights/{post.slug}</strong>. Once you save this change,
+            that address will stop working — anyone who has bookmarked or linked to it will see a &quot;not
+            found&quot; page instead. We don&apos;t redirect old URLs automatically.
+          </p>
+          <div className="a-modal-actions">
+            <button
+              className="a-btn a-btn-outline"
+              onClick={() => {
+                setSlugValue(post.slug);
+                setShowSlugWarning(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              className="a-btn a-btn-danger"
+              style={{ background: "#B91C1C", borderColor: "#B91C1C", color: "var(--white)" }}
+              onClick={() => setShowSlugWarning(false)}
+            >
+              Keep new URL
             </button>
           </div>
         </div>

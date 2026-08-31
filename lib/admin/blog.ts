@@ -69,6 +69,7 @@ async function ensureDraftBlocks(supabase: AdminClient, postId: string) {
 
 type PostMetaSnapshot = {
   title: string;
+  slug: string;
   subtitle: string | null;
   author: string | null;
   category: string;
@@ -96,6 +97,7 @@ async function currentPostMeta(supabase: AdminClient, postId: string): Promise<{
   if (error || !existing) throw new Error(error?.message ?? "Post not found");
   const base: PostMetaSnapshot = (existing.draft_meta as PostMetaSnapshot | null) ?? {
     title: existing.title,
+    slug: existing.slug,
     subtitle: existing.subtitle,
     author: existing.author,
     category: existing.category,
@@ -193,6 +195,45 @@ export async function updatePostMeta(
   if (error) throw new Error(error.message);
 }
 
+/** Renames a post's URL slug. Mirrors updatePostMeta's shape: writes live
+ * and revalidates immediately for a never-published post (!draftMode), or
+ * stashes the pending value into draft_meta for an already-published one,
+ * where it only takes effect (live row + revalidation) at the next
+ * setPostStatus(id, "published") call. Rejects a slug already used by
+ * another post (checked here, with the DB's unique constraint as a fallback
+ * in case of a race). */
+export async function updatePostSlug(id: string, newSlugRaw: string, draftMode: boolean) {
+  const supabase = createAdminClient();
+  const newSlug = slugify(newSlugRaw);
+  if (!newSlug) throw new Error("URL can't be empty");
+
+  const { data: existingRow, error: fetchError } = await supabase.from("blog_posts").select("slug").eq("id", id).single();
+  if (fetchError || !existingRow) throw new Error(fetchError?.message ?? "Post not found");
+
+  const { data: collision } = await supabase.from("blog_posts").select("id").eq("slug", newSlug).neq("id", id).maybeSingle();
+  if (collision) throw new Error("That URL is already used by another post");
+
+  if (!draftMode) {
+    const oldSlug = existingRow.slug;
+    const { error } = await supabase.from("blog_posts").update({ slug: newSlug }).eq("id", id);
+    if (error) {
+      if (error.code === "23505") throw new Error("That URL is already used by another post");
+      throw new Error(error.message);
+    }
+    revalidateInsights(oldSlug);
+    revalidatePath(`/insights/${newSlug}`);
+    return newSlug;
+  }
+
+  const { base } = await currentPostMeta(supabase, id);
+  const { error } = await supabase.from("blog_posts").update({ draft_meta: { ...base, slug: newSlug } }).eq("id", id);
+  if (error) {
+    if (error.code === "23505") throw new Error("That URL is already used by another post");
+    throw new Error(error.message);
+  }
+  return newSlug;
+}
+
 export async function updatePostSeo(
   id: string,
   fields: Partial<{
@@ -251,6 +292,9 @@ export async function setPostStatus(id: string, status: PageStatus) {
     .single();
   if (postError || !post) throw new Error(postError?.message ?? "Post not found");
 
+  const oldSlug = post.slug;
+  const newSlug = (post.draft_meta as PostMetaSnapshot | null)?.slug ?? oldSlug;
+
   const { data: drafts, error: draftsError } = await supabase.from("block_drafts").select("*").eq("post_id", id);
   if (draftsError) throw new Error(draftsError.message);
 
@@ -295,7 +339,8 @@ export async function setPostStatus(id: string, status: PageStatus) {
     })
     .eq("id", id);
   if (error) throw new Error(error.message);
-  revalidateInsights(post.slug);
+  revalidateInsights(oldSlug);
+  if (newSlug !== oldSlug) revalidatePath(`/insights/${newSlug}`);
 }
 
 export async function createBlock(

@@ -10,7 +10,6 @@ import {
   reorderSections,
   restoreSection,
   updatePageSeo,
-  updatePageTitle,
   updateSectionContent,
 } from "@/lib/admin/pages";
 import type { Database, SectionType } from "@/lib/supabase/types";
@@ -23,7 +22,6 @@ import {
   ChevronIcon,
   CloseIcon,
   DownIcon,
-  EditIcon,
   ExternalLinkIcon,
   EyeIcon,
   EyeOffIcon,
@@ -133,11 +131,6 @@ export default function PageEditor({
   const [future, setFuture] = useState<SectionRow[][]>([]);
 
   const pageOptions = buildPageOptions(pages);
-
-  // Page title editing
-  const [titleValue, setTitleValue] = useState(page.title);
-  const [titleSaving, setTitleSaving] = useState(false);
-  const titleDirty = titleValue.trim() !== page.title && titleValue.trim().length > 0;
 
   const livePath = pageSlugToPath(slug);
 
@@ -280,29 +273,6 @@ export default function PageEditor({
     setPast((p) => [...p, current]);
     setFuture((prev) => prev.slice(1));
     await applySnapshot(current, snapshot, "redo");
-  }
-
-  async function handleTitleSave() {
-    const trimmed = titleValue.trim();
-    if (!trimmed || trimmed === page.title) {
-      setTitleValue(page.title);
-      return;
-    }
-    setTitleSaving(true);
-    try {
-      await updatePageTitle(page.id, trimmed, isPublished);
-      showToast("Page name updated");
-      // page.title (a server-fetched prop) won't reflect the new value until
-      // the route's server data is re-fetched — refresh so titleDirty (and
-      // the page-switcher dropdown / sidebar labels) settle immediately.
-      router.refresh();
-    } catch (err) {
-      console.error(err);
-      showToast("Failed to update page name");
-      setTitleValue(page.title);
-    } finally {
-      setTitleSaving(false);
-    }
   }
 
   function showToast(message: string) {
@@ -501,35 +471,6 @@ export default function PageEditor({
               </option>
             ))}
           </select>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <EditIcon />
-            <input
-              type="text"
-              className="a-input"
-              style={{ width: 200 }}
-              value={titleValue}
-              onChange={(e) => setTitleValue(e.target.value)}
-              onBlur={handleTitleSave}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") (e.target as HTMLInputElement).blur();
-              }}
-              disabled={titleSaving}
-              title="Page name"
-              aria-label="Page name"
-            />
-            {titleDirty ? (
-              <button
-                type="button"
-                className="a-icon-btn"
-                title="Save page name"
-                onClick={handleTitleSave}
-                disabled={titleSaving}
-              >
-                <CheckIcon />
-              </button>
-            ) : null}
-          </div>
 
           <div className="a-undo-redo-group">
             <button className="a-icon-btn" onClick={handleUndo} disabled={past.length === 0} title="Undo">

@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
@@ -69,6 +70,26 @@ export async function renameNavItem(slug: string, title: string) {
   revalidatePath("/", "layout");
 }
 
+/** Updates a nav item's href to match a page's new slug, if that page's old
+ * href is present in the nav (no-op otherwise — e.g. a page that was never
+ * published/added to the nav). Called from publishPage() and
+ * updatePageSlug() so renaming a page's URL keeps its navbar link pointed at
+ * the right address instead of pointing at a now-404ing old path. */
+export async function renameNavItemHref(oldSlug: string, newSlug: string) {
+  const supabase = createAdminClient();
+  const { data } = await supabase.from("site_settings").select("value").eq("key", "nav").maybeSingle();
+  const nav = (data?.value as NavSettings | undefined) ?? DEFAULT_NAV_SETTINGS;
+  const oldHref = pageSlugToPath(oldSlug);
+  const newHref = pageSlugToPath(newSlug);
+
+  if (!nav.items.some((item) => item.href === oldHref)) return;
+
+  const items = nav.items.map((item) => (item.href === oldHref ? { ...item, href: newHref } : item));
+  const { error } = await supabase.from("site_settings").update({ value: { ...nav, items } }).eq("key", "nav");
+  if (error) throw new Error(error.message);
+  revalidatePath("/", "layout");
+}
+
 /** Removes a page's nav item, if present (no-op otherwise — e.g. a page
  * that was never published/added to the nav). Called when a page is
  * soft-deleted so it doesn't linger in the public navbar. */
@@ -98,7 +119,7 @@ export async function appendPageToNav(slug: string, title: string) {
 
   if (nav.items.some((item) => item.href === href)) return;
 
-  const items = [...nav.items, { id: slug, label: title, href, visible: true }];
+  const items = [...nav.items, { id: randomUUID(), label: title, href, visible: true }];
   const { error } = await supabase.from("site_settings").update({ value: { ...nav, items } }).eq("key", "nav");
   if (error) throw new Error(error.message);
   revalidatePath("/", "layout");

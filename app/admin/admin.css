@@ -595,6 +595,12 @@ a { color: inherit; }
   border-color: var(--copper);
 }
 
+.a-input-readonly {
+  background: var(--cool-white);
+  color: var(--steel);
+  cursor: default;
+}
+
 .a-textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
 
 .a-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%233A4E5C' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; }
@@ -1343,6 +1349,8 @@ a { color: inherit; }
 .a-nav-editor-row.is-hidden { opacity: .55; }
 .a-nav-editor-row-order { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
 .a-nav-editor-row-fields { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-width: 0; }
+.a-nav-editor-row-fields.is-single { grid-template-columns: 1fr; }
+.a-nav-editor-row-name { font-family: 'Atkinson Hyperlegible', sans-serif; font-size: 14px; color: var(--forge); padding: 10px 12px; }
 .a-nav-editor-row-toggle { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 /* ─── FOOTER EDITOR ──────────────────────────────────────── */

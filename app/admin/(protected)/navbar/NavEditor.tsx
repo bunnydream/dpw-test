@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { updateNavSettings } from "@/lib/admin/site-settings";
 import { uploadMedia } from "@/lib/admin/media";
 import LinkPicker from "@/components/admin/LinkPicker";
 import type { NavItem, NavSettings } from "@/lib/site-settings";
+import { effectivePageTitle } from "@/lib/admin/page-meta";
+import type { Database } from "@/lib/supabase/types";
+import { pageSlugToPath } from "@/lib/page-path";
+
+type PageRow = Database["public"]["Tables"]["pages"]["Row"];
 
 // Small inline icon set, scoped to this route — mirrors the style of
 // app/admin/(protected)/pages/[slug]/icons.tsx (viewBox 0 0 24 24, stroke-based).
@@ -42,13 +47,22 @@ function CheckIcon() {
   );
 }
 
-export default function NavEditor({ initial }: { initial: NavSettings }) {
+export default function NavEditor({ initial, pages }: { initial: NavSettings; pages: PageRow[] }) {
   const [settings, setSettings] = useState<NavSettings>(initial);
   const [dirty, setDirty] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  // Names are edited exclusively in Site → Page Options now; this map lets
+  // each item's row display that live, always-current name read-only,
+  // rather than trusting its own (normally in-sync, but no longer editable
+  // here) stored `label`.
+  const pageTitleByHref = useMemo(
+    () => new Map(pages.map((p) => [pageSlugToPath(p.slug), effectivePageTitle(p)])),
+    [pages]
+  );
 
   function update(patch: Partial<NavSettings>) {
     setSettings((s) => ({ ...s, ...patch }));
@@ -172,56 +186,54 @@ export default function NavEditor({ initial }: { initial: NavSettings }) {
               Toggle visibility and reorder the pages shown in the header.
             </div>
             <div className="a-nav-editor-list">
-              {settings.items.map((item, i) => (
-                <div className={`a-nav-editor-row${item.visible ? "" : " is-hidden"}`} key={item.id}>
-                  <div className="a-nav-editor-row-order">
-                    <button
-                      type="button"
-                      className="a-icon-btn"
-                      onClick={() => moveItem(item.id, -1)}
-                      disabled={i === 0}
-                      title="Move up"
-                    >
-                      <UpIcon />
-                    </button>
-                    <button
-                      type="button"
-                      className="a-icon-btn"
-                      onClick={() => moveItem(item.id, 1)}
-                      disabled={i === settings.items.length - 1}
-                      title="Move down"
-                    >
-                      <DownIcon />
-                    </button>
+              {settings.items.map((item, i) => {
+                // Falls back to the item's own last-known stored label only
+                // if its href matches no known page — expected never to
+                // happen in practice, since every item here is created via
+                // appendPageToNav and always tied to a real page.
+                const displayName = pageTitleByHref.get(item.href) ?? item.label;
+                return (
+                  <div className={`a-nav-editor-row${item.visible ? "" : " is-hidden"}`} key={`${item.id}-${i}`}>
+                    <div className="a-nav-editor-row-order">
+                      <button
+                        type="button"
+                        className="a-icon-btn"
+                        onClick={() => moveItem(item.id, -1)}
+                        disabled={i === 0}
+                        title="Move up"
+                      >
+                        <UpIcon />
+                      </button>
+                      <button
+                        type="button"
+                        className="a-icon-btn"
+                        onClick={() => moveItem(item.id, 1)}
+                        disabled={i === settings.items.length - 1}
+                        title="Move down"
+                      >
+                        <DownIcon />
+                      </button>
+                    </div>
+                    <div className="a-nav-editor-row-fields is-single">
+                      <div className="a-nav-editor-row-name" title="Rename this page under Site → Page Options">
+                        {displayName}
+                      </div>
+                    </div>
+                    <div className="a-nav-editor-row-toggle">
+                      <span className="a-partner-visible-label">{item.visible ? "Visible" : "Hidden"}</span>
+                      <span
+                        className={`a-toggle${item.visible ? " is-on" : ""}`}
+                        onClick={() => updateItem(item.id, { visible: !item.visible })}
+                        role="switch"
+                        aria-checked={item.visible}
+                        tabIndex={0}
+                      >
+                        <span className="a-toggle-knob"></span>
+                      </span>
+                    </div>
                   </div>
-                  <div className="a-nav-editor-row-fields">
-                    <input
-                      className="a-input"
-                      value={item.label}
-                      onChange={(e) => updateItem(item.id, { label: e.target.value })}
-                      placeholder="Label"
-                    />
-                    <input
-                      className="a-input"
-                      value={item.href}
-                      onChange={(e) => updateItem(item.id, { href: e.target.value })}
-                      placeholder="/path"
-                    />
-                  </div>
-                  <div className="a-nav-editor-row-toggle">
-                    <span className="a-partner-visible-label">{item.visible ? "Visible" : "Hidden"}</span>
-                    <span
-                      className={`a-toggle${item.visible ? " is-on" : ""}`}
-                      onClick={() => updateItem(item.id, { visible: !item.visible })}
-                      role="switch"
-                      aria-checked={item.visible}
-                      tabIndex={0}
-                    >
-                      <span className="a-toggle-knob"></span>
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
