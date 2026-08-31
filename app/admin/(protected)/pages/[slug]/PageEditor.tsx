@@ -28,7 +28,6 @@ import {
   GripIcon,
   PlusIcon,
   RedoIcon,
-  RefreshIcon,
   TrashIcon,
   UndoIcon,
   UpIcon,
@@ -480,15 +479,12 @@ export default function PageEditor({
               <RedoIcon />
             </button>
           </div>
-          <button className="a-icon-btn" onClick={() => setPreviewKey((k) => k + 1)} title="Refresh preview">
-            <RefreshIcon />
-          </button>
           <button className="a-icon-btn" onClick={() => setAddModalOpen(true)} title="Add a new block">
             <PlusIcon />
           </button>
         </div>
         <div className="admin-topbar-actions">
-          <span className={`a-save-status${saving ? " is-saving" : ""}`}>
+          <span className={`a-save-status${saving ? " is-saving" : hasUnsaved ? " is-unsaved" : ""}`}>
             {!saving && !hasUnsaved ? <CheckIcon /> : null}
             {saving ? "Saving..." : hasUnsaved ? "Unsaved changes" : "All changes saved"}
           </span>
@@ -508,7 +504,7 @@ export default function PageEditor({
 
       <div className="a-editor-shell">
         <div className="a-preview-pane">
-          <div className="a-preview-pane-label">Live preview. Click Save draft then refresh button to view changes.</div>
+          <div className="a-preview-pane-label">Click publish to view changes.</div>
           <div className="a-preview-frame">
             <iframe
               key={previewKey}

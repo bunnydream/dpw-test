@@ -265,6 +265,7 @@ a { color: inherit; }
 }
 .a-save-status svg { width: 15px; height: 15px; }
 .a-save-status.is-saving { color: var(--steel); }
+.a-save-status.is-unsaved { color: #B91C1C; }
 
 /* ─── CARDS ──────────────────────────────────────────────── */
 .a-card {
