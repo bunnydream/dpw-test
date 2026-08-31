@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -106,12 +107,21 @@ export default async function InsightPostPage({
                       {content.text}
                     </h2>
                   );
-                case "paragraph":
+                case "paragraph": {
+                  const rawText: string = content.text ?? "";
+                  const paragraphs = rawText
+                    .split(/\n\s*\n/)
+                    .map((p: string) => p.trim())
+                    .filter((p: string) => p.length > 0);
+                  const finalParagraphs = paragraphs.length > 0 ? paragraphs : [rawText];
                   return (
-                    <p key={block.id} className="body-p">
-                      {content.text}
-                    </p>
+                    <Fragment key={block.id}>
+                      {finalParagraphs.map((para: string, i: number) => (
+                        <p key={i} className="body-p">{para}</p>
+                      ))}
+                    </Fragment>
                   );
+                }
                 case "quote":
                   return (
                     <blockquote key={block.id} className="pullquote">

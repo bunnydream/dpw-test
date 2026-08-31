@@ -240,7 +240,11 @@
 }
 
 .page-insights .insight-heading {
-  margin: 40px 0 16px;
+  margin: 40px 0 28px;
+}
+
+.page-insights .insight-body .body-p {
+  margin-bottom: 18px;
 }
 
 .page-insights .insight-photo-block {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   createBlock,
@@ -46,7 +46,8 @@ function defaultContentFor(type: BlogBlockType) {
 
 function summarize(block: EditorBlock) {
   if (block.type === "photo") {
-    return block.content.alt || block.content.caption || "No photo selected yet";
+    if (!block.content.url) return "No photo selected yet";
+    return block.content.alt || block.content.caption || "Untitled photo";
   }
   const text = (block.content.text || "").trim();
   if (!text) return `New ${BLOCK_LABELS[block.type].toLowerCase()}`;
@@ -122,7 +123,6 @@ export default function BlogEditor({
   const [isDeletingPost, setIsDeletingPost] = useState(false);
 
   const [isSaving, setIsSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState(post.status === "published" ? "Published" : "Draft");
 
   // SEO fields: own local state, seeded from the `post` prop, deliberately
   // independent of the block-editing state above. Persisted by saveAll()
@@ -139,6 +139,45 @@ export default function BlogEditor({
   function updateSeo(patch: Partial<SeoFieldsValue>) {
     setSeoValue((s) => ({ ...s, ...patch }));
   }
+
+  const savedSnapshotRef = useRef({
+    title: post.title,
+    subtitle: post.subtitle ?? "",
+    slug: post.slug,
+    category: post.category,
+    showNewCategory: false,
+    newCategory: "",
+    author: post.author ?? "",
+    showNewAuthor: !!post.author && !authors.includes(post.author),
+    newAuthor: post.author && !authors.includes(post.author) ? post.author : "",
+    featuredUrl: post.featured_image_url ?? "",
+    featuredAlt: post.featured_image_alt ?? "",
+    featuredCaption: post.featured_image_caption ?? "",
+    blocks: initialBlocks.map((b) => ({ id: b.id, type: b.type, content: b.content })),
+    seo: {
+      meta_title: post.meta_title,
+      meta_description: post.meta_description,
+      og_image_url: post.og_image_url,
+      canonical_url: post.canonical_url,
+      noindex: post.noindex,
+    },
+  });
+
+  const hasUnsaved =
+    title !== savedSnapshotRef.current.title ||
+    subtitle !== savedSnapshotRef.current.subtitle ||
+    slugValue !== savedSnapshotRef.current.slug ||
+    category !== savedSnapshotRef.current.category ||
+    showNewCategory !== savedSnapshotRef.current.showNewCategory ||
+    newCategory !== savedSnapshotRef.current.newCategory ||
+    author !== savedSnapshotRef.current.author ||
+    showNewAuthor !== savedSnapshotRef.current.showNewAuthor ||
+    newAuthor !== savedSnapshotRef.current.newAuthor ||
+    featuredUrl !== savedSnapshotRef.current.featuredUrl ||
+    featuredAlt !== savedSnapshotRef.current.featuredAlt ||
+    featuredCaption !== savedSnapshotRef.current.featuredCaption ||
+    JSON.stringify(blocks) !== JSON.stringify(savedSnapshotRef.current.blocks) ||
+    JSON.stringify(seoValue) !== JSON.stringify(savedSnapshotRef.current.seo);
 
   const [toast, setToast] = useState<string | null>(null);
   let toastTimer: ReturnType<typeof setTimeout> | null = null;
@@ -300,16 +339,34 @@ export default function BlogEditor({
         await updatePostSlug(post.id, trimmedSlug, draftMode);
       }
 
+      savedSnapshotRef.current.title = title;
+      savedSnapshotRef.current.subtitle = subtitle;
+      savedSnapshotRef.current.slug = slugValue;
+      savedSnapshotRef.current.featuredUrl = featuredUrl;
+      savedSnapshotRef.current.featuredAlt = featuredAlt;
+      savedSnapshotRef.current.featuredCaption = featuredCaption;
+      savedSnapshotRef.current.seo = seoValue;
+
       if (showNewCategory && finalCategory) {
         setCategory(finalCategory);
         setShowNewCategory(false);
         setNewCategory("");
+        savedSnapshotRef.current.category = finalCategory;
+        savedSnapshotRef.current.showNewCategory = false;
+        savedSnapshotRef.current.newCategory = "";
+      } else {
+        savedSnapshotRef.current.category = category;
       }
 
       if (showNewAuthor && finalAuthor) {
         setAuthor(finalAuthor);
         setShowNewAuthor(false);
         setNewAuthor("");
+        savedSnapshotRef.current.author = finalAuthor;
+        savedSnapshotRef.current.showNewAuthor = false;
+        savedSnapshotRef.current.newAuthor = "";
+      } else {
+        savedSnapshotRef.current.author = author;
       }
 
       const updatedBlocks: EditorBlock[] = [];
@@ -331,6 +388,7 @@ export default function BlogEditor({
 
       await reorderBlocks(updatedBlocks.map((b) => b.id), draftMode);
       setBlocks(updatedBlocks);
+      savedSnapshotRef.current.blocks = updatedBlocks;
 
       if (nextStatus) {
         await setPostStatus(post.id, nextStatus);
@@ -348,12 +406,13 @@ export default function BlogEditor({
         const fresh = await getPostWithBlocks(post.id);
         if (fresh) {
           setPublishedAt(fresh.post.published_at);
-          setBlocks(fresh.blocks.map((b) => ({ id: b.id, type: b.type, content: b.content })));
+          const freshBlocks = fresh.blocks.map((b) => ({ id: b.id, type: b.type, content: b.content }));
+          setBlocks(freshBlocks);
+          savedSnapshotRef.current.blocks = freshBlocks;
         }
       }
 
       const message = nextStatus === "published" ? "Post published" : nextStatus === "draft" ? "Post unpublished" : "Draft saved";
-      setSaveMessage(nextStatus === "published" ? "Published" : nextStatus === "draft" ? "Draft" : saveMessage);
       showToast(message);
       router.refresh();
     } catch (err) {
@@ -387,11 +446,13 @@ export default function BlogEditor({
           Back to all posts
         </a>
         <div className="admin-topbar-actions">
-          <span className="a-save-status">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            {isSaving ? "Saving..." : saveMessage}
+          <span className={`a-save-status${isSaving ? " is-saving" : hasUnsaved ? " is-unsaved" : ""}`}>
+            {!isSaving && !hasUnsaved ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            ) : null}
+            {isSaving ? "Saving..." : hasUnsaved ? "Unsaved changes" : "All changes saved"}
           </span>
         </div>
       </header>
@@ -553,7 +614,6 @@ export default function BlogEditor({
               <div className="a-field">
                 <label>URL</label>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ fontSize: 13, color: "var(--steel)", whiteSpace: "nowrap" }}>/insights/</span>
                   <input
                     className="a-input"
                     type="text"
