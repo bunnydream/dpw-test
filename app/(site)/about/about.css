@@ -1,7 +1,7 @@
 /* ─── ABOUT-SPECIFIC STYLES ────────────────────── */
 
 /* ─── HERO ─────────────────────────────────────── */
-.page-about .hero {
+.page-about .hero--page {
   background: var(--white);
   min-height: calc(100vh - 74px);
   display: grid;
@@ -9,14 +9,14 @@
   overflow: hidden;
 }
 
-.page-about .hero-left {
+.page-about .hero--page .hero-left {
   padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.page-about .hero-eyebrow {
+.page-about .hero--page .hero-eyebrow {
   font-family: 'Space Grotesk', sans-serif;
   font-size: var(--t-label);
   font-weight: 700;
@@ -27,11 +27,11 @@
   margin-bottom: 18px;
 }
 
-.page-about .hero-img {
+.page-about .hero--page .hero-img {
   overflow: hidden;
 }
 
-.page-about .hero-img img {
+.page-about .hero--page .hero-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -113,12 +113,12 @@
 
 /* ─── RESPONSIVE ────────────────────────────────── */
 @media (max-width: 1024px) {
-  .page-about .hero {
+  .page-about .hero--page {
     grid-template-columns: 1fr;
     min-height: auto;
   }
 
-  .page-about .hero-img {
+  .page-about .hero--page .hero-img {
     height: 400px;
     order: -1;
   }
@@ -134,7 +134,7 @@
 }
 
 @media (max-width: 768px) {
-  .page-about .hero-left h1 {
+  .page-about .hero--page .hero-left h1 {
     max-width: none;
   }
 }

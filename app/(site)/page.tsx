@@ -82,8 +82,8 @@ const DEFAULT_HOW_IMAGE: ImageContent = {
   photo_alt: "How VMI works diagram",
 };
 
-function byType(sections: Section[], type: Section["type"]) {
-  return sections.filter((s) => s.type === type);
+function byType(sections: Section[], type: Section["type"], opts?: { includeHidden?: boolean }) {
+  return sections.filter((s) => s.type === type && (opts?.includeHidden || !s.hidden));
 }
 
 // Matches sections of `type` to `names` by exact `name`, in order — pins
@@ -93,16 +93,19 @@ function byType(sections: Section[], type: Section["type"]) {
 // silently take over the slot. Any name with no match falls back to the
 // next remaining same-type row by position, matching today's behavior.
 function pickByName(sections: Section[], type: Section["type"], names: string[]) {
-  const candidates = byType(sections, type);
+  const candidates = byType(sections, type, { includeHidden: true }); // must see hidden rows to name-match them
   const claimed = new Set<string>();
   const picks = names.map((name) => {
     const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
     if (match) claimed.add(match.id);
     return match;
   });
-  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  const remaining = candidates.filter((s) => !claimed.has(s.id) && !s.hidden);
   let i = 0;
-  return picks.map((p) => p ?? remaining[i++]);
+  // A hidden section still claims its slot when matched by exact name (so a
+  // same-type admin block can't steal it via the fallback above), but must
+  // render as absent — same as the admin's hide/show toggle everywhere else.
+  return picks.map((p) => p ?? remaining[i++]).map((s) => (s?.hidden ? undefined : s));
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -148,7 +151,7 @@ export default async function HomePage() {
       .filter((s): s is Section => !!s)
       .map((s) => s.id)
   );
-  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id) && !s.hidden);
 
   // Rank used as a section's sort position only when its DB row doesn't
   // exist yet — reproduces today's fixed order for freshly-seeded pages.
@@ -171,7 +174,7 @@ export default async function HomePage() {
     {
       key: hero?.id ?? "hero",
       position: hero?.position ?? RANK.hero,
-      node: hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} /> : null,
+      node: hero ? <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} isPageHero /> : null,
     },
     {
       key: stats?.id ?? "stats",

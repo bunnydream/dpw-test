@@ -29,7 +29,7 @@ export default async function CustomPage({ params }: { params: Promise<{ slug: s
 
   return (
     <div className="page-custom">
-      <SectionRenderer sections={result.sections} />
+      <SectionRenderer sections={result.sections.filter((s) => !s.hidden)} />
     </div>
   );
 }

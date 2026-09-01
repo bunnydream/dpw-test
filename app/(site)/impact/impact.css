@@ -3,7 +3,7 @@
 ══════════════════════════════════════════════ */
 
 /* ─── HERO (matches product page) ─── */
-.page-impact .hero {
+.page-impact .hero--page {
   background: var(--white);
   min-height: calc(100dvh - 74px);
   display: grid;
@@ -11,7 +11,7 @@
   overflow: hidden;
 }
 
-.page-impact .hero-left {
+.page-impact .hero--page .hero-left {
   padding: clamp(48px, 6vw, 80px) clamp(32px, 4vw, 64px) clamp(48px, 6vw, 80px) max(clamp(20px, 5vw, 64px), calc((100vw - 1200px) / 2));
   display: flex;
   flex-direction: column;
@@ -22,17 +22,17 @@
 
 /* h1 font + margin-bottom: 36px from shared.css */
 
-.page-impact .hero-tagline {
+.page-impact .hero--page .hero-tagline {
   white-space: normal;
   max-width: 38ch;
 }
 
-.page-impact .hero-img {
+.page-impact .hero--page .hero-img {
   overflow: hidden;
   padding: 0;
 }
 
-.page-impact .hero-img img {
+.page-impact .hero--page .hero-img img {
   object-fit: cover;
   object-position: center 25%;
 }
@@ -124,7 +124,7 @@
   background: var(--white);
 }
 
-.page-impact .case-card {
+#deployed .case-card {
   background: var(--cool-white);
 }
 
@@ -183,22 +183,22 @@
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1024px) {
-  .page-impact .hero {
+  .page-impact .hero--page {
     grid-template-columns: 1fr;
     height: auto;
     min-height: auto;
   }
 
-  .page-impact .hero-left {
+  .page-impact .hero--page .hero-left {
     padding: clamp(40px, 5vw, 64px) clamp(20px, 5vw, 48px);
   }
 
-  .page-impact .hero-tagline {
+  .page-impact .hero--page .hero-tagline {
     max-width: none;
     min-width: 0;
   }
 
-  .page-impact .hero-img {
+  .page-impact .hero--page .hero-img {
     aspect-ratio: 16/7;
     min-height: 280px;
     order: -1;
