@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
 import InsightsFilter from "@/components/InsightsFilter";
 import LinkedCard from "@/components/blocks/LinkedCard";
+import SubscribeForm from "@/components/SubscribeForm";
 import { createClient } from "@/lib/supabase/server";
 import { getSeoSettings } from "@/lib/site-settings";
 import { resolveMetadata } from "@/lib/seo";
+import { excerptFrom } from "@/lib/blog-excerpt";
 import "./insights.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteSeo = await getSeoSettings();
-  return resolveMetadata({ item: null, fallbackTitle: "Insights", path: "/insights", siteSeo });
-}
-
-function excerptFrom(text: string | undefined, max = 160) {
-  if (!text) return "";
-  const trimmed = text.trim();
-  if (trimmed.length <= max) return trimmed;
-  return `${trimmed.slice(0, max).trim()}...`;
+  const base = resolveMetadata({ item: null, fallbackTitle: "Insights", path: "/insights", siteSeo });
+  return {
+    ...base,
+    // Lets feed readers and Brevo's RSS campaign discover the feed from the page itself.
+    alternates: { ...base.alternates, types: { "application/rss+xml": "/insights/feed.xml" } },
+  };
 }
 
 export default async function InsightsPage() {
@@ -104,18 +104,7 @@ export default async function InsightsPage() {
               <p className="subscribe-sub">Get notified when we publish new insights.</p>
             </div>
             <div className="reveal d1">
-              <form className="subscribe-form">
-                <input
-                  className="subscribe-input"
-                  type="email"
-                  placeholder="Your email address"
-                  aria-label="Email address"
-                  autoComplete="email"
-                />
-                <button type="submit" className="btn btn-forge">
-                  Subscribe
-                </button>
-              </form>
+              <SubscribeForm />
             </div>
           </div>
         </div>

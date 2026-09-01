@@ -141,6 +141,21 @@
   color: var(--aluminum);
 }
 
+/* ─── SUBSCRIBE FORM STATUS ──────────────────────── */
+.page-insights .form-status {
+  font-size: var(--t-body);
+  line-height: 1.65;
+}
+
+.page-insights .form-status--success {
+  color: var(--forge);
+}
+
+.page-insights .form-status--error {
+  color: var(--copper);
+  padding-top: 4px;
+}
+
 /* ─── POST DETAIL ────────────────────────────────── */
 .page-insights .insight-article {
   background: var(--white);
