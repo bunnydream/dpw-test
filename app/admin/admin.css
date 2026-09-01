@@ -418,6 +418,10 @@ a { color: inherit; }
   overflow: hidden;
 }
 
+.a-preview-pane-label {
+  padding-left: 12px;
+}
+
 .a-sections-pane {
   background: var(--white);
   overflow-y: auto;

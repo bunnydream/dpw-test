@@ -12,8 +12,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return resolveMetadata({ item: result?.page ?? null, fallbackTitle: "Careers", path: "/careers", siteSeo });
 }
 
-function byType(sections: Section[], type: Section["type"]) {
-  return sections.filter((s) => s.type === type);
+function byType(sections: Section[], type: Section["type"], opts?: { includeHidden?: boolean }) {
+  return sections.filter((s) => s.type === type && (opts?.includeHidden || !s.hidden));
 }
 
 // Matches sections of `type` to `names` by exact `name`, in order — pins
@@ -23,16 +23,19 @@ function byType(sections: Section[], type: Section["type"]) {
 // silently take over the slot. Any name with no match falls back to the
 // next remaining same-type row by position, matching today's behavior.
 function pickByName(sections: Section[], type: Section["type"], names: string[]) {
-  const candidates = byType(sections, type);
+  const candidates = byType(sections, type, { includeHidden: true }); // must see hidden rows to name-match them
   const claimed = new Set<string>();
   const picks = names.map((name) => {
     const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
     if (match) claimed.add(match.id);
     return match;
   });
-  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  const remaining = candidates.filter((s) => !claimed.has(s.id) && !s.hidden);
   let i = 0;
-  return picks.map((p) => p ?? remaining[i++]);
+  // A hidden section still claims its slot when matched by exact name (so a
+  // same-type admin block can't steal it via the fallback above), but must
+  // render as absent — same as the admin's hide/show toggle everywhere else.
+  return picks.map((p) => p ?? remaining[i++]).map((s) => (s?.hidden ? undefined : s));
 }
 
 type TextContent = {
@@ -58,7 +61,7 @@ export default async function CareersPage() {
   const openingsContent = (openings?.content as TextContent | undefined) ?? DEFAULT_OPENINGS;
 
   const consumedIds = new Set([hero, intro, openings].filter((s): s is Section => !!s).map((s) => s.id));
-  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id) && !s.hidden);
 
   // Rank used as a section's sort position only when its DB row doesn't
   // exist yet — reproduces today's fixed order for freshly-seeded pages.
@@ -71,7 +74,7 @@ export default async function CareersPage() {
       key: hero?.id ?? "hero",
       position: hero?.position ?? RANK.hero,
       node: hero ? (
-        <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} matchTaglineWidthToHeadline />
+        <Hero content={hero.content as HeroContent} backgroundColor={hero.background_color} matchTaglineWidthToHeadline isPageHero />
       ) : null,
     },
     {
@@ -93,10 +96,10 @@ export default async function CareersPage() {
     {
       key: openings?.id ?? "openings",
       position: openings?.position ?? RANK.openings,
-      node: (
+      node: openings ? (
         <section
           className="openings section-pad"
-          style={openings?.background_color ? { background: openings.background_color } : undefined}
+          style={openings.background_color ? { background: openings.background_color } : undefined}
         >
           <div className="section-inner">
             <div className="openings-header reveal">
@@ -106,7 +109,7 @@ export default async function CareersPage() {
             <p className="openings-body reveal d1">{openingsContent.text}</p>
           </div>
         </section>
-      ),
+      ) : null,
     },
     ...extraSections.map((section) => ({
       key: section.id,

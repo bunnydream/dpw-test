@@ -54,6 +54,7 @@ export default function Hero({
   matchTaglineWidthToHeadline = false,
   imgWidth,
   imgHeight,
+  isPageHero = false,
 }: {
   content: HeroContent;
   backgroundColor?: string | null;
@@ -92,6 +93,11 @@ export default function Hero({
   subtitleLayout?: SubtitleLayout;
   imgWidth?: number;
   imgHeight?: number;
+  /** True only for the one real, ported hero hardcoded in a fixed page's own
+   * page.tsx — adds "hero--page" so that page's own .hero CSS (written only
+   * for that real hero) can target it specifically, instead of matching
+   * every admin-added Hero block too. Never passed by SectionRenderer. */
+  isPageHero?: boolean;
 }) {
   const { headline, subtitle, text, footnote, photo_url, photo_alt, photo_position, button_primary, button_secondary } = content;
 
@@ -125,7 +131,7 @@ export default function Hero({
   }
 
   return (
-    <section className="hero" style={backgroundColor ? { background: backgroundColor } : undefined}>
+    <section className={`hero${isPageHero ? " hero--page" : ""}`} style={backgroundColor ? { background: backgroundColor } : undefined}>
       <div className={heroLeftClass}>
         {headingBlock}
 

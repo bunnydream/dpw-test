@@ -76,8 +76,8 @@ const DEFAULT_BOTTOM_CTA: CtaContent = {
   background_photo_url: "/images/impact/christin-hume-Hcfwew744z4-unsplash.jpg",
 };
 
-function byType(sections: Section[], type: Section["type"]) {
-  return sections.filter((s) => s.type === type);
+function byType(sections: Section[], type: Section["type"], opts?: { includeHidden?: boolean }) {
+  return sections.filter((s) => s.type === type && (opts?.includeHidden || !s.hidden));
 }
 
 // Matches sections of `type` to `names` by exact `name`, in order — pins
@@ -87,16 +87,19 @@ function byType(sections: Section[], type: Section["type"]) {
 // silently take over the slot. Any name with no match falls back to the
 // next remaining same-type row by position, matching today's behavior.
 function pickByName(sections: Section[], type: Section["type"], names: string[]) {
-  const candidates = byType(sections, type);
+  const candidates = byType(sections, type, { includeHidden: true }); // must see hidden rows to name-match them
   const claimed = new Set<string>();
   const picks = names.map((name) => {
     const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
     if (match) claimed.add(match.id);
     return match;
   });
-  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  const remaining = candidates.filter((s) => !claimed.has(s.id) && !s.hidden);
   let i = 0;
-  return picks.map((p) => p ?? remaining[i++]);
+  // A hidden section still claims its slot when matched by exact name (so a
+  // same-type admin block can't steal it via the fallback above), but must
+  // render as absent — same as the admin's hide/show toggle everywhere else.
+  return picks.map((p) => p ?? remaining[i++]).map((s) => (s?.hidden ? undefined : s));
 }
 
 export default async function ImpactPage() {
@@ -127,7 +130,7 @@ export default async function ImpactPage() {
       .filter((s): s is Section => !!s)
       .map((s) => s.id)
   );
-  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id) && !s.hidden);
 
   // Rank used as a section's sort position only when its DB row doesn't
   // exist yet — reproduces today's fixed order for freshly-seeded pages.
@@ -155,6 +158,7 @@ export default async function ImpactPage() {
           subtitleLayout="stack-staggered"
           imgWidth={1200}
           imgHeight={1600}
+          isPageHero
         />
       ) : null,
     },
@@ -165,7 +169,7 @@ export default async function ImpactPage() {
       // live markup uses <span class="stat-label"> while Stats.tsx renders
       // <p class="stat-label"> — a real tag difference with no explicit
       // `display` override in CSS, so swapping would risk a layout shift.
-      node: (
+      node: stats ? (
         <div className="stat-row" role="list">
           {statsContent.stats.map((stat, i) => (
             <div className={`stat-cell reveal d${i + 1}`} role="listitem" key={i}>
@@ -174,7 +178,7 @@ export default async function ImpactPage() {
             </div>
           ))}
         </div>
-      ),
+      ) : null,
     },
     {
       key: families?.id ?? manualTable?.id ?? "families",
@@ -184,7 +188,7 @@ export default async function ImpactPage() {
       // home's pressure/model pattern that PhotoText.tsx implements, and it
       // has no pullquote but does have a fixed .comp-card widget that isn't
       // part of admin's photo-text field shape at all.
-      node: (
+      node: families || manualTable ? (
         <section className="families">
           {(() => {
             const imgEl = (
@@ -229,7 +233,7 @@ export default async function ImpactPage() {
             );
           })()}
         </section>
-      ),
+      ) : null,
     },
     {
       key: voices?.id ?? "voices",
@@ -239,41 +243,41 @@ export default async function ImpactPage() {
     {
       key: deployed?.id ?? "deployed",
       position: deployed?.position ?? RANK.deployed,
-      node: (
+      node: deployed ? (
         <section className="field section-pad" id="deployed">
           <div className="section-inner">
             <h2 className="section-h reveal">
-              {deployed ? (deployed.content as CaseStudyContent).heading ?? "Deployed and delivering results" : "Deployed and delivering results"}
+              {(deployed.content as CaseStudyContent).heading ?? "Deployed and delivering results"}
             </h2>
-            {deployed ? <CaseStudy content={deployed.content as CaseStudyContent} /> : null}
+            <CaseStudy content={deployed.content as CaseStudyContent} />
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: yearInReview?.id ?? "yearInReview",
       position: yearInReview?.position ?? RANK.yearInReview,
-      node: <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview?.background_color} />,
+      node: yearInReview ? <ImpactYearInReview content={yearInReviewContent} backgroundColor={yearInReview.background_color} /> : null,
     },
     {
       key: fundingModel?.id ?? "fundingModel",
       position: fundingModel?.position ?? RANK.fundingModel,
-      node: (
+      node: fundingModel ? (
         <section
           className="funding section-pad"
           id="funding-model"
-          style={fundingModel?.background_color ? { background: fundingModel.background_color } : undefined}
+          style={fundingModel.background_color ? { background: fundingModel.background_color } : undefined}
         >
           <div className="section-inner">
             <IconCards content={fundingModelContent} />
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: bottomCta?.id ?? "bottomCta",
       position: bottomCta?.position ?? RANK.bottomCta,
-      node: <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />,
+      node: bottomCta ? <Cta content={bottomCtaContent} backgroundColor={bottomCta.background_color} /> : null,
     },
     ...extraSections.map((section) => ({
       key: section.id,

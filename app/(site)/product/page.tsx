@@ -203,8 +203,8 @@ const DEFAULT_BOTTOM_CTA: CtaContent = {
   background_photo_url: "/images/product/harald-wolff-msHKfPyFH7g-unsplash.jpg",
 };
 
-function byType(sections: Section[], type: Section["type"]) {
-  return sections.filter((s) => s.type === type);
+function byType(sections: Section[], type: Section["type"], opts?: { includeHidden?: boolean }) {
+  return sections.filter((s) => s.type === type && (opts?.includeHidden || !s.hidden));
 }
 
 // Matches sections of `type` to `names` by exact `name`, in order — pins
@@ -214,16 +214,19 @@ function byType(sections: Section[], type: Section["type"]) {
 // silently take over the slot. Any name with no match falls back to the
 // next remaining same-type row by position, matching today's behavior.
 function pickByName(sections: Section[], type: Section["type"], names: string[]) {
-  const candidates = byType(sections, type);
+  const candidates = byType(sections, type, { includeHidden: true }); // must see hidden rows to name-match them
   const claimed = new Set<string>();
   const picks = names.map((name) => {
     const match = candidates.find((s) => s.name === name && !claimed.has(s.id));
     if (match) claimed.add(match.id);
     return match;
   });
-  const remaining = candidates.filter((s) => !claimed.has(s.id));
+  const remaining = candidates.filter((s) => !claimed.has(s.id) && !s.hidden);
   let i = 0;
-  return picks.map((p) => p ?? remaining[i++]);
+  // A hidden section still claims its slot when matched by exact name (so a
+  // same-type admin block can't steal it via the fallback above), but must
+  // render as absent — same as the admin's hide/show toggle everywhere else.
+  return picks.map((p) => p ?? remaining[i++]).map((s) => (s?.hidden ? undefined : s));
 }
 
 export default async function ProductPage() {
@@ -260,7 +263,7 @@ export default async function ProductPage() {
       .filter((s): s is Section => !!s)
       .map((s) => s.id)
   );
-  const extraSections = sections.filter((s) => !consumedIds.has(s.id));
+  const extraSections = sections.filter((s) => !consumedIds.has(s.id) && !s.hidden);
 
   // Rank used as a section's sort position only when its DB row doesn't
   // exist yet — reproduces today's fixed order for freshly-seeded pages.
@@ -289,6 +292,7 @@ export default async function ProductPage() {
           backgroundColor={hero.background_color}
           subtitleLayout="stack"
           primaryButtonStyle={{ marginTop: "8px" }}
+          isPageHero
         />
       ) : null,
     },
@@ -336,7 +340,7 @@ export default async function ProductPage() {
     {
       key: verificationProblem?.id ?? problemAccordion?.id ?? "verificationProblem",
       position: verificationProblem?.position ?? problemAccordion?.position ?? RANK.verificationProblem,
-      node: (
+      node: verificationProblem || problemAccordion ? (
         <section
           className="ps-section section-pad"
           id="the-problem"
@@ -393,17 +397,19 @@ export default async function ProductPage() {
             </div>
           </div>
         </section>
-      ),
+      ) : null,
     },
     {
       key: talkCta?.id ?? "talkCta",
       position: talkCta?.position ?? RANK.talkCta,
-      node: <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta?.background_color} />,
+      node: talkCta ? <ProductTalkCta content={talkCtaContent} backgroundColor={talkCta.background_color} /> : null,
     },
     {
       key: compareTable?.id ?? "compareTable",
       position: compareTable?.position ?? RANK.compareTable,
-      node: <ProductCompareTable content={compareTableContent} backgroundColor={compareTable?.background_color} />,
+      node: compareTable ? (
+        <ProductCompareTable content={compareTableContent} backgroundColor={compareTable.background_color} />
+      ) : null,
     },
     {
       key: vendorQuestions?.id ?? "vendorQuestions",
@@ -411,16 +417,18 @@ export default async function ProductPage() {
       // ═══════════════════════════════════════════════
       // QUESTIONS TO ASK — bigger bare chevrons
       // ═══════════════════════════════════════════════
-      node: <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions?.background_color} />,
+      node: vendorQuestions ? (
+        <ProductVendorQuestions content={vendorQuestionsContent} backgroundColor={vendorQuestions.background_color} />
+      ) : null,
     },
     {
       key: accessible?.id ?? "accessible",
       position: accessible?.position ?? RANK.accessible,
-      node: (
+      node: accessible ? (
         <section
           className="access-section"
           id="accessibility"
-          style={accessible?.background_color ? { background: accessible.background_color } : undefined}
+          style={accessible.background_color ? { background: accessible.background_color } : undefined}
         >
           {(() => {
             const textEl = (
@@ -468,7 +476,7 @@ export default async function ProductPage() {
             );
           })()}
         </section>
-      ),
+      ) : null,
     },
     {
       key: pilotSteps?.id ?? "pilotSteps",
@@ -526,7 +534,7 @@ export default async function ProductPage() {
     {
       key: bottomCta?.id ?? "bottomCta",
       position: bottomCta?.position ?? RANK.bottomCta,
-      node: <Cta content={bottomCtaContent} backgroundColor={bottomCta?.background_color} />,
+      node: bottomCta ? <Cta content={bottomCtaContent} backgroundColor={bottomCta.background_color} /> : null,
     },
     ...extraSections.map((section) => ({
       key: section.id,

@@ -30,5 +30,5 @@ export async function getPageSections(
     return { page, sections: [] };
   }
 
-  return { page, sections: sections.filter((s) => !s.hidden) };
+  return { page, sections };
 }
