@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
@@ -10,9 +10,40 @@ export default function ResetPasswordForm() {
   const [confirm, setConfirm] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "error" | "done">("idle");
   const [error, setError] = useState("");
+  const [sessionReady, setSessionReady] = useState(false);
+
+  useEffect(() => {
+    const hash = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : window.location.hash;
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get("access_token");
+    const refreshToken = params.get("refresh_token");
+    const type = params.get("type");
+
+    if (type !== "recovery" || !accessToken || !refreshToken) {
+      setStatus("error");
+      setError("This password reset link is invalid or has expired. Please request a new one.");
+      return;
+    }
+
+    const supabase = createClient();
+    supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken }).then(({ error: sessionError }) => {
+      if (sessionError) {
+        setStatus("error");
+        setError(sessionError.message);
+        return;
+      }
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      setSessionReady(true);
+    });
+  }, []);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!sessionReady) {
+      setStatus("error");
+      setError("This password reset link is invalid or has expired. Please request a new one.");
+      return;
+    }
     if (password.length < 8) {
       setStatus("error");
       setError("Password must be at least 8 characters long.");
@@ -37,6 +68,10 @@ export default function ResetPasswordForm() {
 
   if (status === "done") {
     return <p>Password updated — redirecting you to the dashboard…</p>;
+  }
+
+  if (status === "error" && !sessionReady) {
+    return <p style={{ color: "var(--copper)", fontSize: "13.5px" }}>{error}</p>;
   }
 
   return (
@@ -66,7 +101,7 @@ export default function ResetPasswordForm() {
       {status === "error" ? (
         <p style={{ color: "var(--copper)", fontSize: "13.5px", marginBottom: "12px" }}>{error}</p>
       ) : null}
-      <button type="submit" className="a-btn a-btn-primary a-login-submit" disabled={status === "saving"}>
+      <button type="submit" className="a-btn a-btn-primary a-login-submit" disabled={status === "saving" || !sessionReady}>
         {status === "saving" ? "Saving…" : "Set new password"}
       </button>
     </form>
