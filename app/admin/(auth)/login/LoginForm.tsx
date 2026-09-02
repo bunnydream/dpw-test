@@ -2,23 +2,10 @@
 
 import { useActionState, useState } from "react";
 import { login, type LoginState } from "./actions";
-import { requestPasswordReset } from "./reset-actions";
 
 export default function LoginForm() {
   const [state, formAction, pending] = useActionState<LoginState, FormData>(login, undefined);
   const [email, setEmail] = useState("");
-  const [resetStatus, setResetStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-
-  async function handleForgotPassword(e: React.MouseEvent) {
-    e.preventDefault();
-    if (!email) {
-      setResetStatus("error");
-      return;
-    }
-    setResetStatus("sending");
-    const result = await requestPasswordReset(email);
-    setResetStatus(result.ok ? "sent" : "error");
-  }
 
   return (
     <>
@@ -57,21 +44,6 @@ export default function LoginForm() {
           {pending ? "Logging in…" : "Log in"}
         </button>
       </form>
-
-      <div className="a-login-links">
-        {resetStatus === "sent" ? (
-          <span>Check your email for a password reset link.</span>
-        ) : (
-          <a href="#" onClick={handleForgotPassword}>
-            {resetStatus === "sending" ? "Sending…" : "Forgot your password?"}
-          </a>
-        )}
-        {resetStatus === "error" ? (
-          <div style={{ color: "var(--copper)", fontSize: "13px", marginTop: "6px" }}>
-            Enter your email address above first.
-          </div>
-        ) : null}
-      </div>
     </>
   );
 }
